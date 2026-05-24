@@ -1,1 +1,1 @@
-# PS-2-Edtech-platform
+# PS-3-Edtech-platform
