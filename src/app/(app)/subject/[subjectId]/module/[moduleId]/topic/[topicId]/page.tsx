@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { getModulesWithCustomTopics } from "@/lib/course";
 import TopicTypeBadge from "@/components/ui/TopicTypeBadge";
 import TopicFooterNav from "@/components/ui/TopicFooterNav";

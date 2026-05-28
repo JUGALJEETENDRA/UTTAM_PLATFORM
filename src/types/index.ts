@@ -38,7 +38,7 @@ export interface Topic {
   id: string;
   moduleId: string;
   title: string;
-  type: "video" | "reading" | "quiz" | "assignment" | "simulation";
+  type: "video" | "reading" | "quiz" | "assignment" | "simulation" | "notes" | "extra" | "flashcard" | "mindmap" | string;
   durationMinutes: number;
   isCompleted: boolean;
   order: number;
