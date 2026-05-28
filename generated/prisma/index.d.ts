@@ -48,6 +48,16 @@ export type FileMaterial = $Result.DefaultSelection<Prisma.$FileMaterialPayload>
  * 
  */
 export type QuizQuestion = $Result.DefaultSelection<Prisma.$QuizQuestionPayload>
+/**
+ * Model TopicProgress
+ * 
+ */
+export type TopicProgress = $Result.DefaultSelection<Prisma.$TopicProgressPayload>
+/**
+ * Model ModuleProgress
+ * 
+ */
+export type ModuleProgress = $Result.DefaultSelection<Prisma.$ModuleProgressPayload>
 
 /**
  * Enums
@@ -257,6 +267,26 @@ export class PrismaClient<
     * ```
     */
   get quizQuestion(): Prisma.QuizQuestionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.topicProgress`: Exposes CRUD operations for the **TopicProgress** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TopicProgresses
+    * const topicProgresses = await prisma.topicProgress.findMany()
+    * ```
+    */
+  get topicProgress(): Prisma.TopicProgressDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.moduleProgress`: Exposes CRUD operations for the **ModuleProgress** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ModuleProgresses
+    * const moduleProgresses = await prisma.moduleProgress.findMany()
+    * ```
+    */
+  get moduleProgress(): Prisma.ModuleProgressDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -697,7 +727,9 @@ export namespace Prisma {
     Module: 'Module',
     Topic: 'Topic',
     FileMaterial: 'FileMaterial',
-    QuizQuestion: 'QuizQuestion'
+    QuizQuestion: 'QuizQuestion',
+    TopicProgress: 'TopicProgress',
+    ModuleProgress: 'ModuleProgress'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -713,7 +745,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "account" | "subject" | "module" | "topic" | "fileMaterial" | "quizQuestion"
+      modelProps: "user" | "account" | "subject" | "module" | "topic" | "fileMaterial" | "quizQuestion" | "topicProgress" | "moduleProgress"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1235,6 +1267,154 @@ export namespace Prisma {
           }
         }
       }
+      TopicProgress: {
+        payload: Prisma.$TopicProgressPayload<ExtArgs>
+        fields: Prisma.TopicProgressFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TopicProgressFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TopicProgressFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload>
+          }
+          findFirst: {
+            args: Prisma.TopicProgressFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TopicProgressFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload>
+          }
+          findMany: {
+            args: Prisma.TopicProgressFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload>[]
+          }
+          create: {
+            args: Prisma.TopicProgressCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload>
+          }
+          createMany: {
+            args: Prisma.TopicProgressCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TopicProgressCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload>[]
+          }
+          delete: {
+            args: Prisma.TopicProgressDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload>
+          }
+          update: {
+            args: Prisma.TopicProgressUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload>
+          }
+          deleteMany: {
+            args: Prisma.TopicProgressDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TopicProgressUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TopicProgressUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload>[]
+          }
+          upsert: {
+            args: Prisma.TopicProgressUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TopicProgressPayload>
+          }
+          aggregate: {
+            args: Prisma.TopicProgressAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTopicProgress>
+          }
+          groupBy: {
+            args: Prisma.TopicProgressGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TopicProgressGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TopicProgressCountArgs<ExtArgs>
+            result: $Utils.Optional<TopicProgressCountAggregateOutputType> | number
+          }
+        }
+      }
+      ModuleProgress: {
+        payload: Prisma.$ModuleProgressPayload<ExtArgs>
+        fields: Prisma.ModuleProgressFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ModuleProgressFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ModuleProgressFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload>
+          }
+          findFirst: {
+            args: Prisma.ModuleProgressFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ModuleProgressFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload>
+          }
+          findMany: {
+            args: Prisma.ModuleProgressFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload>[]
+          }
+          create: {
+            args: Prisma.ModuleProgressCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload>
+          }
+          createMany: {
+            args: Prisma.ModuleProgressCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ModuleProgressCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload>[]
+          }
+          delete: {
+            args: Prisma.ModuleProgressDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload>
+          }
+          update: {
+            args: Prisma.ModuleProgressUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload>
+          }
+          deleteMany: {
+            args: Prisma.ModuleProgressDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ModuleProgressUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ModuleProgressUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload>[]
+          }
+          upsert: {
+            args: Prisma.ModuleProgressUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModuleProgressPayload>
+          }
+          aggregate: {
+            args: Prisma.ModuleProgressAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateModuleProgress>
+          }
+          groupBy: {
+            args: Prisma.ModuleProgressGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ModuleProgressGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ModuleProgressCountArgs<ExtArgs>
+            result: $Utils.Optional<ModuleProgressCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1350,6 +1530,8 @@ export namespace Prisma {
     topic?: TopicOmit
     fileMaterial?: FileMaterialOmit
     quizQuestion?: QuizQuestionOmit
+    topicProgress?: TopicProgressOmit
+    moduleProgress?: ModuleProgressOmit
   }
 
   /* Types for Logging */
@@ -1431,10 +1613,14 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     accounts: number
+    topicProgress: number
+    moduleProgress: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
+    topicProgress?: boolean | UserCountOutputTypeCountTopicProgressArgs
+    moduleProgress?: boolean | UserCountOutputTypeCountModuleProgressArgs
   }
 
   // Custom InputTypes
@@ -1453,6 +1639,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AccountWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTopicProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TopicProgressWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountModuleProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ModuleProgressWhereInput
   }
 
 
@@ -1493,10 +1693,12 @@ export namespace Prisma {
 
   export type ModuleCountOutputType = {
     topics: number
+    studentProgress: number
   }
 
   export type ModuleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     topics?: boolean | ModuleCountOutputTypeCountTopicsArgs
+    studentProgress?: boolean | ModuleCountOutputTypeCountStudentProgressArgs
   }
 
   // Custom InputTypes
@@ -1517,6 +1719,13 @@ export namespace Prisma {
     where?: TopicWhereInput
   }
 
+  /**
+   * ModuleCountOutputType without action
+   */
+  export type ModuleCountOutputTypeCountStudentProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ModuleProgressWhereInput
+  }
+
 
   /**
    * Count Type TopicCountOutputType
@@ -1525,11 +1734,13 @@ export namespace Prisma {
   export type TopicCountOutputType = {
     quizQuestions: number
     fileMaterials: number
+    studentProgress: number
   }
 
   export type TopicCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quizQuestions?: boolean | TopicCountOutputTypeCountQuizQuestionsArgs
     fileMaterials?: boolean | TopicCountOutputTypeCountFileMaterialsArgs
+    studentProgress?: boolean | TopicCountOutputTypeCountStudentProgressArgs
   }
 
   // Custom InputTypes
@@ -1555,6 +1766,13 @@ export namespace Prisma {
    */
   export type TopicCountOutputTypeCountFileMaterialsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FileMaterialWhereInput
+  }
+
+  /**
+   * TopicCountOutputType without action
+   */
+  export type TopicCountOutputTypeCountStudentProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TopicProgressWhereInput
   }
 
 
@@ -1751,6 +1969,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
+    topicProgress?: boolean | User$topicProgressArgs<ExtArgs>
+    moduleProgress?: boolean | User$moduleProgressArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1790,6 +2010,8 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
+    topicProgress?: boolean | User$topicProgressArgs<ExtArgs>
+    moduleProgress?: boolean | User$moduleProgressArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1799,6 +2021,8 @@ export namespace Prisma {
     name: "User"
     objects: {
       accounts: Prisma.$AccountPayload<ExtArgs>[]
+      topicProgress: Prisma.$TopicProgressPayload<ExtArgs>[]
+      moduleProgress: Prisma.$ModuleProgressPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2204,6 +2428,8 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    topicProgress<T extends User$topicProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$topicProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    moduleProgress<T extends User$moduleProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$moduleProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2655,6 +2881,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+  }
+
+  /**
+   * User.topicProgress
+   */
+  export type User$topicProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    where?: TopicProgressWhereInput
+    orderBy?: TopicProgressOrderByWithRelationInput | TopicProgressOrderByWithRelationInput[]
+    cursor?: TopicProgressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TopicProgressScalarFieldEnum | TopicProgressScalarFieldEnum[]
+  }
+
+  /**
+   * User.moduleProgress
+   */
+  export type User$moduleProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    where?: ModuleProgressWhereInput
+    orderBy?: ModuleProgressOrderByWithRelationInput | ModuleProgressOrderByWithRelationInput[]
+    cursor?: ModuleProgressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ModuleProgressScalarFieldEnum | ModuleProgressScalarFieldEnum[]
   }
 
   /**
@@ -5317,6 +5591,7 @@ export namespace Prisma {
     updatedAt?: boolean
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
     topics?: boolean | Module$topicsArgs<ExtArgs>
+    studentProgress?: boolean | Module$studentProgressArgs<ExtArgs>
     _count?: boolean | ModuleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["module"]>
 
@@ -5359,6 +5634,7 @@ export namespace Prisma {
   export type ModuleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
     topics?: boolean | Module$topicsArgs<ExtArgs>
+    studentProgress?: boolean | Module$studentProgressArgs<ExtArgs>
     _count?: boolean | ModuleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ModuleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5373,6 +5649,7 @@ export namespace Prisma {
     objects: {
       subject: Prisma.$SubjectPayload<ExtArgs>
       topics: Prisma.$TopicPayload<ExtArgs>[]
+      studentProgress: Prisma.$ModuleProgressPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5779,6 +6056,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     topics<T extends Module$topicsArgs<ExtArgs> = {}>(args?: Subset<T, Module$topicsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentProgress<T extends Module$studentProgressArgs<ExtArgs> = {}>(args?: Subset<T, Module$studentProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6241,6 +6519,30 @@ export namespace Prisma {
   }
 
   /**
+   * Module.studentProgress
+   */
+  export type Module$studentProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    where?: ModuleProgressWhereInput
+    orderBy?: ModuleProgressOrderByWithRelationInput | ModuleProgressOrderByWithRelationInput[]
+    cursor?: ModuleProgressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ModuleProgressScalarFieldEnum | ModuleProgressScalarFieldEnum[]
+  }
+
+  /**
    * Module without action
    */
   export type ModuleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6520,6 +6822,7 @@ export namespace Prisma {
     module?: boolean | ModuleDefaultArgs<ExtArgs>
     quizQuestions?: boolean | Topic$quizQuestionsArgs<ExtArgs>
     fileMaterials?: boolean | Topic$fileMaterialsArgs<ExtArgs>
+    studentProgress?: boolean | Topic$studentProgressArgs<ExtArgs>
     _count?: boolean | TopicCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["topic"]>
 
@@ -6575,6 +6878,7 @@ export namespace Prisma {
     module?: boolean | ModuleDefaultArgs<ExtArgs>
     quizQuestions?: boolean | Topic$quizQuestionsArgs<ExtArgs>
     fileMaterials?: boolean | Topic$fileMaterialsArgs<ExtArgs>
+    studentProgress?: boolean | Topic$studentProgressArgs<ExtArgs>
     _count?: boolean | TopicCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TopicIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6590,6 +6894,7 @@ export namespace Prisma {
       module: Prisma.$ModulePayload<ExtArgs>
       quizQuestions: Prisma.$QuizQuestionPayload<ExtArgs>[]
       fileMaterials: Prisma.$FileMaterialPayload<ExtArgs>[]
+      studentProgress: Prisma.$TopicProgressPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7001,6 +7306,7 @@ export namespace Prisma {
     module<T extends ModuleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ModuleDefaultArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     quizQuestions<T extends Topic$quizQuestionsArgs<ExtArgs> = {}>(args?: Subset<T, Topic$quizQuestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     fileMaterials<T extends Topic$fileMaterialsArgs<ExtArgs> = {}>(args?: Subset<T, Topic$fileMaterialsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FileMaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentProgress<T extends Topic$studentProgressArgs<ExtArgs> = {}>(args?: Subset<T, Topic$studentProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7488,6 +7794,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FileMaterialScalarFieldEnum | FileMaterialScalarFieldEnum[]
+  }
+
+  /**
+   * Topic.studentProgress
+   */
+  export type Topic$studentProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    where?: TopicProgressWhereInput
+    orderBy?: TopicProgressOrderByWithRelationInput | TopicProgressOrderByWithRelationInput[]
+    cursor?: TopicProgressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TopicProgressScalarFieldEnum | TopicProgressScalarFieldEnum[]
   }
 
   /**
@@ -9705,6 +10035,2221 @@ export namespace Prisma {
 
 
   /**
+   * Model TopicProgress
+   */
+
+  export type AggregateTopicProgress = {
+    _count: TopicProgressCountAggregateOutputType | null
+    _avg: TopicProgressAvgAggregateOutputType | null
+    _sum: TopicProgressSumAggregateOutputType | null
+    _min: TopicProgressMinAggregateOutputType | null
+    _max: TopicProgressMaxAggregateOutputType | null
+  }
+
+  export type TopicProgressAvgAggregateOutputType = {
+    quizScore: number | null
+  }
+
+  export type TopicProgressSumAggregateOutputType = {
+    quizScore: number | null
+  }
+
+  export type TopicProgressMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    topicId: string | null
+    isCompleted: boolean | null
+    quizScore: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TopicProgressMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    topicId: string | null
+    isCompleted: boolean | null
+    quizScore: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TopicProgressCountAggregateOutputType = {
+    id: number
+    userId: number
+    topicId: number
+    isCompleted: number
+    quizScore: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TopicProgressAvgAggregateInputType = {
+    quizScore?: true
+  }
+
+  export type TopicProgressSumAggregateInputType = {
+    quizScore?: true
+  }
+
+  export type TopicProgressMinAggregateInputType = {
+    id?: true
+    userId?: true
+    topicId?: true
+    isCompleted?: true
+    quizScore?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TopicProgressMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    topicId?: true
+    isCompleted?: true
+    quizScore?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TopicProgressCountAggregateInputType = {
+    id?: true
+    userId?: true
+    topicId?: true
+    isCompleted?: true
+    quizScore?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TopicProgressAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TopicProgress to aggregate.
+     */
+    where?: TopicProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TopicProgresses to fetch.
+     */
+    orderBy?: TopicProgressOrderByWithRelationInput | TopicProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TopicProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TopicProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TopicProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TopicProgresses
+    **/
+    _count?: true | TopicProgressCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TopicProgressAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TopicProgressSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TopicProgressMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TopicProgressMaxAggregateInputType
+  }
+
+  export type GetTopicProgressAggregateType<T extends TopicProgressAggregateArgs> = {
+        [P in keyof T & keyof AggregateTopicProgress]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTopicProgress[P]>
+      : GetScalarType<T[P], AggregateTopicProgress[P]>
+  }
+
+
+
+
+  export type TopicProgressGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TopicProgressWhereInput
+    orderBy?: TopicProgressOrderByWithAggregationInput | TopicProgressOrderByWithAggregationInput[]
+    by: TopicProgressScalarFieldEnum[] | TopicProgressScalarFieldEnum
+    having?: TopicProgressScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TopicProgressCountAggregateInputType | true
+    _avg?: TopicProgressAvgAggregateInputType
+    _sum?: TopicProgressSumAggregateInputType
+    _min?: TopicProgressMinAggregateInputType
+    _max?: TopicProgressMaxAggregateInputType
+  }
+
+  export type TopicProgressGroupByOutputType = {
+    id: string
+    userId: string
+    topicId: string
+    isCompleted: boolean
+    quizScore: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TopicProgressCountAggregateOutputType | null
+    _avg: TopicProgressAvgAggregateOutputType | null
+    _sum: TopicProgressSumAggregateOutputType | null
+    _min: TopicProgressMinAggregateOutputType | null
+    _max: TopicProgressMaxAggregateOutputType | null
+  }
+
+  type GetTopicProgressGroupByPayload<T extends TopicProgressGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TopicProgressGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TopicProgressGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TopicProgressGroupByOutputType[P]>
+            : GetScalarType<T[P], TopicProgressGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TopicProgressSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    topicId?: boolean
+    isCompleted?: boolean
+    quizScore?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["topicProgress"]>
+
+  export type TopicProgressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    topicId?: boolean
+    isCompleted?: boolean
+    quizScore?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["topicProgress"]>
+
+  export type TopicProgressSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    topicId?: boolean
+    isCompleted?: boolean
+    quizScore?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["topicProgress"]>
+
+  export type TopicProgressSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    topicId?: boolean
+    isCompleted?: boolean
+    quizScore?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TopicProgressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "topicId" | "isCompleted" | "quizScore" | "createdAt" | "updatedAt", ExtArgs["result"]["topicProgress"]>
+  export type TopicProgressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }
+  export type TopicProgressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }
+  export type TopicProgressIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }
+
+  export type $TopicProgressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TopicProgress"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      topic: Prisma.$TopicPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      topicId: string
+      isCompleted: boolean
+      quizScore: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["topicProgress"]>
+    composites: {}
+  }
+
+  type TopicProgressGetPayload<S extends boolean | null | undefined | TopicProgressDefaultArgs> = $Result.GetResult<Prisma.$TopicProgressPayload, S>
+
+  type TopicProgressCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TopicProgressFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TopicProgressCountAggregateInputType | true
+    }
+
+  export interface TopicProgressDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TopicProgress'], meta: { name: 'TopicProgress' } }
+    /**
+     * Find zero or one TopicProgress that matches the filter.
+     * @param {TopicProgressFindUniqueArgs} args - Arguments to find a TopicProgress
+     * @example
+     * // Get one TopicProgress
+     * const topicProgress = await prisma.topicProgress.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TopicProgressFindUniqueArgs>(args: SelectSubset<T, TopicProgressFindUniqueArgs<ExtArgs>>): Prisma__TopicProgressClient<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TopicProgress that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TopicProgressFindUniqueOrThrowArgs} args - Arguments to find a TopicProgress
+     * @example
+     * // Get one TopicProgress
+     * const topicProgress = await prisma.topicProgress.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TopicProgressFindUniqueOrThrowArgs>(args: SelectSubset<T, TopicProgressFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TopicProgressClient<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TopicProgress that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TopicProgressFindFirstArgs} args - Arguments to find a TopicProgress
+     * @example
+     * // Get one TopicProgress
+     * const topicProgress = await prisma.topicProgress.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TopicProgressFindFirstArgs>(args?: SelectSubset<T, TopicProgressFindFirstArgs<ExtArgs>>): Prisma__TopicProgressClient<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TopicProgress that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TopicProgressFindFirstOrThrowArgs} args - Arguments to find a TopicProgress
+     * @example
+     * // Get one TopicProgress
+     * const topicProgress = await prisma.topicProgress.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TopicProgressFindFirstOrThrowArgs>(args?: SelectSubset<T, TopicProgressFindFirstOrThrowArgs<ExtArgs>>): Prisma__TopicProgressClient<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TopicProgresses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TopicProgressFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TopicProgresses
+     * const topicProgresses = await prisma.topicProgress.findMany()
+     * 
+     * // Get first 10 TopicProgresses
+     * const topicProgresses = await prisma.topicProgress.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const topicProgressWithIdOnly = await prisma.topicProgress.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TopicProgressFindManyArgs>(args?: SelectSubset<T, TopicProgressFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TopicProgress.
+     * @param {TopicProgressCreateArgs} args - Arguments to create a TopicProgress.
+     * @example
+     * // Create one TopicProgress
+     * const TopicProgress = await prisma.topicProgress.create({
+     *   data: {
+     *     // ... data to create a TopicProgress
+     *   }
+     * })
+     * 
+     */
+    create<T extends TopicProgressCreateArgs>(args: SelectSubset<T, TopicProgressCreateArgs<ExtArgs>>): Prisma__TopicProgressClient<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TopicProgresses.
+     * @param {TopicProgressCreateManyArgs} args - Arguments to create many TopicProgresses.
+     * @example
+     * // Create many TopicProgresses
+     * const topicProgress = await prisma.topicProgress.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TopicProgressCreateManyArgs>(args?: SelectSubset<T, TopicProgressCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TopicProgresses and returns the data saved in the database.
+     * @param {TopicProgressCreateManyAndReturnArgs} args - Arguments to create many TopicProgresses.
+     * @example
+     * // Create many TopicProgresses
+     * const topicProgress = await prisma.topicProgress.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TopicProgresses and only return the `id`
+     * const topicProgressWithIdOnly = await prisma.topicProgress.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TopicProgressCreateManyAndReturnArgs>(args?: SelectSubset<T, TopicProgressCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TopicProgress.
+     * @param {TopicProgressDeleteArgs} args - Arguments to delete one TopicProgress.
+     * @example
+     * // Delete one TopicProgress
+     * const TopicProgress = await prisma.topicProgress.delete({
+     *   where: {
+     *     // ... filter to delete one TopicProgress
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TopicProgressDeleteArgs>(args: SelectSubset<T, TopicProgressDeleteArgs<ExtArgs>>): Prisma__TopicProgressClient<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TopicProgress.
+     * @param {TopicProgressUpdateArgs} args - Arguments to update one TopicProgress.
+     * @example
+     * // Update one TopicProgress
+     * const topicProgress = await prisma.topicProgress.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TopicProgressUpdateArgs>(args: SelectSubset<T, TopicProgressUpdateArgs<ExtArgs>>): Prisma__TopicProgressClient<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TopicProgresses.
+     * @param {TopicProgressDeleteManyArgs} args - Arguments to filter TopicProgresses to delete.
+     * @example
+     * // Delete a few TopicProgresses
+     * const { count } = await prisma.topicProgress.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TopicProgressDeleteManyArgs>(args?: SelectSubset<T, TopicProgressDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TopicProgresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TopicProgressUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TopicProgresses
+     * const topicProgress = await prisma.topicProgress.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TopicProgressUpdateManyArgs>(args: SelectSubset<T, TopicProgressUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TopicProgresses and returns the data updated in the database.
+     * @param {TopicProgressUpdateManyAndReturnArgs} args - Arguments to update many TopicProgresses.
+     * @example
+     * // Update many TopicProgresses
+     * const topicProgress = await prisma.topicProgress.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TopicProgresses and only return the `id`
+     * const topicProgressWithIdOnly = await prisma.topicProgress.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TopicProgressUpdateManyAndReturnArgs>(args: SelectSubset<T, TopicProgressUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TopicProgress.
+     * @param {TopicProgressUpsertArgs} args - Arguments to update or create a TopicProgress.
+     * @example
+     * // Update or create a TopicProgress
+     * const topicProgress = await prisma.topicProgress.upsert({
+     *   create: {
+     *     // ... data to create a TopicProgress
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TopicProgress we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TopicProgressUpsertArgs>(args: SelectSubset<T, TopicProgressUpsertArgs<ExtArgs>>): Prisma__TopicProgressClient<$Result.GetResult<Prisma.$TopicProgressPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TopicProgresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TopicProgressCountArgs} args - Arguments to filter TopicProgresses to count.
+     * @example
+     * // Count the number of TopicProgresses
+     * const count = await prisma.topicProgress.count({
+     *   where: {
+     *     // ... the filter for the TopicProgresses we want to count
+     *   }
+     * })
+    **/
+    count<T extends TopicProgressCountArgs>(
+      args?: Subset<T, TopicProgressCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TopicProgressCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TopicProgress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TopicProgressAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TopicProgressAggregateArgs>(args: Subset<T, TopicProgressAggregateArgs>): Prisma.PrismaPromise<GetTopicProgressAggregateType<T>>
+
+    /**
+     * Group by TopicProgress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TopicProgressGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TopicProgressGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TopicProgressGroupByArgs['orderBy'] }
+        : { orderBy?: TopicProgressGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TopicProgressGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTopicProgressGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TopicProgress model
+   */
+  readonly fields: TopicProgressFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TopicProgress.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TopicProgressClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    topic<T extends TopicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TopicDefaultArgs<ExtArgs>>): Prisma__TopicClient<$Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TopicProgress model
+   */
+  interface TopicProgressFieldRefs {
+    readonly id: FieldRef<"TopicProgress", 'String'>
+    readonly userId: FieldRef<"TopicProgress", 'String'>
+    readonly topicId: FieldRef<"TopicProgress", 'String'>
+    readonly isCompleted: FieldRef<"TopicProgress", 'Boolean'>
+    readonly quizScore: FieldRef<"TopicProgress", 'Int'>
+    readonly createdAt: FieldRef<"TopicProgress", 'DateTime'>
+    readonly updatedAt: FieldRef<"TopicProgress", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TopicProgress findUnique
+   */
+  export type TopicProgressFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which TopicProgress to fetch.
+     */
+    where: TopicProgressWhereUniqueInput
+  }
+
+  /**
+   * TopicProgress findUniqueOrThrow
+   */
+  export type TopicProgressFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which TopicProgress to fetch.
+     */
+    where: TopicProgressWhereUniqueInput
+  }
+
+  /**
+   * TopicProgress findFirst
+   */
+  export type TopicProgressFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which TopicProgress to fetch.
+     */
+    where?: TopicProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TopicProgresses to fetch.
+     */
+    orderBy?: TopicProgressOrderByWithRelationInput | TopicProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TopicProgresses.
+     */
+    cursor?: TopicProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TopicProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TopicProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TopicProgresses.
+     */
+    distinct?: TopicProgressScalarFieldEnum | TopicProgressScalarFieldEnum[]
+  }
+
+  /**
+   * TopicProgress findFirstOrThrow
+   */
+  export type TopicProgressFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which TopicProgress to fetch.
+     */
+    where?: TopicProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TopicProgresses to fetch.
+     */
+    orderBy?: TopicProgressOrderByWithRelationInput | TopicProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TopicProgresses.
+     */
+    cursor?: TopicProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TopicProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TopicProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TopicProgresses.
+     */
+    distinct?: TopicProgressScalarFieldEnum | TopicProgressScalarFieldEnum[]
+  }
+
+  /**
+   * TopicProgress findMany
+   */
+  export type TopicProgressFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which TopicProgresses to fetch.
+     */
+    where?: TopicProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TopicProgresses to fetch.
+     */
+    orderBy?: TopicProgressOrderByWithRelationInput | TopicProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TopicProgresses.
+     */
+    cursor?: TopicProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TopicProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TopicProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TopicProgresses.
+     */
+    distinct?: TopicProgressScalarFieldEnum | TopicProgressScalarFieldEnum[]
+  }
+
+  /**
+   * TopicProgress create
+   */
+  export type TopicProgressCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TopicProgress.
+     */
+    data: XOR<TopicProgressCreateInput, TopicProgressUncheckedCreateInput>
+  }
+
+  /**
+   * TopicProgress createMany
+   */
+  export type TopicProgressCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TopicProgresses.
+     */
+    data: TopicProgressCreateManyInput | TopicProgressCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TopicProgress createManyAndReturn
+   */
+  export type TopicProgressCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * The data used to create many TopicProgresses.
+     */
+    data: TopicProgressCreateManyInput | TopicProgressCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TopicProgress update
+   */
+  export type TopicProgressUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TopicProgress.
+     */
+    data: XOR<TopicProgressUpdateInput, TopicProgressUncheckedUpdateInput>
+    /**
+     * Choose, which TopicProgress to update.
+     */
+    where: TopicProgressWhereUniqueInput
+  }
+
+  /**
+   * TopicProgress updateMany
+   */
+  export type TopicProgressUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TopicProgresses.
+     */
+    data: XOR<TopicProgressUpdateManyMutationInput, TopicProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which TopicProgresses to update
+     */
+    where?: TopicProgressWhereInput
+    /**
+     * Limit how many TopicProgresses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TopicProgress updateManyAndReturn
+   */
+  export type TopicProgressUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * The data used to update TopicProgresses.
+     */
+    data: XOR<TopicProgressUpdateManyMutationInput, TopicProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which TopicProgresses to update
+     */
+    where?: TopicProgressWhereInput
+    /**
+     * Limit how many TopicProgresses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TopicProgress upsert
+   */
+  export type TopicProgressUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TopicProgress to update in case it exists.
+     */
+    where: TopicProgressWhereUniqueInput
+    /**
+     * In case the TopicProgress found by the `where` argument doesn't exist, create a new TopicProgress with this data.
+     */
+    create: XOR<TopicProgressCreateInput, TopicProgressUncheckedCreateInput>
+    /**
+     * In case the TopicProgress was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TopicProgressUpdateInput, TopicProgressUncheckedUpdateInput>
+  }
+
+  /**
+   * TopicProgress delete
+   */
+  export type TopicProgressDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+    /**
+     * Filter which TopicProgress to delete.
+     */
+    where: TopicProgressWhereUniqueInput
+  }
+
+  /**
+   * TopicProgress deleteMany
+   */
+  export type TopicProgressDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TopicProgresses to delete
+     */
+    where?: TopicProgressWhereInput
+    /**
+     * Limit how many TopicProgresses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TopicProgress without action
+   */
+  export type TopicProgressDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicProgress
+     */
+    select?: TopicProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TopicProgress
+     */
+    omit?: TopicProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TopicProgressInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ModuleProgress
+   */
+
+  export type AggregateModuleProgress = {
+    _count: ModuleProgressCountAggregateOutputType | null
+    _min: ModuleProgressMinAggregateOutputType | null
+    _max: ModuleProgressMaxAggregateOutputType | null
+  }
+
+  export type ModuleProgressMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    moduleId: string | null
+    isCompleted: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ModuleProgressMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    moduleId: string | null
+    isCompleted: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ModuleProgressCountAggregateOutputType = {
+    id: number
+    userId: number
+    moduleId: number
+    isCompleted: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ModuleProgressMinAggregateInputType = {
+    id?: true
+    userId?: true
+    moduleId?: true
+    isCompleted?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ModuleProgressMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    moduleId?: true
+    isCompleted?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ModuleProgressCountAggregateInputType = {
+    id?: true
+    userId?: true
+    moduleId?: true
+    isCompleted?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ModuleProgressAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ModuleProgress to aggregate.
+     */
+    where?: ModuleProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ModuleProgresses to fetch.
+     */
+    orderBy?: ModuleProgressOrderByWithRelationInput | ModuleProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ModuleProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ModuleProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ModuleProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ModuleProgresses
+    **/
+    _count?: true | ModuleProgressCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ModuleProgressMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ModuleProgressMaxAggregateInputType
+  }
+
+  export type GetModuleProgressAggregateType<T extends ModuleProgressAggregateArgs> = {
+        [P in keyof T & keyof AggregateModuleProgress]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateModuleProgress[P]>
+      : GetScalarType<T[P], AggregateModuleProgress[P]>
+  }
+
+
+
+
+  export type ModuleProgressGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ModuleProgressWhereInput
+    orderBy?: ModuleProgressOrderByWithAggregationInput | ModuleProgressOrderByWithAggregationInput[]
+    by: ModuleProgressScalarFieldEnum[] | ModuleProgressScalarFieldEnum
+    having?: ModuleProgressScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ModuleProgressCountAggregateInputType | true
+    _min?: ModuleProgressMinAggregateInputType
+    _max?: ModuleProgressMaxAggregateInputType
+  }
+
+  export type ModuleProgressGroupByOutputType = {
+    id: string
+    userId: string
+    moduleId: string
+    isCompleted: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: ModuleProgressCountAggregateOutputType | null
+    _min: ModuleProgressMinAggregateOutputType | null
+    _max: ModuleProgressMaxAggregateOutputType | null
+  }
+
+  type GetModuleProgressGroupByPayload<T extends ModuleProgressGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ModuleProgressGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ModuleProgressGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ModuleProgressGroupByOutputType[P]>
+            : GetScalarType<T[P], ModuleProgressGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ModuleProgressSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    moduleId?: boolean
+    isCompleted?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["moduleProgress"]>
+
+  export type ModuleProgressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    moduleId?: boolean
+    isCompleted?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["moduleProgress"]>
+
+  export type ModuleProgressSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    moduleId?: boolean
+    isCompleted?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["moduleProgress"]>
+
+  export type ModuleProgressSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    moduleId?: boolean
+    isCompleted?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ModuleProgressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "moduleId" | "isCompleted" | "createdAt" | "updatedAt", ExtArgs["result"]["moduleProgress"]>
+  export type ModuleProgressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }
+  export type ModuleProgressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }
+  export type ModuleProgressIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }
+
+  export type $ModuleProgressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ModuleProgress"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      module: Prisma.$ModulePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      moduleId: string
+      isCompleted: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["moduleProgress"]>
+    composites: {}
+  }
+
+  type ModuleProgressGetPayload<S extends boolean | null | undefined | ModuleProgressDefaultArgs> = $Result.GetResult<Prisma.$ModuleProgressPayload, S>
+
+  type ModuleProgressCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ModuleProgressFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ModuleProgressCountAggregateInputType | true
+    }
+
+  export interface ModuleProgressDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ModuleProgress'], meta: { name: 'ModuleProgress' } }
+    /**
+     * Find zero or one ModuleProgress that matches the filter.
+     * @param {ModuleProgressFindUniqueArgs} args - Arguments to find a ModuleProgress
+     * @example
+     * // Get one ModuleProgress
+     * const moduleProgress = await prisma.moduleProgress.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ModuleProgressFindUniqueArgs>(args: SelectSubset<T, ModuleProgressFindUniqueArgs<ExtArgs>>): Prisma__ModuleProgressClient<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ModuleProgress that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ModuleProgressFindUniqueOrThrowArgs} args - Arguments to find a ModuleProgress
+     * @example
+     * // Get one ModuleProgress
+     * const moduleProgress = await prisma.moduleProgress.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ModuleProgressFindUniqueOrThrowArgs>(args: SelectSubset<T, ModuleProgressFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ModuleProgressClient<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ModuleProgress that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModuleProgressFindFirstArgs} args - Arguments to find a ModuleProgress
+     * @example
+     * // Get one ModuleProgress
+     * const moduleProgress = await prisma.moduleProgress.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ModuleProgressFindFirstArgs>(args?: SelectSubset<T, ModuleProgressFindFirstArgs<ExtArgs>>): Prisma__ModuleProgressClient<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ModuleProgress that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModuleProgressFindFirstOrThrowArgs} args - Arguments to find a ModuleProgress
+     * @example
+     * // Get one ModuleProgress
+     * const moduleProgress = await prisma.moduleProgress.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ModuleProgressFindFirstOrThrowArgs>(args?: SelectSubset<T, ModuleProgressFindFirstOrThrowArgs<ExtArgs>>): Prisma__ModuleProgressClient<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ModuleProgresses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModuleProgressFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ModuleProgresses
+     * const moduleProgresses = await prisma.moduleProgress.findMany()
+     * 
+     * // Get first 10 ModuleProgresses
+     * const moduleProgresses = await prisma.moduleProgress.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const moduleProgressWithIdOnly = await prisma.moduleProgress.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ModuleProgressFindManyArgs>(args?: SelectSubset<T, ModuleProgressFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ModuleProgress.
+     * @param {ModuleProgressCreateArgs} args - Arguments to create a ModuleProgress.
+     * @example
+     * // Create one ModuleProgress
+     * const ModuleProgress = await prisma.moduleProgress.create({
+     *   data: {
+     *     // ... data to create a ModuleProgress
+     *   }
+     * })
+     * 
+     */
+    create<T extends ModuleProgressCreateArgs>(args: SelectSubset<T, ModuleProgressCreateArgs<ExtArgs>>): Prisma__ModuleProgressClient<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ModuleProgresses.
+     * @param {ModuleProgressCreateManyArgs} args - Arguments to create many ModuleProgresses.
+     * @example
+     * // Create many ModuleProgresses
+     * const moduleProgress = await prisma.moduleProgress.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ModuleProgressCreateManyArgs>(args?: SelectSubset<T, ModuleProgressCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ModuleProgresses and returns the data saved in the database.
+     * @param {ModuleProgressCreateManyAndReturnArgs} args - Arguments to create many ModuleProgresses.
+     * @example
+     * // Create many ModuleProgresses
+     * const moduleProgress = await prisma.moduleProgress.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ModuleProgresses and only return the `id`
+     * const moduleProgressWithIdOnly = await prisma.moduleProgress.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ModuleProgressCreateManyAndReturnArgs>(args?: SelectSubset<T, ModuleProgressCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ModuleProgress.
+     * @param {ModuleProgressDeleteArgs} args - Arguments to delete one ModuleProgress.
+     * @example
+     * // Delete one ModuleProgress
+     * const ModuleProgress = await prisma.moduleProgress.delete({
+     *   where: {
+     *     // ... filter to delete one ModuleProgress
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ModuleProgressDeleteArgs>(args: SelectSubset<T, ModuleProgressDeleteArgs<ExtArgs>>): Prisma__ModuleProgressClient<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ModuleProgress.
+     * @param {ModuleProgressUpdateArgs} args - Arguments to update one ModuleProgress.
+     * @example
+     * // Update one ModuleProgress
+     * const moduleProgress = await prisma.moduleProgress.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ModuleProgressUpdateArgs>(args: SelectSubset<T, ModuleProgressUpdateArgs<ExtArgs>>): Prisma__ModuleProgressClient<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ModuleProgresses.
+     * @param {ModuleProgressDeleteManyArgs} args - Arguments to filter ModuleProgresses to delete.
+     * @example
+     * // Delete a few ModuleProgresses
+     * const { count } = await prisma.moduleProgress.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ModuleProgressDeleteManyArgs>(args?: SelectSubset<T, ModuleProgressDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ModuleProgresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModuleProgressUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ModuleProgresses
+     * const moduleProgress = await prisma.moduleProgress.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ModuleProgressUpdateManyArgs>(args: SelectSubset<T, ModuleProgressUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ModuleProgresses and returns the data updated in the database.
+     * @param {ModuleProgressUpdateManyAndReturnArgs} args - Arguments to update many ModuleProgresses.
+     * @example
+     * // Update many ModuleProgresses
+     * const moduleProgress = await prisma.moduleProgress.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ModuleProgresses and only return the `id`
+     * const moduleProgressWithIdOnly = await prisma.moduleProgress.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ModuleProgressUpdateManyAndReturnArgs>(args: SelectSubset<T, ModuleProgressUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ModuleProgress.
+     * @param {ModuleProgressUpsertArgs} args - Arguments to update or create a ModuleProgress.
+     * @example
+     * // Update or create a ModuleProgress
+     * const moduleProgress = await prisma.moduleProgress.upsert({
+     *   create: {
+     *     // ... data to create a ModuleProgress
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ModuleProgress we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ModuleProgressUpsertArgs>(args: SelectSubset<T, ModuleProgressUpsertArgs<ExtArgs>>): Prisma__ModuleProgressClient<$Result.GetResult<Prisma.$ModuleProgressPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ModuleProgresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModuleProgressCountArgs} args - Arguments to filter ModuleProgresses to count.
+     * @example
+     * // Count the number of ModuleProgresses
+     * const count = await prisma.moduleProgress.count({
+     *   where: {
+     *     // ... the filter for the ModuleProgresses we want to count
+     *   }
+     * })
+    **/
+    count<T extends ModuleProgressCountArgs>(
+      args?: Subset<T, ModuleProgressCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ModuleProgressCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ModuleProgress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModuleProgressAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ModuleProgressAggregateArgs>(args: Subset<T, ModuleProgressAggregateArgs>): Prisma.PrismaPromise<GetModuleProgressAggregateType<T>>
+
+    /**
+     * Group by ModuleProgress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModuleProgressGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ModuleProgressGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ModuleProgressGroupByArgs['orderBy'] }
+        : { orderBy?: ModuleProgressGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ModuleProgressGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetModuleProgressGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ModuleProgress model
+   */
+  readonly fields: ModuleProgressFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ModuleProgress.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ModuleProgressClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    module<T extends ModuleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ModuleDefaultArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ModuleProgress model
+   */
+  interface ModuleProgressFieldRefs {
+    readonly id: FieldRef<"ModuleProgress", 'String'>
+    readonly userId: FieldRef<"ModuleProgress", 'String'>
+    readonly moduleId: FieldRef<"ModuleProgress", 'String'>
+    readonly isCompleted: FieldRef<"ModuleProgress", 'Boolean'>
+    readonly createdAt: FieldRef<"ModuleProgress", 'DateTime'>
+    readonly updatedAt: FieldRef<"ModuleProgress", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ModuleProgress findUnique
+   */
+  export type ModuleProgressFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which ModuleProgress to fetch.
+     */
+    where: ModuleProgressWhereUniqueInput
+  }
+
+  /**
+   * ModuleProgress findUniqueOrThrow
+   */
+  export type ModuleProgressFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which ModuleProgress to fetch.
+     */
+    where: ModuleProgressWhereUniqueInput
+  }
+
+  /**
+   * ModuleProgress findFirst
+   */
+  export type ModuleProgressFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which ModuleProgress to fetch.
+     */
+    where?: ModuleProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ModuleProgresses to fetch.
+     */
+    orderBy?: ModuleProgressOrderByWithRelationInput | ModuleProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ModuleProgresses.
+     */
+    cursor?: ModuleProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ModuleProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ModuleProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ModuleProgresses.
+     */
+    distinct?: ModuleProgressScalarFieldEnum | ModuleProgressScalarFieldEnum[]
+  }
+
+  /**
+   * ModuleProgress findFirstOrThrow
+   */
+  export type ModuleProgressFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which ModuleProgress to fetch.
+     */
+    where?: ModuleProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ModuleProgresses to fetch.
+     */
+    orderBy?: ModuleProgressOrderByWithRelationInput | ModuleProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ModuleProgresses.
+     */
+    cursor?: ModuleProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ModuleProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ModuleProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ModuleProgresses.
+     */
+    distinct?: ModuleProgressScalarFieldEnum | ModuleProgressScalarFieldEnum[]
+  }
+
+  /**
+   * ModuleProgress findMany
+   */
+  export type ModuleProgressFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which ModuleProgresses to fetch.
+     */
+    where?: ModuleProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ModuleProgresses to fetch.
+     */
+    orderBy?: ModuleProgressOrderByWithRelationInput | ModuleProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ModuleProgresses.
+     */
+    cursor?: ModuleProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ModuleProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ModuleProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ModuleProgresses.
+     */
+    distinct?: ModuleProgressScalarFieldEnum | ModuleProgressScalarFieldEnum[]
+  }
+
+  /**
+   * ModuleProgress create
+   */
+  export type ModuleProgressCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ModuleProgress.
+     */
+    data: XOR<ModuleProgressCreateInput, ModuleProgressUncheckedCreateInput>
+  }
+
+  /**
+   * ModuleProgress createMany
+   */
+  export type ModuleProgressCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ModuleProgresses.
+     */
+    data: ModuleProgressCreateManyInput | ModuleProgressCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ModuleProgress createManyAndReturn
+   */
+  export type ModuleProgressCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * The data used to create many ModuleProgresses.
+     */
+    data: ModuleProgressCreateManyInput | ModuleProgressCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ModuleProgress update
+   */
+  export type ModuleProgressUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ModuleProgress.
+     */
+    data: XOR<ModuleProgressUpdateInput, ModuleProgressUncheckedUpdateInput>
+    /**
+     * Choose, which ModuleProgress to update.
+     */
+    where: ModuleProgressWhereUniqueInput
+  }
+
+  /**
+   * ModuleProgress updateMany
+   */
+  export type ModuleProgressUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ModuleProgresses.
+     */
+    data: XOR<ModuleProgressUpdateManyMutationInput, ModuleProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which ModuleProgresses to update
+     */
+    where?: ModuleProgressWhereInput
+    /**
+     * Limit how many ModuleProgresses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ModuleProgress updateManyAndReturn
+   */
+  export type ModuleProgressUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * The data used to update ModuleProgresses.
+     */
+    data: XOR<ModuleProgressUpdateManyMutationInput, ModuleProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which ModuleProgresses to update
+     */
+    where?: ModuleProgressWhereInput
+    /**
+     * Limit how many ModuleProgresses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ModuleProgress upsert
+   */
+  export type ModuleProgressUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ModuleProgress to update in case it exists.
+     */
+    where: ModuleProgressWhereUniqueInput
+    /**
+     * In case the ModuleProgress found by the `where` argument doesn't exist, create a new ModuleProgress with this data.
+     */
+    create: XOR<ModuleProgressCreateInput, ModuleProgressUncheckedCreateInput>
+    /**
+     * In case the ModuleProgress was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ModuleProgressUpdateInput, ModuleProgressUncheckedUpdateInput>
+  }
+
+  /**
+   * ModuleProgress delete
+   */
+  export type ModuleProgressDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+    /**
+     * Filter which ModuleProgress to delete.
+     */
+    where: ModuleProgressWhereUniqueInput
+  }
+
+  /**
+   * ModuleProgress deleteMany
+   */
+  export type ModuleProgressDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ModuleProgresses to delete
+     */
+    where?: ModuleProgressWhereInput
+    /**
+     * Limit how many ModuleProgresses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ModuleProgress without action
+   */
+  export type ModuleProgressDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModuleProgress
+     */
+    select?: ModuleProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModuleProgress
+     */
+    omit?: ModuleProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleProgressInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -9824,6 +12369,31 @@ export namespace Prisma {
   };
 
   export type QuizQuestionScalarFieldEnum = (typeof QuizQuestionScalarFieldEnum)[keyof typeof QuizQuestionScalarFieldEnum]
+
+
+  export const TopicProgressScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    topicId: 'topicId',
+    isCompleted: 'isCompleted',
+    quizScore: 'quizScore',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TopicProgressScalarFieldEnum = (typeof TopicProgressScalarFieldEnum)[keyof typeof TopicProgressScalarFieldEnum]
+
+
+  export const ModuleProgressScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    moduleId: 'moduleId',
+    isCompleted: 'isCompleted',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ModuleProgressScalarFieldEnum = (typeof ModuleProgressScalarFieldEnum)[keyof typeof ModuleProgressScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -9948,6 +12518,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     accounts?: AccountListRelationFilter
+    topicProgress?: TopicProgressListRelationFilter
+    moduleProgress?: ModuleProgressListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -9960,6 +12532,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     accounts?: AccountOrderByRelationAggregateInput
+    topicProgress?: TopicProgressOrderByRelationAggregateInput
+    moduleProgress?: ModuleProgressOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -9975,6 +12549,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     accounts?: AccountListRelationFilter
+    topicProgress?: TopicProgressListRelationFilter
+    moduleProgress?: ModuleProgressListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -10209,6 +12785,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Module"> | Date | string
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
     topics?: TopicListRelationFilter
+    studentProgress?: ModuleProgressListRelationFilter
   }
 
   export type ModuleOrderByWithRelationInput = {
@@ -10222,6 +12799,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     subject?: SubjectOrderByWithRelationInput
     topics?: TopicOrderByRelationAggregateInput
+    studentProgress?: ModuleProgressOrderByRelationAggregateInput
   }
 
   export type ModuleWhereUniqueInput = Prisma.AtLeast<{
@@ -10238,6 +12816,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Module"> | Date | string
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
     topics?: TopicListRelationFilter
+    studentProgress?: ModuleProgressListRelationFilter
   }, "id">
 
   export type ModuleOrderByWithAggregationInput = {
@@ -10289,6 +12868,7 @@ export namespace Prisma {
     module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
     quizQuestions?: QuizQuestionListRelationFilter
     fileMaterials?: FileMaterialListRelationFilter
+    studentProgress?: TopicProgressListRelationFilter
   }
 
   export type TopicOrderByWithRelationInput = {
@@ -10307,6 +12887,7 @@ export namespace Prisma {
     module?: ModuleOrderByWithRelationInput
     quizQuestions?: QuizQuestionOrderByRelationAggregateInput
     fileMaterials?: FileMaterialOrderByRelationAggregateInput
+    studentProgress?: TopicProgressOrderByRelationAggregateInput
   }
 
   export type TopicWhereUniqueInput = Prisma.AtLeast<{
@@ -10328,6 +12909,7 @@ export namespace Prisma {
     module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
     quizQuestions?: QuizQuestionListRelationFilter
     fileMaterials?: FileMaterialListRelationFilter
+    studentProgress?: TopicProgressListRelationFilter
   }, "id">
 
   export type TopicOrderByWithAggregationInput = {
@@ -10495,6 +13077,141 @@ export namespace Prisma {
     explanation?: StringWithAggregatesFilter<"QuizQuestion"> | string
   }
 
+  export type TopicProgressWhereInput = {
+    AND?: TopicProgressWhereInput | TopicProgressWhereInput[]
+    OR?: TopicProgressWhereInput[]
+    NOT?: TopicProgressWhereInput | TopicProgressWhereInput[]
+    id?: StringFilter<"TopicProgress"> | string
+    userId?: StringFilter<"TopicProgress"> | string
+    topicId?: StringFilter<"TopicProgress"> | string
+    isCompleted?: BoolFilter<"TopicProgress"> | boolean
+    quizScore?: IntNullableFilter<"TopicProgress"> | number | null
+    createdAt?: DateTimeFilter<"TopicProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"TopicProgress"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    topic?: XOR<TopicScalarRelationFilter, TopicWhereInput>
+  }
+
+  export type TopicProgressOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    topicId?: SortOrder
+    isCompleted?: SortOrder
+    quizScore?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    topic?: TopicOrderByWithRelationInput
+  }
+
+  export type TopicProgressWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_topicId?: TopicProgressUserIdTopicIdCompoundUniqueInput
+    AND?: TopicProgressWhereInput | TopicProgressWhereInput[]
+    OR?: TopicProgressWhereInput[]
+    NOT?: TopicProgressWhereInput | TopicProgressWhereInput[]
+    userId?: StringFilter<"TopicProgress"> | string
+    topicId?: StringFilter<"TopicProgress"> | string
+    isCompleted?: BoolFilter<"TopicProgress"> | boolean
+    quizScore?: IntNullableFilter<"TopicProgress"> | number | null
+    createdAt?: DateTimeFilter<"TopicProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"TopicProgress"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    topic?: XOR<TopicScalarRelationFilter, TopicWhereInput>
+  }, "id" | "userId_topicId">
+
+  export type TopicProgressOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    topicId?: SortOrder
+    isCompleted?: SortOrder
+    quizScore?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TopicProgressCountOrderByAggregateInput
+    _avg?: TopicProgressAvgOrderByAggregateInput
+    _max?: TopicProgressMaxOrderByAggregateInput
+    _min?: TopicProgressMinOrderByAggregateInput
+    _sum?: TopicProgressSumOrderByAggregateInput
+  }
+
+  export type TopicProgressScalarWhereWithAggregatesInput = {
+    AND?: TopicProgressScalarWhereWithAggregatesInput | TopicProgressScalarWhereWithAggregatesInput[]
+    OR?: TopicProgressScalarWhereWithAggregatesInput[]
+    NOT?: TopicProgressScalarWhereWithAggregatesInput | TopicProgressScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TopicProgress"> | string
+    userId?: StringWithAggregatesFilter<"TopicProgress"> | string
+    topicId?: StringWithAggregatesFilter<"TopicProgress"> | string
+    isCompleted?: BoolWithAggregatesFilter<"TopicProgress"> | boolean
+    quizScore?: IntNullableWithAggregatesFilter<"TopicProgress"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"TopicProgress"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TopicProgress"> | Date | string
+  }
+
+  export type ModuleProgressWhereInput = {
+    AND?: ModuleProgressWhereInput | ModuleProgressWhereInput[]
+    OR?: ModuleProgressWhereInput[]
+    NOT?: ModuleProgressWhereInput | ModuleProgressWhereInput[]
+    id?: StringFilter<"ModuleProgress"> | string
+    userId?: StringFilter<"ModuleProgress"> | string
+    moduleId?: StringFilter<"ModuleProgress"> | string
+    isCompleted?: BoolFilter<"ModuleProgress"> | boolean
+    createdAt?: DateTimeFilter<"ModuleProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"ModuleProgress"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
+  }
+
+  export type ModuleProgressOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    moduleId?: SortOrder
+    isCompleted?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    module?: ModuleOrderByWithRelationInput
+  }
+
+  export type ModuleProgressWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_moduleId?: ModuleProgressUserIdModuleIdCompoundUniqueInput
+    AND?: ModuleProgressWhereInput | ModuleProgressWhereInput[]
+    OR?: ModuleProgressWhereInput[]
+    NOT?: ModuleProgressWhereInput | ModuleProgressWhereInput[]
+    userId?: StringFilter<"ModuleProgress"> | string
+    moduleId?: StringFilter<"ModuleProgress"> | string
+    isCompleted?: BoolFilter<"ModuleProgress"> | boolean
+    createdAt?: DateTimeFilter<"ModuleProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"ModuleProgress"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
+  }, "id" | "userId_moduleId">
+
+  export type ModuleProgressOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    moduleId?: SortOrder
+    isCompleted?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ModuleProgressCountOrderByAggregateInput
+    _max?: ModuleProgressMaxOrderByAggregateInput
+    _min?: ModuleProgressMinOrderByAggregateInput
+  }
+
+  export type ModuleProgressScalarWhereWithAggregatesInput = {
+    AND?: ModuleProgressScalarWhereWithAggregatesInput | ModuleProgressScalarWhereWithAggregatesInput[]
+    OR?: ModuleProgressScalarWhereWithAggregatesInput[]
+    NOT?: ModuleProgressScalarWhereWithAggregatesInput | ModuleProgressScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ModuleProgress"> | string
+    userId?: StringWithAggregatesFilter<"ModuleProgress"> | string
+    moduleId?: StringWithAggregatesFilter<"ModuleProgress"> | string
+    isCompleted?: BoolWithAggregatesFilter<"ModuleProgress"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ModuleProgress"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ModuleProgress"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name?: string | null
@@ -10505,6 +13222,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     accounts?: AccountCreateNestedManyWithoutUserInput
+    topicProgress?: TopicProgressCreateNestedManyWithoutUserInput
+    moduleProgress?: ModuleProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -10517,6 +13236,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    topicProgress?: TopicProgressUncheckedCreateNestedManyWithoutUserInput
+    moduleProgress?: ModuleProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -10529,6 +13250,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUpdateManyWithoutUserNestedInput
+    topicProgress?: TopicProgressUpdateManyWithoutUserNestedInput
+    moduleProgress?: ModuleProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -10541,6 +13264,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    topicProgress?: TopicProgressUncheckedUpdateManyWithoutUserNestedInput
+    moduleProgress?: ModuleProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -10806,6 +13531,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutModulesInput
     topics?: TopicCreateNestedManyWithoutModuleInput
+    studentProgress?: ModuleProgressCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleUncheckedCreateInput = {
@@ -10818,6 +13544,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     topics?: TopicUncheckedCreateNestedManyWithoutModuleInput
+    studentProgress?: ModuleProgressUncheckedCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleUpdateInput = {
@@ -10830,6 +13557,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutModulesNestedInput
     topics?: TopicUpdateManyWithoutModuleNestedInput
+    studentProgress?: ModuleProgressUpdateManyWithoutModuleNestedInput
   }
 
   export type ModuleUncheckedUpdateInput = {
@@ -10842,6 +13570,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUncheckedUpdateManyWithoutModuleNestedInput
+    studentProgress?: ModuleProgressUncheckedUpdateManyWithoutModuleNestedInput
   }
 
   export type ModuleCreateManyInput = {
@@ -10891,6 +13620,7 @@ export namespace Prisma {
     module: ModuleCreateNestedOneWithoutTopicsInput
     quizQuestions?: QuizQuestionCreateNestedManyWithoutTopicInput
     fileMaterials?: FileMaterialCreateNestedManyWithoutTopicInput
+    studentProgress?: TopicProgressCreateNestedManyWithoutTopicInput
   }
 
   export type TopicUncheckedCreateInput = {
@@ -10908,6 +13638,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     quizQuestions?: QuizQuestionUncheckedCreateNestedManyWithoutTopicInput
     fileMaterials?: FileMaterialUncheckedCreateNestedManyWithoutTopicInput
+    studentProgress?: TopicProgressUncheckedCreateNestedManyWithoutTopicInput
   }
 
   export type TopicUpdateInput = {
@@ -10925,6 +13656,7 @@ export namespace Prisma {
     module?: ModuleUpdateOneRequiredWithoutTopicsNestedInput
     quizQuestions?: QuizQuestionUpdateManyWithoutTopicNestedInput
     fileMaterials?: FileMaterialUpdateManyWithoutTopicNestedInput
+    studentProgress?: TopicProgressUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicUncheckedUpdateInput = {
@@ -10942,6 +13674,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutTopicNestedInput
     fileMaterials?: FileMaterialUncheckedUpdateManyWithoutTopicNestedInput
+    studentProgress?: TopicProgressUncheckedUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicCreateManyInput = {
@@ -11119,6 +13852,135 @@ export namespace Prisma {
     explanation?: StringFieldUpdateOperationsInput | string
   }
 
+  export type TopicProgressCreateInput = {
+    id?: string
+    isCompleted?: boolean
+    quizScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTopicProgressInput
+    topic: TopicCreateNestedOneWithoutStudentProgressInput
+  }
+
+  export type TopicProgressUncheckedCreateInput = {
+    id?: string
+    userId: string
+    topicId: string
+    isCompleted?: boolean
+    quizScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TopicProgressUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    quizScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTopicProgressNestedInput
+    topic?: TopicUpdateOneRequiredWithoutStudentProgressNestedInput
+  }
+
+  export type TopicProgressUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    topicId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    quizScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TopicProgressCreateManyInput = {
+    id?: string
+    userId: string
+    topicId: string
+    isCompleted?: boolean
+    quizScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TopicProgressUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    quizScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TopicProgressUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    topicId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    quizScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ModuleProgressCreateInput = {
+    id?: string
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutModuleProgressInput
+    module: ModuleCreateNestedOneWithoutStudentProgressInput
+  }
+
+  export type ModuleProgressUncheckedCreateInput = {
+    id?: string
+    userId: string
+    moduleId: string
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ModuleProgressUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutModuleProgressNestedInput
+    module?: ModuleUpdateOneRequiredWithoutStudentProgressNestedInput
+  }
+
+  export type ModuleProgressUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ModuleProgressCreateManyInput = {
+    id?: string
+    userId: string
+    moduleId: string
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ModuleProgressUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ModuleProgressUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -11184,12 +14046,32 @@ export namespace Prisma {
     none?: AccountWhereInput
   }
 
+  export type TopicProgressListRelationFilter = {
+    every?: TopicProgressWhereInput
+    some?: TopicProgressWhereInput
+    none?: TopicProgressWhereInput
+  }
+
+  export type ModuleProgressListRelationFilter = {
+    every?: ModuleProgressWhereInput
+    some?: ModuleProgressWhereInput
+    none?: ModuleProgressWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type AccountOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TopicProgressOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ModuleProgressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -11716,6 +14598,81 @@ export namespace Prisma {
     correctIndex?: SortOrder
   }
 
+  export type TopicProgressUserIdTopicIdCompoundUniqueInput = {
+    userId: string
+    topicId: string
+  }
+
+  export type TopicProgressCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    topicId?: SortOrder
+    isCompleted?: SortOrder
+    quizScore?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TopicProgressAvgOrderByAggregateInput = {
+    quizScore?: SortOrder
+  }
+
+  export type TopicProgressMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    topicId?: SortOrder
+    isCompleted?: SortOrder
+    quizScore?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TopicProgressMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    topicId?: SortOrder
+    isCompleted?: SortOrder
+    quizScore?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TopicProgressSumOrderByAggregateInput = {
+    quizScore?: SortOrder
+  }
+
+  export type ModuleProgressUserIdModuleIdCompoundUniqueInput = {
+    userId: string
+    moduleId: string
+  }
+
+  export type ModuleProgressCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    moduleId?: SortOrder
+    isCompleted?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ModuleProgressMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    moduleId?: SortOrder
+    isCompleted?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ModuleProgressMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    moduleId?: SortOrder
+    isCompleted?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -11723,11 +14680,39 @@ export namespace Prisma {
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
   }
 
+  export type TopicProgressCreateNestedManyWithoutUserInput = {
+    create?: XOR<TopicProgressCreateWithoutUserInput, TopicProgressUncheckedCreateWithoutUserInput> | TopicProgressCreateWithoutUserInput[] | TopicProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TopicProgressCreateOrConnectWithoutUserInput | TopicProgressCreateOrConnectWithoutUserInput[]
+    createMany?: TopicProgressCreateManyUserInputEnvelope
+    connect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+  }
+
+  export type ModuleProgressCreateNestedManyWithoutUserInput = {
+    create?: XOR<ModuleProgressCreateWithoutUserInput, ModuleProgressUncheckedCreateWithoutUserInput> | ModuleProgressCreateWithoutUserInput[] | ModuleProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ModuleProgressCreateOrConnectWithoutUserInput | ModuleProgressCreateOrConnectWithoutUserInput[]
+    createMany?: ModuleProgressCreateManyUserInputEnvelope
+    connect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
     createMany?: AccountCreateManyUserInputEnvelope
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+  }
+
+  export type TopicProgressUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TopicProgressCreateWithoutUserInput, TopicProgressUncheckedCreateWithoutUserInput> | TopicProgressCreateWithoutUserInput[] | TopicProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TopicProgressCreateOrConnectWithoutUserInput | TopicProgressCreateOrConnectWithoutUserInput[]
+    createMany?: TopicProgressCreateManyUserInputEnvelope
+    connect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+  }
+
+  export type ModuleProgressUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ModuleProgressCreateWithoutUserInput, ModuleProgressUncheckedCreateWithoutUserInput> | ModuleProgressCreateWithoutUserInput[] | ModuleProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ModuleProgressCreateOrConnectWithoutUserInput | ModuleProgressCreateOrConnectWithoutUserInput[]
+    createMany?: ModuleProgressCreateManyUserInputEnvelope
+    connect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -11764,6 +14749,34 @@ export namespace Prisma {
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
   }
 
+  export type TopicProgressUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TopicProgressCreateWithoutUserInput, TopicProgressUncheckedCreateWithoutUserInput> | TopicProgressCreateWithoutUserInput[] | TopicProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TopicProgressCreateOrConnectWithoutUserInput | TopicProgressCreateOrConnectWithoutUserInput[]
+    upsert?: TopicProgressUpsertWithWhereUniqueWithoutUserInput | TopicProgressUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TopicProgressCreateManyUserInputEnvelope
+    set?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    disconnect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    delete?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    connect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    update?: TopicProgressUpdateWithWhereUniqueWithoutUserInput | TopicProgressUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TopicProgressUpdateManyWithWhereWithoutUserInput | TopicProgressUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TopicProgressScalarWhereInput | TopicProgressScalarWhereInput[]
+  }
+
+  export type ModuleProgressUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ModuleProgressCreateWithoutUserInput, ModuleProgressUncheckedCreateWithoutUserInput> | ModuleProgressCreateWithoutUserInput[] | ModuleProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ModuleProgressCreateOrConnectWithoutUserInput | ModuleProgressCreateOrConnectWithoutUserInput[]
+    upsert?: ModuleProgressUpsertWithWhereUniqueWithoutUserInput | ModuleProgressUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ModuleProgressCreateManyUserInputEnvelope
+    set?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    disconnect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    delete?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    connect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    update?: ModuleProgressUpdateWithWhereUniqueWithoutUserInput | ModuleProgressUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ModuleProgressUpdateManyWithWhereWithoutUserInput | ModuleProgressUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ModuleProgressScalarWhereInput | ModuleProgressScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -11776,6 +14789,34 @@ export namespace Prisma {
     update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
+  }
+
+  export type TopicProgressUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TopicProgressCreateWithoutUserInput, TopicProgressUncheckedCreateWithoutUserInput> | TopicProgressCreateWithoutUserInput[] | TopicProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TopicProgressCreateOrConnectWithoutUserInput | TopicProgressCreateOrConnectWithoutUserInput[]
+    upsert?: TopicProgressUpsertWithWhereUniqueWithoutUserInput | TopicProgressUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TopicProgressCreateManyUserInputEnvelope
+    set?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    disconnect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    delete?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    connect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    update?: TopicProgressUpdateWithWhereUniqueWithoutUserInput | TopicProgressUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TopicProgressUpdateManyWithWhereWithoutUserInput | TopicProgressUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TopicProgressScalarWhereInput | TopicProgressScalarWhereInput[]
+  }
+
+  export type ModuleProgressUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ModuleProgressCreateWithoutUserInput, ModuleProgressUncheckedCreateWithoutUserInput> | ModuleProgressCreateWithoutUserInput[] | ModuleProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ModuleProgressCreateOrConnectWithoutUserInput | ModuleProgressCreateOrConnectWithoutUserInput[]
+    upsert?: ModuleProgressUpsertWithWhereUniqueWithoutUserInput | ModuleProgressUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ModuleProgressCreateManyUserInputEnvelope
+    set?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    disconnect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    delete?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    connect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    update?: ModuleProgressUpdateWithWhereUniqueWithoutUserInput | ModuleProgressUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ModuleProgressUpdateManyWithWhereWithoutUserInput | ModuleProgressUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ModuleProgressScalarWhereInput | ModuleProgressScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -11863,11 +14904,25 @@ export namespace Prisma {
     connect?: TopicWhereUniqueInput | TopicWhereUniqueInput[]
   }
 
+  export type ModuleProgressCreateNestedManyWithoutModuleInput = {
+    create?: XOR<ModuleProgressCreateWithoutModuleInput, ModuleProgressUncheckedCreateWithoutModuleInput> | ModuleProgressCreateWithoutModuleInput[] | ModuleProgressUncheckedCreateWithoutModuleInput[]
+    connectOrCreate?: ModuleProgressCreateOrConnectWithoutModuleInput | ModuleProgressCreateOrConnectWithoutModuleInput[]
+    createMany?: ModuleProgressCreateManyModuleInputEnvelope
+    connect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+  }
+
   export type TopicUncheckedCreateNestedManyWithoutModuleInput = {
     create?: XOR<TopicCreateWithoutModuleInput, TopicUncheckedCreateWithoutModuleInput> | TopicCreateWithoutModuleInput[] | TopicUncheckedCreateWithoutModuleInput[]
     connectOrCreate?: TopicCreateOrConnectWithoutModuleInput | TopicCreateOrConnectWithoutModuleInput[]
     createMany?: TopicCreateManyModuleInputEnvelope
     connect?: TopicWhereUniqueInput | TopicWhereUniqueInput[]
+  }
+
+  export type ModuleProgressUncheckedCreateNestedManyWithoutModuleInput = {
+    create?: XOR<ModuleProgressCreateWithoutModuleInput, ModuleProgressUncheckedCreateWithoutModuleInput> | ModuleProgressCreateWithoutModuleInput[] | ModuleProgressUncheckedCreateWithoutModuleInput[]
+    connectOrCreate?: ModuleProgressCreateOrConnectWithoutModuleInput | ModuleProgressCreateOrConnectWithoutModuleInput[]
+    createMany?: ModuleProgressCreateManyModuleInputEnvelope
+    connect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -11896,6 +14951,20 @@ export namespace Prisma {
     deleteMany?: TopicScalarWhereInput | TopicScalarWhereInput[]
   }
 
+  export type ModuleProgressUpdateManyWithoutModuleNestedInput = {
+    create?: XOR<ModuleProgressCreateWithoutModuleInput, ModuleProgressUncheckedCreateWithoutModuleInput> | ModuleProgressCreateWithoutModuleInput[] | ModuleProgressUncheckedCreateWithoutModuleInput[]
+    connectOrCreate?: ModuleProgressCreateOrConnectWithoutModuleInput | ModuleProgressCreateOrConnectWithoutModuleInput[]
+    upsert?: ModuleProgressUpsertWithWhereUniqueWithoutModuleInput | ModuleProgressUpsertWithWhereUniqueWithoutModuleInput[]
+    createMany?: ModuleProgressCreateManyModuleInputEnvelope
+    set?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    disconnect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    delete?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    connect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    update?: ModuleProgressUpdateWithWhereUniqueWithoutModuleInput | ModuleProgressUpdateWithWhereUniqueWithoutModuleInput[]
+    updateMany?: ModuleProgressUpdateManyWithWhereWithoutModuleInput | ModuleProgressUpdateManyWithWhereWithoutModuleInput[]
+    deleteMany?: ModuleProgressScalarWhereInput | ModuleProgressScalarWhereInput[]
+  }
+
   export type TopicUncheckedUpdateManyWithoutModuleNestedInput = {
     create?: XOR<TopicCreateWithoutModuleInput, TopicUncheckedCreateWithoutModuleInput> | TopicCreateWithoutModuleInput[] | TopicUncheckedCreateWithoutModuleInput[]
     connectOrCreate?: TopicCreateOrConnectWithoutModuleInput | TopicCreateOrConnectWithoutModuleInput[]
@@ -11908,6 +14977,20 @@ export namespace Prisma {
     update?: TopicUpdateWithWhereUniqueWithoutModuleInput | TopicUpdateWithWhereUniqueWithoutModuleInput[]
     updateMany?: TopicUpdateManyWithWhereWithoutModuleInput | TopicUpdateManyWithWhereWithoutModuleInput[]
     deleteMany?: TopicScalarWhereInput | TopicScalarWhereInput[]
+  }
+
+  export type ModuleProgressUncheckedUpdateManyWithoutModuleNestedInput = {
+    create?: XOR<ModuleProgressCreateWithoutModuleInput, ModuleProgressUncheckedCreateWithoutModuleInput> | ModuleProgressCreateWithoutModuleInput[] | ModuleProgressUncheckedCreateWithoutModuleInput[]
+    connectOrCreate?: ModuleProgressCreateOrConnectWithoutModuleInput | ModuleProgressCreateOrConnectWithoutModuleInput[]
+    upsert?: ModuleProgressUpsertWithWhereUniqueWithoutModuleInput | ModuleProgressUpsertWithWhereUniqueWithoutModuleInput[]
+    createMany?: ModuleProgressCreateManyModuleInputEnvelope
+    set?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    disconnect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    delete?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    connect?: ModuleProgressWhereUniqueInput | ModuleProgressWhereUniqueInput[]
+    update?: ModuleProgressUpdateWithWhereUniqueWithoutModuleInput | ModuleProgressUpdateWithWhereUniqueWithoutModuleInput[]
+    updateMany?: ModuleProgressUpdateManyWithWhereWithoutModuleInput | ModuleProgressUpdateManyWithWhereWithoutModuleInput[]
+    deleteMany?: ModuleProgressScalarWhereInput | ModuleProgressScalarWhereInput[]
   }
 
   export type ModuleCreateNestedOneWithoutTopicsInput = {
@@ -11930,6 +15013,13 @@ export namespace Prisma {
     connect?: FileMaterialWhereUniqueInput | FileMaterialWhereUniqueInput[]
   }
 
+  export type TopicProgressCreateNestedManyWithoutTopicInput = {
+    create?: XOR<TopicProgressCreateWithoutTopicInput, TopicProgressUncheckedCreateWithoutTopicInput> | TopicProgressCreateWithoutTopicInput[] | TopicProgressUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: TopicProgressCreateOrConnectWithoutTopicInput | TopicProgressCreateOrConnectWithoutTopicInput[]
+    createMany?: TopicProgressCreateManyTopicInputEnvelope
+    connect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+  }
+
   export type QuizQuestionUncheckedCreateNestedManyWithoutTopicInput = {
     create?: XOR<QuizQuestionCreateWithoutTopicInput, QuizQuestionUncheckedCreateWithoutTopicInput> | QuizQuestionCreateWithoutTopicInput[] | QuizQuestionUncheckedCreateWithoutTopicInput[]
     connectOrCreate?: QuizQuestionCreateOrConnectWithoutTopicInput | QuizQuestionCreateOrConnectWithoutTopicInput[]
@@ -11942,6 +15032,13 @@ export namespace Prisma {
     connectOrCreate?: FileMaterialCreateOrConnectWithoutTopicInput | FileMaterialCreateOrConnectWithoutTopicInput[]
     createMany?: FileMaterialCreateManyTopicInputEnvelope
     connect?: FileMaterialWhereUniqueInput | FileMaterialWhereUniqueInput[]
+  }
+
+  export type TopicProgressUncheckedCreateNestedManyWithoutTopicInput = {
+    create?: XOR<TopicProgressCreateWithoutTopicInput, TopicProgressUncheckedCreateWithoutTopicInput> | TopicProgressCreateWithoutTopicInput[] | TopicProgressUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: TopicProgressCreateOrConnectWithoutTopicInput | TopicProgressCreateOrConnectWithoutTopicInput[]
+    createMany?: TopicProgressCreateManyTopicInputEnvelope
+    connect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
   }
 
   export type ModuleUpdateOneRequiredWithoutTopicsNestedInput = {
@@ -11980,6 +15077,20 @@ export namespace Prisma {
     deleteMany?: FileMaterialScalarWhereInput | FileMaterialScalarWhereInput[]
   }
 
+  export type TopicProgressUpdateManyWithoutTopicNestedInput = {
+    create?: XOR<TopicProgressCreateWithoutTopicInput, TopicProgressUncheckedCreateWithoutTopicInput> | TopicProgressCreateWithoutTopicInput[] | TopicProgressUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: TopicProgressCreateOrConnectWithoutTopicInput | TopicProgressCreateOrConnectWithoutTopicInput[]
+    upsert?: TopicProgressUpsertWithWhereUniqueWithoutTopicInput | TopicProgressUpsertWithWhereUniqueWithoutTopicInput[]
+    createMany?: TopicProgressCreateManyTopicInputEnvelope
+    set?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    disconnect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    delete?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    connect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    update?: TopicProgressUpdateWithWhereUniqueWithoutTopicInput | TopicProgressUpdateWithWhereUniqueWithoutTopicInput[]
+    updateMany?: TopicProgressUpdateManyWithWhereWithoutTopicInput | TopicProgressUpdateManyWithWhereWithoutTopicInput[]
+    deleteMany?: TopicProgressScalarWhereInput | TopicProgressScalarWhereInput[]
+  }
+
   export type QuizQuestionUncheckedUpdateManyWithoutTopicNestedInput = {
     create?: XOR<QuizQuestionCreateWithoutTopicInput, QuizQuestionUncheckedCreateWithoutTopicInput> | QuizQuestionCreateWithoutTopicInput[] | QuizQuestionUncheckedCreateWithoutTopicInput[]
     connectOrCreate?: QuizQuestionCreateOrConnectWithoutTopicInput | QuizQuestionCreateOrConnectWithoutTopicInput[]
@@ -12006,6 +15117,20 @@ export namespace Prisma {
     update?: FileMaterialUpdateWithWhereUniqueWithoutTopicInput | FileMaterialUpdateWithWhereUniqueWithoutTopicInput[]
     updateMany?: FileMaterialUpdateManyWithWhereWithoutTopicInput | FileMaterialUpdateManyWithWhereWithoutTopicInput[]
     deleteMany?: FileMaterialScalarWhereInput | FileMaterialScalarWhereInput[]
+  }
+
+  export type TopicProgressUncheckedUpdateManyWithoutTopicNestedInput = {
+    create?: XOR<TopicProgressCreateWithoutTopicInput, TopicProgressUncheckedCreateWithoutTopicInput> | TopicProgressCreateWithoutTopicInput[] | TopicProgressUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: TopicProgressCreateOrConnectWithoutTopicInput | TopicProgressCreateOrConnectWithoutTopicInput[]
+    upsert?: TopicProgressUpsertWithWhereUniqueWithoutTopicInput | TopicProgressUpsertWithWhereUniqueWithoutTopicInput[]
+    createMany?: TopicProgressCreateManyTopicInputEnvelope
+    set?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    disconnect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    delete?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    connect?: TopicProgressWhereUniqueInput | TopicProgressWhereUniqueInput[]
+    update?: TopicProgressUpdateWithWhereUniqueWithoutTopicInput | TopicProgressUpdateWithWhereUniqueWithoutTopicInput[]
+    updateMany?: TopicProgressUpdateManyWithWhereWithoutTopicInput | TopicProgressUpdateManyWithWhereWithoutTopicInput[]
+    deleteMany?: TopicProgressScalarWhereInput | TopicProgressScalarWhereInput[]
   }
 
   export type TopicCreateNestedOneWithoutFileMaterialsInput = {
@@ -12043,6 +15168,62 @@ export namespace Prisma {
     upsert?: TopicUpsertWithoutQuizQuestionsInput
     connect?: TopicWhereUniqueInput
     update?: XOR<XOR<TopicUpdateToOneWithWhereWithoutQuizQuestionsInput, TopicUpdateWithoutQuizQuestionsInput>, TopicUncheckedUpdateWithoutQuizQuestionsInput>
+  }
+
+  export type UserCreateNestedOneWithoutTopicProgressInput = {
+    create?: XOR<UserCreateWithoutTopicProgressInput, UserUncheckedCreateWithoutTopicProgressInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTopicProgressInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TopicCreateNestedOneWithoutStudentProgressInput = {
+    create?: XOR<TopicCreateWithoutStudentProgressInput, TopicUncheckedCreateWithoutStudentProgressInput>
+    connectOrCreate?: TopicCreateOrConnectWithoutStudentProgressInput
+    connect?: TopicWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutTopicProgressNestedInput = {
+    create?: XOR<UserCreateWithoutTopicProgressInput, UserUncheckedCreateWithoutTopicProgressInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTopicProgressInput
+    upsert?: UserUpsertWithoutTopicProgressInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTopicProgressInput, UserUpdateWithoutTopicProgressInput>, UserUncheckedUpdateWithoutTopicProgressInput>
+  }
+
+  export type TopicUpdateOneRequiredWithoutStudentProgressNestedInput = {
+    create?: XOR<TopicCreateWithoutStudentProgressInput, TopicUncheckedCreateWithoutStudentProgressInput>
+    connectOrCreate?: TopicCreateOrConnectWithoutStudentProgressInput
+    upsert?: TopicUpsertWithoutStudentProgressInput
+    connect?: TopicWhereUniqueInput
+    update?: XOR<XOR<TopicUpdateToOneWithWhereWithoutStudentProgressInput, TopicUpdateWithoutStudentProgressInput>, TopicUncheckedUpdateWithoutStudentProgressInput>
+  }
+
+  export type UserCreateNestedOneWithoutModuleProgressInput = {
+    create?: XOR<UserCreateWithoutModuleProgressInput, UserUncheckedCreateWithoutModuleProgressInput>
+    connectOrCreate?: UserCreateOrConnectWithoutModuleProgressInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ModuleCreateNestedOneWithoutStudentProgressInput = {
+    create?: XOR<ModuleCreateWithoutStudentProgressInput, ModuleUncheckedCreateWithoutStudentProgressInput>
+    connectOrCreate?: ModuleCreateOrConnectWithoutStudentProgressInput
+    connect?: ModuleWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutModuleProgressNestedInput = {
+    create?: XOR<UserCreateWithoutModuleProgressInput, UserUncheckedCreateWithoutModuleProgressInput>
+    connectOrCreate?: UserCreateOrConnectWithoutModuleProgressInput
+    upsert?: UserUpsertWithoutModuleProgressInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutModuleProgressInput, UserUpdateWithoutModuleProgressInput>, UserUncheckedUpdateWithoutModuleProgressInput>
+  }
+
+  export type ModuleUpdateOneRequiredWithoutStudentProgressNestedInput = {
+    create?: XOR<ModuleCreateWithoutStudentProgressInput, ModuleUncheckedCreateWithoutStudentProgressInput>
+    connectOrCreate?: ModuleCreateOrConnectWithoutStudentProgressInput
+    upsert?: ModuleUpsertWithoutStudentProgressInput
+    connect?: ModuleWhereUniqueInput
+    update?: XOR<XOR<ModuleUpdateToOneWithWhereWithoutStudentProgressInput, ModuleUpdateWithoutStudentProgressInput>, ModuleUncheckedUpdateWithoutStudentProgressInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -12303,6 +15484,60 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TopicProgressCreateWithoutUserInput = {
+    id?: string
+    isCompleted?: boolean
+    quizScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    topic: TopicCreateNestedOneWithoutStudentProgressInput
+  }
+
+  export type TopicProgressUncheckedCreateWithoutUserInput = {
+    id?: string
+    topicId: string
+    isCompleted?: boolean
+    quizScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TopicProgressCreateOrConnectWithoutUserInput = {
+    where: TopicProgressWhereUniqueInput
+    create: XOR<TopicProgressCreateWithoutUserInput, TopicProgressUncheckedCreateWithoutUserInput>
+  }
+
+  export type TopicProgressCreateManyUserInputEnvelope = {
+    data: TopicProgressCreateManyUserInput | TopicProgressCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ModuleProgressCreateWithoutUserInput = {
+    id?: string
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    module: ModuleCreateNestedOneWithoutStudentProgressInput
+  }
+
+  export type ModuleProgressUncheckedCreateWithoutUserInput = {
+    id?: string
+    moduleId: string
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ModuleProgressCreateOrConnectWithoutUserInput = {
+    where: ModuleProgressWhereUniqueInput
+    create: XOR<ModuleProgressCreateWithoutUserInput, ModuleProgressUncheckedCreateWithoutUserInput>
+  }
+
+  export type ModuleProgressCreateManyUserInputEnvelope = {
+    data: ModuleProgressCreateManyUserInput | ModuleProgressCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
     where: AccountWhereUniqueInput
     update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
@@ -12338,6 +15573,63 @@ export namespace Prisma {
     session_state?: StringNullableFilter<"Account"> | string | null
   }
 
+  export type TopicProgressUpsertWithWhereUniqueWithoutUserInput = {
+    where: TopicProgressWhereUniqueInput
+    update: XOR<TopicProgressUpdateWithoutUserInput, TopicProgressUncheckedUpdateWithoutUserInput>
+    create: XOR<TopicProgressCreateWithoutUserInput, TopicProgressUncheckedCreateWithoutUserInput>
+  }
+
+  export type TopicProgressUpdateWithWhereUniqueWithoutUserInput = {
+    where: TopicProgressWhereUniqueInput
+    data: XOR<TopicProgressUpdateWithoutUserInput, TopicProgressUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TopicProgressUpdateManyWithWhereWithoutUserInput = {
+    where: TopicProgressScalarWhereInput
+    data: XOR<TopicProgressUpdateManyMutationInput, TopicProgressUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TopicProgressScalarWhereInput = {
+    AND?: TopicProgressScalarWhereInput | TopicProgressScalarWhereInput[]
+    OR?: TopicProgressScalarWhereInput[]
+    NOT?: TopicProgressScalarWhereInput | TopicProgressScalarWhereInput[]
+    id?: StringFilter<"TopicProgress"> | string
+    userId?: StringFilter<"TopicProgress"> | string
+    topicId?: StringFilter<"TopicProgress"> | string
+    isCompleted?: BoolFilter<"TopicProgress"> | boolean
+    quizScore?: IntNullableFilter<"TopicProgress"> | number | null
+    createdAt?: DateTimeFilter<"TopicProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"TopicProgress"> | Date | string
+  }
+
+  export type ModuleProgressUpsertWithWhereUniqueWithoutUserInput = {
+    where: ModuleProgressWhereUniqueInput
+    update: XOR<ModuleProgressUpdateWithoutUserInput, ModuleProgressUncheckedUpdateWithoutUserInput>
+    create: XOR<ModuleProgressCreateWithoutUserInput, ModuleProgressUncheckedCreateWithoutUserInput>
+  }
+
+  export type ModuleProgressUpdateWithWhereUniqueWithoutUserInput = {
+    where: ModuleProgressWhereUniqueInput
+    data: XOR<ModuleProgressUpdateWithoutUserInput, ModuleProgressUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ModuleProgressUpdateManyWithWhereWithoutUserInput = {
+    where: ModuleProgressScalarWhereInput
+    data: XOR<ModuleProgressUpdateManyMutationInput, ModuleProgressUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ModuleProgressScalarWhereInput = {
+    AND?: ModuleProgressScalarWhereInput | ModuleProgressScalarWhereInput[]
+    OR?: ModuleProgressScalarWhereInput[]
+    NOT?: ModuleProgressScalarWhereInput | ModuleProgressScalarWhereInput[]
+    id?: StringFilter<"ModuleProgress"> | string
+    userId?: StringFilter<"ModuleProgress"> | string
+    moduleId?: StringFilter<"ModuleProgress"> | string
+    isCompleted?: BoolFilter<"ModuleProgress"> | boolean
+    createdAt?: DateTimeFilter<"ModuleProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"ModuleProgress"> | Date | string
+  }
+
   export type UserCreateWithoutAccountsInput = {
     id?: string
     name?: string | null
@@ -12347,6 +15639,8 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt?: Date | string
     updatedAt?: Date | string
+    topicProgress?: TopicProgressCreateNestedManyWithoutUserInput
+    moduleProgress?: ModuleProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -12358,6 +15652,8 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt?: Date | string
     updatedAt?: Date | string
+    topicProgress?: TopicProgressUncheckedCreateNestedManyWithoutUserInput
+    moduleProgress?: ModuleProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -12385,6 +15681,8 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topicProgress?: TopicProgressUpdateManyWithoutUserNestedInput
+    moduleProgress?: ModuleProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -12396,6 +15694,8 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topicProgress?: TopicProgressUncheckedUpdateManyWithoutUserNestedInput
+    moduleProgress?: ModuleProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ModuleCreateWithoutSubjectInput = {
@@ -12407,6 +15707,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     topics?: TopicCreateNestedManyWithoutModuleInput
+    studentProgress?: ModuleProgressCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleUncheckedCreateWithoutSubjectInput = {
@@ -12418,6 +15719,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     topics?: TopicUncheckedCreateNestedManyWithoutModuleInput
+    studentProgress?: ModuleProgressUncheckedCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleCreateOrConnectWithoutSubjectInput = {
@@ -12509,6 +15811,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     quizQuestions?: QuizQuestionCreateNestedManyWithoutTopicInput
     fileMaterials?: FileMaterialCreateNestedManyWithoutTopicInput
+    studentProgress?: TopicProgressCreateNestedManyWithoutTopicInput
   }
 
   export type TopicUncheckedCreateWithoutModuleInput = {
@@ -12525,6 +15828,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     quizQuestions?: QuizQuestionUncheckedCreateNestedManyWithoutTopicInput
     fileMaterials?: FileMaterialUncheckedCreateNestedManyWithoutTopicInput
+    studentProgress?: TopicProgressUncheckedCreateNestedManyWithoutTopicInput
   }
 
   export type TopicCreateOrConnectWithoutModuleInput = {
@@ -12534,6 +15838,32 @@ export namespace Prisma {
 
   export type TopicCreateManyModuleInputEnvelope = {
     data: TopicCreateManyModuleInput | TopicCreateManyModuleInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ModuleProgressCreateWithoutModuleInput = {
+    id?: string
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutModuleProgressInput
+  }
+
+  export type ModuleProgressUncheckedCreateWithoutModuleInput = {
+    id?: string
+    userId: string
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ModuleProgressCreateOrConnectWithoutModuleInput = {
+    where: ModuleProgressWhereUniqueInput
+    create: XOR<ModuleProgressCreateWithoutModuleInput, ModuleProgressUncheckedCreateWithoutModuleInput>
+  }
+
+  export type ModuleProgressCreateManyModuleInputEnvelope = {
+    data: ModuleProgressCreateManyModuleInput | ModuleProgressCreateManyModuleInput[]
     skipDuplicates?: boolean
   }
 
@@ -12612,6 +15942,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Topic"> | Date | string
   }
 
+  export type ModuleProgressUpsertWithWhereUniqueWithoutModuleInput = {
+    where: ModuleProgressWhereUniqueInput
+    update: XOR<ModuleProgressUpdateWithoutModuleInput, ModuleProgressUncheckedUpdateWithoutModuleInput>
+    create: XOR<ModuleProgressCreateWithoutModuleInput, ModuleProgressUncheckedCreateWithoutModuleInput>
+  }
+
+  export type ModuleProgressUpdateWithWhereUniqueWithoutModuleInput = {
+    where: ModuleProgressWhereUniqueInput
+    data: XOR<ModuleProgressUpdateWithoutModuleInput, ModuleProgressUncheckedUpdateWithoutModuleInput>
+  }
+
+  export type ModuleProgressUpdateManyWithWhereWithoutModuleInput = {
+    where: ModuleProgressScalarWhereInput
+    data: XOR<ModuleProgressUpdateManyMutationInput, ModuleProgressUncheckedUpdateManyWithoutModuleInput>
+  }
+
   export type ModuleCreateWithoutTopicsInput = {
     id?: string
     order: number
@@ -12621,6 +15967,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutModulesInput
+    studentProgress?: ModuleProgressCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleUncheckedCreateWithoutTopicsInput = {
@@ -12632,6 +15979,7 @@ export namespace Prisma {
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    studentProgress?: ModuleProgressUncheckedCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleCreateOrConnectWithoutTopicsInput = {
@@ -12693,6 +16041,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TopicProgressCreateWithoutTopicInput = {
+    id?: string
+    isCompleted?: boolean
+    quizScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTopicProgressInput
+  }
+
+  export type TopicProgressUncheckedCreateWithoutTopicInput = {
+    id?: string
+    userId: string
+    isCompleted?: boolean
+    quizScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TopicProgressCreateOrConnectWithoutTopicInput = {
+    where: TopicProgressWhereUniqueInput
+    create: XOR<TopicProgressCreateWithoutTopicInput, TopicProgressUncheckedCreateWithoutTopicInput>
+  }
+
+  export type TopicProgressCreateManyTopicInputEnvelope = {
+    data: TopicProgressCreateManyTopicInput | TopicProgressCreateManyTopicInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ModuleUpsertWithoutTopicsInput = {
     update: XOR<ModuleUpdateWithoutTopicsInput, ModuleUncheckedUpdateWithoutTopicsInput>
     create: XOR<ModuleCreateWithoutTopicsInput, ModuleUncheckedCreateWithoutTopicsInput>
@@ -12713,6 +16089,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutModulesNestedInput
+    studentProgress?: ModuleProgressUpdateManyWithoutModuleNestedInput
   }
 
   export type ModuleUncheckedUpdateWithoutTopicsInput = {
@@ -12724,6 +16101,7 @@ export namespace Prisma {
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentProgress?: ModuleProgressUncheckedUpdateManyWithoutModuleNestedInput
   }
 
   export type QuizQuestionUpsertWithWhereUniqueWithoutTopicInput = {
@@ -12783,6 +16161,22 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FileMaterial"> | Date | string
   }
 
+  export type TopicProgressUpsertWithWhereUniqueWithoutTopicInput = {
+    where: TopicProgressWhereUniqueInput
+    update: XOR<TopicProgressUpdateWithoutTopicInput, TopicProgressUncheckedUpdateWithoutTopicInput>
+    create: XOR<TopicProgressCreateWithoutTopicInput, TopicProgressUncheckedCreateWithoutTopicInput>
+  }
+
+  export type TopicProgressUpdateWithWhereUniqueWithoutTopicInput = {
+    where: TopicProgressWhereUniqueInput
+    data: XOR<TopicProgressUpdateWithoutTopicInput, TopicProgressUncheckedUpdateWithoutTopicInput>
+  }
+
+  export type TopicProgressUpdateManyWithWhereWithoutTopicInput = {
+    where: TopicProgressScalarWhereInput
+    data: XOR<TopicProgressUpdateManyMutationInput, TopicProgressUncheckedUpdateManyWithoutTopicInput>
+  }
+
   export type TopicCreateWithoutFileMaterialsInput = {
     id?: string
     order: number
@@ -12797,6 +16191,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     module: ModuleCreateNestedOneWithoutTopicsInput
     quizQuestions?: QuizQuestionCreateNestedManyWithoutTopicInput
+    studentProgress?: TopicProgressCreateNestedManyWithoutTopicInput
   }
 
   export type TopicUncheckedCreateWithoutFileMaterialsInput = {
@@ -12813,6 +16208,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     quizQuestions?: QuizQuestionUncheckedCreateNestedManyWithoutTopicInput
+    studentProgress?: TopicProgressUncheckedCreateNestedManyWithoutTopicInput
   }
 
   export type TopicCreateOrConnectWithoutFileMaterialsInput = {
@@ -12845,6 +16241,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     module?: ModuleUpdateOneRequiredWithoutTopicsNestedInput
     quizQuestions?: QuizQuestionUpdateManyWithoutTopicNestedInput
+    studentProgress?: TopicProgressUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicUncheckedUpdateWithoutFileMaterialsInput = {
@@ -12861,6 +16258,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutTopicNestedInput
+    studentProgress?: TopicProgressUncheckedUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicCreateWithoutQuizQuestionsInput = {
@@ -12877,6 +16275,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     module: ModuleCreateNestedOneWithoutTopicsInput
     fileMaterials?: FileMaterialCreateNestedManyWithoutTopicInput
+    studentProgress?: TopicProgressCreateNestedManyWithoutTopicInput
   }
 
   export type TopicUncheckedCreateWithoutQuizQuestionsInput = {
@@ -12893,6 +16292,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     fileMaterials?: FileMaterialUncheckedCreateNestedManyWithoutTopicInput
+    studentProgress?: TopicProgressUncheckedCreateNestedManyWithoutTopicInput
   }
 
   export type TopicCreateOrConnectWithoutQuizQuestionsInput = {
@@ -12925,6 +16325,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     module?: ModuleUpdateOneRequiredWithoutTopicsNestedInput
     fileMaterials?: FileMaterialUpdateManyWithoutTopicNestedInput
+    studentProgress?: TopicProgressUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicUncheckedUpdateWithoutQuizQuestionsInput = {
@@ -12941,6 +16342,291 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fileMaterials?: FileMaterialUncheckedUpdateManyWithoutTopicNestedInput
+    studentProgress?: TopicProgressUncheckedUpdateManyWithoutTopicNestedInput
+  }
+
+  export type UserCreateWithoutTopicProgressInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    moduleProgress?: ModuleProgressCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTopicProgressInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    moduleProgress?: ModuleProgressUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTopicProgressInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTopicProgressInput, UserUncheckedCreateWithoutTopicProgressInput>
+  }
+
+  export type TopicCreateWithoutStudentProgressInput = {
+    id?: string
+    order: number
+    title: string
+    type: string
+    durationMinutes?: number
+    videoId?: string | null
+    ebookContent?: string | null
+    simulationUrl?: string | null
+    assignmentDescription?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    module: ModuleCreateNestedOneWithoutTopicsInput
+    quizQuestions?: QuizQuestionCreateNestedManyWithoutTopicInput
+    fileMaterials?: FileMaterialCreateNestedManyWithoutTopicInput
+  }
+
+  export type TopicUncheckedCreateWithoutStudentProgressInput = {
+    id?: string
+    moduleId: string
+    order: number
+    title: string
+    type: string
+    durationMinutes?: number
+    videoId?: string | null
+    ebookContent?: string | null
+    simulationUrl?: string | null
+    assignmentDescription?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    quizQuestions?: QuizQuestionUncheckedCreateNestedManyWithoutTopicInput
+    fileMaterials?: FileMaterialUncheckedCreateNestedManyWithoutTopicInput
+  }
+
+  export type TopicCreateOrConnectWithoutStudentProgressInput = {
+    where: TopicWhereUniqueInput
+    create: XOR<TopicCreateWithoutStudentProgressInput, TopicUncheckedCreateWithoutStudentProgressInput>
+  }
+
+  export type UserUpsertWithoutTopicProgressInput = {
+    update: XOR<UserUpdateWithoutTopicProgressInput, UserUncheckedUpdateWithoutTopicProgressInput>
+    create: XOR<UserCreateWithoutTopicProgressInput, UserUncheckedCreateWithoutTopicProgressInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTopicProgressInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTopicProgressInput, UserUncheckedUpdateWithoutTopicProgressInput>
+  }
+
+  export type UserUpdateWithoutTopicProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    moduleProgress?: ModuleProgressUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTopicProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    moduleProgress?: ModuleProgressUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type TopicUpsertWithoutStudentProgressInput = {
+    update: XOR<TopicUpdateWithoutStudentProgressInput, TopicUncheckedUpdateWithoutStudentProgressInput>
+    create: XOR<TopicCreateWithoutStudentProgressInput, TopicUncheckedCreateWithoutStudentProgressInput>
+    where?: TopicWhereInput
+  }
+
+  export type TopicUpdateToOneWithWhereWithoutStudentProgressInput = {
+    where?: TopicWhereInput
+    data: XOR<TopicUpdateWithoutStudentProgressInput, TopicUncheckedUpdateWithoutStudentProgressInput>
+  }
+
+  export type TopicUpdateWithoutStudentProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    durationMinutes?: IntFieldUpdateOperationsInput | number
+    videoId?: NullableStringFieldUpdateOperationsInput | string | null
+    ebookContent?: NullableStringFieldUpdateOperationsInput | string | null
+    simulationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    assignmentDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    module?: ModuleUpdateOneRequiredWithoutTopicsNestedInput
+    quizQuestions?: QuizQuestionUpdateManyWithoutTopicNestedInput
+    fileMaterials?: FileMaterialUpdateManyWithoutTopicNestedInput
+  }
+
+  export type TopicUncheckedUpdateWithoutStudentProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    durationMinutes?: IntFieldUpdateOperationsInput | number
+    videoId?: NullableStringFieldUpdateOperationsInput | string | null
+    ebookContent?: NullableStringFieldUpdateOperationsInput | string | null
+    simulationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    assignmentDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutTopicNestedInput
+    fileMaterials?: FileMaterialUncheckedUpdateManyWithoutTopicNestedInput
+  }
+
+  export type UserCreateWithoutModuleProgressInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    topicProgress?: TopicProgressCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutModuleProgressInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    topicProgress?: TopicProgressUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutModuleProgressInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutModuleProgressInput, UserUncheckedCreateWithoutModuleProgressInput>
+  }
+
+  export type ModuleCreateWithoutStudentProgressInput = {
+    id?: string
+    order: number
+    title: string
+    description: string
+    isLocked?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutModulesInput
+    topics?: TopicCreateNestedManyWithoutModuleInput
+  }
+
+  export type ModuleUncheckedCreateWithoutStudentProgressInput = {
+    id?: string
+    subjectId: string
+    order: number
+    title: string
+    description: string
+    isLocked?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    topics?: TopicUncheckedCreateNestedManyWithoutModuleInput
+  }
+
+  export type ModuleCreateOrConnectWithoutStudentProgressInput = {
+    where: ModuleWhereUniqueInput
+    create: XOR<ModuleCreateWithoutStudentProgressInput, ModuleUncheckedCreateWithoutStudentProgressInput>
+  }
+
+  export type UserUpsertWithoutModuleProgressInput = {
+    update: XOR<UserUpdateWithoutModuleProgressInput, UserUncheckedUpdateWithoutModuleProgressInput>
+    create: XOR<UserCreateWithoutModuleProgressInput, UserUncheckedCreateWithoutModuleProgressInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutModuleProgressInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutModuleProgressInput, UserUncheckedUpdateWithoutModuleProgressInput>
+  }
+
+  export type UserUpdateWithoutModuleProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    topicProgress?: TopicProgressUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutModuleProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    topicProgress?: TopicProgressUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ModuleUpsertWithoutStudentProgressInput = {
+    update: XOR<ModuleUpdateWithoutStudentProgressInput, ModuleUncheckedUpdateWithoutStudentProgressInput>
+    create: XOR<ModuleCreateWithoutStudentProgressInput, ModuleUncheckedCreateWithoutStudentProgressInput>
+    where?: ModuleWhereInput
+  }
+
+  export type ModuleUpdateToOneWithWhereWithoutStudentProgressInput = {
+    where?: ModuleWhereInput
+    data: XOR<ModuleUpdateWithoutStudentProgressInput, ModuleUncheckedUpdateWithoutStudentProgressInput>
+  }
+
+  export type ModuleUpdateWithoutStudentProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    isLocked?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutModulesNestedInput
+    topics?: TopicUpdateManyWithoutModuleNestedInput
+  }
+
+  export type ModuleUncheckedUpdateWithoutStudentProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    isLocked?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: TopicUncheckedUpdateManyWithoutModuleNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -12956,6 +16642,23 @@ export namespace Prisma {
     scope?: string | null
     id_token?: string | null
     session_state?: string | null
+  }
+
+  export type TopicProgressCreateManyUserInput = {
+    id?: string
+    topicId: string
+    isCompleted?: boolean
+    quizScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ModuleProgressCreateManyUserInput = {
+    id?: string
+    moduleId: string
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -13003,6 +16706,57 @@ export namespace Prisma {
     session_state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type TopicProgressUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    quizScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topic?: TopicUpdateOneRequiredWithoutStudentProgressNestedInput
+  }
+
+  export type TopicProgressUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    topicId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    quizScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TopicProgressUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    topicId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    quizScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ModuleProgressUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    module?: ModuleUpdateOneRequiredWithoutStudentProgressNestedInput
+  }
+
+  export type ModuleProgressUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ModuleProgressUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ModuleCreateManySubjectInput = {
     id?: string
     order: number
@@ -13022,6 +16776,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUpdateManyWithoutModuleNestedInput
+    studentProgress?: ModuleProgressUpdateManyWithoutModuleNestedInput
   }
 
   export type ModuleUncheckedUpdateWithoutSubjectInput = {
@@ -13033,6 +16788,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUncheckedUpdateManyWithoutModuleNestedInput
+    studentProgress?: ModuleProgressUncheckedUpdateManyWithoutModuleNestedInput
   }
 
   export type ModuleUncheckedUpdateManyWithoutSubjectInput = {
@@ -13059,6 +16815,14 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ModuleProgressCreateManyModuleInput = {
+    id?: string
+    userId: string
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type TopicUpdateWithoutModuleInput = {
     id?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
@@ -13073,6 +16837,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quizQuestions?: QuizQuestionUpdateManyWithoutTopicNestedInput
     fileMaterials?: FileMaterialUpdateManyWithoutTopicNestedInput
+    studentProgress?: TopicProgressUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicUncheckedUpdateWithoutModuleInput = {
@@ -13089,6 +16854,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutTopicNestedInput
     fileMaterials?: FileMaterialUncheckedUpdateManyWithoutTopicNestedInput
+    studentProgress?: TopicProgressUncheckedUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicUncheckedUpdateManyWithoutModuleInput = {
@@ -13101,6 +16867,30 @@ export namespace Prisma {
     ebookContent?: NullableStringFieldUpdateOperationsInput | string | null
     simulationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ModuleProgressUpdateWithoutModuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutModuleProgressNestedInput
+  }
+
+  export type ModuleProgressUncheckedUpdateWithoutModuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ModuleProgressUncheckedUpdateManyWithoutModuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13120,6 +16910,15 @@ export namespace Prisma {
     mimeType?: string | null
     fileName: string
     createdAt?: Date | string
+  }
+
+  export type TopicProgressCreateManyTopicInput = {
+    id?: string
+    userId: string
+    isCompleted?: boolean
+    quizScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type QuizQuestionUpdateWithoutTopicInput = {
@@ -13171,6 +16970,33 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     fileName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TopicProgressUpdateWithoutTopicInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    quizScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTopicProgressNestedInput
+  }
+
+  export type TopicProgressUncheckedUpdateWithoutTopicInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    quizScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TopicProgressUncheckedUpdateManyWithoutTopicInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    quizScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

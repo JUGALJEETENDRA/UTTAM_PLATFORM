@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getModulesWithCustomTopics } from "@/lib/course";
+import ProgressBar from "@/components/ui/ProgressBar";
 import { prisma } from "@/lib/prisma";
 
 interface SubjectPageProps {
@@ -20,7 +21,21 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
 
   if (!subject) notFound();
 
+  let dbUser = null;
+  if (user) {
+    dbUser = await prisma.user.findUnique({
+      where: { email: user.email || "" },
+      include: { topicProgress: true, moduleProgress: true },
+    });
+  }
+
+  const completedTopicIds = dbUser?.topicProgress?.filter((t) => t.isCompleted).map((t) => t.topicId) || [];
+  const completedModuleIds = dbUser?.moduleProgress?.filter((m) => m.isCompleted).map((m) => m.moduleId) || [];
+
   const modules = await getModulesWithCustomTopics();
+  const totalTopicsCount = modules.reduce((acc, m) => acc + m.topics.length, 0);
+  const completedInCourse = completedTopicIds.length;
+  const subjectProgress = totalTopicsCount > 0 ? Math.round((completedInCourse / totalTopicsCount) * 100) : 0;
 
   return (
     <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
@@ -62,6 +77,27 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
         </div>
       </header>
 
+      {/* Progress Overview */}
+      <section className="grid grid-cols-3 gap-4">
+        {[
+          { id: "ov-topics", label: "Topics Done", value: `${completedInCourse}`, total: `/${totalTopicsCount}` },
+          { id: "ov-modules", label: "Modules Done", value: `${completedModuleIds.length}`, total: `/${modules.length}` },
+          { id: "ov-completion", label: "Completion", value: `${subjectProgress}`, total: "%" },
+        ].map((item) => (
+          <div key={item.id} id={item.id} className="bg-white border border-gray-100 shadow-sm rounded-2xl p-5 text-center">
+            <p className="text-3xl font-bold text-red-600">
+              {item.value}
+              <span className="text-lg text-gray-400 font-normal">{item.total}</span>
+            </p>
+            <p className="text-sm text-gray-500 mt-1 font-medium">{item.label}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* Overall progress bar */}
+      <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-5">
+        <ProgressBar value={subjectProgress} showLabel height="h-3" id="subject-overview-progress" colorClass="bg-red-500" />
+      </div>
 
       {/* Modules List */}
       <section>

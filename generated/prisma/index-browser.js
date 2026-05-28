@@ -207,6 +207,25 @@ exports.Prisma.QuizQuestionScalarFieldEnum = {
   explanation: 'explanation'
 };
 
+exports.Prisma.TopicProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  topicId: 'topicId',
+  isCompleted: 'isCompleted',
+  quizScore: 'quizScore',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ModuleProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  moduleId: 'moduleId',
+  isCompleted: 'isCompleted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -234,7 +253,9 @@ exports.Prisma.ModelName = {
   Module: 'Module',
   Topic: 'Topic',
   FileMaterial: 'FileMaterial',
-  QuizQuestion: 'QuizQuestion'
+  QuizQuestion: 'QuizQuestion',
+  TopicProgress: 'TopicProgress',
+  ModuleProgress: 'ModuleProgress'
 };
 
 /**

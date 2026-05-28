@@ -1,6 +1,6 @@
 import Sidebar from "@/components/layout/Sidebar";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export default async function AppLayout({
   children,
