@@ -29,17 +29,6 @@ export default async function TopicPage({ params }: TopicPageProps) {
   const topic = mod.topics.find((t) => t.id === topicId);
   if (!topic) notFound();
 
-  let dbUser = null;
-  if (user) {
-    dbUser = await prisma.user.findUnique({
-      where: { email: user.email || "" },
-      include: { topicProgress: true },
-    });
-  }
-
-  const tp = dbUser?.topicProgress?.find((t) => t.topicId === topic.id);
-  const isCompleted = tp?.isCompleted ?? false;
-
   const topicIndex = mod.topics.findIndex((t) => t.id === topicId);
   const nextTopic = mod.topics[topicIndex + 1] ?? null;
   const prevTopic = mod.topics[topicIndex - 1] ?? null;
@@ -67,13 +56,8 @@ export default async function TopicPage({ params }: TopicPageProps) {
       <header className="bg-white border border-gray-100 shadow-sm rounded-3xl p-7 flex items-start justify-between gap-4 flex-wrap">
         <div>
           <div className="flex items-center gap-3 mb-3">
-            <TopicTypeBadge type={topic.type} />
+            <TopicTypeBadge type={topic.type as any} />
             <span className="text-xs text-gray-500">⏱ {topic.durationMinutes} min</span>
-            {isCompleted && (
-              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-50 text-green-600 border border-green-200">
-                ✅ Completed
-              </span>
-            )}
           </div>
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{topic.title}</h1>
         </div>
@@ -194,7 +178,6 @@ export default async function TopicPage({ params }: TopicPageProps) {
         subjectId={subject.id}
         moduleId={mod.id}
         topicId={topic.id}
-        isCompleted={isCompleted}
         prevTopicId={prevTopic?.id || null}
         nextTopicId={nextTopic?.id || null}
       />

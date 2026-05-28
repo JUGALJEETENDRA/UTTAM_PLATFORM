@@ -8,7 +8,6 @@ interface TopicFooterNavProps {
   subjectId: string;
   moduleId: string;
   topicId: string;
-  isCompleted: boolean;
   prevTopicId: string | null;
   nextTopicId: string | null;
 }
@@ -17,7 +16,6 @@ export default function TopicFooterNav({
   subjectId,
   moduleId,
   topicId,
-  isCompleted,
   prevTopicId,
   nextTopicId,
 }: TopicFooterNavProps) {
