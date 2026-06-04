@@ -158,7 +158,7 @@ export default function StudentDashboard({ params }: { params: Promise<{ subject
                 </h3>
                 <p className="text-zinc-500 text-sm mt-0.5">Explore syllabus concepts with videos & reference notes.</p>
               </div>
-              <Link href={`/student/subjects/subject?subjectId=${subjectId}/modules`} className="text-sm font-semibold text-primary hover:underline flex items-center">
+              <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`} className="text-sm font-semibold text-primary hover:underline flex items-center">
                 All Modules <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
@@ -240,7 +240,7 @@ export default function StudentDashboard({ params }: { params: Promise<{ subject
                 </h3>
                 <p className="text-zinc-500 text-sm mt-0.5">Test your concept understanding with quizzes.</p>
               </div>
-              <Link href={`/student/subjects/subject?subjectId=${subjectId}/quizzes`} className="text-sm font-semibold text-primary hover:underline flex items-center">
+              <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`} className="text-sm font-semibold text-primary hover:underline flex items-center">
                 All Quizzes <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
@@ -316,7 +316,7 @@ export default function StudentDashboard({ params }: { params: Promise<{ subject
                 </h3>
                 <p className="text-zinc-500 text-sm mt-0.5">Review key terms and concepts interactively.</p>
               </div>
-              <Link href={`/student/subjects/subject?subjectId=${subjectId}/flashcards`} className="text-sm font-semibold text-primary hover:underline flex items-center">
+              <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`} className="text-sm font-semibold text-primary hover:underline flex items-center">
                 All Decks <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </div>

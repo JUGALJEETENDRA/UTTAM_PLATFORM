@@ -39,7 +39,7 @@ export default function FlashcardDeckPage() {
       {/* Header */}
       <div className="bg-white border-b border-zinc-200 py-4">
         <div className="container mx-auto px-4 max-w-5xl">
-          <Link href={`/student/subjects/subject?subjectId=${subjectId}/flashcards`} className="text-xs font-semibold text-zinc-500 hover:text-primary flex items-center mb-2 transition-colors w-fit">
+          <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`} className="text-xs font-semibold text-zinc-500 hover:text-primary flex items-center mb-2 transition-colors w-fit">
             <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back to Flashcards
           </Link>
           <div className="flex items-center justify-between">

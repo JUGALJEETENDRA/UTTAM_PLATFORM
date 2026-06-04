@@ -73,7 +73,7 @@ export default function ModuleDetailPage() {
   const completedResources: string[] = []; // Not tracked strictly in GAS schema currently, assume empty
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <Link href={`/student/subjects/subject?subjectId=${subjectId}/modules`} className="flex items-center text-sm font-medium text-zinc-500 hover:text-primary mb-6 transition-colors">
+      <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`} className="flex items-center text-sm font-medium text-zinc-500 hover:text-primary mb-6 transition-colors">
         <ChevronLeft className="w-4 h-4 mr-1" /> Back to Modules
       </Link>
       <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-8 mb-8">

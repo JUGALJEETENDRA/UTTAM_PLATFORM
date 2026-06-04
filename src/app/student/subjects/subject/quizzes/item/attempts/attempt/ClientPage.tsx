@@ -37,7 +37,7 @@ export default function AttemptReviewPage() {
   const answersData = attempt.answersData || [];
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <Link href={`/student/subjects/subject?subjectId=${subjectId}/quizzes`} className="flex items-center text-sm font-medium text-zinc-500 hover:text-primary mb-6 transition-colors">
+      <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`} className="flex items-center text-sm font-medium text-zinc-500 hover:text-primary mb-6 transition-colors">
         <ChevronLeft className="w-4 h-4 mr-1" /> Back to Quizzes
       </Link>
       <Card className="border-zinc-200 shadow-xl overflow-hidden mb-8">

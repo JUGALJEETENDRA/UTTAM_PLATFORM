@@ -46,7 +46,7 @@ export function QuizContainer({ quiz }: QuizContainerProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <Link href={subjectId ? `/student/subjects/subject?subjectId=${subjectId}/quizzes` : "/student/dashboard"} className="flex items-center text-sm font-medium text-zinc-500 hover:text-primary mb-6 transition-colors">
+      <Link href={subjectId ? `/student/subjects/subject/quizzes?subjectId=${subjectId}` : "/student/dashboard"} className="flex items-center text-sm font-medium text-zinc-500 hover:text-primary mb-6 transition-colors">
         <ChevronLeft className="w-4 h-4 mr-1" /> Back to Quizzes
       </Link>
 
