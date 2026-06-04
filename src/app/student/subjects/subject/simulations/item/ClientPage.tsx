@@ -37,7 +37,6 @@ export default function SimulationDetailPage() {
     title: simulation.title,
     description: simulation.description,
     difficulty: simulation.difficulty || 'medium',
-    xpReward: simulation.xpReward || 0,
     estimatedTime: simulation.estimatedTime || 15,
     learningOutcome: simulation.learningOutcome || "Apply concepts practically.",
     frontendUrl: simulation.frontendUrl,

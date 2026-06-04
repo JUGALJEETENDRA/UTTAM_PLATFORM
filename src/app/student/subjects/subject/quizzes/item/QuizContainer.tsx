@@ -23,7 +23,6 @@ interface QuizContainerProps {
     title: string;
     difficulty: string;
     timeLimit: number;
-    xpReward: number;
     questions: Question[];
     module: {
       moduleNo: number;
@@ -34,7 +33,7 @@ interface QuizContainerProps {
 export function QuizContainer({ quiz }: QuizContainerProps) {
   const [started, setStarted] = useState(false);
   const searchParams = useSearchParams();
-  const subjectId = params?.subjectId as string;
+  const subjectId = searchParams.get('subjectId') || '';
 
   if (started) {
     return (
@@ -54,7 +53,6 @@ export function QuizContainer({ quiz }: QuizContainerProps) {
         <CardHeader className="bg-zinc-50 border-b border-zinc-100 pb-6">
           <div className="flex justify-between items-start mb-4">
             <Badge className="bg-primary/10 text-primary border-none">Module {quiz.module.moduleNo}</Badge>
-            <Badge variant="outline" className="text-amber-600 border-amber-200 bg-amber-50">{quiz.xpReward} XP Reward</Badge>
           </div>
           <CardTitle className="text-3xl font-bold text-zinc-900">{quiz.title}</CardTitle>
           <div className="flex flex-wrap gap-4 mt-4 text-sm text-zinc-600 font-medium">
@@ -71,7 +69,7 @@ export function QuizContainer({ quiz }: QuizContainerProps) {
           <ul className="space-y-3 text-zinc-600 mb-6 list-disc list-inside">
             <li>Ensure you have a stable internet connection before starting.</li>
             <li>Once started, the timer cannot be paused.</li>
-            <li>You must score at least 70% to earn the XP reward and badge.</li>
+            <li>You must score at least 70% to pass the quiz.</li>
             <li>Avoid refreshing the page during the quiz.</li>
           </ul>
 

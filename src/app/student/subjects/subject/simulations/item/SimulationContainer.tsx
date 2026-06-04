@@ -14,7 +14,6 @@ interface SimulationContainerProps {
     title: string;
     description: string;
     difficulty: string;
-    xpReward: number;
     estimatedTime: string | null;
     learningOutcome: string | null;
     frontendUrl?: string | null;
@@ -26,9 +25,8 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
   const [started, setStarted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const [xpEarned, setXpEarned] = useState(0);
   const searchParams = useSearchParams();
-  const subjectId = params?.subjectId as string;
+  const subjectId = searchParams.get('subjectId') || '';
 
   // State for Sim 1 (Usability Audit Simulator)
   const [foundFlaws, setFoundFlaws] = useState<string[]>([]);
@@ -65,7 +63,6 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
 
       const data = await response.json();
       if (data.success) {
-        setXpEarned(data.xpEarned);
         setCompleted(true);
       } else {
         alert(data.error || "Failed to submit simulation");
@@ -95,8 +92,8 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
           <CardContent className="px-8 py-4 space-y-4">
             <div className="bg-zinc-50 p-6 rounded-xl border border-zinc-100 flex items-center justify-center space-x-4">
               <div className="text-center">
-                <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">XP Awarded</span>
-                <span className="text-3xl font-bold text-amber-600">+{xpEarned} XP</span>
+                <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">Simulation Finished</span>
+                <span className="text-3xl font-bold text-green-600">Great Job!</span>
               </div>
             </div>
           </CardContent>
@@ -346,7 +343,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                 <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
                 <div className="text-sm">
                   <p className="font-semibold mb-1">Interactive Sandbox Environment</p>
-                  <p>In this sandbox, you are tasked with aligning page components to ensure ideal scanning. When ready, submit the final build to claim XP.</p>
+                  <p>In this sandbox, you are tasked with aligning page components to ensure ideal scanning. When ready, submit the final build to complete the simulation.</p>
                 </div>
               </div>
             </CardContent>
@@ -398,10 +395,6 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                 <div>
                   <div className="text-sm text-zinc-500 mb-1">Difficulty Level</div>
                   <Badge className="bg-zinc-100 text-zinc-800 hover:bg-zinc-200">{simulation.difficulty}</Badge>
-                </div>
-                <div>
-                  <div className="text-sm text-zinc-500 mb-1">XP Reward</div>
-                  <Badge variant="outline" className="text-amber-600 border-amber-200 bg-amber-50">+{simulation.xpReward} XP</Badge>
                 </div>
               </div>
             </CardContent>

@@ -54,7 +54,6 @@ export default function QuizDetailPage() {
     title: quiz.title,
     difficulty: quiz.difficulty || 'medium',
     timeLimit: quiz.timeLimit || 15,
-    xpReward: quiz.xpReward || 0,
     questions: displayQuestions.map((q: any) => ({
       id: q.id,
       questionText: q.questionText,

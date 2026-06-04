@@ -42,7 +42,6 @@ export default function SubtopicSimulationPage() {
     title: subtopic.title,
     description: subtopic.description,
     difficulty: "Intermediate",
-    xpReward: 100,
     estimatedTime: "15 mins",
     learningOutcome: subtopic.learningOutcome || "Practice and apply the principles from the learning materials in an interactive environment.",
     frontendUrl: subtopic.simulationUrl,
