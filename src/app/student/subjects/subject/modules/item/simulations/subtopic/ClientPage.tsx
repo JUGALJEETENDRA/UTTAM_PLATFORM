@@ -2,15 +2,13 @@
 import { useEffect, useState, use } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 import { SimulationContainer } from "@/app/student/subjects/subject/simulations/item/SimulationContainer";
-import { useSession } from "@/components/AuthProvider";
 import { redirect, useSearchParams } from "next/navigation";
 export default function SubtopicSimulationPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
   const moduleId = searchParams.get('id') || '';
   const subtopicId = searchParams.get('subtopicId') || '';
-  const { data: session, status } = useSession();
-  const [moduleData, setModuleData] = useState<any>(null);
+    const [moduleData, setModuleData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (status === "unauthenticated") redirect("/sign-in");

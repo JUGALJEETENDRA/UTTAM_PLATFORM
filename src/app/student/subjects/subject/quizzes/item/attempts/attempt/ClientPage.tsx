@@ -4,15 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, XCircle, ChevronLeft, Trophy } from "lucide-react";
 import { useEffect, useState, use } from "react";
 import { fetchGAS } from "@/lib/apiClient";
-import { useSession } from "@/components/AuthProvider";
 import { redirect, useSearchParams } from "next/navigation";
 export default function AttemptReviewPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
   const quizId = searchParams.get('id') || '';
   const attemptId = searchParams.get('attemptId') || '';
-  const { data: session, status } = useSession();
-  const [attempt, setAttempt] = useState<any>(null);
+    const [attempt, setAttempt] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (status === "unauthenticated") redirect("/sign-in");

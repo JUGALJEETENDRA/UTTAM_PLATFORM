@@ -6,13 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Layers, ArrowLeft } from "lucide-react";
 import { useEffect, useState, use } from "react";
 import { fetchGAS } from "@/lib/apiClient";
-import { useSession } from "@/components/AuthProvider";
 import { redirect, useSearchParams } from "next/navigation";
 export default function FlashcardsListPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
-  const { data: session, status } = useSession();
-  const [flashcardDecks, setFlashcardDecks] = useState<any[]>([]);
+    const [flashcardDecks, setFlashcardDecks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (status === "unauthenticated") redirect("/sign-in");

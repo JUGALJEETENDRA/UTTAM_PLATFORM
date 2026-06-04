@@ -6,13 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, use } from "react";
 import { fetchGAS } from "@/lib/apiClient";
-import { useSession } from "@/components/AuthProvider";
 import { redirect, useSearchParams } from "next/navigation";
 export default function QuizzesPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
-  const { data: session, status } = useSession();
-  const [quizzes, setQuizzes] = useState<any[]>([]);
+    const [quizzes, setQuizzes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (status === "unauthenticated") redirect("/sign-in");

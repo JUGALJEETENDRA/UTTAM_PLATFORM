@@ -13,18 +13,14 @@ import { fetchGAS } from "@/lib/apiClient";
 import { useEffect, useState } from "react";
 
 export default function FacultyDashboardPage() {
-  const { data: session, status } = useSession();
+  const { isAuthenticated, status } = useSession();
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      redirect("/sign-in");
+    if (status !== "loading" && !isAuthenticated) {
+      redirect("/faculty/login");
     } else if (status === "authenticated") {
-      if (session?.user?.role !== "faculty") {
-        // If not faculty, redirect to student dashboard
-        redirect("/student/dashboard");
-      }
 
       const loadData = async () => {
         try {
@@ -39,7 +35,7 @@ export default function FacultyDashboardPage() {
       
       loadData();
     }
-  }, [status, session]);
+  }, [status, isAuthenticated]);
 
   if (status === "loading" || loading) {
     return <div className="p-8 text-center">Loading faculty dashboard...</div>;

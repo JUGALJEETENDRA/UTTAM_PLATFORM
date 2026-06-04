@@ -4,14 +4,12 @@ import { ArrowLeft, Layers } from "lucide-react";
 import { FlashcardViewer } from "@/components/student/FlashcardViewer";
 import { useEffect, useState, use } from "react";
 import { fetchGAS } from "@/lib/apiClient";
-import { useSession } from "@/components/AuthProvider";
 import { redirect, useSearchParams } from "next/navigation";
 export default function FlashcardDeckPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
   const id = searchParams.get('id') || '';
-  const { data: session, status } = useSession();
-  const [deck, setDeck] = useState<any>(null);
+    const [deck, setDeck] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (status === "unauthenticated") redirect("/sign-in");

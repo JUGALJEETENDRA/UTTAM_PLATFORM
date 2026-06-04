@@ -1,115 +1,61 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
-import { fetchGAS } from "@/lib/apiClient";
-import { jwtDecode } from "jwt-decode";
-
-export interface Session {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    image?: string;
-    role: string;
-  };
-}
+import { useRouter } from "next/navigation";
 
 interface AuthContextType {
-  data: Session | null;
+  isAuthenticated: boolean;
   status: "authenticated" | "unauthenticated" | "loading";
-  login: () => void;
+  login: (password: string) => boolean;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  data: null,
-  status: "unauthenticated",
-  login: () => {},
+  isAuthenticated: false,
+  status: "loading",
+  login: () => false,
   logout: () => {},
 });
 
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "missing-client-id-in-env";
-
-const AuthProviderInner = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(null);
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [status, setStatus] = useState<"authenticated" | "unauthenticated" | "loading">("loading");
+  const router = useRouter();
 
   useEffect(() => {
-    // Check local storage for session
-    const storedSession = localStorage.getItem("user_session");
-    if (storedSession) {
-      setSession(JSON.parse(storedSession));
+    const session = localStorage.getItem('faculty_session');
+    if (session === 'authenticated') {
+      setIsAuthenticated(true);
       setStatus("authenticated");
     } else {
+      setIsAuthenticated(false);
       setStatus("unauthenticated");
     }
   }, []);
 
-  const handleLoginSuccess = async (tokenResponse: any) => {
-    setStatus("loading");
-    try {
-      // Decode the JWT if it's a credential response
-      // But we are using useGoogleLogin, which returns access_token. Let's fetch user info.
-      const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-        headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-      });
-      const userInfo = await userInfoResponse.json();
-
-      // Send to GAS to record login
-      const gasUser = await fetchGAS("login", {
-        email: userInfo.email,
-        name: userInfo.name,
-        picture: userInfo.picture,
-      });
-
-      const newSession: Session = {
-        user: {
-          id: gasUser.id || userInfo.sub,
-          name: gasUser.name || userInfo.name,
-          email: gasUser.email || userInfo.email,
-          image: gasUser.image || userInfo.picture,
-          role: gasUser.role || "student",
-        }
-      };
-
-      localStorage.setItem("user_session", JSON.stringify(newSession));
-      setSession(newSession);
+  const login = (password: string) => {
+    const correctPassword = process.env.NEXT_PUBLIC_FACULTY_PASSWORD;
+    if (password === correctPassword) {
+      localStorage.setItem('faculty_session', 'authenticated');
+      setIsAuthenticated(true);
       setStatus("authenticated");
-    } catch (err) {
-      console.error("Login error", err);
-      setStatus("unauthenticated");
+      return true;
     }
+    return false;
   };
 
-  const login = useGoogleLogin({
-    onSuccess: handleLoginSuccess,
-    onError: (error) => console.log('Login Failed:', error)
-  });
-
   const logout = () => {
-    localStorage.removeItem("user_session");
-    setSession(null);
+    localStorage.removeItem('faculty_session');
+    setIsAuthenticated(false);
     setStatus("unauthenticated");
+    router.push("/");
   };
 
   return (
-    <AuthContext.Provider value={{ data: session, status, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, status, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  if (!GOOGLE_CLIENT_ID) {
-    console.warn("NEXT_PUBLIC_GOOGLE_CLIENT_ID is not set");
-  }
-  return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <AuthProviderInner>{children}</AuthProviderInner>
-    </GoogleOAuthProvider>
-  );
-};
-
-// Replace next-auth's useSession hook
 export const useSession = () => useContext(AuthContext);

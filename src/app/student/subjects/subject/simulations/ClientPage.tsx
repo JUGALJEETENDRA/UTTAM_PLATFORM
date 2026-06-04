@@ -4,13 +4,11 @@ import { Gamepad2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, use } from "react";
 import { fetchGAS } from "@/lib/apiClient";
-import { useSession } from "@/components/AuthProvider";
 import { redirect, useSearchParams } from "next/navigation";
 export default function SimulationsPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
-  const { data: session, status } = useSession();
-  const [simulations, setSimulations] = useState<any[]>([]);
+    const [simulations, setSimulations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (status === "unauthenticated") redirect("/sign-in");

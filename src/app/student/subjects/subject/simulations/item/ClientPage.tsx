@@ -2,13 +2,11 @@
 import { useEffect, useState, use } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 import { SimulationContainer } from "./SimulationContainer";
-import { useSession } from "@/components/AuthProvider";
 import { redirect, useSearchParams } from "next/navigation";
 export default function SimulationDetailPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get('id') || '';
-  const { data: session, status } = useSession();
-  const [simulation, setSimulation] = useState<any>(null);
+    const [simulation, setSimulation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (status === "unauthenticated") redirect("/sign-in");

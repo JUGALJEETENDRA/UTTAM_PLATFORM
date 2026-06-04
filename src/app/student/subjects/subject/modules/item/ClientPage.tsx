@@ -10,7 +10,6 @@ import { module1Quizzes } from "@/data/module1QuizData";
 import { module2Quizzes } from "@/data/module2QuizData";
 import { useEffect, useState, use } from "react";
 import { fetchGAS } from "@/lib/apiClient";
-import { useSession } from "@/components/AuthProvider";
 import { redirect, useSearchParams } from "next/navigation";
 function getEmbedUrl(url: string | null | undefined): string | null {
   if (!url) return null;
@@ -47,8 +46,7 @@ export default function ModuleDetailPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get('id') || '';
   const subjectId = searchParams.get('subjectId') || '';
-  const { data: session, status } = useSession();
-  const [moduleData, setModuleData] = useState<any>(null);
+    const [moduleData, setModuleData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (status === "unauthenticated") redirect("/sign-in");

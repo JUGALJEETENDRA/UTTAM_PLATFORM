@@ -11,14 +11,14 @@ import { redirect, useSearchParams } from "next/navigation";
 export default function FacultyAnalyticsPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
-  const { data: session, status } = useSession();
+  const { isAuthenticated, status } = useSession();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (status === "unauthenticated" || (status === "authenticated" && session?.user?.role !== "faculty")) {
-      redirect("/sign-in");
+    if (status !== "loading" && !isAuthenticated) {
+      redirect("/faculty/login");
     }
-    if (status === "authenticated" && session?.user?.role === "faculty") {
+    if (status === "authenticated") {
       const loadAnalytics = async () => {
         try {
           const result = await fetchGAS("getSubjectAnalytics", { subjectId });
@@ -31,7 +31,7 @@ export default function FacultyAnalyticsPage() {
       };
       loadAnalytics();
     }
-  }, [subjectId, status, session]);
+  }, [subjectId, status, isAuthenticated]);
   if (status === "loading" || loading) return <div className="p-8 text-center">Loading analytics...</div>;
   if (!data || !data.subject) return <div className="p-8 text-center text-red-500">Subject analytics not found.</div>;
   const {

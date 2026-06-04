@@ -6,14 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, use } from "react";
 import { fetchGAS } from "@/lib/apiClient";
-import { useSession } from "@/components/AuthProvider";
+
 import { redirect } from "next/navigation";
 
 export default function ModulesPage({ params }: { params: Promise<{ subjectId: string }> }) {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId');
 
-  const { data: session, status } = useSession();
+  
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
