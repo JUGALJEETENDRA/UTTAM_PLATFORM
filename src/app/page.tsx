@@ -135,7 +135,6 @@ export default function LandingPage() {
               <h3 className="font-bold text-xl mb-2 text-zinc-800">Badges</h3>
               <p className="text-zinc-500 text-sm">Unlock special achievements for mastering specific learning topics.</p>
             </div>
-<<<<<<< Updated upstream
             
             <div className="bg-white rounded-2xl p-6 text-center border border-zinc-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
               <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm border border-orange-100">
@@ -145,17 +144,6 @@ export default function LandingPage() {
               <p className="text-zinc-500 text-sm">Maintain a daily study streak to build consistent learning habits.</p>
             </div>
           </div>
-=======
-          ) : (
-            <button 
-              onClick={() => signIn('google', { callbackUrl: '/' })} 
-              className="border border-red-500 text-red-600 bg-white py-2 px-6 rounded-full text-sm font-semibold flex items-center gap-2 hover:bg-red-50 transition shadow-sm"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/></svg>
-              Sign In with Google
-            </button>
-          )}
->>>>>>> Stashed changes
         </div>
       </section>
 
