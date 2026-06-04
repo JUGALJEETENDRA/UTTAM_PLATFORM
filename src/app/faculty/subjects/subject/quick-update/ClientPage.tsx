@@ -16,6 +16,7 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 
 import { useSearchParams } from "next/navigation";
+import { fetchGAS } from "@/lib/apiClient";
 
 interface Subtopic {
   id: string;
@@ -52,18 +53,23 @@ export default function QuickUpdatePage() {
 
   const fetchModules = async () => {
     try {
-      const res = await fetch(`/api/quick-update?subjectId=${subjectId}`);
-      if (res.ok) {
-        const data = await res.json();
+      const data = await fetchGAS("getModules", { subjectId });
+      if (data && !data.error) {
         setModules(data);
         
         // Initialize inputs
         const initialInputs: Record<string, { videoUrl: string; notesUrl: string }> = {};
         data.forEach((mod: Module) => {
-          mod.subtopics.forEach((st: Subtopic) => {
+          mod.subtopics.forEach((st: any) => {
+            let simData: any = {};
+            if (typeof st.simulationData === 'string') {
+              try { simData = JSON.parse(st.simulationData); } catch (e) {}
+            } else if (typeof st.simulationData === 'object') {
+              simData = st.simulationData || {};
+            }
             initialInputs[st.id] = {
-              videoUrl: st.videoUrl || "",
-              notesUrl: st.notesUrl || ""
+              videoUrl: simData.videoUrl || "",
+              notesUrl: simData.notesUrl || ""
             };
           });
         });
@@ -99,23 +105,16 @@ export default function QuickUpdatePage() {
     setSavingStates(prev => ({ ...prev, [subtopicId]: "saving" }));
 
     try {
-      const res = await fetch("/api/quick-update", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          subtopicId,
-          videoUrl: inputs.videoUrl,
-          notesUrl: inputs.notesUrl
-        })
+      const data = await fetchGAS("updateSubtopicLinks", {
+        subtopicId,
+        videoUrl: inputs.videoUrl,
+        notesUrl: inputs.notesUrl
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
+      if (data && data.success) {
         setSavingStates(prev => ({ ...prev, [subtopicId]: "saved" }));
         toast.success("Successfully updated subtopic links!");
         
-        // Update local subtopic values with formatted response from API
         setInputStates(prev => ({
           ...prev,
           [subtopicId]: {
@@ -124,7 +123,6 @@ export default function QuickUpdatePage() {
           }
         }));
 
-        // Keep the checkmark for 3 seconds then return to idle
         setTimeout(() => {
           setSavingStates(prev => {
             if (prev[subtopicId] === "saved") {
@@ -135,7 +133,7 @@ export default function QuickUpdatePage() {
         }, 3000);
       } else {
         setSavingStates(prev => ({ ...prev, [subtopicId]: "idle" }));
-        toast.error(data.error || "Failed to update subtopic");
+        toast.error(data?.error || "Failed to update subtopic");
       }
     } catch (err: any) {
       setSavingStates(prev => ({ ...prev, [subtopicId]: "idle" }));

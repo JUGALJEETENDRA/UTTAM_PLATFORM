@@ -30,7 +30,6 @@ function FacultySubjectLayoutInner({ children }: { children: React.ReactNode }) 
     { name: "Simulations", href: `/faculty/subjects/subject/simulations?subjectId=${subjectId}`, icon: Gamepad2 },
     { name: "Quizzes", href: `/faculty/subjects/subject/quizzes?subjectId=${subjectId}`, icon: Brain },
     { name: "Flashcards", href: `/faculty/subjects/subject/flashcards?subjectId=${subjectId}`, icon: Layers },
-    { name: "Analytics", href: `/faculty/subjects/subject/analytics?subjectId=${subjectId}`, icon: Activity },
     { name: "Live Link Editor", href: `/faculty/subjects/subject/quick-update?subjectId=${subjectId}`, icon: Sparkles },
   ];
 
