@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 import { useSession } from "@/components/AuthProvider";
 import { redirect } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function SubjectSelectionPage() {
   const { status } = useSession();
@@ -35,7 +36,34 @@ export default function SubjectSelectionPage() {
   }, [status]);
 
   if (status === "loading" || loading) {
-    return <div className="p-8 text-center">Loading subjects...</div>;
+    return (
+      <div className="container mx-auto px-4 py-16 max-w-4xl flex-1 flex flex-col justify-center items-center">
+        <div className="text-center mb-12 space-y-3 w-full flex flex-col items-center">
+          <Skeleton className="h-10 w-3/4 max-w-sm rounded-lg" />
+          <Skeleton className="h-4 w-5/6 max-w-md rounded-md mt-4" />
+          <Skeleton className="h-4 w-4/6 max-w-xs rounded-md" />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="border border-zinc-100 h-full overflow-hidden flex flex-col justify-between bg-white shadow-sm">
+              <div className="p-6 space-y-4">
+                <Skeleton className="w-12 h-12 rounded-xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-6 w-3/4 rounded-md" />
+                  <Skeleton className="h-4 w-full rounded-md" />
+                  <Skeleton className="h-4 w-5/6 rounded-md" />
+                </div>
+              </div>
+              <div className="bg-zinc-50 px-6 py-4 border-t border-zinc-100 flex justify-between items-center">
+                <Skeleton className="h-4 w-24 rounded-md" />
+                <Skeleton className="h-4 w-4 rounded-full" />
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -51,7 +79,7 @@ export default function SubjectSelectionPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
         {subjects.map((subject) => (
-          <Link key={subject.id} href={`/student/subjects/${subject.id}`} className="block group">
+          <Link key={subject.id} href={`/student/subjects/subject?subjectId=${subject.id}`} className="block group">
             <Card className="border border-zinc-200 hover:border-primary/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-full cursor-pointer overflow-hidden flex flex-col justify-between bg-white">
               <div className="p-6 space-y-4">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300">

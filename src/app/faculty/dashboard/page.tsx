@@ -98,7 +98,7 @@ export default function FacultyDashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {subjects && subjects.length > 0 ? (
               subjects.map((subject: any) => (
-                <Link key={subject.id} href={`/faculty/subjects/${subject.id}/modules`}>
+                <Link key={subject.id} href={`/faculty/subjects/subject/modules?subjectId=${subject.id}`}>
                   <Card className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer h-full border-zinc-200 relative">
                     <DeleteSubjectButton subjectId={subject.id} />
                     <CardHeader className="pb-2">
