@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Users, BookOpen, Target, Gamepad2, PlusCircle, Activity, HardDrive, GraduationCap, Trophy, Sparkles } from "lucide-react";
 import { CreateSubjectForm } from "@/components/faculty/CreateSubjectForm";
 import { DeleteSubjectButton } from "@/components/faculty/DeleteSubjectButton";
-import { FacultyListCard } from "@/components/faculty/FacultyListModal";
 import { useSession } from "@/components/AuthProvider";
 import { redirect } from "next/navigation";
 import { fetchGAS } from "@/lib/apiClient";
@@ -45,7 +44,7 @@ export default function FacultyDashboardPage() {
     return <div className="p-8 text-center text-red-500">Failed to load dashboard data.</div>;
   }
 
-  const { subjects, totalStudents, facultyMembers, totalSubjects, totalFaculty } = dashboardData;
+  const { subjects, totalSubjects } = dashboardData;
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -57,18 +56,7 @@ export default function FacultyDashboardPage() {
       </div>
  
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="border-zinc-200">
-          <CardContent className="p-6 flex items-center space-x-4">
-            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-zinc-500">Total Students</p>
-              <h3 className="text-2xl font-bold">{totalStudents}</h3>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <Card className="border-zinc-200">
           <CardContent className="p-6 flex items-center space-x-4">
             <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center">
@@ -80,7 +68,6 @@ export default function FacultyDashboardPage() {
             </div>
           </CardContent>
         </Card>
-        <FacultyListCard totalFaculty={totalFaculty} facultyMembers={facultyMembers} />
       </div>
  
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -104,7 +91,6 @@ export default function FacultyDashboardPage() {
                     <CardContent>
                       <div className="flex items-center gap-4 text-sm text-zinc-500">
                         <span className="flex items-center gap-1"><BookOpen className="w-4 h-4" /> {subject._count?.modules || 0} Modules</span>
-                        <span className="flex items-center gap-1"><Users className="w-4 h-4" /> {subject._count?.enrollments || 0} Enrolled</span>
                       </div>
                     </CardContent>
                   </Card>
