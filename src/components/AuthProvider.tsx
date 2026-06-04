@@ -34,8 +34,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const login = (password: string) => {
-    const correctPassword = process.env.NEXT_PUBLIC_FACULTY_PASSWORD?.trim() || "admin123";
-    if (password === correctPassword) {
+    const correctPassword = process.env.NEXT_PUBLIC_FACULTY_PASSWORD?.trim();
+    if (correctPassword && password === correctPassword) {
       localStorage.setItem('faculty_session', 'authenticated');
       setIsAuthenticated(true);
       setStatus("authenticated");
