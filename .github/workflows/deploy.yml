@@ -34,6 +34,7 @@ jobs:
         # We pass the Google Apps Script URL securely from GitHub Secrets
         env:
           NEXT_PUBLIC_GAS_URL: ${{ secrets.NEXT_PUBLIC_GAS_URL }}
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
         run: npm run build
 
       # Add SPA fallback for GitHub Pages dynamic routes

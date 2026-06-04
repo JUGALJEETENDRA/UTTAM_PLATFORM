@@ -29,7 +29,7 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
 });
 
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "missing-client-id-in-env";
 
 const AuthProviderInner = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
