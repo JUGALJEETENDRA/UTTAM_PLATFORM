@@ -1,0 +1,16 @@
+id,question,answer,createdAt,flashcardDeckId
+cmpxsttod0016s5wkka7dxik4,What is the main tradeoff when flattening a deeply nested information architecture?,The tradeoff is between reducing interaction cost (fewer clicks) and increasing cognitive load (too many menu choices).,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttod0017s5wkrg4mmim7,What architecture solution balances interaction cost and cognitive load in large menus?,A Hub-and-Spoke model with progressive disclosure and grouped functional hubs.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttod0018s5wko64md06x,What principle does Hick’s Law relate to in UX design?,Hick’s Law relates to cognitive load and decision-making time.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttod0019s5wkjhswn1y6,What is the best navigation pattern for a multi-step mortgage application?,A flexible sequential wizard with a stepper and auto-save mechanism.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001as5wkezjgbnp1,Why is auto-save important in long forms?,Auto-save prevents data loss and supports safe exploration.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001bs5wkc94xwqa5,What does “Safe Exploration” mean in UX?,It means users can freely navigate and recover from mistakes without losing progress.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001cs5wkf7kxwsc4,"In faceted search, how should logic work within the same category?",OR logic should be used within the same category.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001ds5wkqhookd2h,"In faceted search, how should logic work across different categories?",AND logic should be used across different categories.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001es5wksf57mc3x,What is a polyhierarchical structure?,It allows content to exist in multiple categories simultaneously.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001fs5wk3qnh61xc,Why is polyhierarchy useful in information architecture?,It supports different user mental models and improves findability.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001gs5wksyk3ml84,What does LATCH stand for in content organization?,"Location, Alphabet, Time, Category, and Hierarchy.",2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001hs5wkpd5avowp,Which LATCH principle should be primary for city-based event searches?,Location should be the primary organizational principle.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001is5wkditx7fie,What usability risk is common in matrix structures?,Users can become “lost in space” due to excessive navigation freedom.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001js5wk5bax2fec,How can “lost in space” problems be reduced?,By using breadcrumbs and persistent navigation anchors.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
+cmpxsttoe001ks5wk5qtz0ya6,When is a strict hierarchical structure preferred?,When users must progressively narrow down highly specific categories.,2026-06-03 08:22:53.053,cmpxsttod0015s5wk7ft310sv
