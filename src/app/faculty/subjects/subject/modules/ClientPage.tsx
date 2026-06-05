@@ -438,6 +438,7 @@ export default function ManageModulesPage() {
                             value={st.selectedResourceType || "none"}
                             onChange={(e) => handleSubtopicChange(index, "selectedResourceType", e.target.value)}
                             className="w-full sm:w-1/2 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary mb-4"
+                          >
                             <option value="none">Select resource type...</option>
                             <option value="videoUrl">Video (Hybrid)</option>
                             <option value="notes">Notes (File Upload)</option>

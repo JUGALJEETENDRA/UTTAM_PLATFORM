@@ -44,7 +44,13 @@ export default function QuickUpdatePage() {
   const [searchQuery, setSearchQuery] = useState("");
   
   // Track input values locally for each subtopic to prevent re-rendering the whole page
-  const [inputStates, setInputStates] = useState<Record<string, { videoUrl: string; notesUrl: string; videoLanguages: { language: string; url: string }[] }>>({});
+  const [inputStates, setInputStates] = useState<Record<string, { 
+    videoUrl: string; 
+    notesUrl: string; 
+    videoLanguages: { language: string; url: string }[];
+    audioUrl: string;
+    audioLanguages: { language: string; url: string }[];
+  }>>({});
   const [savingStates, setSavingStates] = useState<Record<string, "idle" | "saving" | "saved">>({});
 
   useEffect(() => {
@@ -70,7 +76,9 @@ export default function QuickUpdatePage() {
             initialInputs[st.id] = {
               videoUrl: st.videoUrl || simData.videoUrl || (st.type === 'videoUrl' ? st.mediaUrl : ""),
               notesUrl: st.notesUrl || simData.notesUrl || (st.type === 'notes' ? st.mediaUrl : ""),
-              videoLanguages: st.videoLanguages || simData.videoLanguages || []
+              videoLanguages: st.videoLanguages || simData.videoLanguages || [],
+              audioUrl: st.audioUrl || simData.audioUrl || (st.type === 'audio' ? st.mediaUrl : ""),
+              audioLanguages: st.audioLanguages || simData.audioLanguages || []
             };
           });
         });
@@ -86,7 +94,7 @@ export default function QuickUpdatePage() {
     }
   };
 
-  const handleInputChange = (subtopicId: string, field: "videoUrl" | "notesUrl" | "videoLanguages", value: string | { language: string; url: string }[]) => {
+  const handleInputChange = (subtopicId: string, field: "videoUrl" | "notesUrl" | "videoLanguages" | "audioUrl" | "audioLanguages", value: string | { language: string; url: string }[]) => {
     setInputStates(prev => ({
       ...prev,
       [subtopicId]: {
@@ -101,23 +109,23 @@ export default function QuickUpdatePage() {
     }
   };
 
-  const handleLanguageChange = (subtopicId: string, index: number, field: "language" | "url", value: string) => {
+  const handleLanguageChange = (subtopicId: string, type: "videoLanguages" | "audioLanguages", index: number, field: "language" | "url", value: string) => {
     setInputStates(prev => {
-      const langs = [...(prev[subtopicId].videoLanguages || [])];
+      const langs = [...(prev[subtopicId][type] || [])];
       langs[index] = { ...langs[index], [field]: value };
-      return { ...prev, [subtopicId]: { ...prev[subtopicId], videoLanguages: langs } };
+      return { ...prev, [subtopicId]: { ...prev[subtopicId], [type]: langs } };
     });
     if (savingStates[subtopicId] === "saved") {
       setSavingStates(prev => ({ ...prev, [subtopicId]: "idle" }));
     }
   };
 
-  const handleAddLanguage = (subtopicId: string) => {
+  const handleAddLanguage = (subtopicId: string, type: "videoLanguages" | "audioLanguages") => {
     setInputStates(prev => ({
       ...prev,
       [subtopicId]: {
         ...prev[subtopicId],
-        videoLanguages: [...(prev[subtopicId].videoLanguages || []), { language: "", url: "" }]
+        [type]: [...(prev[subtopicId][type] || []), { language: "", url: "" }]
       }
     }));
     if (savingStates[subtopicId] === "saved") {
@@ -134,7 +142,9 @@ export default function QuickUpdatePage() {
         subtopicId,
         videoUrl: inputs.videoUrl,
         notesUrl: inputs.notesUrl,
-        videoLanguages: inputs.videoLanguages
+        videoLanguages: inputs.videoLanguages,
+        audioUrl: inputs.audioUrl,
+        audioLanguages: inputs.audioLanguages
       });
 
       if (data && data.success) {
@@ -146,7 +156,9 @@ export default function QuickUpdatePage() {
           [subtopicId]: {
             videoUrl: data.subtopic.videoUrl || "",
             notesUrl: data.subtopic.notesUrl || "",
-            videoLanguages: data.subtopic.videoLanguages || []
+            videoLanguages: data.subtopic.videoLanguages || [],
+            audioUrl: data.subtopic.audioUrl || "",
+            audioLanguages: data.subtopic.audioLanguages || []
           }
         }));
 
@@ -300,14 +312,14 @@ export default function QuickUpdatePage() {
                           {/* Inputs Row */}
                           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                             {/* Video URL Input */}
-                            <div className="md:col-span-5 space-y-1.5">
+                            <div className="md:col-span-6 space-y-1.5">
                               <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5 justify-between w-full">
                                 <div className="flex items-center gap-1.5">
                                   <Play className="w-3.5 h-3.5 text-red-500 fill-red-500/20" />
                                   <span>Video URL (Hybrid)</span>
                                 </div>
                                 <button 
-                                  onClick={() => handleAddLanguage(st.id)}
+                                  onClick={() => handleAddLanguage(st.id, "videoLanguages")}
                                   className="text-[10px] bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-2 py-0.5 rounded font-semibold transition-colors"
                                 >
                                   + Add Language
@@ -328,14 +340,57 @@ export default function QuickUpdatePage() {
                                     type="text" 
                                     placeholder="Lang (e.g. Hindi)" 
                                     value={lang.language} 
-                                    onChange={(e) => handleLanguageChange(st.id, lIndex, "language", e.target.value)}
+                                    onChange={(e) => handleLanguageChange(st.id, "videoLanguages", lIndex, "language", e.target.value)}
                                     className="w-1/3 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all"
                                   />
                                   <input 
                                     type="text" 
                                     placeholder="Hybrid URL..." 
                                     value={lang.url} 
-                                    onChange={(e) => handleLanguageChange(st.id, lIndex, "url", e.target.value)}
+                                    onChange={(e) => handleLanguageChange(st.id, "videoLanguages", lIndex, "url", e.target.value)}
+                                    className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Audio URL Input */}
+                            <div className="md:col-span-6 space-y-1.5">
+                              <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5 justify-between w-full">
+                                <div className="flex items-center gap-1.5">
+                                  <Play className="w-3.5 h-3.5 text-purple-500 fill-purple-500/20" />
+                                  <span>Audio URL (Hybrid)</span>
+                                </div>
+                                <button 
+                                  onClick={() => handleAddLanguage(st.id, "audioLanguages")}
+                                  className="text-[10px] bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-2 py-0.5 rounded font-semibold transition-colors"
+                                >
+                                  + Add Language
+                                </button>
+                              </label>
+                              <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
+                                <input
+                                  type="text"
+                                  placeholder="Paste audio URL..."
+                                  value={inputs.audioUrl || ""}
+                                  onChange={(e) => handleInputChange(st.id, "audioUrl", e.target.value)}
+                                  className="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+                                />
+                                </div>
+                              {(inputs.audioLanguages || []).map((lang, lIndex) => (
+                                <div key={lIndex} className="flex items-center gap-2 mt-2">
+                                  <input 
+                                    type="text" 
+                                    placeholder="Lang (e.g. Hindi)" 
+                                    value={lang.language} 
+                                    onChange={(e) => handleLanguageChange(st.id, "audioLanguages", lIndex, "language", e.target.value)}
+                                    className="w-1/3 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all"
+                                  />
+                                  <input 
+                                    type="text" 
+                                    placeholder="Hybrid URL..." 
+                                    value={lang.url} 
+                                    onChange={(e) => handleLanguageChange(st.id, "audioLanguages", lIndex, "url", e.target.value)}
                                     className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all"
                                   />
                                 </div>
@@ -343,7 +398,7 @@ export default function QuickUpdatePage() {
                             </div>
 
                             {/* Notes URL Input */}
-                            <div className="md:col-span-5 space-y-1.5">
+                            <div className="md:col-span-10 space-y-1.5 mt-2">
                               <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
                                 <FileText className="w-3.5 h-3.5 text-blue-500" />
                                 <span>External Notes URL</span>
