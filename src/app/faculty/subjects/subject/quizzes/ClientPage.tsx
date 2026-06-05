@@ -255,7 +255,7 @@ export default function ManageQuizzesPage() {
     e.preventDefault();
     setLoading(true);
 
-    if (!selectedModuleId || !title || !timeLimit || !xpReward) {
+    if (!selectedModuleId || !title || !timeLimit) {
       toast.error("Please fill in all required fields.");
       setLoading(false);
       return;
@@ -267,6 +267,9 @@ export default function ManageQuizzesPage() {
       setLoading(false);
       return;
     }
+    
+    // Calculate total marks from questions
+    const calculatedTotalMarks = validQuestions.reduce((sum, q) => sum + (parseInt(q.marks) || 1), 0);
 
     try {
       const data = await fetchGAS("saveQuiz", {
@@ -277,7 +280,7 @@ export default function ManageQuizzesPage() {
         title,
         difficulty,
         timeLimit,
-        totalMarks: xpReward, // map xpReward to totalMarks for GAS
+        totalMarks: calculatedTotalMarks, // Send actual total marks instead of xpReward
         documentUrl,
         totalQuestionsToAsk: totalQuestionsToAsk ? parseInt(totalQuestionsToAsk) : null,
         questions: validQuestions
@@ -397,16 +400,6 @@ export default function ManageQuizzesPage() {
                       placeholder="e.g. 15"
                       value={timeLimit}
                       onChange={(e) => setTimeLimit(e.target.value)}
-                      className="w-full px-3 py-2 border border-zinc-300 rounded-lg text-zinc-900 focus:outline-none focus:border-primary"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-zinc-700 mb-1">XP Reward *</label>
-                    <input
-                      type="number"
-                      required
-                      value={xpReward}
-                      onChange={(e) => setXpReward(e.target.value)}
                       className="w-full px-3 py-2 border border-zinc-300 rounded-lg text-zinc-900 focus:outline-none focus:border-primary"
                     />
                   </div>

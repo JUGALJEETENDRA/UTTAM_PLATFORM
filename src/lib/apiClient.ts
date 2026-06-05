@@ -17,7 +17,14 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      throw new Error(`Invalid response from server: ${text.substring(0, 100)}...`);
+    }
+    
     if (data && data.error) {
       throw new Error(data.error);
     }

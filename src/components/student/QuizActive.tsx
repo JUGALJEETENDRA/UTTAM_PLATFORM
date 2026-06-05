@@ -14,6 +14,8 @@ interface Question {
   questionText: string;
   options: string[];
   marks: number;
+  correctAnswer: string;
+  explanation: string;
 }
 
 interface QuizActiveProps {
@@ -37,6 +39,7 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
   const [result, setResult] = useState<{
     success: boolean;
     score: number;
+    maxScore: number;
     totalQuestions: number;
     xpEarned: number;
     unlockedBadge: { name: string; description: string } | null;
@@ -53,17 +56,19 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
 
   // Countdown timer
   useEffect(() => {
-    if (timeLeft <= 0) {
+    if (timeLeft <= 0 && !result) {
       handleSubmit();
       return;
     }
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+      if (timeLeft > 0 && !result) {
+        setTimeLeft((prev) => prev - 1);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, [timeLeft, result]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -95,45 +100,41 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
-    const answersPayload = Object.entries(selectedAnswers).map(([questionId, selectedOption]) => ({
-      questionId,
-      selectedOption,
-    }));
+    let score = 0;
+    const maxScore = quiz.questions.reduce((sum, q) => sum + (Number(q.marks) || 1), 0);
+    
+    const answersData = quiz.questions.map((q) => {
+      const selectedOption = selectedAnswers[q.id] || "";
+      const isCorrect = selectedOption === q.correctAnswer;
+      if (isCorrect) score += (Number(q.marks) || 1);
 
-    // Ensure all questions are represented (even if unanswered)
-    quiz.questions.forEach((q) => {
-      if (!selectedAnswers[q.id]) {
-        answersPayload.push({
-          questionId: q.id,
-          selectedOption: "",
-        });
-      }
+      return {
+        questionId: q.id,
+        selectedOption,
+        isCorrect,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation || null,
+        questionText: q.questionText,
+        options: q.options || [],
+      };
     });
 
-    try {
-      const response = await fetch("/api/quizzes/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          quizId: quiz.id,
-          answers: answersPayload,
-        }),
-      });
+    const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
+    const passed = percentage >= 70;
 
-      const data = await response.json();
-      if (data.success) {
-        setResult(data);
-      } else {
-        alert(data.error || "Failed to submit quiz");
-      }
-    } catch (error) {
-      console.error("Submission error:", error);
-      alert("An error occurred. Please try again.");
-    } finally {
+    // Simulate network delay for UI feedback
+    setTimeout(() => {
+      setResult({
+        success: true,
+        score,
+        maxScore,
+        totalQuestions: quiz.questions.length,
+        xpEarned: 0,
+        unlockedBadge: null,
+        answersData,
+      });
       setIsSubmitting(false);
-    }
+    }, 600);
   };
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
@@ -142,7 +143,7 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
 
   if (result) {
-    const percentage = (result.score / result.totalQuestions) * 100;
+    const percentage = result.maxScore > 0 ? (result.score / result.maxScore) * 100 : 0;
     const passed = percentage >= 70;
 
     return (
@@ -163,44 +164,12 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
           <CardTitle className="text-3xl font-extrabold text-zinc-900">
             {passed ? "Assessment Completed!" : "Keep Practicing!"}
           </CardTitle>
-          <p className="text-zinc-500 mt-2">
+          <p className="text-zinc-500 mt-2 text-lg">
             You scored <span className="font-bold text-zinc-800">{result.score}</span> out of{" "}
-            <span className="font-bold text-zinc-800">{result.totalQuestions}</span> ({Math.round(percentage)}%)
+            <span className="font-bold text-zinc-800">{result.maxScore}</span> ({Math.round(percentage)}%)
           </p>
         </CardHeader>
         <CardContent className="px-8 py-6 space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-100 text-center">
-              <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">XP Awarded</span>
-              <span className="text-2xl font-bold text-amber-600">+{result.xpEarned} XP</span>
-            </div>
-            <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-100 text-center">
-              <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">Passing Score</span>
-              <span className="text-2xl font-bold text-zinc-700">70%</span>
-            </div>
-          </div>
-
-          {result.unlockedBadge && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center space-x-4">
-              <div className="bg-amber-100 text-amber-600 p-2.5 rounded-full">
-                <Trophy className="w-6 h-6" />
-              </div>
-              <div>
-                <Badge className="bg-amber-600 text-white hover:bg-amber-700 border-none mb-1">New Badge Unlocked!</Badge>
-                <h4 className="font-bold text-zinc-800 text-base">{result.unlockedBadge.name}</h4>
-                <p className="text-zinc-600 text-sm mt-0.5">{result.unlockedBadge.description}</p>
-              </div>
-            </div>
-          )}
-
-          {!passed && (
-            <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 flex items-start space-x-3 text-amber-800">
-              <AlertTriangle className="w-5 h-5 mt-0.5 flex-shrink-0" />
-              <p className="text-sm">
-                To earn the <strong>{quiz.xpReward} XP</strong> reward and related badges, you need to score at least <strong>70%</strong>. Review the reading materials and try again!
-              </p>
-            </div>
-          )}
 
           {result.answersData && (
             <div className="mt-8 space-y-6">
@@ -289,32 +258,38 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
           {currentQuestion.questionText}
         </h2>
         <div className="space-y-4">
-          {currentQuestion.options.map((label, index) => {
-            const key = String.fromCharCode(65 + index);
-            const isSelected = selectedAnswers[currentQuestion.id] === key;
-            return (
-              <button
-                key={key}
-                onClick={() => handleSelectOption(key)}
-                className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center space-x-4 ${
-                  isSelected
-                    ? "border-primary bg-primary/5 text-primary font-semibold shadow-sm"
-                    : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 text-zinc-700"
-                }`}
-              >
-                <span
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold border-2 ${
+          {currentQuestion.options && currentQuestion.options.length > 0 ? (
+            currentQuestion.options.map((label, index) => {
+              const key = String.fromCharCode(65 + index);
+              const isSelected = selectedAnswers[currentQuestion.id] === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => handleSelectOption(key)}
+                  className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center space-x-4 ${
                     isSelected
-                      ? "bg-primary text-white border-primary"
-                      : "bg-zinc-100 text-zinc-500 border-zinc-300"
+                      ? "border-primary bg-primary/5 text-primary font-semibold shadow-sm"
+                      : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 text-zinc-700"
                   }`}
                 >
-                  {key}
-                </span>
-                <span className="text-base">{label}</span>
-              </button>
-            );
-          })}
+                  <span
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold border-2 ${
+                      isSelected
+                        ? "bg-primary text-white border-primary"
+                        : "bg-zinc-100 text-zinc-500 border-zinc-300"
+                    }`}
+                  >
+                    {key}
+                  </span>
+                  <span className="text-base">{label}</span>
+                </button>
+              );
+            })
+          ) : (
+            <div className="p-4 text-center text-zinc-500 italic bg-zinc-50 rounded-lg border border-zinc-200">
+              No multiple choice options provided for this question.
+            </div>
+          )}
         </div>
       </CardContent>
       <CardFooter className="bg-zinc-50 border-t border-zinc-100 p-6 flex justify-between">

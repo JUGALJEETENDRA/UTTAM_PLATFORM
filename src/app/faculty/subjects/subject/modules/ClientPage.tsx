@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Plus, Trash2, CheckCircle2, ChevronDown, ChevronUp, Edit3, UploadCloud } from "lucide-react";
+import { BookOpen, Plus, Trash2, CheckCircle2, ChevronDown, ChevronUp, Edit3, UploadCloud, Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { fetchGAS } from "@/lib/apiClient";
+
 interface SubtopicForm {
   id?: string;
   title: string;
@@ -57,6 +58,7 @@ export default function ManageModulesPage() {
   const [loading, setLoading] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [isUploadingSyllabus, setIsUploadingSyllabus] = useState(false);
   useEffect(() => {
     fetchModules();
   }, []);
@@ -217,14 +219,72 @@ export default function ManageModulesPage() {
       setLoading(false);
     }
   };
+  const handleSyllabusUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    setIsUploadingSyllabus(true);
+    const loadingToast = toast.loading("Parsing syllabus PDF...");
+    
+    try {
+      const { parsePdfToModules } = await import("@/lib/pdfParser");
+      const parsedModules = await parsePdfToModules(file);
+      
+      if (parsedModules.length === 0) {
+        toast.error("Could not find any modules in the PDF format.", { id: loadingToast });
+        setIsUploadingSyllabus(false);
+        return;
+      }
+
+      toast.loading(`Creating ${parsedModules.length} modules...`, { id: loadingToast });
+      
+      let successCount = 0;
+      for (const mod of parsedModules) {
+        const payload = {
+          subjectId,
+          moduleNo: mod.moduleNo,
+          title: mod.title,
+          hours: mod.hours,
+          co: mod.co,
+          description: mod.description,
+          subtopics: mod.subtopics
+        };
+        const res = await fetchGAS("saveModule", payload);
+        if (res && res.success) {
+          successCount++;
+        } else {
+          console.error("Failed to create module", mod.title, res);
+        }
+      }
+      
+      toast.success(`Successfully created ${successCount}/${parsedModules.length} modules!`, { id: loadingToast });
+      fetchModules(); // refresh list
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || "Failed to process syllabus", { id: loadingToast });
+    } finally {
+      setIsUploadingSyllabus(false);
+      e.target.value = ''; // reset input
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-zinc-900 flex items-center">
-          <BookOpen className="w-8 h-8 mr-3 text-primary" />
-          Manage Modules & Subtopics
-        </h1>
-        <p className="text-zinc-500 mt-1">Add or edit curriculum modules and define subtopic learning materials.</p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-zinc-900 flex items-center">
+            <BookOpen className="w-8 h-8 mr-3 text-primary" />
+            Manage Modules & Subtopics
+          </h1>
+          <p className="text-zinc-500 mt-1">Add or edit curriculum modules and define subtopic learning materials.</p>
+        </div>
+        <div>
+          <input type="file" accept="application/pdf" className="hidden" id="syllabus-upload" onChange={handleSyllabusUpload} />
+          <Button onClick={() => document.getElementById('syllabus-upload')?.click()} variant="outline" className="border-primary text-primary" disabled={isUploadingSyllabus}>
+            {isUploadingSyllabus ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <UploadCloud className="w-4 h-4 mr-2" />}
+            Auto-Generate from Syllabus
+          </Button>
+        </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">

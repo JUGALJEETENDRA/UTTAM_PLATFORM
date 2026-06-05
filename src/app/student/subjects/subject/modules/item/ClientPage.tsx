@@ -49,12 +49,10 @@ export default function ModuleDetailPage() {
     const [moduleData, setModuleData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (status === "unauthenticated") redirect("/sign-in");
-    
-    if (status === "authenticated" && session?.user) {
+    if (id) {
       const loadModule = async () => {
         try {
-          const result = await fetchGAS("getModule", { moduleId: id, userId: session.user.id });
+          const result = await fetchGAS("getModule", { moduleId: id, userId: "anonymous" });
           setModuleData(result);
         } catch (err) {
           console.error("Failed to load module", err);
@@ -64,8 +62,9 @@ export default function ModuleDetailPage() {
       };
       loadModule();
     }
-  }, [status, session, id]);
-  if (status === "loading" || loading) return <div className="p-8 text-center">Loading module details...</div>;
+  }, [id]);
+
+  if (loading) return <div className="p-8 text-center">Loading module details...</div>;
   if (!moduleData || moduleData.error) return <div className="p-8 text-center text-red-500">Module not found.</div>;
   const completedSubtopics = moduleData.completedSubtopics || [];
   const completedResources: string[] = []; // Not tracked strictly in GAS schema currently, assume empty
