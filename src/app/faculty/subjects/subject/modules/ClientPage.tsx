@@ -21,7 +21,13 @@ interface SubtopicForm {
   audioUrl: string;
   audioLanguages: { language: string; url: string }[];
   audioDownloadUrl?: string;
+  didYouKnowUrl?: string;
+  didYouKnowDownloadUrl?: string;
+  referenceUrl?: string;
+  referenceDownloadUrl?: string;
   selectedResourceType?: string;
+  type?: string;
+  mediaUrl?: string;
 }
 const initialSubtopicState = { 
   title: "", description: "", learningOutcome: "", 
@@ -29,7 +35,10 @@ const initialSubtopicState = {
   notesUrl: "", notesDownloadUrl: "", 
   otherUrl: "", otherDownloadUrl: "", 
   audioUrl: "", audioLanguages: [], audioDownloadUrl: "",
-  selectedResourceType: "none" 
+  didYouKnowUrl: "", didYouKnowDownloadUrl: "",
+  referenceUrl: "", referenceDownloadUrl: "",
+  selectedResourceType: "none",
+  type: "", mediaUrl: ""
 };
 export default function ManageModulesPage() {
   const searchParams = useSearchParams();
@@ -55,7 +64,21 @@ export default function ManageModulesPage() {
     try {
       const data = await fetchGAS("getModules", { subjectId });
       if (Array.isArray(data)) {
-        setModules(data);
+        const parsedModules = data.map((mod: any) => {
+          if (mod.subtopics) {
+            mod.subtopics = mod.subtopics.map((st: any) => {
+              let parsedData = {};
+              if (typeof st.simulationData === 'string') {
+                try { parsedData = JSON.parse(st.simulationData); } catch (e) {}
+              } else if (typeof st.simulationData === 'object' && st.simulationData) {
+                parsedData = st.simulationData;
+              }
+              return { ...st, ...parsedData };
+            });
+          }
+          return mod;
+        });
+        setModules(parsedModules);
       } else {
         setModules([]);
       }
@@ -108,22 +131,45 @@ export default function ManageModulesPage() {
     setDescription(mod.description || "");
     
     if (mod.subtopics && mod.subtopics.length > 0) {
-      setSubtopics(mod.subtopics.map((st: any) => ({
-        ...initialSubtopicState,
-        id: st.id,
-        title: st.title || "",
-        description: st.description || "",
-        learningOutcome: st.learningOutcome || "",
-        videoUrl: st.videoUrl || "",
-        videoLanguages: st.videoLanguages || [],
-        notesUrl: st.notesUrl || "",
-        notesDownloadUrl: st.notesDownloadUrl || "",
-        otherUrl: st.otherUrl || "",
-        otherDownloadUrl: st.otherDownloadUrl || "",
-        audioUrl: st.audioUrl || "",
-        audioLanguages: st.audioLanguages || [],
-        audioDownloadUrl: st.audioDownloadUrl || "",
-      })));
+      setSubtopics(mod.subtopics.map((st: any) => {
+        let parsedData: any = {};
+        if (typeof st.simulationData === 'string' && st.simulationData) {
+          try { parsedData = JSON.parse(st.simulationData); } catch(e) {}
+        } else if (typeof st.simulationData === 'object' && st.simulationData !== null) {
+          parsedData = st.simulationData;
+        }
+
+        let unpackedOther = { otherUrl: st.otherUrl, otherDownloadUrl: st.otherDownloadUrl, didYouKnowUrl: "", didYouKnowDownloadUrl: "", referenceUrl: "", referenceDownloadUrl: "" };
+        if (typeof st.otherUrl === 'string' && st.otherUrl.startsWith("{")) {
+          try {
+            const parsedOther = JSON.parse(st.otherUrl);
+            unpackedOther = { ...unpackedOther, ...parsedOther };
+          } catch(e) {}
+        }
+
+        return {
+          ...initialSubtopicState,
+          id: st.id,
+          title: st.title || "",
+          description: st.description || "",
+          learningOutcome: st.learningOutcome || "",
+          videoUrl: st.videoUrl || (st.type === 'videoUrl' ? st.mediaUrl : "") || "",
+          videoLanguages: st.videoLanguages || [],
+          notesUrl: parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : "") || "",
+          notesDownloadUrl: parsedData.notesDownloadUrl || st.notesDownloadUrl || "",
+          otherUrl: unpackedOther.otherUrl || parsedData.otherUrl || (st.type === 'other' ? st.mediaUrl : "") || "",
+          otherDownloadUrl: unpackedOther.otherDownloadUrl || parsedData.otherDownloadUrl || st.otherDownloadUrl || "",
+          audioUrl: parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || "",
+          audioLanguages: parsedData.audioLanguages || st.audioLanguages || [],
+          audioDownloadUrl: parsedData.audioDownloadUrl || st.audioDownloadUrl || "",
+          didYouKnowUrl: unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || st.didYouKnowUrl || "",
+          didYouKnowDownloadUrl: unpackedOther.didYouKnowDownloadUrl || parsedData.didYouKnowDownloadUrl || st.didYouKnowDownloadUrl || "",
+          referenceUrl: unpackedOther.referenceUrl || parsedData.referenceUrl || st.referenceUrl || "",
+          referenceDownloadUrl: unpackedOther.referenceDownloadUrl || parsedData.referenceDownloadUrl || st.referenceDownloadUrl || "",
+          type: st.type || "",
+          mediaUrl: st.mediaUrl || "",
+        };
+      }));
     } else {
       setSubtopics([{...initialSubtopicState}]);
     }
@@ -192,12 +238,44 @@ export default function ManageModulesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const validSubtopics = subtopics.filter(st => st.title.trim() !== "");
+    const validSubtopics = subtopics.filter(st => st.title.trim() !== "").map(st => {
+      const {
+        didYouKnowUrl, didYouKnowDownloadUrl,
+        referenceUrl, referenceDownloadUrl,
+        otherUrl, otherDownloadUrl, 
+        notesUrl, notesDownloadUrl,
+        audioUrl, audioLanguages, audioDownloadUrl,
+        ...rest
+      } = st;
+
+      // Pack new fields into otherUrl to bypass backend schema limitations
+      const packedOtherUrl = JSON.stringify({
+        otherUrl: otherUrl || "",
+        otherDownloadUrl: otherDownloadUrl || "",
+        didYouKnowUrl: didYouKnowUrl || "",
+        didYouKnowDownloadUrl: didYouKnowDownloadUrl || "",
+        referenceUrl: referenceUrl || "",
+        referenceDownloadUrl: referenceDownloadUrl || "",
+      });
+
+      return {
+        ...rest,
+        otherUrl: packedOtherUrl,
+        notesUrl: notesUrl || "",
+        notesDownloadUrl: notesDownloadUrl || "",
+        audioUrl: audioUrl || "",
+        audioLanguages: audioLanguages || [],
+        audioDownloadUrl: audioDownloadUrl || "",
+        simulationData: "" // Backend will recreate this
+      };
+    });
+
     if (validSubtopics.length === 0) {
       toast.error("At least one subtopic with a title is required.");
       setLoading(false);
       return;
     }
+
     try {
       const payload = {
         subjectId,
@@ -209,8 +287,9 @@ export default function ManageModulesPage() {
         description,
         subtopics: validSubtopics
       };
-      const res = await fetchGAS("saveModule", payload);
-      if (res && res.success) {
+
+      const data = await fetchGAS("saveModule", payload);
+      if (data && data.success) {
         toast.success(editingModuleId ? "Module updated successfully!" : "Module created successfully!");
         handleCancelEdit();
         fetchModules();
@@ -441,9 +520,11 @@ export default function ManageModulesPage() {
                           >
                             <option value="none">Select resource type...</option>
                             <option value="videoUrl">Video (Hybrid)</option>
-                            <option value="notes">Notes (File Upload)</option>
-                            <option value="audio">Audio (File Upload)</option>
-                            <option value="other">Other (File Upload)</option>
+                            <option value="notes">Notes (Link)</option>
+                            <option value="audio">Audio (Link)</option>
+                            <option value="didYouKnow">Did You Know (Link)</option>
+                            <option value="reference">Reference</option>
+                            <option value="other">Other (Link)</option>
                           </select>
                           {st.selectedResourceType === "videoUrl" && (
                             <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
@@ -486,19 +567,7 @@ export default function ManageModulesPage() {
                               </div>
                             </div>
                           )}
-                          {st.selectedResourceType === "simulationUrl" && (
-                            <div className="mb-4">
-                              <label className="block text-xs font-bold text-zinc-700 mb-1">Simulation URL</label>
-                              <input
-                                type="text"
-                                placeholder="https://example.com/simulation..."
-                                value={st.simulationUrl}
-                                onChange={(e) => handleSubtopicChange(index, "simulationUrl", e.target.value)}
-                                className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
-                              />
-                            </div>
-                          )}
-                          {st.selectedResourceType === "audio" && (
+                          {["notes", "didYouKnow", "reference", "other"].includes(st.selectedResourceType || "") && (
                             <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
                               <label className="block text-xs font-bold text-zinc-700 mb-1">English Audio URL (Default)</label>
                               <input
@@ -539,7 +608,7 @@ export default function ManageModulesPage() {
                               </div>
                             </div>
                           )}
-                          {["notes", "quizFile", "mindMap", "flashCards", "reference", "other"].includes(st.selectedResourceType || "") && (
+                          {["notes", "didYouKnow", "reference", "other"].includes(st.selectedResourceType || "") && (
                             <div className="mb-4 p-3 bg-blue-50/50 rounded-lg border border-blue-100 space-y-3">
                               <div>
                                 <label className="block text-[10px] font-bold text-blue-900 mb-1">Paste External Resource Link</label>
@@ -557,11 +626,8 @@ export default function ManageModulesPage() {
                           )}
                           <div className="mt-4 space-y-2">
                             {st.videoUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎥 YouTube Video Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "videoUrl", "")}>Remove</Button></div>}
-                            {st.simulationUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎮 Simulation Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "simulationUrl", "")}>Remove</Button></div>}
                             {st.notesUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📄 Notes File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "notesUrl", ""); handleSubtopicChange(index, "notesDownloadUrl", "")}}>Remove</Button></div>}
-                            {st.quizFileUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📝 Quiz File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "quizFileUrl", ""); handleSubtopicChange(index, "quizFileDownloadUrl", "")}}>Remove</Button></div>}
-                            {st.mindMapUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🧠 Mind Map File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "mindMapUrl", ""); handleSubtopicChange(index, "mindMapDownloadUrl", "")}}>Remove</Button></div>}
-                            {st.flashCardsUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎴 Flash Cards File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "flashCardsUrl", ""); handleSubtopicChange(index, "flashCardsDownloadUrl", "")}}>Remove</Button></div>}
+                            {st.didYouKnowUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>💡 Did You Know Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "didYouKnowUrl", ""); handleSubtopicChange(index, "didYouKnowDownloadUrl", "")}}>Remove</Button></div>}
                             {st.referenceUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📚 Reference File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "referenceUrl", ""); handleSubtopicChange(index, "referenceDownloadUrl", "")}}>Remove</Button></div>}
                             {st.audioUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎵 Audio File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "audioUrl", ""); handleSubtopicChange(index, "audioDownloadUrl", "")}}>Remove</Button></div>}
                             {st.otherUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🔗 Other File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "otherUrl", ""); handleSubtopicChange(index, "otherDownloadUrl", "")}}>Remove</Button></div>}

@@ -30,7 +30,7 @@ export default function SubtopicSimulationPage() {
   }, [moduleId, status, session]);
   if (status === "loading" || loading) return <div className="p-8 text-center">Loading simulation...</div>;
   if (!moduleData || moduleData.error) return <div className="p-8 text-center text-red-500">Module not found.</div>;
-  const subtopic = moduleData.subtopics?.find((s: any) => s.id === subtopicId);
+  const subtopic = moduleData.subtopics?.find((s: any) => s.id === subtopicId || s.subtopicNo === subtopicId);
   if (!subtopic || !subtopic.simulationUrl) {
     return <div className="p-8 text-center text-red-500">Simulation not found for this subtopic.</div>;
   }

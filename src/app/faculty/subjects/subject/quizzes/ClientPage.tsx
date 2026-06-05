@@ -192,7 +192,12 @@ export default function ManageQuizzesPage() {
   const handleEdit = (quiz: any) => {
     setEditingQuizId(quiz.id);
     setSelectedModuleId(quiz.moduleId);
-    setSelectedSubtopicId(quiz.subtopicId || "");
+    
+    // Find matching subtopic to convert legacy UUID to subtopicNo
+    const mod = modules.find(m => m.id === quiz.moduleId);
+    const matchingSt = mod?.subtopics?.find((s: any) => s.id === quiz.subtopicId);
+    setSelectedSubtopicId(matchingSt ? matchingSt.subtopicNo : quiz.subtopicId || "");
+
     setTitle(quiz.title);
     setDifficulty(quiz.difficulty);
     setTimeLimit(quiz.timeLimit.toString());
@@ -357,7 +362,7 @@ export default function ManageQuizzesPage() {
                     >
                       <option value="">Map to entire module</option>
                       {getSubtopicsForSelectedModule().map((st: any) => (
-                        <option key={st.id} value={st.id}>
+                        <option key={st.id} value={st.subtopicNo}>
                           {st.subtopicNo} - {st.title}
                         </option>
                       ))}

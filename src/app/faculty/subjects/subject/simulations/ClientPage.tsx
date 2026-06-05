@@ -63,7 +63,12 @@ export default function ManageSimulationsPage() {
   const handleEdit = (sim: any) => {
     setEditingId(sim.id);
     setSelectedModuleId(sim.moduleId);
-    setSelectedSubtopicId(sim.subtopicId || "");
+    
+    // Find matching subtopic to convert legacy UUID to subtopicNo
+    const mod = modules.find(m => m.id === sim.moduleId);
+    const matchingSt = mod?.subtopics?.find((s: any) => s.id === sim.subtopicId);
+    setSelectedSubtopicId(matchingSt ? matchingSt.subtopicNo : sim.subtopicId || "");
+    
     setTitle(sim.title);
     setDescription(sim.description);
     setDifficulty(sim.difficulty);
@@ -189,7 +194,7 @@ export default function ManageSimulationsPage() {
                     >
                       <option value="">Map to entire module</option>
                       {getSubtopicsForSelectedModule().map((st: any) => (
-                        <option key={st.id} value={st.id}>
+                        <option key={st.id} value={st.subtopicNo}>
                           {st.subtopicNo} - {st.title}
                         </option>
                       ))}

@@ -5,7 +5,7 @@ import { ResourceLinkTracker } from "@/components/student/ResourceLinkTracker";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, PlayCircle, FileText, CheckCircle2, Gamepad2, Target, Download, Book, BrainCircuit, CreditCard, Link as LinkIcon, HelpCircle, Layers, Headphones } from "lucide-react";
+import { ChevronLeft, PlayCircle, FileText, CheckCircle2, Gamepad2, Target, Download, Book, BrainCircuit, CreditCard, Link as LinkIcon, HelpCircle, Layers, Headphones, Lightbulb } from "lucide-react";
 import { module1Quizzes } from "@/data/module1QuizData";
 import { module2Quizzes } from "@/data/module2QuizData";
 import { useEffect, useState, use } from "react";
@@ -113,12 +113,19 @@ export default function ModuleDetailPage() {
           } else if (typeof subtopic.simulationData === 'object' && subtopic.simulationData !== null) {
             subtopic = { ...subtopic, ...subtopic.simulationData };
           }
+          
+          if (typeof subtopic.otherUrl === 'string' && subtopic.otherUrl.startsWith("{")) {
+            try {
+              const parsedOther = JSON.parse(subtopic.otherUrl);
+              subtopic = { ...subtopic, ...parsedOther };
+            } catch(e) {}
+          }
 
           const hasNotes = !!subtopic.notesUrl;
           
-          const subtopicQuizzes = moduleData.quizzes?.filter((q: any) => q.subtopicId === subtopic.id) || [];
-          const subtopicSims = moduleData.simulations?.filter((s: any) => s.subtopicId === subtopic.id) || [];
-          const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.id) || [];
+          const subtopicQuizzes = moduleData.quizzes?.filter((q: any) => q.subtopicId === subtopic.subtopicNo || q.subtopicId === subtopic.id) || [];
+          const subtopicSims = moduleData.simulations?.filter((s: any) => s.subtopicId === subtopic.subtopicNo || s.subtopicId === subtopic.id) || [];
+          const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
           // Simplification for client rendering without deep tracking
           const isNotesCompleted = true; 
           const isSimCompleted = true;
@@ -234,6 +241,33 @@ export default function ModuleDetailPage() {
                           <Gamepad2 className="w-5 h-5 mr-2" /> View Simulation
                         </Button>
                       </Link>
+                    </ResourceLinkTracker>
+                  )}
+                  {subtopic.didYouKnowUrl && (
+                    <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
+                      <a href={subtopic.didYouKnowUrl} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" className="bg-white hover:bg-yellow-50 border-yellow-200 text-yellow-700 text-sm font-bold h-11 px-6 shadow-sm">
+                          <Lightbulb className="w-5 h-5 mr-2" /> Did You Know
+                        </Button>
+                      </a>
+                    </ResourceLinkTracker>
+                  )}
+                  {subtopic.referenceUrl && (
+                    <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="reference">
+                      <a href={subtopic.referenceUrl} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" className="bg-white hover:bg-zinc-50 border-zinc-200 text-zinc-700 text-sm font-bold h-11 px-6 shadow-sm">
+                          <Book className="w-5 h-5 mr-2" /> Reference Material
+                        </Button>
+                      </a>
+                    </ResourceLinkTracker>
+                  )}
+                  {subtopic.otherUrl && (
+                    <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="other">
+                      <a href={subtopic.otherUrl} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" className="bg-white hover:bg-zinc-50 border-zinc-200 text-zinc-700 text-sm font-bold h-11 px-6 shadow-sm">
+                          <LinkIcon className="w-5 h-5 mr-2" /> External Link
+                        </Button>
+                      </a>
                     </ResourceLinkTracker>
                   )}
                   {subtopicFlashcards.length > 0 && (

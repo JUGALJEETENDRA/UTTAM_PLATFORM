@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { fetchGAS } from "@/lib/apiClient";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BookOpen, Target, Zap, Clock, Star, Gamepad2, FileText, ExternalLink, ArrowRight, Book, Layers } from "lucide-react";
+import { BookOpen, Target, Zap, Clock, Star, Gamepad2, FileText, ExternalLink, ArrowRight, Book, Layers, Brain } from "lucide-react";
 import { SubjectResourceCard } from "@/components/cards/SubjectResourceCard";
 
 export default function StudentDashboard({ params }: { params: Promise<{ subjectId: string }> }) {
@@ -43,7 +43,7 @@ export default function StudentDashboard({ params }: { params: Promise<{ subject
     return <div className="p-8 text-center text-red-500">Failed to load subject data.</div>;
   }
 
-  const { subject, modules, quizzesWithAttempts, flashcardDecks, subjectResources } = data;
+  const { subject, modules, quizzesWithAttempts, flashcardDecks, mindmaps = [], subjectResources } = data;
   const activeModule = modules[0];
 
   return (
@@ -239,6 +239,51 @@ export default function StudentDashboard({ params }: { params: Promise<{ subject
               )}
             </div>
           </div>
+
+          {/* 4. Mind Maps */}
+          <div>
+            <div className="flex justify-between items-center mb-5">
+              <div>
+                <h2 className="text-2xl font-bold text-zinc-900 flex items-center">
+                  <Brain className="w-6 h-6 mr-2 text-purple-500" /> Interactive Mind Maps
+                </h2>
+                <p className="text-sm text-zinc-500 mt-1">Explore visual topic structures</p>
+              </div>
+              <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
+                <Button variant="ghost" className="text-purple-600 hover:text-purple-700 hover:bg-purple-50">
+                  View All <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {mindmaps.slice(0, 4).map((map: any) => (
+                <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`}>
+                  <Card className="hover:border-purple-400/50 hover:shadow-md transition-all cursor-pointer h-full group bg-white border-zinc-200">
+                    <CardHeader className="pb-3">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-100 px-2 py-0.5 rounded">
+                          Mind Map
+                        </span>
+                      </div>
+                      <CardTitle className="text-lg font-bold text-zinc-800 leading-tight group-hover:text-purple-600 transition-colors">
+                        {map.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center text-sm text-zinc-500 font-medium">
+                        <ExternalLink className="w-4 h-4 mr-1.5" /> Interactive View
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+              {mindmaps.length === 0 && (
+                <div className="col-span-full py-8 text-center text-zinc-500 border border-dashed rounded-lg bg-zinc-50">
+                  No mind maps available yet.
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Sidebar Column */}
@@ -253,7 +298,12 @@ export default function StudentDashboard({ params }: { params: Promise<{ subject
             </CardHeader>
             <CardContent className="pt-4 space-y-4">
               {subjectResources.map((resource: any, index: number) => (
-                 <SubjectResourceCard key={index} resource={resource} />
+                 <SubjectResourceCard 
+                   key={index} 
+                   title={resource.title}
+                   type={resource.type}
+                   link={resource.link}
+                 />
               ))}
               {subjectResources.length === 0 && (
                 <p className="text-sm text-zinc-500 text-center py-2">No resources provided yet.</p>

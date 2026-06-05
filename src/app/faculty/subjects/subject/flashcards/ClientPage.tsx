@@ -114,7 +114,12 @@ export default function ManageFlashcardsPage() {
   const handleEdit = (deck: any) => {
     setEditingDeckId(deck.id);
     setSelectedModuleId(deck.moduleId);
-    setSelectedSubtopicId(deck.subtopicId || "");
+    
+    // Find matching subtopic to convert legacy UUID to subtopicNo
+    const mod = modules.find(m => m.id === deck.moduleId);
+    const matchingSt = mod?.subtopics?.find((s: any) => s.id === deck.subtopicId);
+    setSelectedSubtopicId(matchingSt ? matchingSt.subtopicNo : deck.subtopicId || "");
+    
     setTitle(deck.title);
     setDocumentUrl(deck.documentUrl || null);
     if (deck.cards && deck.cards.length > 0) {
@@ -238,7 +243,7 @@ export default function ManageFlashcardsPage() {
                     >
                       <option value="">Map to entire module</option>
                       {getSubtopicsForSelectedModule().map((st: any) => (
-                        <option key={st.id} value={st.id}>
+                        <option key={st.id} value={st.subtopicNo}>
                           {st.subtopicNo} - {st.title}
                         </option>
                       ))}
