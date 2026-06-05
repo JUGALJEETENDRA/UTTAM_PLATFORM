@@ -9,24 +9,25 @@ export default function SimulationDetailPage() {
     const [simulation, setSimulation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (status === "unauthenticated") redirect("/sign-in");
-    if (status === "authenticated" && session?.user) {
-      const loadSimulation = async () => {
-        try {
-          const result = await fetchGAS("getSimulation", { simulationId: id });
-          if (result && !result.error) {
-            setSimulation(result);
-          }
-        } catch (err) {
-          console.error("Failed to load simulation", err);
-        } finally {
-          setLoading(false);
+    const loadSimulation = async () => {
+      try {
+        const result = await fetchGAS("getSimulation", { simulationId: id });
+        if (result && !result.error) {
+          setSimulation(result);
         }
-      };
+      } catch (err) {
+        console.error("Failed to load simulation", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (id) {
       loadSimulation();
+    } else {
+      setLoading(false);
     }
-  }, [id, status, session]);
-  if (status === "loading" || loading) return <div className="p-8 text-center">Loading simulation...</div>;
+  }, [id]);
+  if (loading) return <div className="p-8 text-center">Loading simulation...</div>;
   if (!simulation) return <div className="p-8 text-center text-red-500">Simulation not found.</div>;
   const category = simulation.module ? `Module ${simulation.module.moduleNo}: ${simulation.module.title}` : "General";
   // Cast type to match SimulationContainer expectations

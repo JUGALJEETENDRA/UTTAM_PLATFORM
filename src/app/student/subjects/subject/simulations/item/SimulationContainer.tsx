@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, Play, AlertCircle, Trophy, CheckCircle2, Eye, ShieldAlert, Sparkles } from "lucide-react";
+import { ChevronLeft, Play, AlertCircle, Trophy, CheckCircle2, Eye, ShieldAlert, Sparkles, RefreshCcw } from "lucide-react";
 
 interface SimulationContainerProps {
   simulation: {
@@ -25,6 +25,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
   const [started, setStarted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
 
@@ -46,33 +47,9 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
     }
   };
 
-  const handleSubmitSimulation = async () => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch("/api/simulations/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          simulationId: simulation.id,
-        }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setCompleted(true);
-      } else {
-        alert(data.error || "Failed to submit simulation");
-      }
-    } catch (error) {
-      console.error("Submission error:", error);
-      alert("An error occurred. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleRetrySimulation = () => {
+    setFoundFlaws([]);
+    setRetryCount(prev => prev + 1);
   };
 
   if (completed) {
@@ -123,7 +100,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
         </div>
 
         {simulation.id === "sim1" ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div key={retryCount} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* The E-Commerce Mockup Sandbox */}
             <div className="lg:col-span-2 space-y-4">
               <Card className="border-2 border-zinc-300 shadow-lg overflow-hidden">
@@ -270,11 +247,10 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                 </CardContent>
                 <CardFooter className="pt-2">
                   <Button 
-                    onClick={handleSubmitSimulation}
-                    disabled={foundFlaws.length < 5 || isSubmitting}
+                    onClick={handleRetrySimulation}
                     className="w-full bg-primary hover:bg-primary/90 text-white font-bold"
                   >
-                    {isSubmitting ? "Submitting..." : foundFlaws.length < 5 ? `Spot remaining flaws (${foundFlaws.length}/5)` : "Submit Usability Audit"}
+                    <RefreshCcw className="w-4 h-4 mr-2" /> Retry Simulation
                   </Button>
                 </CardFooter>
               </Card>
@@ -294,27 +270,27 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
               </div>
               <div className="relative w-full h-[85vh] min-h-[700px] bg-white">
                 <iframe 
-                  src={simulation.frontendUrl} 
+                  key={retryCount}
+                  src={`${simulation.frontendUrl}${simulation.frontendUrl?.includes('?') ? '&' : '?'}retry=${retryCount}`} 
                   className="absolute inset-0 w-full h-full border-none"
                   title={simulation.title}
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                  sandbox="allow-scripts allow-forms allow-popups"
                   allowFullScreen
                 />
               </div>
             </Card>
             <div className="flex justify-end pt-4">
               <Button 
-                onClick={handleSubmitSimulation}
-                disabled={isSubmitting}
+                onClick={handleRetrySimulation}
                 className="bg-primary hover:bg-primary/95 text-white font-bold px-8 shadow-md"
               >
-                {isSubmitting ? "Submitting..." : "Complete & Submit Sandbox"}
+                <RefreshCcw className="w-4 h-4 mr-2" /> Retry Simulation
               </Button>
             </div>
           </div>
         ) : (
           /* Generic Simulation Simulator */
-          <Card className="border-zinc-200 max-w-2xl mx-auto shadow-lg">
+          <Card key={retryCount} className="border-zinc-200 max-w-2xl mx-auto shadow-lg">
             <CardHeader className="bg-zinc-50 border-b border-zinc-100 text-center py-8">
               <Sparkles className="w-12 h-12 text-primary mx-auto mb-4 animate-pulse" />
               <CardTitle className="text-2xl font-bold text-zinc-900">{simulation.title} Sandbox</CardTitle>
@@ -349,11 +325,10 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
             </CardContent>
             <CardFooter className="bg-zinc-50 border-t border-zinc-100 p-6 flex justify-end">
               <Button 
-                onClick={handleSubmitSimulation}
-                disabled={isSubmitting}
+                onClick={handleRetrySimulation}
                 className="bg-primary hover:bg-primary/90 text-white font-bold px-8"
               >
-                {isSubmitting ? "Submitting..." : "Complete & Submit Sandbox"}
+                <RefreshCcw className="w-4 h-4 mr-2" /> Retry Simulation
               </Button>
             </CardFooter>
           </Card>

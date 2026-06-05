@@ -22,7 +22,6 @@ export default function ManageSimulationsPage() {
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("Intermediate");
   const [estimatedTime, setEstimatedTime] = useState("");
-  const [xpReward, setXpReward] = useState("100");
   const [learningOutcome, setLearningOutcome] = useState("");
   const [frontendUrl, setFrontendUrl] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -69,7 +68,6 @@ export default function ManageSimulationsPage() {
     setDescription(sim.description);
     setDifficulty(sim.difficulty);
     setEstimatedTime(sim.estimatedTime || "");
-    setXpReward(sim.xpReward ? sim.xpReward.toString() : "100");
     setLearningOutcome(sim.learningOutcome || "");
     setFrontendUrl(sim.frontendUrl || "");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -95,7 +93,6 @@ export default function ManageSimulationsPage() {
     setTitle("");
     setDescription("");
     setEstimatedTime("");
-    setXpReward("100");
     setLearningOutcome("");
     setFrontendUrl("");
     setSelectedModuleId("");
@@ -122,7 +119,7 @@ export default function ManageSimulationsPage() {
         description,
         difficulty,
         estimatedTime,
-        xpReward: parseInt(xpReward),
+        xpReward: 0,
         learningOutcome,
         frontendUrl
       });
@@ -226,7 +223,7 @@ export default function ManageSimulationsPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-bold text-zinc-700 mb-1">Difficulty *</label>
                     <select
@@ -246,16 +243,6 @@ export default function ManageSimulationsPage() {
                       placeholder="e.g. 15 mins"
                       value={estimatedTime}
                       onChange={(e) => setEstimatedTime(e.target.value)}
-                      className="w-full px-3 py-2 border border-zinc-300 rounded-lg text-zinc-900 focus:outline-none focus:border-primary"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-zinc-700 mb-1">XP Reward *</label>
-                    <input
-                      type="number"
-                      required
-                      value={xpReward}
-                      onChange={(e) => setXpReward(e.target.value)}
                       className="w-full px-3 py-2 border border-zinc-300 rounded-lg text-zinc-900 focus:outline-none focus:border-primary"
                     />
                   </div>
@@ -331,7 +318,6 @@ export default function ManageSimulationsPage() {
                         {sim.difficulty}
                       </span>
                       <div className="flex items-center space-x-3">
-                        <span className="text-xs font-bold text-amber-600">+{sim.xpReward} XP</span>
                         <button type="button" onClick={() => handleEdit(sim)} className="text-blue-600 hover:text-blue-800 transition-colors" title="Edit">
                           <Edit className="w-4 h-4" />
                         </button>

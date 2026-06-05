@@ -80,14 +80,14 @@ export default function QuizDetailPage() {
     difficulty: quiz.difficulty || 'medium',
     timeLimit: quiz.timeLimit || 15,
     xpReward: quiz.xpReward || 50,
-    questions: displayQuestions.map((q: any) => {
+    questions: displayQuestions.map((q: any, index: number) => {
       // Map optionA, optionB, etc from GAS payload if the 'options' array is missing
       const optionsArray = q.options && q.options.length > 0 
         ? q.options 
         : [q.optionA, q.optionB, q.optionC, q.optionD].filter(Boolean);
         
       return {
-        id: q.id,
+        id: q.id || `q_${index}`,
         questionText: q.questionText,
         options: optionsArray,
         marks: q.marks || 10,

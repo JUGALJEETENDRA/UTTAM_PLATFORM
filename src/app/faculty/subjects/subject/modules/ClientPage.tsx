@@ -436,7 +436,7 @@ export default function ManageModulesPage() {
                             className="w-full sm:w-1/2 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary mb-4"
                           >
                             <option value="none">Select resource type...</option>
-                            <option value="videoUrl">YouTube Video (Link)</option>
+                            <option value="videoUrl">Video (YouTube or Google Drive)</option>
                             <option value="simulationUrl">Simulation (Link)</option>
                             <option value="notes">Notes (File Upload)</option>
                             <option value="quizFile">Quiz File (File Upload)</option>
@@ -448,10 +448,10 @@ export default function ManageModulesPage() {
                           </select>
                           {st.selectedResourceType === "videoUrl" && (
                             <div className="mb-4">
-                              <label className="block text-xs font-bold text-zinc-700 mb-1">YouTube Video URL</label>
+                              <label className="block text-xs font-bold text-zinc-700 mb-1">Video URL (YouTube or Google Drive)</label>
                               <input
                                 type="text"
-                                placeholder="https://youtube.com/..."
+                                placeholder="https://youtube.com/... or https://drive.google.com/..."
                                 value={st.videoUrl}
                                 onChange={(e) => handleSubtopicChange(index, "videoUrl", e.target.value)}
                                 className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"

@@ -15,6 +15,10 @@ function getEmbedUrl(url: string | null | undefined): string | null {
   if (!url) return null;
   if (url.includes("/embed/")) return url;
   
+  if (url.includes("drive.google.com/file/d/")) {
+    return url.replace(/\/view.*$/, "/preview");
+  }
+  
   if (url.includes("youtube.com/watch")) {
     try {
       const urlObj = new URL(url);
