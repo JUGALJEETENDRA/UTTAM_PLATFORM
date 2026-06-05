@@ -12,34 +12,23 @@ interface SubtopicForm {
   title: string;
   description: string;
   learningOutcome: string;
-  referenceUrl: string;
-  referenceDownloadUrl?: string;
   videoUrl: string;
+  videoLanguages: { language: string; url: string }[];
   notesUrl: string;
   notesDownloadUrl?: string;
-  quizFileUrl: string;
-  quizFileDownloadUrl?: string;
-  mindMapUrl: string;
-  mindMapDownloadUrl?: string;
-  flashCardsUrl: string;
-  flashCardsDownloadUrl?: string;
   otherUrl: string;
   otherDownloadUrl?: string;
   audioUrl: string;
+  audioLanguages: { language: string; url: string }[];
   audioDownloadUrl?: string;
-  simulationUrl: string;
   selectedResourceType?: string;
 }
 const initialSubtopicState = { 
   title: "", description: "", learningOutcome: "", 
-  videoUrl: "", simulationUrl: "", 
+  videoUrl: "", videoLanguages: [], 
   notesUrl: "", notesDownloadUrl: "", 
-  quizFileUrl: "", quizFileDownloadUrl: "", 
-  mindMapUrl: "", mindMapDownloadUrl: "", 
-  flashCardsUrl: "", flashCardsDownloadUrl: "", 
-  referenceUrl: "", referenceDownloadUrl: "", 
   otherUrl: "", otherDownloadUrl: "", 
-  audioUrl: "", audioDownloadUrl: "",
+  audioUrl: "", audioLanguages: [], audioDownloadUrl: "",
   selectedResourceType: "none" 
 };
 export default function ManageModulesPage() {
@@ -84,7 +73,29 @@ export default function ManageModulesPage() {
   };
   const handleSubtopicChange = (index: number, field: keyof SubtopicForm, value: string) => {
     const updated = [...subtopics];
-    updated[index][field] = value;
+    updated[index][field] = value as any;
+    setSubtopics(updated);
+  };
+
+  const handleLanguageChange = (index: number, type: "videoLanguages" | "audioLanguages", langIndex: number, field: "language" | "url", value: string) => {
+    const updated = [...subtopics];
+    if (!updated[index][type]) updated[index][type] = [];
+    updated[index][type][langIndex][field] = value;
+    setSubtopics(updated);
+  };
+
+  const handleAddLanguage = (index: number, type: "videoLanguages" | "audioLanguages") => {
+    const updated = [...subtopics];
+    if (!updated[index][type]) updated[index][type] = [];
+    updated[index][type].push({ language: "", url: "" });
+    setSubtopics(updated);
+  };
+
+  const handleRemoveLanguage = (index: number, type: "videoLanguages" | "audioLanguages", langIndex: number) => {
+    const updated = [...subtopics];
+    if (updated[index][type]) {
+      updated[index][type] = updated[index][type].filter((_, i) => i !== langIndex);
+    }
     setSubtopics(updated);
   };
   const handleEditModule = (e: React.MouseEvent, mod: any) => {
@@ -104,20 +115,13 @@ export default function ManageModulesPage() {
         description: st.description || "",
         learningOutcome: st.learningOutcome || "",
         videoUrl: st.videoUrl || "",
-        simulationUrl: st.simulationUrl || "",
+        videoLanguages: st.videoLanguages || [],
         notesUrl: st.notesUrl || "",
         notesDownloadUrl: st.notesDownloadUrl || "",
-        quizFileUrl: st.quizFileUrl || "",
-        quizFileDownloadUrl: st.quizFileDownloadUrl || "",
-        mindMapUrl: st.mindMapUrl || "",
-        mindMapDownloadUrl: st.mindMapDownloadUrl || "",
-        flashCardsUrl: st.flashCardsUrl || "",
-        flashCardsDownloadUrl: st.flashCardsDownloadUrl || "",
-        referenceUrl: st.referenceUrl || "",
-        referenceDownloadUrl: st.referenceDownloadUrl || "",
         otherUrl: st.otherUrl || "",
         otherDownloadUrl: st.otherDownloadUrl || "",
         audioUrl: st.audioUrl || "",
+        audioLanguages: st.audioLanguages || [],
         audioDownloadUrl: st.audioDownloadUrl || "",
       })));
     } else {
@@ -437,25 +441,49 @@ export default function ManageModulesPage() {
                           >
                             <option value="none">Select resource type...</option>
                             <option value="videoUrl">Video (YouTube or Google Drive)</option>
-                            <option value="simulationUrl">Simulation (Link)</option>
                             <option value="notes">Notes (File Upload)</option>
-                            <option value="quizFile">Quiz File (File Upload)</option>
-                            <option value="mindMap">Mind Map (File Upload)</option>
-                            <option value="flashCards">Flash Cards (File Upload)</option>
-                            <option value="reference">Reference Content (File Upload)</option>
                             <option value="audio">Audio (File Upload)</option>
                             <option value="other">Other (File Upload)</option>
                           </select>
                           {st.selectedResourceType === "videoUrl" && (
-                            <div className="mb-4">
-                              <label className="block text-xs font-bold text-zinc-700 mb-1">Video URL (YouTube or Google Drive)</label>
+                            <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
+                              <label className="block text-xs font-bold text-zinc-700 mb-1">English Video URL (Default)</label>
                               <input
                                 type="text"
                                 placeholder="https://youtube.com/... or https://drive.google.com/..."
                                 value={st.videoUrl}
                                 onChange={(e) => handleSubtopicChange(index, "videoUrl", e.target.value)}
-                                className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
+                                className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary mb-4"
                               />
+                              <div className="pt-3 border-t border-zinc-200">
+                                <div className="flex justify-between items-center mb-3">
+                                  <label className="block text-xs font-bold text-zinc-700">Additional Video Languages</label>
+                                  <Button type="button" variant="outline" size="sm" onClick={() => handleAddLanguage(index, "videoLanguages")} className="h-7 text-xs px-2">
+                                    <Plus className="w-3 h-3 mr-1" /> Add Language
+                                  </Button>
+                                </div>
+                                {(st.videoLanguages || []).map((lang, lIndex) => (
+                                  <div key={lIndex} className="flex items-center space-x-2 mb-2">
+                                    <input 
+                                      type="text" 
+                                      placeholder="e.g. Spanish" 
+                                      value={lang.language} 
+                                      onChange={(e) => handleLanguageChange(index, "videoLanguages", lIndex, "language", e.target.value)}
+                                      className="w-1/3 px-2 py-1.5 bg-white border border-zinc-300 rounded text-xs focus:border-primary"
+                                    />
+                                    <input 
+                                      type="text" 
+                                      placeholder="URL" 
+                                      value={lang.url} 
+                                      onChange={(e) => handleLanguageChange(index, "videoLanguages", lIndex, "url", e.target.value)}
+                                      className="flex-1 px-2 py-1.5 bg-white border border-zinc-300 rounded text-xs focus:border-primary"
+                                    />
+                                    <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveLanguage(index, "videoLanguages", lIndex)} className="text-red-500 p-1 h-auto">
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           )}
                           {st.selectedResourceType === "simulationUrl" && (
@@ -470,7 +498,48 @@ export default function ManageModulesPage() {
                               />
                             </div>
                           )}
-                          {["notes", "quizFile", "mindMap", "flashCards", "reference", "audio", "other"].includes(st.selectedResourceType || "") && (
+                          {st.selectedResourceType === "audio" && (
+                            <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
+                              <label className="block text-xs font-bold text-zinc-700 mb-1">English Audio URL (Default)</label>
+                              <input
+                                type="text"
+                                placeholder="https://..."
+                                value={st.audioUrl}
+                                onChange={(e) => handleSubtopicChange(index, "audioUrl", e.target.value)}
+                                className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary mb-4"
+                              />
+                              <div className="pt-3 border-t border-zinc-200">
+                                <div className="flex justify-between items-center mb-3">
+                                  <label className="block text-xs font-bold text-zinc-700">Additional Audio Languages</label>
+                                  <Button type="button" variant="outline" size="sm" onClick={() => handleAddLanguage(index, "audioLanguages")} className="h-7 text-xs px-2">
+                                    <Plus className="w-3 h-3 mr-1" /> Add Language
+                                  </Button>
+                                </div>
+                                {(st.audioLanguages || []).map((lang, lIndex) => (
+                                  <div key={lIndex} className="flex items-center space-x-2 mb-2">
+                                    <input 
+                                      type="text" 
+                                      placeholder="e.g. Spanish" 
+                                      value={lang.language} 
+                                      onChange={(e) => handleLanguageChange(index, "audioLanguages", lIndex, "language", e.target.value)}
+                                      className="w-1/3 px-2 py-1.5 bg-white border border-zinc-300 rounded text-xs focus:border-primary"
+                                    />
+                                    <input 
+                                      type="text" 
+                                      placeholder="URL" 
+                                      value={lang.url} 
+                                      onChange={(e) => handleLanguageChange(index, "audioLanguages", lIndex, "url", e.target.value)}
+                                      className="flex-1 px-2 py-1.5 bg-white border border-zinc-300 rounded text-xs focus:border-primary"
+                                    />
+                                    <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveLanguage(index, "audioLanguages", lIndex)} className="text-red-500 p-1 h-auto">
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {["notes", "quizFile", "mindMap", "flashCards", "reference", "other"].includes(st.selectedResourceType || "") && (
                             <div className="mb-4 p-3 bg-blue-50/50 rounded-lg border border-blue-100 space-y-3">
                               <div>
                                 <label className="block text-[10px] font-bold text-blue-900 mb-1">Paste External Resource Link</label>

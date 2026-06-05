@@ -4,38 +4,35 @@ import { ModuleCard } from "@/components/cards/ModuleCard";
 import { BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, use } from "react";
+import { useEffect, useState } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 
-import { redirect } from "next/navigation";
-
-export default function ModulesPage({ params }: { params: Promise<{ subjectId: string }> }) {
+export default function ModulesPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId');
-
   
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (status === "unauthenticated") redirect("/sign-in");
-    
-    if (status === "authenticated" && session?.user) {
-      const loadModules = async () => {
-        try {
-          const result = await fetchGAS("getModules", { subjectId, userId: session.user.id });
-          setData(result);
-        } catch (err) {
-          console.error("Failed to load modules", err);
-        } finally {
-          setLoading(false);
-        }
-      };
+    const loadModules = async () => {
+      try {
+        const result = await fetchGAS("getModules", { subjectId, userId: "anonymous" });
+        setData(result);
+      } catch (err) {
+        console.error("Failed to load modules", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (subjectId) {
       loadModules();
+    } else {
+      setLoading(false);
     }
-  }, [status, session, subjectId]);
+  }, [subjectId]);
 
-  if (status === "loading" || loading) return <div className="p-8 text-center">Loading modules...</div>;
+  if (loading) return <div className="p-8 text-center">Loading modules...</div>;
 
   const modules = data || [];
 

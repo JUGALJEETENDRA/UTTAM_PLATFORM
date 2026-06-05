@@ -52,6 +52,17 @@ export default function ModuleDetailPage() {
   const subjectId = searchParams.get('subjectId') || '';
     const [moduleData, setModuleData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedLanguages, setSelectedLanguages] = useState<{[id: string]: {video: string, audio: string}}>({});
+
+  const handleLanguageChange = (subtopicId: string, type: 'video' | 'audio', url: string) => {
+    setSelectedLanguages(prev => ({
+      ...prev,
+      [subtopicId]: {
+        ...(prev[subtopicId] || {}),
+        [type]: url
+      }
+    }));
+  };
   useEffect(() => {
     if (id) {
       const loadModule = async () => {
@@ -92,10 +103,19 @@ export default function ModuleDetailPage() {
       </div>
       <h2 className="text-2xl font-bold text-zinc-800 mb-6">Subtopics</h2>
       <div className="space-y-4">
-        {moduleData.subtopics && moduleData.subtopics.map((subtopic: any, index: number) => {
+        {moduleData.subtopics && moduleData.subtopics.map((rawSubtopic: any, index: number) => {
+          let subtopic = { ...rawSubtopic };
+          if (typeof subtopic.simulationData === 'string') {
+            try {
+              const parsed = JSON.parse(subtopic.simulationData);
+              subtopic = { ...subtopic, ...parsed };
+            } catch(e) {}
+          } else if (typeof subtopic.simulationData === 'object' && subtopic.simulationData !== null) {
+            subtopic = { ...subtopic, ...subtopic.simulationData };
+          }
+
           const hasNotes = !!subtopic.notesUrl;
           
-          // Map dynamic resources
           const subtopicQuizzes = moduleData.quizzes?.filter((q: any) => q.subtopicId === subtopic.id) || [];
           const subtopicSims = moduleData.simulations?.filter((s: any) => s.subtopicId === subtopic.id) || [];
           const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.id) || [];
@@ -106,7 +126,9 @@ export default function ModuleDetailPage() {
           const isAudioCompleted = true;
           const canComplete = isNotesCompleted && isSimCompleted && isQuizCompleted && isAudioCompleted;
           return (
-          <Card key={subtopic.id} className="border-zinc-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden bg-white">
+            <div key={subtopic.id} className="mb-8">
+          <Card className="border-zinc-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden bg-white">
+
             <div className="flex flex-col md:flex-row">
               <div className="bg-zinc-50 w-full md:w-16 flex items-center justify-center border-b md:border-b-0 md:border-r border-zinc-100 py-4 md:py-0 flex-shrink-0">
                 <span className="text-2xl font-bold text-zinc-300">{index + 1}</span>
@@ -116,11 +138,27 @@ export default function ModuleDetailPage() {
                   <CardTitle className="text-xl mb-2 text-zinc-800 font-bold">{subtopic.title}</CardTitle>
                   <CardDescription className="text-base text-zinc-600">{subtopic.description}</CardDescription>
                 </div>
-                {subtopic.videoUrl && (
+                {(subtopic.videoUrl || (subtopic.videoLanguages && subtopic.videoLanguages.length > 0)) && (() => {
+                  const defaultVideoUrl = subtopic.videoUrl || (subtopic.videoLanguages?.[0]?.url || "");
+                  return (
                   <div className="w-full mb-5">
+                    {subtopic.videoLanguages && subtopic.videoLanguages.length > 0 && (
+                      <div className="flex justify-end mb-2 max-w-3xl mx-auto">
+                        <select 
+                          className="bg-white border border-zinc-200 rounded-lg text-sm px-3 py-1.5 text-zinc-700 font-medium focus:outline-none focus:border-primary shadow-sm"
+                          value={selectedLanguages[subtopic.id]?.video || defaultVideoUrl}
+                          onChange={(e) => handleLanguageChange(subtopic.id, 'video', e.target.value)}
+                        >
+                          {subtopic.videoUrl && <option value={subtopic.videoUrl}>English (Default)</option>}
+                          {subtopic.videoLanguages.map((lang: any, i: number) => (
+                            <option key={i} value={lang.url}>{lang.language}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
                     <div className="w-full rounded-lg overflow-hidden border border-zinc-200 bg-zinc-950 aspect-video shadow-sm max-w-3xl mx-auto">
                       <iframe
-                        src={getEmbedUrl(subtopic.videoUrl) || ""}
+                        src={getEmbedUrl(selectedLanguages[subtopic.id]?.video || defaultVideoUrl) || ""}
                         className="w-full h-full border-0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
@@ -128,26 +166,44 @@ export default function ModuleDetailPage() {
                       ></iframe>
                     </div>
                   </div>
-                )}
-                {subtopic.audioUrl && (
+                  );
+                })()}
+                {(subtopic.audioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (() => {
+                  const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
+                  return (
                   <div className="w-full mb-5 max-w-3xl mx-auto">
-                    <p className="text-sm font-bold text-zinc-700 mb-2 flex items-center">
-                      <Headphones className="w-4 h-4 mr-2 text-purple-600" /> Audio Lesson
-                    </p>
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="text-sm font-bold text-zinc-700 flex items-center">
+                        <Headphones className="w-4 h-4 mr-2 text-purple-600" /> Audio Lesson
+                      </p>
+                      {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
+                        <select 
+                          className="bg-white border border-zinc-200 rounded-lg text-sm px-3 py-1.5 text-zinc-700 font-medium focus:outline-none focus:border-primary shadow-sm"
+                          value={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl}
+                          onChange={(e) => handleLanguageChange(subtopic.id, 'audio', e.target.value)}
+                        >
+                          {subtopic.audioUrl && <option value={subtopic.audioUrl}>English (Default)</option>}
+                          {subtopic.audioLanguages.map((lang: any, i: number) => (
+                            <option key={i} value={lang.url}>{lang.language}</option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
                     <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="audio">
                       <iframe 
                         className="w-full h-16 rounded-lg bg-zinc-50 border border-zinc-200 shadow-sm"
-                        src={getExternalEmbedUrl(subtopic.audioUrl) || ""}
+                        src={getExternalEmbedUrl(selectedLanguages[subtopic.id]?.audio || defaultAudioUrl) || ""}
                         allow="autoplay"
                       ></iframe>
                     </ResourceLinkTracker>
                     <div className="mt-2 text-right">
-                       <a href={subtopic.audioUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-purple-600 hover:underline">
+                       <a href={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-purple-600 hover:underline">
                          Open Audio Source
                        </a>
                     </div>
                   </div>
-                )}
+                  );
+                })()}
                 <div className="flex flex-wrap items-center gap-4 border-t border-zinc-100 pt-5 mt-auto">
                   {subtopic.notesUrl && (
                     <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
@@ -197,7 +253,8 @@ export default function ModuleDetailPage() {
               </div>
             </div>
           </Card>
-          );
+        </div>
+        );
         })}
       </div>
     </div>

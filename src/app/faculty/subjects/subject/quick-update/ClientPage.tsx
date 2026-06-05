@@ -68,8 +68,8 @@ export default function QuickUpdatePage() {
               simData = st.simulationData || {};
             }
             initialInputs[st.id] = {
-              videoUrl: simData.videoUrl || "",
-              notesUrl: simData.notesUrl || ""
+              videoUrl: st.videoUrl || simData.videoUrl || (st.type === 'videoUrl' ? st.mediaUrl : ""),
+              notesUrl: st.notesUrl || simData.notesUrl || (st.type === 'notes' ? st.mediaUrl : "")
             };
           });
         });

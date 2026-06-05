@@ -41,20 +41,7 @@ export function ModuleCard({ module, href }: { module: ModuleWithSubtopics; href
           </div>
         </div>
 
-        {typeof module.totalXpAvailable === 'number' && typeof module.xpEarned === 'number' && (
-          <div className="mt-auto space-y-1">
-            <div className="flex justify-between items-center text-xs text-zinc-500 font-medium">
-              <span>XP Progress</span>
-              <span className="text-primary font-bold">{module.xpEarned} / {module.totalXpAvailable} XP</span>
-            </div>
-            <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-primary rounded-full" 
-                style={{ width: `${Math.min(100, module.totalXpAvailable > 0 ? (module.xpEarned / module.totalXpAvailable) * 100 : 0)}%` }}
-              />
-            </div>
-          </div>
-        )}
+
       </CardContent>
       <CardFooter className="pt-4 border-t border-zinc-100 mt-auto">
         <Link href={href} className="w-full flex items-center justify-between text-primary font-medium hover:text-primary/80 transition-colors">
