@@ -438,9 +438,8 @@ export default function ManageModulesPage() {
                             value={st.selectedResourceType || "none"}
                             onChange={(e) => handleSubtopicChange(index, "selectedResourceType", e.target.value)}
                             className="w-full sm:w-1/2 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary mb-4"
-                          >
                             <option value="none">Select resource type...</option>
-                            <option value="videoUrl">Video (YouTube or Google Drive)</option>
+                            <option value="videoUrl">Video (Hybrid)</option>
                             <option value="notes">Notes (File Upload)</option>
                             <option value="audio">Audio (File Upload)</option>
                             <option value="other">Other (File Upload)</option>
@@ -450,7 +449,7 @@ export default function ManageModulesPage() {
                               <label className="block text-xs font-bold text-zinc-700 mb-1">English Video URL (Default)</label>
                               <input
                                 type="text"
-                                placeholder="https://youtube.com/... or https://drive.google.com/..."
+                                placeholder="https://drive.google.com/..."
                                 value={st.videoUrl}
                                 onChange={(e) => handleSubtopicChange(index, "videoUrl", e.target.value)}
                                 className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary mb-4"
