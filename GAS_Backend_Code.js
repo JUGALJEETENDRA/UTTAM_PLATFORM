@@ -1,7 +1,7 @@
 // Google Apps Script (Code.gs)
 // Deploy this as a Web App: Execute as "Me", Access: "Anyone"
 
-const SPREADSHEET_ID = "1yCtEhBVg3hFYamkoOAz9f_SYsdC4TbWjW6culuFHOoA"; // Replace with your Spreadsheet ID
+const SPREADSHEET_ID = "ADD_YOUR_OWN_SHEET_HERE"; // Replace with your Spreadsheet ID
 
 let __ssCache = null;
 function getSpreadsheet() {
