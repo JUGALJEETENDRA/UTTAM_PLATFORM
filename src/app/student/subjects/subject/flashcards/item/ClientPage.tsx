@@ -12,24 +12,21 @@ export default function FlashcardDeckPage() {
     const [deck, setDeck] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (status === "unauthenticated") redirect("/sign-in");
-    if (status === "authenticated" && session?.user) {
-      const loadDeck = async () => {
-        try {
-          const result = await fetchGAS("getFlashcardDeck", { deckId: id });
-          if (result && !result.error) {
-            setDeck(result);
-          }
-        } catch (err) {
-          console.error("Failed to load flashcard deck", err);
-        } finally {
-          setLoading(false);
+    const loadDeck = async () => {
+      try {
+        const result = await fetchGAS("getFlashcardDeck", { deckId: id });
+        if (result && !result.error) {
+          setDeck(result);
         }
-      };
-      loadDeck();
-    }
-  }, [id, status, session]);
-  if (status === "loading" || loading) return <div className="p-8 text-center">Loading flashcard deck...</div>;
+      } catch (err) {
+        console.error("Failed to load flashcard deck", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (id) loadDeck();
+  }, [id]);
+  if (loading) return <div className="p-8 text-center">Loading flashcard deck...</div>;
   if (!deck) return <div className="p-8 text-center text-red-500">Deck not found.</div>;
   const isInitiallyCompleted = false; // Mocked for now, progress removed
   return (

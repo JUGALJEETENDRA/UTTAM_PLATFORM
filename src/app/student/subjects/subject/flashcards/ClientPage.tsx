@@ -13,24 +13,21 @@ export default function FlashcardsListPage() {
     const [flashcardDecks, setFlashcardDecks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (status === "unauthenticated") redirect("/sign-in");
-    if (status === "authenticated" && session?.user) {
-      const loadDecks = async () => {
-        try {
-          const result = await fetchGAS("getFlashcardDecks", { subjectId });
-          if (Array.isArray(result)) {
-            setFlashcardDecks(result);
-          }
-        } catch (err) {
-          console.error("Failed to load flashcard decks", err);
-        } finally {
-          setLoading(false);
+    const loadDecks = async () => {
+      try {
+        const result = await fetchGAS("getFlashcardDecks", { subjectId });
+        if (Array.isArray(result)) {
+          setFlashcardDecks(result);
         }
-      };
-      loadDecks();
-    }
-  }, [status, session, subjectId]);
-  if (status === "loading" || loading) return <div className="p-8 text-center">Loading flashcards...</div>;
+      } catch (err) {
+        console.error("Failed to load flashcard decks", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadDecks();
+  }, [subjectId]);
+  if (loading) return <div className="p-8 text-center">Loading flashcards...</div>;
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       <div className="mb-6">

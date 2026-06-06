@@ -4,6 +4,7 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
   try {
     const url = new URL(GAS_WEB_APP_URL);
     url.searchParams.append('action', action);
+    url.searchParams.append('t', Date.now().toString());
     
     const response = await fetch(url.toString(), {
       method: 'POST',
@@ -11,6 +12,7 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
         'Content-Type': 'text/plain;charset=utf-8', 
       },
       body: JSON.stringify(payload),
+      cache: 'no-store',
     });
     
     if (!response.ok) {

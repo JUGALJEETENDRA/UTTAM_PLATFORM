@@ -73,7 +73,31 @@ export default function ManageModulesPage() {
               } else if (typeof st.simulationData === 'object' && st.simulationData) {
                 parsedData = st.simulationData;
               }
-              return { ...st, ...parsedData };
+              let parsedOther: any = {};
+              if (typeof st.otherUrl === 'string' && st.otherUrl.trim().startsWith("{")) {
+                try { 
+                  const sanitizedStr = st.otherUrl.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
+                  parsedOther = JSON.parse(sanitizedStr); 
+                  
+                  // Handle double-encoded JSON strings
+                  while (typeof parsedOther === 'string') {
+                    parsedOther = JSON.parse(parsedOther);
+                  }
+                  
+                  if (typeof parsedOther !== 'object' || parsedOther === null) {
+                    parsedOther = {};
+                  }
+                  
+                  // Force empty strings
+                  if (!parsedOther.otherUrl || parsedOther.otherUrl.trim() === "" || parsedOther.otherUrl.trim().startsWith("{")) parsedOther.otherUrl = "";
+                  if (!parsedOther.didYouKnowUrl || parsedOther.didYouKnowUrl.trim() === "" || parsedOther.didYouKnowUrl.trim().startsWith("{")) parsedOther.didYouKnowUrl = "";
+                  if (!parsedOther.referenceUrl || parsedOther.referenceUrl.trim() === "" || parsedOther.referenceUrl.trim().startsWith("{")) parsedOther.referenceUrl = "";
+                } catch (e) {
+                  // Fallback: clear the string so it doesn't cause Truthy UI bugs
+                  parsedOther = { otherUrl: "", didYouKnowUrl: "", referenceUrl: "" };
+                }
+              }
+              return { ...st, ...parsedData, ...parsedOther };
             });
           }
           return mod;
@@ -249,14 +273,16 @@ export default function ManageModulesPage() {
       } = st;
 
       // Pack new fields into otherUrl to bypass backend schema limitations
-      const packedOtherUrl = JSON.stringify({
+      const otherFields = {
         otherUrl: otherUrl || "",
         otherDownloadUrl: otherDownloadUrl || "",
         didYouKnowUrl: didYouKnowUrl || "",
         didYouKnowDownloadUrl: didYouKnowDownloadUrl || "",
         referenceUrl: referenceUrl || "",
         referenceDownloadUrl: referenceDownloadUrl || "",
-      });
+      };
+      const hasAnyOtherField = Object.values(otherFields).some(val => val !== "");
+      const packedOtherUrl = hasAnyOtherField ? JSON.stringify(otherFields) : "";
 
       return {
         ...rest,
@@ -441,9 +467,8 @@ export default function ManageModulesPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-zinc-700 mb-1">Description *</label>
+                  <label className="block text-sm font-bold text-zinc-700 mb-1">Description</label>
                   <textarea
-                    required
                     rows={3}
                     placeholder="Brief description of the module content..."
                     value={description}
@@ -567,7 +592,7 @@ export default function ManageModulesPage() {
                               </div>
                             </div>
                           )}
-                          {["notes", "didYouKnow", "reference", "other"].includes(st.selectedResourceType || "") && (
+                          {st.selectedResourceType === "audio" && (
                             <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
                               <label className="block text-xs font-bold text-zinc-700 mb-1">English Audio URL (Default)</label>
                               <input

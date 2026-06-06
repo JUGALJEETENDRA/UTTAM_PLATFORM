@@ -11,24 +11,21 @@ export default function SimulationsPage() {
     const [simulations, setSimulations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (status === "unauthenticated") redirect("/sign-in");
-    if (status === "authenticated" && session?.user) {
-      const loadSimulations = async () => {
-        try {
-          const result = await fetchGAS("getSimulations", { subjectId });
-          if (Array.isArray(result)) {
-            setSimulations(result);
-          }
-        } catch (err) {
-          console.error("Failed to load simulations", err);
-        } finally {
-          setLoading(false);
+    const loadSimulations = async () => {
+      try {
+        const result = await fetchGAS("getSimulations", { subjectId });
+        if (Array.isArray(result)) {
+          setSimulations(result);
         }
-      };
-      loadSimulations();
-    }
-  }, [status, session, subjectId]);
-  if (status === "loading" || loading) return <div className="p-8 text-center">Loading simulations...</div>;
+      } catch (err) {
+        console.error("Failed to load simulations", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadSimulations();
+  }, [subjectId]);
+  if (loading) return <div className="p-8 text-center">Loading simulations...</div>;
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">

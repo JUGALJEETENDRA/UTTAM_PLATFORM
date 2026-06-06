@@ -133,32 +133,85 @@ export default function QuickUpdatePage() {
     }
   };
 
-  const handleSaveSubtopic = async (subtopicId: string) => {
+  const handleSaveSubtopic = async (moduleId: string, subtopicId: string) => {
     const inputs = inputStates[subtopicId];
     setSavingStates(prev => ({ ...prev, [subtopicId]: "saving" }));
 
     try {
-      const data = await fetchGAS("updateSubtopicLinks", {
-        subtopicId,
-        videoUrl: inputs.videoUrl,
-        notesUrl: inputs.notesUrl,
-        videoLanguages: inputs.videoLanguages,
-        audioUrl: inputs.audioUrl,
-        audioLanguages: inputs.audioLanguages
+      const targetModule: any = modules.find(m => m.id === moduleId);
+      if (!targetModule) throw new Error("Module not found locally");
+      
+      const updatedSubtopics = targetModule.subtopics.map((st: any) => {
+        if (st.id === subtopicId) {
+          // Keep all existing fields but update the ones from the quick editor
+          const updatedSt = {
+            ...st,
+            videoUrl: inputs.videoUrl,
+            notesUrl: inputs.notesUrl,
+            videoLanguages: inputs.videoLanguages,
+            audioUrl: inputs.audioUrl,
+            audioLanguages: inputs.audioLanguages
+          };
+          
+          // Re-pack otherUrl because saveModule expects it
+          const otherFields = {
+            otherUrl: updatedSt.otherUrl || "",
+            otherDownloadUrl: updatedSt.otherDownloadUrl || "",
+            didYouKnowUrl: updatedSt.didYouKnowUrl || "",
+            didYouKnowDownloadUrl: updatedSt.didYouKnowDownloadUrl || "",
+            referenceUrl: updatedSt.referenceUrl || "",
+            referenceDownloadUrl: updatedSt.referenceDownloadUrl || "",
+          };
+          const hasAnyOtherField = Object.values(otherFields).some(val => val !== "");
+          updatedSt.otherUrl = hasAnyOtherField ? JSON.stringify(otherFields) : "";
+          
+          return updatedSt;
+        } else {
+          // Re-pack other subtopics too since saveModule overwrites the whole module
+          const otherFields = {
+            otherUrl: st.otherUrl || "",
+            otherDownloadUrl: st.otherDownloadUrl || "",
+            didYouKnowUrl: st.didYouKnowUrl || "",
+            didYouKnowDownloadUrl: st.didYouKnowDownloadUrl || "",
+            referenceUrl: st.referenceUrl || "",
+            referenceDownloadUrl: st.referenceDownloadUrl || "",
+          };
+          const hasAnyOtherField = Object.values(otherFields).some(val => val !== "");
+          return {
+            ...st,
+            otherUrl: hasAnyOtherField ? JSON.stringify(otherFields) : ""
+          };
+        }
       });
+
+      const payload = {
+        subjectId,
+        moduleId: targetModule.id,
+        moduleNo: targetModule.moduleNo,
+        title: targetModule.title,
+        hours: targetModule.hours || 0,
+        co: targetModule.co || "",
+        description: targetModule.description || "",
+        subtopics: updatedSubtopics
+      };
+
+      const data = await fetchGAS("saveModule", payload);
 
       if (data && data.success) {
         setSavingStates(prev => ({ ...prev, [subtopicId]: "saved" }));
         toast.success("Successfully updated subtopic links!");
         
+        // Update the local modules state so the UI stays in sync without a refresh
+        setModules(prev => prev.map(m => m.id === moduleId ? { ...m, subtopics: updatedSubtopics } : m));
+
         setInputStates(prev => ({
           ...prev,
           [subtopicId]: {
-            videoUrl: data.subtopic.videoUrl || "",
-            notesUrl: data.subtopic.notesUrl || "",
-            videoLanguages: data.subtopic.videoLanguages || [],
-            audioUrl: data.subtopic.audioUrl || "",
-            audioLanguages: data.subtopic.audioLanguages || []
+            videoUrl: inputs.videoUrl || "",
+            notesUrl: inputs.notesUrl || "",
+            videoLanguages: inputs.videoLanguages || [],
+            audioUrl: inputs.audioUrl || "",
+            audioLanguages: inputs.audioLanguages || []
           }
         }));
 
@@ -417,7 +470,7 @@ export default function QuickUpdatePage() {
                             {/* Save Button */}
                             <div className="md:col-span-2">
                               <button
-                                onClick={() => handleSaveSubtopic(st.id)}
+                                onClick={() => handleSaveSubtopic(mod.id, st.id)}
                                 disabled={saveState === "saving"}
                                 className={`w-full h-[38px] rounded-xl text-xs font-bold shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-1.5
                                   ${saveState === "saving" 

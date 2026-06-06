@@ -108,7 +108,7 @@ export default function ManageSimulationsPage() {
     e.preventDefault();
     setLoading(true);
 
-    if (!selectedModuleId || !title || !description || !frontendUrl) {
+    if (!selectedModuleId || !title || !frontendUrl) {
       toast.error("Please fill in all required fields.");
       setLoading(false);
       return;
@@ -217,9 +217,8 @@ export default function ManageSimulationsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-zinc-700 mb-1">Description *</label>
+                  <label className="block text-sm font-bold text-zinc-700 mb-1">Description (Optional)</label>
                   <textarea
-                    required
                     rows={3}
                     placeholder="Provide description of what the user does in this simulation..."
                     value={description}

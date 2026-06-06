@@ -4,20 +4,20 @@ import { Target, Clock, Trophy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState, use } from "react";
+import { useEffect, useState } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 import { redirect, useSearchParams } from "next/navigation";
+
 export default function QuizzesPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
-    const [quizzes, setQuizzes] = useState<any[]>([]);
+  const [quizzes, setQuizzes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (status === "unauthenticated") redirect("/sign-in");
-    if (status === "authenticated" && session?.user) {
-      const loadQuizzes = async () => {
-        try {
-          const result = await fetchGAS("getQuizzes", { subjectId, userId: session.user.id });
+    const loadQuizzes = async () => {
+      try {
+        const result = await fetchGAS("getQuizzes", { subjectId, userId: "anonymous" });
           if (Array.isArray(result)) {
             setQuizzes(result);
           }
@@ -26,11 +26,11 @@ export default function QuizzesPage() {
         } finally {
           setLoading(false);
         }
-      };
-      loadQuizzes();
-    }
-  }, [status, session, subjectId]);
-  if (status === "loading" || loading) return <div className="p-8 text-center">Loading quizzes...</div>;
+    };
+    loadQuizzes();
+  }, [subjectId]);
+
+  if (loading) return <div className="p-8 text-center">Loading quizzes...</div>;
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">

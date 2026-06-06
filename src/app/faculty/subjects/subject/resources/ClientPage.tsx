@@ -28,8 +28,10 @@ export default function ManageResourcesPage() {
     setLoading(true);
     try {
       const data = await fetchGAS("getResources", { subjectId });
-      if (data && !data.error) {
+      if (Array.isArray(data)) {
         setResources(data);
+      } else {
+        setResources([]);
       }
     } catch (err) {
       console.error("Error fetching resources:", err);

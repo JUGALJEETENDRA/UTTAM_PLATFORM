@@ -31,6 +31,7 @@ export default function MindMapsClientPage() {
   const [title, setTitle] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [saving, setSaving] = useState(false);
+  const [imageErrors, setImageErrors] = useState<{[id: string]: boolean}>({});
 
   useEffect(() => {
     if (subjectId) {
@@ -54,25 +55,70 @@ export default function MindMapsClientPage() {
     }
   };
 
+  const [targetType, setTargetType] = useState<"module" | "subtopic">("module");
+  const [subtopicId, setSubtopicId] = useState("");
+
   const handleEdit = (map: MindMap) => {
     setEditingId(map.id || null);
     setModuleId(map.moduleId || "");
-    setTitle(map.title || "");
+    
+    // Auto-detect target type based on title
+    const mod = modules.find(m => m.id === map.moduleId);
+    let foundSubtopic = "";
+    let type: "module" | "subtopic" = "module";
+    
+    if (mod) {
+      const sub = mod.subtopics?.find((s: any) => s.title === map.title);
+      if (sub && map.title !== mod.title) {
+        foundSubtopic = sub.id;
+        type = "subtopic";
+      }
+    }
+    
+    setTargetType(type);
+    setSubtopicId(foundSubtopic);
     setImageUrl(map.imageUrl || "");
     setShowForm(true);
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
   };
 
   const handleCreateNew = () => {
     setEditingId(null);
     setModuleId("");
-    setTitle("");
+    setSubtopicId("");
+    setTargetType("module");
     setImageUrl("");
     setShowForm(true);
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
   };
 
   const handleSave = async () => {
-    if (!title || !imageUrl) {
-      toast.error("Title and Image URL are required");
+    if (!moduleId) {
+      toast.error("Please select a module");
+      return;
+    }
+
+    let finalTitle = "";
+    const mod = modules.find(m => m.id === moduleId);
+    if (!mod) return;
+
+    if (targetType === "module") {
+      finalTitle = mod.title;
+    } else {
+      if (!subtopicId) {
+        toast.error("Please select a subtopic");
+        return;
+      }
+      const sub = mod.subtopics?.find((s: any) => s.id === subtopicId);
+      if (!sub) {
+        toast.error("Subtopic not found");
+        return;
+      }
+      finalTitle = sub.title;
+    }
+
+    if (!imageUrl) {
+      toast.error("Image URL is required");
       return;
     }
     
@@ -82,7 +128,7 @@ export default function MindMapsClientPage() {
         id: editingId,
         subjectId,
         moduleId,
-        title,
+        title: finalTitle,
         imageUrl
       };
       const res = await fetchGAS("saveMindMap", payload);
@@ -144,28 +190,53 @@ export default function MindMapsClientPage() {
           <CardContent className="space-y-4 pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-sm font-bold text-zinc-700">Link to Module (Optional)</label>
+                <label className="text-sm font-bold text-zinc-700">Link Target To</label>
+                <select 
+                  className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm"
+                  value={targetType}
+                  onChange={e => {
+                    setTargetType(e.target.value as any);
+                    setSubtopicId("");
+                  }}
+                >
+                  <option value="module">Whole Module</option>
+                  <option value="subtopic">Specific Subtopic</option>
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-zinc-700">Select Module</label>
                 <select 
                   className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm"
                   value={moduleId}
-                  onChange={e => setModuleId(e.target.value)}
+                  onChange={e => {
+                    setModuleId(e.target.value);
+                    setSubtopicId("");
+                  }}
                 >
-                  <option value="">-- No Module Linked --</option>
+                  <option value="">-- Select Module --</option>
                   {modules.map(m => (
                     <option key={m.id} value={m.id}>Module {m.moduleNo}: {m.title}</option>
                   ))}
                 </select>
               </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-bold text-zinc-700">Title</label>
-                <input 
-                  type="text" 
-                  className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm"
-                  placeholder="e.g. Overview of Quantum Mechanics"
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                />
-              </div>
+
+              {targetType === "subtopic" && moduleId && (
+                <div className="space-y-1.5 md:col-span-2">
+                  <label className="text-sm font-bold text-zinc-700">Select Subtopic</label>
+                  <select 
+                    className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm"
+                    value={subtopicId}
+                    onChange={e => setSubtopicId(e.target.value)}
+                  >
+                    <option value="">-- Select Subtopic --</option>
+                    {modules.find(m => m.id === moduleId)?.subtopics?.map((s: any) => (
+                      <option key={s.id} value={s.id}>{s.title}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               <div className="space-y-1.5 md:col-span-2">
                 <label className="text-sm font-bold text-zinc-700 flex items-center">
                   <ImageIcon className="w-4 h-4 mr-1.5 text-zinc-500" />
@@ -202,25 +273,28 @@ export default function MindMapsClientPage() {
             return (
               <Card key={map.id} className="overflow-hidden hover:shadow-lg transition-all group">
                 <div className="h-40 w-full bg-zinc-100 border-b border-zinc-200 overflow-hidden relative">
-                  {map.imageUrl ? (
+                  {map.imageUrl && !imageErrors[map.id!] ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img 
                       src={(() => {
-                        let url = map.imageUrl;
+                        let url = map.imageUrl || "";
                         if (url.includes('drive.google.com')) {
                           const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
                           if (match && match[1]) {
-                            return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                            // Use Google Drive thumbnail API to bypass virus scan redirect that breaks images
+                            return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800-h400`;
                           }
                         }
                         return url.startsWith('/') || url.startsWith('http') ? url : `/${url}`;
                       })()}
                       alt={map.title} 
                       className="w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition-opacity" 
+                      onError={() => setImageErrors(prev => ({ ...prev, [map.id!]: true }))}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-zinc-300">
-                      <ImageIcon className="w-12 h-12" />
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-purple-50">
+                      <Brain className="w-16 h-16 text-purple-200 mb-2" strokeWidth={1.5} />
+                      <span className="text-xs font-semibold text-purple-300 uppercase tracking-wider">Mind Map</span>
                     </div>
                   )}
                   {module && (

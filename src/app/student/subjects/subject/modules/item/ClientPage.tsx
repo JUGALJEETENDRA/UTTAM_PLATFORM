@@ -114,11 +114,29 @@ export default function ModuleDetailPage() {
             subtopic = { ...subtopic, ...subtopic.simulationData };
           }
           
-          if (typeof subtopic.otherUrl === 'string' && subtopic.otherUrl.startsWith("{")) {
+          if (typeof subtopic.otherUrl === 'string' && subtopic.otherUrl.trim().startsWith("{")) {
             try {
-              const parsedOther = JSON.parse(subtopic.otherUrl);
-              subtopic = { ...subtopic, ...parsedOther };
-            } catch(e) {}
+              const sanitizedStr = subtopic.otherUrl.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
+              let parsedOther = JSON.parse(sanitizedStr);
+              
+              // Handle double-encoded JSON strings
+              while (typeof parsedOther === 'string') {
+                parsedOther = JSON.parse(parsedOther);
+              }
+              
+              if (typeof parsedOther === 'object' && parsedOther !== null) {
+                subtopic = { ...subtopic, ...parsedOther };
+              }
+              
+              // Force empty strings for fields that might have parsed as empty strings
+              if (!subtopic.otherUrl || subtopic.otherUrl.trim() === "" || subtopic.otherUrl.trim().startsWith("{")) subtopic.otherUrl = "";
+              if (!subtopic.didYouKnowUrl || subtopic.didYouKnowUrl.trim() === "" || subtopic.didYouKnowUrl.trim().startsWith("{")) subtopic.didYouKnowUrl = "";
+              if (!subtopic.referenceUrl || subtopic.referenceUrl.trim() === "" || subtopic.referenceUrl.trim().startsWith("{")) subtopic.referenceUrl = "";
+            } catch(e) {
+              subtopic.otherUrl = "";
+              subtopic.didYouKnowUrl = "";
+              subtopic.referenceUrl = "";
+            }
           }
 
           const hasNotes = !!subtopic.notesUrl;
@@ -126,6 +144,7 @@ export default function ModuleDetailPage() {
           const subtopicQuizzes = moduleData.quizzes?.filter((q: any) => q.subtopicId === subtopic.subtopicNo || q.subtopicId === subtopic.id) || [];
           const subtopicSims = moduleData.simulations?.filter((s: any) => s.subtopicId === subtopic.subtopicNo || s.subtopicId === subtopic.id) || [];
           const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
+          const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
           // Simplification for client rendering without deep tracking
           const isNotesCompleted = true; 
           const isSimCompleted = true;
@@ -226,6 +245,15 @@ export default function ModuleDetailPage() {
                       <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`}>
                         <Button variant="outline" className="bg-white hover:bg-red-50 border-red-200 text-red-700 text-sm font-bold h-11 px-6 shadow-sm">
                           <Target className="w-5 h-5 mr-2" /> Attempt Quiz
+                        </Button>
+                      </Link>
+                    </ResourceLinkTracker>
+                  )}
+                  {subtopicMindMaps.length > 0 && (
+                    <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="mindmap">
+                      <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${subtopicMindMaps[0].id}`}>
+                        <Button variant="outline" className="bg-white hover:bg-purple-50 border-purple-200 text-purple-700 text-sm font-bold h-11 px-6 shadow-sm">
+                          <BrainCircuit className="w-5 h-5 mr-2" /> View Mind Map
                         </Button>
                       </Link>
                     </ResourceLinkTracker>
