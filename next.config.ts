@@ -8,11 +8,14 @@ if (isGithubActions) {
   const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1] || 'PS-3-Pages-Client-Only';
   basePath = `/${repoName}`;
   assetPrefix = `/${repoName}/`;
-  process.env.NEXT_PUBLIC_IS_DEPLOYED = 'true';
 }
 
 const nextConfig: NextConfig = {
   output: "export",
+  env: {
+    NEXT_PUBLIC_IS_DEPLOYED: isGithubActions ? 'true' : 'false',
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
   images: {
     unoptimized: true,
   },
