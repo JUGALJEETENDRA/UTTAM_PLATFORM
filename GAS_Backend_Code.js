@@ -1,7 +1,7 @@
 // Google Apps Script (Code.gs)
 // Deploy this as a Web App: Execute as "Me", Access: "Anyone"
 
-const SPREADSHEET_ID = "1yCtEhBVg3hFYamkoOAz9f_SYsdC4TbWjW6culuFHOoA"; // Replace with your Spreadsheet ID
+const SPREADSHEET_ID = "ADD_YOUR_OWN_SHEET_HERE"; // Replace with your Spreadsheet ID
 
 let __ssCache = null;
 function getSpreadsheet() {
@@ -16,7 +16,7 @@ function invalidateCache(sheetName) {
   delete __sheetDataCache[sheetName];
   try {
     CacheService.getScriptCache().remove("sheet_" + sheetName);
-  } catch (e) {}
+  } catch (e) { }
 }
 
 // ==========================================
@@ -24,7 +24,7 @@ function invalidateCache(sheetName) {
 // ==========================================
 function setupDatabase() {
   const ss = getSpreadsheet();
-  
+
   const schemas = {
     "Subjects": ["id", "name", "description", "resources", "createdAt"],
     "Modules": ["id", "subjectId", "moduleNo", "title", "hours", "co", "description", "createdAt"],
@@ -52,12 +52,12 @@ function setupDatabase() {
         // ENHANCEMENT: Automatically append any missing columns to existing sheets
         let existingHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
         let missingHeaders = headers.filter(h => !existingHeaders.includes(h));
-        
+
         if (missingHeaders.length > 0) {
-           let startCol = existingHeaders.length + 1;
-           sheet.getRange(1, startCol, 1, missingHeaders.length).setValues([missingHeaders]);
-           sheet.getRange(1, startCol, 1, missingHeaders.length).setFontWeight("bold");
-           Logger.log(`Appended missing headers to ${sheetName}: ${missingHeaders.join(', ')}`);
+          let startCol = existingHeaders.length + 1;
+          sheet.getRange(1, startCol, 1, missingHeaders.length).setValues([missingHeaders]);
+          sheet.getRange(1, startCol, 1, missingHeaders.length).setFontWeight("bold");
+          Logger.log(`Appended missing headers to ${sheetName}: ${missingHeaders.join(', ')}`);
         }
       }
     }
@@ -73,7 +73,7 @@ function getSheetData(sheetName) {
   if (__sheetDataCache[sheetName]) {
     return __sheetDataCache[sheetName];
   }
-  
+
   try {
     const cached = CacheService.getScriptCache().get("sheet_" + sheetName);
     if (cached) {
@@ -81,13 +81,13 @@ function getSheetData(sheetName) {
       __sheetDataCache[sheetName] = parsed;
       return parsed;
     }
-  } catch (e) {}
+  } catch (e) { }
 
   const sheet = getSpreadsheet().getSheetByName(sheetName);
   if (!sheet) return [];
   const data = sheet.getDataRange().getValues();
   if (data.length < 2) return [];
-  
+
   const headers = data[0];
   const rows = data.slice(1);
   const result = rows.map(row => {
@@ -95,26 +95,26 @@ function getSheetData(sheetName) {
     headers.forEach((header, index) => {
       try {
         if (row[index] && typeof row[index] === 'string' && (row[index].startsWith('[') || row[index].startsWith('{'))) {
-           obj[header] = JSON.parse(row[index]);
+          obj[header] = JSON.parse(row[index]);
         } else {
-           obj[header] = row[index];
+          obj[header] = row[index];
         }
-      } catch(e) {
+      } catch (e) {
         obj[header] = row[index];
       }
     });
     return obj;
   });
-  
+
   __sheetDataCache[sheetName] = result;
-  
+
   try {
     const str = JSON.stringify(result);
     if (str.length < 100000) {
       CacheService.getScriptCache().put("sheet_" + sheetName, str, 21600); // 6 hours
     }
-  } catch(e) {}
-  
+  } catch (e) { }
+
   return result;
 }
 
@@ -139,10 +139,10 @@ function updateRow(sheetName, idField, idValue, updateData) {
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
   const idIndex = headers.indexOf(idField);
-  
+
   const rowIndex = data.findIndex((row, i) => i > 0 && row[idIndex] === idValue);
   if (rowIndex === -1) return null;
-  
+
   const existingRow = data[rowIndex];
   const updatedRow = existingRow.map((val, index) => {
     const header = headers[index];
@@ -153,7 +153,7 @@ function updateRow(sheetName, idField, idValue, updateData) {
     }
     return val;
   });
-  
+
   sheet.getRange(rowIndex + 1, 1, 1, headers.length).setValues([updatedRow]);
   return updateData;
 }
@@ -165,11 +165,11 @@ function deleteRow(sheetName, idField, idValue) {
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
   const idIndex = headers.indexOf(idField);
-  
+
   const rowIndex = data.findIndex((row, i) => i > 0 && row[idIndex] === idValue);
   if (rowIndex === -1) return false;
-  
-  sheet.deleteRow(rowIndex + 1); 
+
+  sheet.deleteRow(rowIndex + 1);
   return true;
 }
 
@@ -178,23 +178,23 @@ function executeSheetQuery(sheetName, queryStr) {
   const ss = getSpreadsheet();
   const sheet = ss.getSheetByName(sheetName);
   if (!sheet) throw new Error("Sheet not found");
-  
+
   const sheetId = sheet.getSheetId();
   const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&headers=1&gid=${sheetId}&tq=${encodeURIComponent(queryStr)}`;
   const token = ScriptApp.getOAuthToken();
-  
+
   const response = UrlFetchApp.fetch(url, {
     headers: { 'Authorization': 'Bearer ' + token },
     muteHttpExceptions: true
   });
-  
+
   const text = response.getContentText();
   try {
     const match = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/);
     if (match) {
       return JSON.parse(match[1]).table;
     }
-  } catch (e) {}
+  } catch (e) { }
   return { error: "Failed to parse query response", raw: text };
 }
 
@@ -222,29 +222,33 @@ function handleRequest(e, isPost) {
         result = getSheetData("Subjects");
         break;
       case "getStudentDashboard":
-         result = handleGetStudentDashboard(payload);
-         break;
-         
+        result = handleGetStudentDashboard(payload);
+        break;
+
       // --- Faculty Endpoints ---
       case "getFacultyDashboard":
-         result = handleGetFacultyDashboard(payload);
-         break;
+        result = handleGetFacultyDashboard(payload);
+        break;
       case "createSubject":
-         result = writeRow("Subjects", {
-           id: generateId(),
-           name: payload.name,
-           description: payload.description,
-           resources: JSON.stringify([]),
-           createdAt: new Date().toISOString()
-         });
-         break;
+        result = writeRow("Subjects", {
+          id: generateId(),
+          name: payload.name,
+          description: payload.description,
+          resources: JSON.stringify([]),
+          createdAt: new Date().toISOString()
+        });
+        break;
       case "deleteSubject":
-         result = { success: deleteRow("Subjects", "id", payload.subjectId) };
-         break;
+        result = { success: deleteRow("Subjects", "id", payload.subjectId) };
+        break;
       case "setupDatabase":
-         setupDatabase();
-         result = { success: true, message: "Database initialized successfully" };
-         break;
+        setupDatabase();
+        result = { success: true, message: "Database initialized successfully" };
+        break;
+
+      case "triggerDeploy":
+        result = handleTriggerDeploy(payload);
+        break;
 
       // --- Individual Pages Endpoints ---
       case "getModules":
@@ -262,7 +266,7 @@ function handleRequest(e, isPost) {
       case "updateSubtopicLinks":
         result = handleUpdateSubtopicLinks(payload);
         break;
-      
+
       // --- Mind Maps Endpoints ---
       case "getMindMaps":
         result = handleGetMindMaps(payload);
@@ -273,7 +277,7 @@ function handleRequest(e, isPost) {
       case "deleteMindMap":
         result = handleDeleteMindMap(payload);
         break;
-        
+
       // --- Resources Endpoints ---
       case "getResources":
         result = handleGetResources(payload);
@@ -322,7 +326,7 @@ function handleRequest(e, isPost) {
 
     return ContentService.createTextOutput(JSON.stringify(result))
       .setMimeType(ContentService.MimeType.JSON);
-      
+
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ error: err.toString(), stack: err.stack }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -336,7 +340,7 @@ function handleRequest(e, isPost) {
 function handleGetStudentDashboard(payload) {
   const subject = getSheetData("Subjects").find(s => s.id === payload.subjectId) || { name: "Sample Subject" };
   const subjectModules = getSheetData("Modules").filter(m => m.subjectId === payload.subjectId) || [];
-  
+
   const allSubtopicsData = getSheetData("Subtopics");
   subjectModules.forEach(mod => {
     mod.subtopics = allSubtopicsData.filter(s => s.moduleId === mod.id);
@@ -346,7 +350,7 @@ function handleGetStudentDashboard(payload) {
   allQuizzes.forEach(q => {
     q.module = subjectModules.find(m => m.id === q.moduleId);
     if (typeof q.questions === 'string') {
-      try { q.questions = JSON.parse(q.questions); } catch(e) { q.questions = []; }
+      try { q.questions = JSON.parse(q.questions); } catch (e) { q.questions = []; }
     }
   });
 
@@ -354,7 +358,7 @@ function handleGetStudentDashboard(payload) {
   flashcardDecks.forEach(d => {
     d.module = subjectModules.find(m => m.id === d.moduleId);
     if (typeof d.cards === 'string') {
-      try { d.cards = JSON.parse(d.cards); } catch(e) { d.cards = []; }
+      try { d.cards = JSON.parse(d.cards); } catch (e) { d.cards = []; }
     }
   });
 
@@ -374,7 +378,7 @@ function handleGetStudentDashboard(payload) {
 function handleGetFacultyDashboard(payload) {
   const allSubjects = getSheetData("Subjects");
   const allModules = getSheetData("Modules");
-  
+
   const subjectsWithCounts = allSubjects.map(s => {
     return {
       ...s,
@@ -398,12 +402,12 @@ function handleGetModules(payload) {
   const { subjectId } = payload;
   const modules = getSheetData("Modules").filter(m => m.subjectId === subjectId);
   const subtopics = getSheetData("Subtopics");
-  
+
   return modules.map(m => {
     m.subtopics = subtopics.filter(s => s.moduleId === m.id).map(st => {
       let simData = {};
       if (typeof st.simulationData === 'string') {
-        try { simData = JSON.parse(st.simulationData); } catch(e) {}
+        try { simData = JSON.parse(st.simulationData); } catch (e) { }
       } else if (typeof st.simulationData === 'object' && st.simulationData !== null) {
         simData = st.simulationData;
       }
@@ -434,7 +438,7 @@ function handleSaveMindMap(payload) {
     downloadUrl: downloadUrl || "",
     createdAt: new Date().toISOString()
   };
-  
+
   if (id) {
     updateRow("MindMaps", "id", id, data);
   } else {
@@ -457,7 +461,7 @@ function handleGetResources(payload) {
 function handleSaveResource(payload) {
   const { id, subjectId, title, type, link, detail } = payload;
   const resId = id || generateId();
-  
+
   // Auto-create the sheet if the user forgot to run setupDatabase
   const ss = getSpreadsheet();
   if (!ss.getSheetByName("Resources")) {
@@ -492,16 +496,16 @@ function handleUpdateSubtopicLinks(payload) {
   const { subtopicId, videoUrl, notesUrl, audioUrl } = payload;
   const allSubtopics = getSheetData("Subtopics");
   const subtopic = allSubtopics.find(s => s.id === subtopicId);
-  
+
   if (!subtopic) return { error: "Subtopic not found" };
 
   let simData = {};
   if (typeof subtopic.simulationData === 'string' && subtopic.simulationData.startsWith('{')) {
-    try { simData = JSON.parse(subtopic.simulationData); } catch (e) {}
+    try { simData = JSON.parse(subtopic.simulationData); } catch (e) { }
   } else if (typeof subtopic.simulationData === 'object') {
     simData = subtopic.simulationData || {};
   }
-  
+
   simData.videoUrl = videoUrl;
   simData.notesUrl = notesUrl;
   if (audioUrl !== undefined) {
@@ -518,15 +522,15 @@ function handleUpdateSubtopicLinks(payload) {
     simulationData: JSON.stringify(simData)
   });
 
-  return { 
-    success: true, 
-    subtopic: { 
-      videoUrl, 
-      notesUrl, 
+  return {
+    success: true,
+    subtopic: {
+      videoUrl,
+      notesUrl,
       videoLanguages: simData.videoLanguages || [],
       audioUrl: simData.audioUrl || "",
       audioLanguages: simData.audioLanguages || []
-    } 
+    }
   };
 }
 
@@ -534,14 +538,14 @@ function handleGetModule(payload) {
   const { moduleId } = payload;
   const mod = getSheetData("Modules").find(m => m.id === moduleId);
   if (!mod) return { error: "Module not found" };
-  
+
   mod.subtopics = getSheetData("Subtopics")
     .filter(s => s.moduleId === moduleId)
     .sort((a, b) => a.order - b.order)
     .map(st => {
       let simData = {};
       if (typeof st.simulationData === 'string') {
-        try { simData = JSON.parse(st.simulationData); } catch(e) {}
+        try { simData = JSON.parse(st.simulationData); } catch (e) { }
       } else if (typeof st.simulationData === 'object' && st.simulationData !== null) {
         simData = st.simulationData;
       }
@@ -561,7 +565,7 @@ function handleGetQuizzes(payload) {
   quizzes.forEach(q => {
     q.module = allModules.find(m => m.id === q.moduleId);
     if (typeof q.questions === 'string') {
-      try { q.questions = JSON.parse(q.questions); } catch(e) { q.questions = []; }
+      try { q.questions = JSON.parse(q.questions); } catch (e) { q.questions = []; }
     }
   });
   return quizzes;
@@ -573,7 +577,7 @@ function handleGetQuiz(payload) {
   if (quiz) {
     quiz.module = getSheetData("Modules").find(m => m.id === quiz.moduleId);
     if (typeof quiz.questions === 'string') {
-      try { quiz.questions = JSON.parse(quiz.questions); } catch(e) { quiz.questions = []; }
+      try { quiz.questions = JSON.parse(quiz.questions); } catch (e) { quiz.questions = []; }
     }
   }
   return quiz;
@@ -583,7 +587,7 @@ function handleSaveModule(payload) {
   const { subjectId, moduleId, moduleNo, title, hours, co, subtopics } = payload;
   const newModuleId = moduleId || generateId();
   const description = payload.description || "";
-  
+
   const moduleData = {
     id: newModuleId,
     subjectId,
@@ -637,7 +641,7 @@ function handleSaveModule(payload) {
 function handleSaveQuiz(payload) {
   const { id, subjectId, moduleId, subtopicId, title, timeLimit, totalMarks, documentUrl, totalQuestionsToAsk, questions } = payload;
   const quizId = id || generateId();
-  
+
   const quizData = {
     id: quizId,
     subjectId,
@@ -711,7 +715,7 @@ function handleGetSimulation(payload) {
 function handleSaveSimulation(payload) {
   const { id, subjectId, moduleId, subtopicId, title, description, difficulty, estimatedTime, learningOutcome, frontendUrl } = payload;
   const simId = id || generateId();
-  
+
   const simData = {
     id: simId,
     subjectId,
@@ -736,4 +740,44 @@ function handleSaveSimulation(payload) {
 function handleDeleteSimulation(payload) {
   const { id } = payload;
   return { success: deleteRow("Simulations", "id", id) };
+}
+
+function handleTriggerDeploy(payload) {
+  // Use Script Properties to store the GITHUB_PAT securely, or fallback to payload token.
+  // We recommend the user adds GITHUB_PAT to their GAS Script Properties.
+  const props = PropertiesService.getScriptProperties();
+  const token = props.getProperty('GITHUB_PAT') || payload.token;
+
+  if (!token) {
+    return { error: "GitHub token is required to trigger deployment. Please add GITHUB_PAT to Script Properties." };
+  }
+
+  const owner = "SourishAshtikar";
+  const repo = "PS-3-Pages-Client-Only";
+  const url = `https://api.github.com/repos/${owner}/${repo}/dispatches`;
+
+  const options = {
+    method: 'post',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    },
+    payload: JSON.stringify({
+      event_type: "deploy-from-gas"
+    }),
+    muteHttpExceptions: true
+  };
+
+  try {
+    const response = UrlFetchApp.fetch(url, options);
+    const code = response.getResponseCode();
+    if (code >= 200 && code < 300) {
+      return { success: true, message: "Deployment triggered successfully!" };
+    } else {
+      return { error: `GitHub API Error: ${code}`, details: response.getContentText() };
+    }
+  } catch (err) {
+    return { error: err.toString() };
+  }
 }

@@ -130,7 +130,28 @@ export default function FacultyDashboardPage() {
                 <HardDrive className="w-4 h-4 mr-2" />
                 Initialize Database
               </Button>
-              <p className="text-xs text-zinc-500 mt-2 text-center">Run this once to create required Google Sheets.</p>
+              <p className="text-xs text-zinc-500 mt-2 text-center mb-4">Run this once to create required Google Sheets.</p>
+              
+              <Button 
+                variant="default" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={async () => {
+                  try {
+                    const res = await fetchGAS("triggerDeploy");
+                    if (res && res.success) {
+                      alert("Deployment triggered successfully! The deployed site will be updated in a few minutes.");
+                    } else {
+                      alert(res?.error || "Failed to trigger deployment.");
+                    }
+                  } catch (e) {
+                    alert("Error communicating with server.");
+                  }
+                }}
+              >
+                <Target className="w-4 h-4 mr-2" />
+                Commit to Main (Deploy)
+              </Button>
+              <p className="text-xs text-zinc-500 mt-2 text-center">Save changes and rebuild the live web application.</p>
             </CardContent>
           </Card>
 

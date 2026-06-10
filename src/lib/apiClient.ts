@@ -1,6 +1,46 @@
 export const GAS_WEB_APP_URL = process.env.NEXT_PUBLIC_GAS_URL || "";
 
+declare global {
+  interface Window {
+    _dataJsonPromise?: Promise<any>;
+  }
+}
+
 export async function fetchGAS(action: string, payload: Record<string, any> = {}) {
+  // If deployed and not on a faculty page, intercept READ requests and use local data.json
+  const isDeployed = process.env.NEXT_PUBLIC_IS_DEPLOYED === 'true';
+  const isFaculty = typeof window !== 'undefined' && window.location.pathname.includes('/faculty');
+  
+  if (isDeployed && !isFaculty) {
+    if (typeof window !== 'undefined') {
+      if (!window._dataJsonPromise) {
+        // Fetch the local data.json relative to the base path
+        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+        window._dataJsonPromise = fetch(`${basePath}/data.json`).then(res => res.json());
+      }
+      
+      try {
+        const dataJson = await window._dataJsonPromise;
+        
+        if (action === 'getSubjects') return dataJson.getSubjects || [];
+        if (action === 'getStudentDashboard') return dataJson.getStudentDashboard[payload.subjectId] || null;
+        if (action === 'getModules') return dataJson.getModules[payload.subjectId] || [];
+        if (action === 'getModule') return dataJson.getModule[payload.moduleId] || null;
+        if (action === 'getQuizzes') return dataJson.getQuizzes[payload.subjectId] || [];
+        if (action === 'getQuiz') return dataJson.getQuiz[payload.quizId] || null;
+        if (action === 'getSimulations') return dataJson.getSimulations[payload.subjectId] || [];
+        if (action === 'getSimulation') return dataJson.getSimulation[payload.simulationId] || null;
+        if (action === 'getFlashcardDecks') return dataJson.getFlashcardDecks[payload.subjectId] || [];
+        if (action === 'getFlashcardDeck') return dataJson.getFlashcardDeck[payload.deckId] || null;
+        if (action === 'getMindMaps') return dataJson.getMindMaps[payload.subjectId] || [];
+        
+        // If not a read action or not handled, it will fall through to GAS (though likely fail if offline/static)
+      } catch (err) {
+        console.error("Failed to load local data.json:", err);
+      }
+    }
+  }
+
   try {
     const url = new URL(GAS_WEB_APP_URL);
     url.searchParams.append('action', action);
