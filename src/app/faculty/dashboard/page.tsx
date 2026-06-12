@@ -65,7 +65,7 @@ export default function FacultyDashboardPage() {
             <h2 className="text-xl font-bold text-zinc-900">Your Subjects</h2>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {subjects && subjects.length > 0 ? (
               subjects.map((subject: any) => (
                 <Link key={subject.id} href={`/faculty/subjects/subject/modules?subjectId=${subject.id}`}>
@@ -84,7 +84,7 @@ export default function FacultyDashboardPage() {
                 </Link>
               ))
             ) : (
-              <div className="col-span-1 sm:col-span-2 p-8 text-center border border-dashed border-zinc-300 rounded-lg bg-zinc-50">
+              <div className="col-span-1 sm:col-span-3 p-8 text-center border border-dashed border-zinc-300 rounded-lg bg-zinc-50">
                 <p className="text-zinc-500">No subjects created yet. Create one to get started!</p>
               </div>
             )}

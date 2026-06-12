@@ -35,8 +35,8 @@ export default function SubjectSelectionPage() {
           <Skeleton className="h-4 w-4/6 max-w-xs rounded-md" />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-          {[1, 2, 3, 4].map((i) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+          {[1, 2, 3].map((i) => (
             <Card key={i} className="border border-zinc-100 h-full overflow-hidden flex flex-col justify-between bg-white shadow-sm">
               <div className="p-6 space-y-4">
                 <Skeleton className="w-12 h-12 rounded-xl" />
@@ -58,7 +58,7 @@ export default function SubjectSelectionPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16 max-w-4xl flex-1 flex flex-col justify-center items-center">
+    <div className="container mx-auto px-4 py-16 max-w-6xl flex-1 flex flex-col justify-center items-center">
       <div className="text-center mb-12 space-y-3">
         <h1 className="text-4xl font-extrabold text-zinc-900 tracking-tight">
           Choose your subject to learn
@@ -68,7 +68,7 @@ export default function SubjectSelectionPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
         {subjects.map((subject) => (
           <Link key={subject.id} href={`/student/subjects/subject?subjectId=${subject.id}`} className="block group">
             <Card className="border border-zinc-200 hover:border-primary/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-full cursor-pointer overflow-hidden flex flex-col justify-between bg-white">
@@ -77,7 +77,7 @@ export default function SubjectSelectionPage() {
                   <BookOpen className="w-6 h-6 group-hover:animate-pulse" />
                 </div>
                 <div className="space-y-2">
-                  <CardTitle className="text-2xl font-bold text-zinc-900 group-hover:text-primary transition-colors">
+                  <CardTitle className="text-xl font-bold text-zinc-900 group-hover:text-primary transition-colors">
                     {subject.name}
                   </CardTitle>
                   <CardDescription className="text-sm text-zinc-500 leading-relaxed">
@@ -95,7 +95,7 @@ export default function SubjectSelectionPage() {
         ))}
 
         {subjects.length === 0 && (
-          <div className="col-span-1 md:col-span-2 text-center py-12 text-zinc-500 bg-white border border-dashed border-zinc-300 rounded-xl">
+          <div className="col-span-1 md:col-span-3 text-center py-12 text-zinc-500 bg-white border border-dashed border-zinc-300 rounded-xl">
             <BookOpen className="w-8 h-8 text-zinc-300 mx-auto mb-3" />
             <p className="font-semibold text-zinc-700">No subjects found in Google Sheets.</p>
             <p className="text-sm">Please make sure the "Subjects" sheet has data with an 'id' and 'name' column.</p>
