@@ -66,26 +66,91 @@ export default function ManageFlashcardsPage() {
     updated[index][field] = value;
     setCards(updated);
   };
-  const handleDocxUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setLoading(true);
     try {
-      // 1. Read locally using mammoth
-      const arrayBuffer = await file.arrayBuffer();
-      const mammoth = await import("mammoth");
-      const result = await mammoth.extractRawText({ arrayBuffer });
-      const text = result.value;
-      parseTextAndSetCards(text);
+      if (file.name.toLowerCase().endsWith(".csv")) {
+        const text = await file.text();
+        parseCsvAndSetCards(text);
+      } else {
+        // 1. Read locally using mammoth
+        const arrayBuffer = await file.arrayBuffer();
+        const mammoth = await import("mammoth");
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        const text = result.value;
+        parseTextAndSetCards(text);
+      }
       // Google Drive API upload removed as per request.
       setDocumentUrl("local-parsed-only");
-      toast.success("Document parsed successfully!");
     } catch (err) {
       console.error(err);
       toast.error("An error occurred during file processing.");
     } finally {
       setLoading(false);
       if (e.target) e.target.value = ""; // reset file input
+    }
+  };
+
+  const parseCsvAndSetCards = (text: string) => {
+    if (!text.trim()) return;
+    const newCards: FlashcardForm[] = [];
+    
+    // Simple CSV parser
+    let inQuote = false;
+    let currentVal = '';
+    const rows: string[][] = [];
+    let currentRow: string[] = [];
+    
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (char === '"') {
+        if (inQuote && text[i+1] === '"') {
+          currentVal += '"';
+          i++; // skip next quote
+        } else {
+          inQuote = !inQuote;
+        }
+      } else if (char === ',' && !inQuote) {
+        currentRow.push(currentVal.trim());
+        currentVal = '';
+      } else if ((char === '\n' || char === '\r') && !inQuote) {
+        if (char === '\r' && text[i+1] === '\n') {
+          i++; // skip \n
+        }
+        currentRow.push(currentVal.trim());
+        if (currentRow.length > 1 || currentRow[0].length > 0) {
+          rows.push(currentRow);
+        }
+        currentRow = [];
+        currentVal = '';
+      } else {
+        currentVal += char;
+      }
+    }
+    if (currentVal.length > 0 || currentRow.length > 0) {
+      currentRow.push(currentVal.trim());
+      rows.push(currentRow);
+    }
+    
+    // Skip header row if it's Front,Back or similar
+    let startIdx = 0;
+    if (rows.length > 0 && rows[0].length >= 2 && rows[0][0].toLowerCase().includes("front")) {
+      startIdx = 1;
+    }
+    
+    for (let i = startIdx; i < rows.length; i++) {
+      if (rows[i].length >= 2 && (rows[i][0] || rows[i][1])) {
+        newCards.push({ question: rows[i][0], answer: rows[i][1] });
+      }
+    }
+    
+    if (newCards.length > 0) {
+      setCards([...cards.filter(c => c.question.trim() !== ""), ...newCards]);
+      toast.success(`Successfully parsed ${newCards.length} flashcards from CSV!`);
+    } else {
+      toast.error("Failed to parse flashcards. Please check the format in the CSV file.");
     }
   };
   const parseTextAndSetCards = (text: string) => {
@@ -278,26 +343,26 @@ export default function ManageFlashcardsPage() {
                   </div>
                   <div className="mb-6 p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-3 relative group">
                     <h4 className="font-bold text-sm text-zinc-800 flex items-center">
-                      <FileUp className="w-4 h-4 mr-2 text-primary" /> Import Cards from DOCX
+                      <FileUp className="w-4 h-4 mr-2 text-primary" /> Import Cards from DOCX or CSV
                     </h4>
                     {documentUrl && (
                       <p className="text-xs text-green-600 font-semibold mb-2">
                         Document uploaded and attached successfully.
                       </p>
                     )}
-                    <p className="text-xs text-zinc-500">Upload a Word Document to extract cards. Format: <br/>1. Question Text<br/>Answer: Answer text</p>
+                    <p className="text-xs text-zinc-500">Upload a Word Document or CSV file to extract cards.<br/>DOCX Format: Question Text\nAnswer: Answer text<br/>CSV Format: Front,Back columns</p>
                     
                     <div className="border-2 border-dashed border-zinc-300 rounded-lg p-4 flex flex-col items-center justify-center bg-white hover:bg-zinc-50 transition-colors relative cursor-pointer">
                       <input
                         type="file"
-                        accept=".docx"
-                        onChange={handleDocxUpload}
+                        accept=".docx,.csv"
+                        onChange={handleFileUpload}
                         className="absolute inset-0 opacity-0 cursor-pointer"
                         disabled={loading}
                       />
                       <FileUp className="w-8 h-8 text-zinc-400 group-hover:text-primary transition-colors mb-2" />
                       <span className="font-semibold text-zinc-700 text-xs">
-                        Click or Drag .docx File here to Upload
+                        Click or Drag .docx or .csv File here to Upload
                       </span>
                     </div>
                   </div>

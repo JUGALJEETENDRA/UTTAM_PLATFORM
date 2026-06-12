@@ -302,6 +302,12 @@ function handleRequest(e, isPost) {
       case "deleteQuiz":
         result = handleDeleteQuiz(payload);
         break;
+      case "getFlashcardDecks":
+        result = handleGetFlashcardDecks(payload);
+        break;
+      case "getFlashcardDeck":
+        result = handleGetFlashcardDeck(payload);
+        break;
       case "saveFlashcardDeck":
         result = handleSaveFlashcardDeck(payload);
         break;
@@ -666,6 +672,31 @@ function handleSaveQuiz(payload) {
 function handleDeleteQuiz(payload) {
   const { id } = payload;
   return { success: deleteRow("Quizzes", "id", id) };
+}
+
+function handleGetFlashcardDecks(payload) {
+  const { subjectId } = payload;
+  const decks = getSheetData("FlashcardDecks").filter(d => d.subjectId === subjectId);
+  const allModules = getSheetData("Modules");
+  decks.forEach(d => {
+    d.module = allModules.find(m => m.id === d.moduleId);
+    if (typeof d.cards === 'string') {
+      try { d.cards = JSON.parse(d.cards); } catch (e) { d.cards = []; }
+    }
+  });
+  return decks;
+}
+
+function handleGetFlashcardDeck(payload) {
+  const { deckId } = payload;
+  const deck = getSheetData("FlashcardDecks").find(d => d.id === deckId);
+  if (deck) {
+    deck.module = getSheetData("Modules").find(m => m.id === deck.moduleId);
+    if (typeof deck.cards === 'string') {
+      try { deck.cards = JSON.parse(deck.cards); } catch (e) { deck.cards = []; }
+    }
+  }
+  return deck;
 }
 
 function handleSaveFlashcardDeck(payload) {
