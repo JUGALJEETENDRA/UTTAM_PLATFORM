@@ -5,12 +5,22 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronLeft, LayoutDashboard, FolderOpen, Gamepad2, Brain, Activity, Layers, Sparkles } from "lucide-react";
 import { fetchGAS } from "@/lib/apiClient";
+import { useSession } from "@/components/AuthProvider";
+import { redirect } from "next/navigation";
 
 function FacultySubjectLayoutInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
   const [subjectName, setSubjectName] = useState("Subject Loading...");
+
+  const { isAuthenticated, status } = useSession();
+
+  useEffect(() => {
+    if (status !== "loading" && !isAuthenticated) {
+      redirect("/faculty/login");
+    }
+  }, [status, isAuthenticated]);
 
   useEffect(() => {
     // Fetch subject name just for the header context
@@ -23,6 +33,10 @@ function FacultySubjectLayoutInner({ children }: { children: React.ReactNode }) 
       })
       .catch(() => setSubjectName("Subject Management"));
   }, [subjectId]);
+
+  if (status === "loading" || !isAuthenticated) {
+    return <div className="p-8 text-center">Checking authentication...</div>;
+  }
 
   const navLinks = [
     { name: "Modules & Subtopics", href: `/faculty/subjects/subject/modules?subjectId=${subjectId}`, icon: LayoutDashboard },
