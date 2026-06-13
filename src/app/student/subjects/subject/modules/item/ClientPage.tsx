@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { MarkCompletedButton } from "@/components/student/MarkCompletedButton";
 import { ResourceLinkTracker } from "@/components/student/ResourceLinkTracker";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -305,12 +304,6 @@ export default function ModuleDetailPage() {
                       </Button>
                     </Link>
                   )}
-                  <MarkCompletedButton 
-                    subtopicId={subtopic.id} 
-                    moduleId={id} 
-                    isInitiallyCompleted={completedSubtopics.includes(subtopic.id)} 
-                    canComplete={canComplete}
-                  />
                 </div>
               </div>
             </div>
