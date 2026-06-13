@@ -90,7 +90,7 @@ export default function ModuleDetailPage() {
       <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-8 mb-8">
         <div className="flex flex-wrap gap-2 mb-4">
           <Badge className="bg-primary/10 text-primary border-none hover:bg-primary/20">{moduleData.id.toUpperCase()}</Badge>
-          <Badge variant="secondary">{moduleData.co}</Badge>
+          <Badge variant="secondary" className="whitespace-normal h-auto py-1 text-left">{moduleData.co}</Badge>
           <Badge variant="outline" className="text-amber-600 border-amber-200 bg-amber-50">{moduleData.hours} Hours</Badge>
         </div>
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">

@@ -21,8 +21,8 @@ export function ModuleCard({ module, href }: { module: ModuleWithSubtopics; href
   return (
     <Card className="flex flex-col h-full hover:shadow-lg transition-shadow border-zinc-200">
       <CardHeader>
-        <div className="flex justify-end items-start mb-2">
-          <Badge variant="secondary" className="bg-zinc-100 text-zinc-600">
+        <div className="flex justify-start items-start mb-2">
+          <Badge variant="secondary" className="bg-zinc-100 text-zinc-600 whitespace-normal h-auto py-1 text-left">
             {module.co}
           </Badge>
         </div>
