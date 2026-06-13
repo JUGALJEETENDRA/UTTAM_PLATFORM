@@ -644,6 +644,36 @@ function handleSaveModule(payload) {
   return { success: true, moduleId: newModuleId };
 }
 
+function handleDeleteModule(payload) {
+  const { moduleId } = payload;
+  if (!moduleId) return { error: "moduleId is required" };
+
+  // Delete from Modules sheet
+  const moduleDeleted = deleteRow("Modules", "id", moduleId);
+
+  // Delete associated Subtopics
+  const subtopics = getSheetData("Subtopics").filter(s => s.moduleId === moduleId);
+  subtopics.forEach(st => deleteRow("Subtopics", "id", st.id));
+
+  // Delete associated Quizzes
+  const quizzes = getSheetData("Quizzes").filter(q => q.moduleId === moduleId);
+  quizzes.forEach(q => deleteRow("Quizzes", "id", q.id));
+
+  // Delete associated FlashcardDecks
+  const decks = getSheetData("FlashcardDecks").filter(d => d.moduleId === moduleId);
+  decks.forEach(d => deleteRow("FlashcardDecks", "id", d.id));
+
+  // Delete associated Simulations
+  const simulations = getSheetData("Simulations").filter(s => s.moduleId === moduleId);
+  simulations.forEach(s => deleteRow("Simulations", "id", s.id));
+
+  // Delete associated MindMaps
+  const mindmaps = getSheetData("MindMaps").filter(m => m.moduleId === moduleId);
+  mindmaps.forEach(m => deleteRow("MindMaps", "id", m.id));
+
+  return { success: moduleDeleted };
+}
+
 function handleSaveQuiz(payload) {
   const { id, subjectId, moduleId, subtopicId, title, timeLimit, totalMarks, documentUrl, totalQuestionsToAsk, questions } = payload;
   const quizId = id || generateId();

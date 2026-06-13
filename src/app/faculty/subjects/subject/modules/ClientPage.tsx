@@ -373,7 +373,28 @@ export default function ManageModulesPage() {
       toast.error(err.message || "Failed to process syllabus", { id: loadingToast });
     } finally {
       setIsUploadingSyllabus(false);
-      e.target.value = ''; // reset input
+    }
+  };
+
+  const handleDeleteModule = async (e: React.MouseEvent, moduleId: string) => {
+    e.stopPropagation();
+    if (!confirm("Are you sure you want to delete this module and all of its subtopics, quizzes, flashcards, simulations, and mind maps? This action cannot be undone.")) {
+      return;
+    }
+    
+    try {
+      const res = await fetchGAS("deleteModule", { moduleId });
+      if (res && res.success) {
+        toast.success("Module deleted successfully!");
+        fetchModules();
+        if (editingModuleId === moduleId) {
+          handleCancelEdit();
+        }
+      } else {
+        toast.error(res?.error || "Failed to delete module");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "An error occurred while deleting the module");
     }
   };
 
@@ -700,6 +721,14 @@ export default function ManageModulesPage() {
                       onClick={(e) => handleEditModule(e, mod)}
                     >
                       <Edit3 className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-zinc-500 hover:text-red-600 z-10"
+                      onClick={(e) => handleDeleteModule(e, mod.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
                     </Button>
                     {expandedModuleId === mod.id ? <ChevronUp className="w-4 h-4 text-zinc-500" /> : <ChevronDown className="w-4 h-4 text-zinc-500" />}
                   </div>
