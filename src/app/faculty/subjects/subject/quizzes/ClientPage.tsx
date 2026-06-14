@@ -114,23 +114,27 @@ export default function ManageQuizzesPage() {
     setQuestions(updated);
   };
 
-  const handleDocxUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setLoading(true);
     try {
-      // 1. Read locally using mammoth
-      const arrayBuffer = await file.arrayBuffer();
-      const mammoth = await import("mammoth");
-      const result = await mammoth.extractRawText({ arrayBuffer });
-      const text = result.value;
+      if (file.name.toLowerCase().endsWith(".csv")) {
+        const text = await file.text();
+        parseCsvAndSetQuestions(text);
+        setDocumentUrl("local-parsed-csv");
+      } else if (file.name.toLowerCase().endsWith(".docx")) {
+        const arrayBuffer = await file.arrayBuffer();
+        const mammoth = await import("mammoth");
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        const text = result.value;
 
-      parseTextAndSetQuestions(text);
-
-      // Google Drive API upload removed as per request.
-      setDocumentUrl("local-parsed-only");
-      toast.success("Document parsed successfully!");
+        parseTextAndSetQuestions(text);
+        setDocumentUrl("local-parsed-docx");
+      } else {
+        toast.error("Unsupported file type");
+      }
     } catch (err) {
       console.error(err);
       toast.error("An error occurred during file processing.");
@@ -186,6 +190,85 @@ export default function ManageQuizzesPage() {
       toast.success(`Successfully parsed ${newQuestions.length} questions from DOCX!`);
     } else {
       toast.error("Failed to parse questions. Please check the format in the DOCX file.");
+    }
+  };
+
+  const parseCsvAndSetQuestions = (text: string) => {
+    if (!text.trim()) return;
+
+    const newQuestions: QuestionForm[] = [];
+    
+    // A simple CSV parser that handles quotes and newlines
+    let inQuotes = false;
+    let currentField = '';
+    let currentLine: string[] = [];
+    const lines: string[][] = [];
+
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (char === '"') {
+        if (inQuotes && text[i + 1] === '"') {
+          currentField += '"';
+          i++; // skip escaped quote
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === ',' && !inQuotes) {
+        currentLine.push(currentField);
+        currentField = '';
+      } else if ((char === '\n' || char === '\r') && !inQuotes) {
+        if (char === '\r' && text[i + 1] === '\n') {
+          i++;
+        }
+        currentLine.push(currentField);
+        if (currentLine.some(f => f.trim() !== '')) {
+          lines.push(currentLine);
+        }
+        currentLine = [];
+        currentField = '';
+      } else {
+        currentField += char;
+      }
+    }
+    
+    if (currentField || currentLine.length > 0) {
+      currentLine.push(currentField);
+      lines.push(currentLine);
+    }
+
+    // Skip header (index 0)
+    for (let i = 1; i < lines.length; i++) {
+      const columns = lines[i];
+      if (columns.length >= 8) {
+        let answer = "A";
+        const rawAnswer = columns[6].trim();
+        const match = rawAnswer.match(/^[A-D]/i);
+        if (match) {
+          answer = match[0].toUpperCase();
+        }
+
+        newQuestions.push({
+          questionText: columns[1].trim(),
+          optionA: columns[2].trim(),
+          optionB: columns[3].trim(),
+          optionC: columns[4].trim(),
+          optionD: columns[5].trim(),
+          correctAnswer: answer,
+          marks: "1",
+          explanation: columns[7].trim(),
+          difficulty: difficulty
+        });
+      }
+    }
+
+    if (newQuestions.length > 0) {
+      setQuestions(prev => {
+        const filtered = prev.filter(q => q.questionText.trim() !== "");
+        return [...filtered, ...newQuestions];
+      });
+      toast.success(`Successfully parsed ${newQuestions.length} questions from CSV!`);
+    } else {
+      toast.error("Failed to parse questions from CSV. Please check the format.");
     }
   };
 
@@ -436,26 +519,29 @@ export default function ManageQuizzesPage() {
 
                   <div className="mb-6 p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-3 relative group">
                     <h4 className="font-bold text-sm text-zinc-800 flex items-center">
-                      <FileUp className="w-4 h-4 mr-2 text-primary" /> Import Questions from DOCX
+                      <FileUp className="w-4 h-4 mr-2 text-primary" /> Import Questions from DOCX / CSV
                     </h4>
                     {documentUrl && (
                       <p className="text-xs text-green-600 font-semibold mb-2">
                         Document uploaded and attached successfully.
                       </p>
                     )}
-                    <p className="text-xs text-zinc-500">Upload a Word Document to extract questions. Format: <br/>1. Question Text<br/>A) Option 1<br/>B) Option 2<br/>C) Option 3<br/>D) Option 4<br/>Answer: A. Explanation text...</p>
+                    <div className="text-xs text-zinc-500 space-y-1">
+                      <p><strong>DOCX Format:</strong> 1. Question Text, A) Option 1, B) Option 2, C) Option 3, D) Option 4, Answer: A. Explanation text...</p>
+                      <p><strong>CSV Format:</strong> "#","Question","Option A","Option B","Option C","Option D","Correct Answer","Rationale"</p>
+                    </div>
                     
                     <div className="border-2 border-dashed border-zinc-300 rounded-lg p-4 flex flex-col items-center justify-center bg-white hover:bg-zinc-50 transition-colors relative cursor-pointer">
                       <input
                         type="file"
-                        accept=".docx"
-                        onChange={handleDocxUpload}
+                        accept=".docx,.csv"
+                        onChange={handleFileUpload}
                         className="absolute inset-0 opacity-0 cursor-pointer"
                         disabled={loading}
                       />
                       <FileUp className="w-8 h-8 text-zinc-400 group-hover:text-primary transition-colors mb-2" />
-                      <span className="font-semibold text-zinc-700 text-xs">
-                        Click or Drag .docx File here to Upload
+                      <span className="font-semibold text-zinc-700 text-xs text-center">
+                        Click or Drag .docx or .csv File here to Upload
                       </span>
                     </div>
                   </div>
