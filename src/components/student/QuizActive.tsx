@@ -54,48 +54,6 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
     }[];
   } | null>(null);
 
-  // Countdown timer
-  useEffect(() => {
-    if (timeLeft <= 0 && !result) {
-      handleSubmit();
-      return;
-    }
-
-    const timer = setInterval(() => {
-      if (timeLeft > 0 && !result) {
-        setTimeLeft((prev) => prev - 1);
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [timeLeft, result]);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const handleSelectOption = (option: string) => {
-    const currentQuestion = quiz.questions[currentQuestionIndex];
-    setSelectedAnswers((prev) => ({
-      ...prev,
-      [currentQuestion.id]: option,
-    }));
-  };
-
-  const handleNext = () => {
-    if (currentQuestionIndex < quiz.questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prev) => prev - 1);
-    }
-  };
-
   const handleSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
@@ -135,6 +93,50 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
       });
       setIsSubmitting(false);
     }, 600);
+  };
+
+  // Countdown timer
+  useEffect(() => {
+    if (timeLeft <= 0 && !result) {
+      const timer = setTimeout(() => {
+        handleSubmit();
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+
+    const timer = setInterval(() => {
+      if (timeLeft > 0 && !result) {
+        setTimeLeft((prev) => prev - 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft, result]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const handleSelectOption = (option: string) => {
+    const currentQuestion = quiz.questions[currentQuestionIndex];
+    setSelectedAnswers((prev) => ({
+      ...prev,
+      [currentQuestion.id]: option,
+    }));
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex < quiz.questions.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((prev) => prev - 1);
+    }
   };
 
   const currentQuestion = quiz.questions[currentQuestionIndex];

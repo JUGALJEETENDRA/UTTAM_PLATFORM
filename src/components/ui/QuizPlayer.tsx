@@ -28,9 +28,11 @@ export default function QuizPlayer({ questions, originalFileUrl }: QuizPlayerPro
     setAnswers({});
     setSubmitted(false);
   };
-  
   useEffect(() => {
-    reshuffle();
+    const timer = setTimeout(() => {
+      reshuffle();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [questions]);
 
   const handleSelect = (questionId: string, optionIndex: number) => {

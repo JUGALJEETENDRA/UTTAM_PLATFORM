@@ -57,7 +57,7 @@ export function Footer() {
             <ul className="space-y-4 text-sm">
               <li className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span>Department of Information Technology,<br/>Engineering College Campus.</span>
+                <span>Department of Information Technology,<br />Engineering College Campus.</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-primary flex-shrink-0" />

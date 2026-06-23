@@ -12,6 +12,7 @@ if (isGithubActions) {
 
 const nextConfig: NextConfig = {
   output: "export",
+  optimizeFonts: false,
   env: {
     NEXT_PUBLIC_IS_DEPLOYED: isGithubActions ? 'true' : 'false',
     NEXT_PUBLIC_BASE_PATH: basePath,

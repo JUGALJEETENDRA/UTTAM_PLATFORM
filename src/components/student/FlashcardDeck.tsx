@@ -19,6 +19,20 @@ export function FlashcardDeck({ flashcards }: FlashcardDeckProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
+  const handleNext = () => {
+    setIsFlipped(false);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % flashcards.length);
+    }, 150);
+  };
+
+  const handlePrev = () => {
+    setIsFlipped(false);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev - 1 + flashcards.length) % flashcards.length);
+    }, 150);
+  };
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -43,20 +57,6 @@ export function FlashcardDeck({ flashcards }: FlashcardDeckProps) {
       </Card>
     );
   }
-
-  const handleNext = () => {
-    setIsFlipped(false);
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % flashcards.length);
-    }, 150);
-  };
-
-  const handlePrev = () => {
-    setIsFlipped(false);
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev - 1 + flashcards.length) % flashcards.length);
-    }, 150);
-  };
 
   const currentCard = flashcards[currentIndex];
 
