@@ -669,8 +669,8 @@ export default function StudentDashboard() {
     );
   }
 
-  const { subject, modules, quizzesWithAttempts, flashcardDecks, mindmaps = [], subjectResources } = data;
-  const activeModule = modules[0];
+  const { subject, modules = [], quizzesWithAttempts = [], flashcardDecks = [], mindmaps = [], subjectResources = [] } = data;
+  const activeModule = modules.length > 0 ? modules[0] : null;
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();

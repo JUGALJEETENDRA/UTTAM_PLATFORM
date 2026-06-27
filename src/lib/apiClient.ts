@@ -14,9 +14,10 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
   if (isDeployed && !isFaculty) {
     if (typeof window !== 'undefined') {
       if (!window._dataJsonPromise) {
-        // Fetch the local data.json relative to the base path
+        // Fetch the local data.json relative to the base path, with cache busting
         const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-        window._dataJsonPromise = fetch(`${basePath}/data.json`).then(res => res.json());
+        const buildTime = process.env.NEXT_PUBLIC_BUILD_TIME || '0';
+        window._dataJsonPromise = fetch(`${basePath}/data.json?v=${buildTime}`).then(res => res.json());
       }
       
       try {

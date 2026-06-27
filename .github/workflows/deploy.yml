@@ -5,12 +5,15 @@ on:
     branches: ["main"]
   workflow_dispatch:
   repository_dispatch:
-    types: [deploy-from-gas]
+    types: [deploy-from-dashboard]
 
 permissions:
   contents: read
   pages: write
   id-token: write
+
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 concurrency:
   group: "pages"
@@ -38,11 +41,10 @@ jobs:
         run: node scripts/fetch-data.js
 
       - name: Build with Next.js
-        # We pass the Google Apps Script URL securely from GitHub Secrets
         env:
           NEXT_PUBLIC_GAS_URL: ${{ secrets.NEXT_PUBLIC_GAS_URL }}
-          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
           NEXT_PUBLIC_FACULTY_PASSWORD: ${{ secrets.NEXT_PUBLIC_FACULTY_PASSWORD }}
+          NEXT_PUBLIC_BUILD_TIME: ${{ github.run_id }}
         run: npm run build
 
       # Add SPA fallback for GitHub Pages dynamic routes
