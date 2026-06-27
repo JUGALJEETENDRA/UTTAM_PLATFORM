@@ -241,6 +241,12 @@ function handleRequest(e, isPost) {
       case "deleteSubject":
         result = { success: deleteRow("Subjects", "id", payload.subjectId) };
         break;
+      case "updateSubject":
+        result = { success: updateRow("Subjects", "id", payload.subjectId, {
+          name: payload.name,
+          description: payload.description
+        }) !== null };
+        break;
       case "setupDatabase":
         setupDatabase();
         result = { success: true, message: "Database initialized successfully" };

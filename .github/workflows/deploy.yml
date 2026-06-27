@@ -5,7 +5,7 @@ on:
     branches: ["main"]
   workflow_dispatch:
   repository_dispatch:
-    types: [deploy-from-dashboard]
+    types: [deploy-from-dashboard, deploy-from-gas]
 
 permissions:
   contents: read
