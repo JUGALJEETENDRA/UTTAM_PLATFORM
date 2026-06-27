@@ -276,49 +276,5 @@ Analytics Dashboard
 
 ---
 
-# 🔮 Future Improvements
-
-- Authentication
-- Database Integration
-- User Profiles
-- Certificates
-- Leaderboards
-- AI-powered Learning Assistant
-- Assignment Submission
-- Notifications
-- Dark Mode
-- Real-time Collaboration
-
----
-
-# 🤝 Contributing
-
-Contributions are welcome!
-
-1. Fork the repository
-2. Create your feature branch
-
-```bash
-git checkout -b feature/NewFeature
-```
-
-3. Commit your changes
-
-```bash
-git commit -m "Add new feature"
-```
-
-4. Push the branch
-
-```bash
-git push origin feature/NewFeature
-```
-
-5. Open a Pull Request
-
----
-
-
-Made with ❤️ using Next.js & React
 
 </div>
