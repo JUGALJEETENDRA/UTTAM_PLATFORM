@@ -184,7 +184,7 @@ Faculty dashboard providing learning insights and student engagement statistics.
 Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/student-platform.git
+git clone https://sourishashtikar.github.io/PS-3-Pages-Client-Only/
 ```
 
 Navigate into the project
@@ -318,13 +318,6 @@ git push origin feature/NewFeature
 
 ---
 
-# 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-<div align="center">
 
 Made with ❤️ using Next.js & React
 
