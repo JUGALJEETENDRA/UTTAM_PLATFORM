@@ -688,7 +688,7 @@ export default function StudentDashboard() {
   };
 
   // Identify theme variants safely using lowercase checks
-  const subjectNameLower = subject?.name?.toLowerCase() || "";
+  const subjectNameLower = String(subject?.name || "").toLowerCase();
   const isDigitalBusiness = subjectNameLower.includes("digital business");
   const isUiProgramming = subjectNameLower.includes("ui programming");
   const isPythonProgramming = subjectNameLower.includes("python");
@@ -1082,7 +1082,7 @@ export default function StudentDashboard() {
 
     // Helper to generate file structure from modules
     const getModuleFiles = (mod: any) => {
-      const slug = mod.title.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+      const slug = String(mod.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "_");
       return [
         { name: `${slug}.py`, code: getCodeSnippet(`${slug}.py`, mod.title) },
         { name: `test_${slug}.py`, code: getCodeSnippet(`test_${slug}.py`, mod.title) },
@@ -1666,7 +1666,7 @@ export default function StudentDashboard() {
   // RENDER VARIANT B: UI PROGRAMMING & DEFAULT FALLBACK LOOK (NEUBRUTALISM STYLE)
   // ==========================================
   const renderModulePreview = (moduleNo: number, title: string) => {
-    const normalizedTitle = title.toLowerCase();
+    const normalizedTitle = String(title || "").toLowerCase();
 
     // Module 1: User Persona Card, User Journey, Profile Layout
     if (normalizedTitle.includes("intro") || normalizedTitle.includes("thinking") || moduleNo === 1) {
@@ -1961,7 +1961,7 @@ export default function StudentDashboard() {
   };
 
   const renderQuizPreview = (quizIndex: number, title: string) => {
-    const normalizedTitle = title.toLowerCase();
+    const normalizedTitle = String(title || "").toLowerCase();
 
     if (normalizedTitle.includes("layout") || normalizedTitle.includes("concept") || quizIndex === 1) {
       return (

@@ -409,7 +409,7 @@ export default function ModulesPage() {
             {modules.map((mod: any, idx: number) => {
               // Custom helper to resolve clean short titles and func names without underscores
               const getCleanPythonDetails = (title: string) => {
-                const lower = title.toLowerCase();
+                const lower = String(title || "").toLowerCase();
                 let shortTitle = "";
                 let funcName = "";
 
@@ -494,7 +494,7 @@ export default function ModulesPage() {
   // RENDER VARIANT B: UI PROGRAMMING (NEUBRUTALISM /FIGMA CANVAS WORKBENCH)
   // ==========================================
   const renderModulePreview = (moduleNo: number, title: string) => {
-    const normalizedTitle = title.toLowerCase();
+    const normalizedTitle = String(title || "").toLowerCase();
 
     // Module 1: User Persona Card, User Journey, Profile Layout
     if (normalizedTitle.includes("intro") || normalizedTitle.includes("thinking") || moduleNo === 1) {
