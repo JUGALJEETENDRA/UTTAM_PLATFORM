@@ -144,7 +144,6 @@ function getGoogleDriveFileId(url: string | null | undefined): string | null {
 
 const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
   const [isFullscreenModalOpen, setIsFullscreenModalOpen] = useState(false);
-  const [useEmbed, setUseEmbed] = useState(true);
   if (!url) return null;
 
   const lowerUrl = url.toLowerCase();
@@ -152,7 +151,6 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getEmbedUrl(url);
 
-  const openStreamUrl = driveFileId ? `https://docs.google.com/uc?export=open&id=${driveFileId}` : url;
   const downloadVideoUrl = driveFileId ? `https://drive.google.com/uc?export=download&id=${driveFileId}` : url;
   const driveAppUrl = driveFileId ? `https://drive.google.com/file/d/${driveFileId}/view` : url;
 
@@ -160,27 +158,7 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
     <div className="w-full flex flex-col select-none">
       {/* Video Viewport Container */}
       <div className="w-full aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
-        {embedUrl && useEmbed ? (
-          <iframe
-            src={embedUrl}
-            className="w-full h-full border-0 bg-black"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-            allowFullScreen
-            referrerPolicy="no-referrer"
-            title={title}
-          />
-        ) : driveFileId ? (
-          <video
-            controls
-            playsInline
-            preload="metadata"
-            className="w-full h-full object-contain bg-black"
-          >
-            <source src={openStreamUrl} type="video/mp4" />
-            <source src={url} type="video/mp4" />
-            Your browser does not support HTML5 video streaming.
-          </video>
-        ) : isDirectVideo ? (
+        {isDirectVideo ? (
           <video
             controls
             playsInline
@@ -190,6 +168,15 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
             <source src={url} />
             Your browser does not support the video tag.
           </video>
+        ) : embedUrl ? (
+          <iframe
+            src={embedUrl}
+            className="w-full h-full border-0 bg-black"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+            allowFullScreen
+            referrerPolicy="no-referrer"
+            title={title}
+          />
         ) : null}
       </div>
 
@@ -238,18 +225,6 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
         </div>
       </div>
 
-      {driveFileId && (
-        <div className="flex justify-end pt-1 px-1">
-          <button
-            type="button"
-            onClick={() => setUseEmbed(!useEmbed)}
-            className="text-[11px] text-blue-600 hover:underline font-bold"
-          >
-            {useEmbed ? "Switch to Direct HTML5 Player" : "Switch to Drive Embed Player"}
-          </button>
-        </div>
-      )}
-
       {/* In-App Fullscreen Theater Modal */}
       {isFullscreenModalOpen && (
         <div className="fixed inset-0 z-[200] bg-slate-950/98 backdrop-blur-2xl flex flex-col p-3 sm:p-6 animate-in fade-in duration-200">
@@ -282,27 +257,7 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
           </div>
 
           <div className="flex-1 w-full h-full relative rounded-xl overflow-hidden bg-black flex items-center justify-center">
-            {embedUrl && useEmbed ? (
-              <iframe
-                src={`${embedUrl}${embedUrl.includes('?') ? '&' : '?'}autoplay=1`}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                allowFullScreen
-                referrerPolicy="no-referrer"
-                title={title}
-              />
-            ) : driveFileId ? (
-              <video
-                controls
-                autoPlay
-                playsInline
-                preload="metadata"
-                className="w-full h-full object-contain"
-              >
-                <source src={openStreamUrl} type="video/mp4" />
-                <source src={url} type="video/mp4" />
-              </video>
-            ) : isDirectVideo ? (
+            {isDirectVideo ? (
               <video
                 controls
                 autoPlay
@@ -312,6 +267,15 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
               >
                 <source src={url} />
               </video>
+            ) : embedUrl ? (
+              <iframe
+                src={`${embedUrl}${embedUrl.includes('?') ? '&' : '?'}autoplay=1`}
+                className="w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                allowFullScreen
+                referrerPolicy="no-referrer"
+                title={title}
+              />
             ) : null}
           </div>
 
