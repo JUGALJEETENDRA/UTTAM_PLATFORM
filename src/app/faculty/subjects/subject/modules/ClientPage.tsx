@@ -209,6 +209,40 @@ export default function ManageModulesPage() {
     setSubtopics([{...initialSubtopicState}]);
     setMessage(null);
   };
+
+  const handleCloudinaryAudioUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>, langIndex?: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingIndex(index);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "faculty_uploads");
+
+      const res = await fetch("https://api.cloudinary.com/v1_1/dboelpizj/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok && data.secure_url) {
+        toast.success("Audio uploaded to Cloudinary!");
+        if (langIndex !== undefined) {
+          handleLanguageChange(index, "audioLanguages", langIndex, "url", data.secure_url);
+        } else {
+          handleSubtopicChange(index, "audioUrl", data.secure_url);
+          handleSubtopicChange(index, "audioDownloadUrl" as any, data.secure_url);
+        }
+      } else {
+        toast.error(data.error?.message || "Failed to upload audio to Cloudinary");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Cloudinary upload error");
+    } finally {
+      setUploadingIndex(null);
+      e.target.value = "";
+    }
+  };
+
   const handleUploadFile = async (subtopicId: string, index: number, resourceType: string) => {
     if (!subtopicId) return;
     const fileInput = document.getElementById(`file-${index}-${resourceType}`) as HTMLInputElement;
@@ -615,14 +649,40 @@ export default function ManageModulesPage() {
                           )}
                           {st.selectedResourceType === "audio" && (
                             <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
-                              <label className="block text-xs font-bold text-zinc-700 mb-1">English Audio URL (Default)</label>
-                              <input
-                                type="text"
-                                placeholder="https://..."
-                                value={st.audioUrl}
-                                onChange={(e) => handleSubtopicChange(index, "audioUrl", e.target.value)}
-                                className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary mb-4"
-                              />
+                              <label className="block text-xs font-bold text-zinc-700 mb-1">English Audio File / URL (Default)</label>
+                              <div className="flex flex-col sm:flex-row items-center gap-2 mb-4">
+                                <input
+                                  type="text"
+                                  placeholder="Paste Audio URL or upload file..."
+                                  value={st.audioUrl}
+                                  onChange={(e) => handleSubtopicChange(index, "audioUrl", e.target.value)}
+                                  className="w-full sm:flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
+                                />
+                                <div className="w-full sm:w-auto relative shrink-0">
+                                  <input
+                                    type="file"
+                                    accept="audio/mp3,audio/wav,audio/m4a,audio/mpeg,audio/*"
+                                    id={`cloudinary-audio-${index}`}
+                                    className="hidden"
+                                    onChange={(e) => handleCloudinaryAudioUpload(index, e)}
+                                  />
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => document.getElementById(`cloudinary-audio-${index}`)?.click()}
+                                    disabled={uploadingIndex === index}
+                                    className="w-full sm:w-auto bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700 text-xs font-bold h-10 px-3 flex items-center justify-center gap-1.5"
+                                  >
+                                    {uploadingIndex === index ? (
+                                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                    ) : (
+                                      <UploadCloud className="w-3.5 h-3.5 text-purple-600" />
+                                    )}
+                                    Upload MP3 to Cloudinary
+                                  </Button>
+                                </div>
+                              </div>
+
                               <div className="pt-3 border-t border-zinc-200">
                                 <div className="flex justify-between items-center mb-3">
                                   <label className="block text-xs font-bold text-zinc-700">Additional Audio Languages</label>
@@ -631,24 +691,43 @@ export default function ManageModulesPage() {
                                   </Button>
                                 </div>
                                 {(st.audioLanguages || []).map((lang, lIndex) => (
-                                  <div key={lIndex} className="flex items-center space-x-2 mb-2">
+                                  <div key={lIndex} className="flex flex-col sm:flex-row items-center gap-2 mb-2">
                                     <input 
                                       type="text" 
                                       placeholder="e.g. Spanish" 
                                       value={lang.language} 
                                       onChange={(e) => handleLanguageChange(index, "audioLanguages", lIndex, "language", e.target.value)}
-                                      className="w-1/3 px-2 py-1.5 bg-white border border-zinc-300 rounded text-xs focus:border-primary"
+                                      className="w-full sm:w-1/3 px-2 py-1.5 bg-white border border-zinc-300 rounded text-xs focus:border-primary"
                                     />
                                     <input 
                                       type="text" 
                                       placeholder="URL" 
                                       value={lang.url} 
                                       onChange={(e) => handleLanguageChange(index, "audioLanguages", lIndex, "url", e.target.value)}
-                                      className="flex-1 px-2 py-1.5 bg-white border border-zinc-300 rounded text-xs focus:border-primary"
+                                      className="w-full sm:flex-1 px-2 py-1.5 bg-white border border-zinc-300 rounded text-xs focus:border-primary"
                                     />
-                                    <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveLanguage(index, "audioLanguages", lIndex)} className="text-red-500 p-1 h-auto">
-                                      <Trash2 className="w-4 h-4" />
-                                    </Button>
+                                    <div className="flex items-center gap-1 w-full sm:w-auto justify-end">
+                                      <input
+                                        type="file"
+                                        accept="audio/*"
+                                        id={`cloudinary-audio-${index}-${lIndex}`}
+                                        className="hidden"
+                                        onChange={(e) => handleCloudinaryAudioUpload(index, e, lIndex)}
+                                      />
+                                      <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => document.getElementById(`cloudinary-audio-${index}-${lIndex}`)?.click()}
+                                        className="text-purple-600 hover:bg-purple-50 text-xs px-2 h-7"
+                                        title="Upload file for this language"
+                                      >
+                                        <UploadCloud className="w-3.5 h-3.5" />
+                                      </Button>
+                                      <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveLanguage(index, "audioLanguages", lIndex)} className="text-red-500 p-1 h-auto">
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </div>
                                   </div>
                                 ))}
                               </div>

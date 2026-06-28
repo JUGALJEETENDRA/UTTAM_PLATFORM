@@ -433,15 +433,17 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
           </a>
 
           {/* External Drive Source Link */}
-          <a
-            href={driveViewUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[10px] font-medium text-slate-500 hover:text-slate-800 p-1.5 rounded bg-slate-100 border border-slate-200 transition-colors flex items-center shrink-0"
-            title="Open Source Link"
-          >
-            <ExternalLink className="w-3 h-3" />
-          </a>
+          {driveFileId && (
+            <a
+              href={driveViewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] font-medium text-slate-500 hover:text-slate-800 p-1.5 rounded bg-slate-100 border border-slate-200 transition-colors flex items-center shrink-0"
+              title="Open Source Link"
+            >
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
         </div>
       </div>
 
