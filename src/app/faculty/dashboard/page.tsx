@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Users, BookOpen, Target, Gamepad2, PlusCircle, Activity, HardDrive, GraduationCap, Trophy, Sparkles } from "lucide-react";
 import { CreateSubjectForm } from "@/components/faculty/CreateSubjectForm";
 import { DeleteSubjectButton } from "@/components/faculty/DeleteSubjectButton";
+import { EditSubjectButton } from "@/components/faculty/EditSubjectButton";
 import { useSession } from "@/components/AuthProvider";
 import { redirect } from "next/navigation";
 import { fetchGAS } from "@/lib/apiClient";
@@ -71,6 +72,7 @@ export default function FacultyDashboardPage() {
                 <Link key={subject.id} href={`/faculty/subjects/subject/modules?subjectId=${subject.id}`}>
                   <Card className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer h-full border-zinc-200 relative">
                     <DeleteSubjectButton subjectId={subject.id} />
+                    <EditSubjectButton subject={subject} />
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg text-primary">{subject.name}</CardTitle>
                       <CardDescription className="line-clamp-2 min-h-[40px]">{subject.description || "No description provided."}</CardDescription>

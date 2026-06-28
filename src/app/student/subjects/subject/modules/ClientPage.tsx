@@ -160,7 +160,7 @@ export default function ModulesPage() {
         }} />
 
         <div className="container mx-auto px-4 py-8 relative z-10 max-w-6xl space-y-6">
-          
+
           {/* Subtle Breadcrumb Navigation - Removed */}
 
           {/* Dashboard Back Nav Bar */}
@@ -213,13 +213,12 @@ export default function ModulesPage() {
                         <div className="flex justify-between items-center mb-3">
                           <span className="text-[9px] font-mono text-slate-400 font-bold uppercase tracking-wider">Module 0{mod.moduleNo || (index + 1)}</span>
                           <span className="flex items-center gap-2">
-                            <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
-                              (mod.moduleNo || (index + 1)) <= 2 
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200" 
+                            <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider ${(mod.moduleNo || (index + 1)) <= 2
+                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                                 : (mod.moduleNo || (index + 1)) <= 4
                                   ? "bg-amber-50 text-amber-700 border border-amber-250"
                                   : "bg-rose-50 text-rose-700 border border-rose-250"
-                            }`}>
+                              }`}>
                               {(mod.moduleNo || (index + 1)) <= 2 ? "Beginner" : (mod.moduleNo || (index + 1)) <= 4 ? "Intermediate" : "Advanced"}
                             </span>
                             <span className="text-[9px] font-mono text-teal-700 border border-teal-200/60 px-1.5 py-0.5 rounded bg-teal-500/10 font-semibold uppercase group-hover:bg-teal-650 group-hover:text-white group-hover:border-teal-650 transition-colors duration-300">
@@ -342,9 +341,9 @@ export default function ModulesPage() {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
           >
             {modules.map((mod: any, idx: number) => {
-              const getCleanPythonDetails = (title: any) => {
-                const titleStr = String(title || "");
-                const lower = titleStr.toLowerCase();
+              // Custom helper to resolve clean short titles and func names without underscores
+              const getCleanPythonDetails = (title: string) => {
+                const lower = title.toLowerCase();
                 let shortTitle = "";
                 let funcName = "";
 
@@ -696,7 +695,7 @@ export default function ModulesPage() {
           variants={{
             rest: { scaleY: 1, originY: "54px" },
             hover: { scaleY: [1, 1.15, 1], originY: "54px", transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut" } }
-            }}
+          }}
         />
         <motion.rect
           x="101" y="26" width="6" height="28" rx="1" fill="#F59E0B" stroke="none"
@@ -835,22 +834,22 @@ export default function ModulesPage() {
         >
           {modules.map((mod: any) => (
             <motion.div key={mod.id} variants={itemVariants}>
-               <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`} className="block h-full">
-                 <motion.div
-                   whileHover={isPremiumTheme ? "hover" : ""}
-                   animate="rest"
-                   className="h-full"
-                 >
-                   <motion.div
-                     variants={{
-                       rest: { y: 0, scale: 1 },
-                       hover: { y: -8, scale: 1.03 }
-                     }}
-                     transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                     className="h-full"
-                   >
-                     <DesignStudioCard isPremium={isPremiumTheme} className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group relative`}>
-                      
+              <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`} className="block h-full">
+                <motion.div
+                  whileHover={isPremiumTheme ? "hover" : ""}
+                  animate="rest"
+                  className="h-full"
+                >
+                  <motion.div
+                    variants={{
+                      rest: { y: 0, scale: 1 },
+                      hover: { y: -8, scale: 1.03 }
+                    }}
+                    transition={{ type: "spring", stiffness: 350, damping: 22 }}
+                    className="h-full"
+                  >
+                    <DesignStudioCard isPremium={isPremiumTheme} className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group relative`}>
+
                       <CardHeader className={isPremiumTheme ? "p-5 md:p-6 pb-2 relative z-10" : "pb-3 relative z-10"}>
                         <div className="flex justify-between items-center mb-3">
                           <motion.span
@@ -867,13 +866,12 @@ export default function ModulesPage() {
                             Module 0{mod.moduleNo}
                           </motion.span>
                           {isPremiumTheme && (
-                            <span className={`text-[9px] font-sans font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
-                              mod.moduleNo <= 2 
-                                ? "bg-green-100 text-green-800" 
+                            <span className={`text-[9px] font-sans font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${mod.moduleNo <= 2
+                                ? "bg-green-100 text-green-800"
                                 : mod.moduleNo <= 4
                                   ? "bg-amber-100 text-amber-850"
                                   : "bg-red-100 text-red-800"
-                            }`}>
+                              }`}>
                               {mod.moduleNo <= 2 ? "Beginner" : mod.moduleNo <= 4 ? "Intermediate" : "Advanced"}
                             </span>
                           )}

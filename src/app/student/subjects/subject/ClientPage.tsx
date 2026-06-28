@@ -713,8 +713,8 @@ export default function StudentDashboard() {
     );
   }
 
-  const { subject, modules, quizzesWithAttempts, flashcardDecks, mindmaps = [], subjectResources } = data;
-  const activeModule = modules[0];
+  const { subject, modules = [], quizzesWithAttempts = [], flashcardDecks = [], mindmaps = [], subjectResources = [] } = data;
+  const activeModule = modules.length > 0 ? modules[0] : null;
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -732,7 +732,7 @@ export default function StudentDashboard() {
   };
 
   // Identify theme variants safely using lowercase checks
-  const subjectNameLower = subject?.name?.toLowerCase() || "";
+  const subjectNameLower = String(subject?.name || "").toLowerCase();
   const isDigitalBusiness = subjectNameLower.includes("digital business");
   const isUiProgramming = subjectNameLower.includes("ui programming");
   const isPythonProgramming = subjectNameLower.includes("python");
@@ -802,7 +802,7 @@ export default function StudentDashboard() {
             <div className="absolute right-0 top-0 bottom-0 w-1/2 z-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%)] pointer-events-none select-none">
               {/* Element A: The Data Grid */}
               <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:1rem_1rem] opacity-70" />
-              
+
               {/* Element C: CSS Candlesticks */}
               {/* Candlestick 1 - Green */}
               <div className="absolute bottom-[20%] left-[10%] flex flex-col items-center">
@@ -842,11 +842,11 @@ export default function StudentDashboard() {
 
               {/* Element B: Upward trend line with shadow glow */}
               <svg className="absolute inset-0 w-full h-full text-teal-500" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path 
-                  d="M 0 85 L 20 65 L 35 72 L 55 45 L 70 52 L 90 25 L 100 15" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
+                <path
+                  d="M 0 85 L 20 65 L 35 72 L 55 45 L 70 52 L 90 25 L 100 15"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   style={{ filter: "drop-shadow(0px 3px 6px rgba(20, 184, 166, 0.4))" }}
@@ -1236,7 +1236,7 @@ export default function StudentDashboard() {
 
     // Helper to generate file structure from modules
     const getModuleFiles = (mod: any) => {
-      const slug = String(mod?.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "_");
+      const slug = mod.title.toLowerCase().replace(/[^a-z0-9]+/g, "_");
       return [
         { name: `${slug}.py`, code: getCodeSnippet(`${slug}.py`, mod?.title || "") },
         { name: `test_${slug}.py`, code: getCodeSnippet(`test_${slug}.py`, mod?.title || "") },

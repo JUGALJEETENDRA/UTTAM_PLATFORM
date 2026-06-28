@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_IS_DEPLOYED: isGithubActions ? 'true' : 'false',
     NEXT_PUBLIC_BASE_PATH: basePath,
+    NEXT_PUBLIC_BUILD_TIME: Date.now().toString(),
   },
   images: {
     unoptimized: true,

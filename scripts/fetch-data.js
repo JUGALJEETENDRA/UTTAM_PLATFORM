@@ -38,6 +38,13 @@ async function fetchGAS(action, payload = {}) {
   return data;
 }
 
+async function executeInChunks(tasks, chunkSize = 15) {
+  for (let i = 0; i < tasks.length; i += chunkSize) {
+    const chunk = tasks.slice(i, i + chunkSize);
+    await Promise.all(chunk.map(task => task()));
+  }
+}
+
 async function main() {
   console.log('Fetching data from GAS to build static data.json...');
   
@@ -63,45 +70,68 @@ async function main() {
     for (const subject of subjects) {
       console.log(`- Fetching data for subject ${subject.id} (${subject.name})`);
       
-      db.getStudentDashboard[subject.id] = await fetchGAS('getStudentDashboard', { subjectId: subject.id });
+      const topLevelTasks = [
+        fetchGAS('getStudentDashboard', { subjectId: subject.id }),
+        fetchGAS('getModules', { subjectId: subject.id }),
+        fetchGAS('getQuizzes', { subjectId: subject.id }),
+        fetchGAS('getSimulations', { subjectId: subject.id }),
+        fetchGAS('getMindMaps', { subjectId: subject.id }),
+        fetchGAS('getFlashcardDecks', { subjectId: subject.id }).catch(e => {
+          console.warn(`  Warning: getFlashcardDecks failed for subject ${subject.id}: ${e.message}`);
+          return [];
+        })
+      ];
+
+      const [
+        dashboard,
+        modules,
+        quizzes,
+        simulations,
+        mindmaps,
+        decks
+      ] = await Promise.all(topLevelTasks);
       
-      const modules = await fetchGAS('getModules', { subjectId: subject.id });
+      db.getStudentDashboard[subject.id] = dashboard;
       db.getModules[subject.id] = modules;
-      for (const mod of modules) {
-        db.getModule[mod.id] = await fetchGAS('getModule', { moduleId: mod.id });
-      }
-
-      const quizzes = await fetchGAS('getQuizzes', { subjectId: subject.id });
       db.getQuizzes[subject.id] = quizzes;
-      for (const quiz of quizzes) {
-        db.getQuiz[quiz.id] = await fetchGAS('getQuiz', { quizId: quiz.id });
-      }
-
-      const simulations = await fetchGAS('getSimulations', { subjectId: subject.id });
       db.getSimulations[subject.id] = simulations;
-      for (const sim of simulations) {
-        db.getSimulation[sim.id] = await fetchGAS('getSimulation', { simulationId: sim.id });
-      }
-
-      // In GAS, getting all flashcard decks might be named differently or just 'getFlashcardDecks'.
-      // Wait, let's just fetch all 'getFlashcardDecks' if it exists. 
-      // Checking GAS_Backend_Code.js: it seems `getStudentDashboard` already has `flashcardDecks`.
-      // But student app calls `getFlashcardDecks` and `getFlashcardDeck`.
-      // The GAS code doesn't explicitly handle `getFlashcardDecks` in the switch? Wait!
-      // Let's assume it does. If it fails, we catch it.
-      try {
-        const decks = await fetchGAS('getFlashcardDecks', { subjectId: subject.id });
-        db.getFlashcardDecks[subject.id] = decks;
-        for (const deck of decks) {
-          db.getFlashcardDeck[deck.id] = await fetchGAS('getFlashcardDeck', { deckId: deck.id });
-        }
-      } catch (e) {
-         // Some endpoints might not exist in GAS if not fully implemented
-         console.warn(`  Warning: getFlashcardDecks/getFlashcardDeck failed for subject ${subject.id}: ${e.message}`);
-      }
-
-      const mindmaps = await fetchGAS('getMindMaps', { subjectId: subject.id });
       db.getMindMaps[subject.id] = mindmaps;
+      db.getFlashcardDecks[subject.id] = decks || [];
+
+      const childTasks = [];
+      
+      (modules || []).forEach(mod => {
+        childTasks.push(async () => {
+          db.getModule[mod.id] = await fetchGAS('getModule', { moduleId: mod.id });
+        });
+      });
+
+      (quizzes || []).forEach(quiz => {
+        childTasks.push(async () => {
+          db.getQuiz[quiz.id] = await fetchGAS('getQuiz', { quizId: quiz.id });
+        });
+      });
+
+      (simulations || []).forEach(sim => {
+        childTasks.push(async () => {
+          db.getSimulation[sim.id] = await fetchGAS('getSimulation', { simulationId: sim.id });
+        });
+      });
+
+      (decks || []).forEach(deck => {
+        childTasks.push(async () => {
+          try {
+            db.getFlashcardDeck[deck.id] = await fetchGAS('getFlashcardDeck', { deckId: deck.id });
+          } catch (e) {
+            console.warn(`  Warning: getFlashcardDeck failed for deck ${deck.id}: ${e.message}`);
+          }
+        });
+      });
+
+      if (childTasks.length > 0) {
+        console.log(`  - Fetching ${childTasks.length} child items in parallel chunks...`);
+        await executeInChunks(childTasks, 15);
+      }
     }
 
     const publicDir = path.join(__dirname, '..', 'public');
