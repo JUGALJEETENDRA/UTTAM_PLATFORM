@@ -152,34 +152,34 @@ function getGoogleDriveFileId(url: string | null | undefined): string | null {
 
 const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
   const [isFullscreenModalOpen, setIsFullscreenModalOpen] = useState(false);
-  const [playerMode, setPlayerMode] = useState<'cdn' | 'embed'>('cdn');
   if (!url) return null;
 
   const lowerUrl = url.toLowerCase();
+  const isYouTube = lowerUrl.includes("youtube.com") || lowerUrl.includes("youtu.be");
   const isDirectVideo = lowerUrl.endsWith(".mp4") || lowerUrl.endsWith(".webm") || lowerUrl.endsWith(".ogg") || lowerUrl.includes(".mp4?") || lowerUrl.includes(".webm?");
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getEmbedUrl(url);
 
-  const googleCdnUrl = driveFileId ? `https://lh3.googleusercontent.com/d/${driveFileId}` : url;
-  const downloadVideoUrl = driveFileId ? `https://drive.google.com/uc?export=download&id=${driveFileId}` : url;
-  const driveAppUrl = driveFileId ? `https://drive.google.com/file/d/${driveFileId}/view` : url;
+  const downloadVideoUrl = driveFileId 
+    ? `https://drive.google.com/uc?export=download&id=${driveFileId}` 
+    : url;
+  const driveAppUrl = driveFileId 
+    ? `https://drive.google.com/file/d/${driveFileId}/view` 
+    : url;
 
   return (
     <div className="w-full flex flex-col select-none">
-      {/* Video Viewport Container */}
+      {/* Video Viewport Container - Responsive Aspect Ratio */}
       <div className="w-full aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
-        {driveFileId && playerMode === 'cdn' ? (
-          <video
-            controls
-            playsInline
-            preload="metadata"
-            className="w-full h-full object-contain bg-black"
-            onError={() => setPlayerMode('embed')}
-          >
-            <source src={googleCdnUrl} type="video/mp4" />
-            <source src={`https://drive.google.com/uc?export=open&id=${driveFileId}`} type="video/mp4" />
-            Your browser does not support raw video streaming.
-          </video>
+        {isYouTube || (!isDirectVideo && embedUrl) ? (
+          <iframe
+            src={embedUrl || url}
+            className="w-full h-full border-0 bg-black"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+            allowFullScreen
+            referrerPolicy="no-referrer"
+            title={title}
+          />
         ) : isDirectVideo ? (
           <video
             controls
@@ -190,19 +190,19 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
             <source src={url} />
             Your browser does not support the video tag.
           </video>
-        ) : embedUrl ? (
+        ) : (
           <iframe
-            src={embedUrl}
+            src={embedUrl || url}
             className="w-full h-full border-0 bg-black"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
             allowFullScreen
             referrerPolicy="no-referrer"
             title={title}
           />
-        ) : null}
+        )}
       </div>
 
-      {/* White Action Bar Positioned Below Video - Mobile Optimized */}
+      {/* White Action Bar Positioned Below Video - Mobile Grid Responsive */}
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2.5 p-3 bg-white text-slate-800 rounded-xl border border-slate-200 shadow-sm">
         <div className="flex items-center space-x-2 truncate">
           <PlayCircle className="w-4 h-4 text-blue-600 shrink-0" />
@@ -224,16 +224,18 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
           )}
 
           {/* Download Video Button */}
-          <a
-            href={downloadVideoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            download={`${title || 'video-lesson'}.mp4`}
-            className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs h-8 px-2.5 rounded-lg border border-slate-200 flex items-center gap-1 transition-all shrink-0"
-            title="Download Video Copy"
-          >
-            <Download className="w-3.5 h-3.5 text-blue-600" /> Download
-          </a>
+          {!isYouTube && (
+            <a
+              href={downloadVideoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              download={`${title || 'video-lesson'}.mp4`}
+              className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs h-8 px-2.5 rounded-lg border border-slate-200 flex items-center gap-1 transition-all shrink-0"
+              title="Download Video Copy"
+            >
+              <Download className="w-3.5 h-3.5 text-blue-600" /> Download
+            </a>
+          )}
 
           {/* Full-App Player Modal Trigger */}
           <Button
@@ -246,18 +248,6 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
           </Button>
         </div>
       </div>
-
-      {driveFileId && (
-        <div className="flex justify-end pt-1 px-1">
-          <button
-            type="button"
-            onClick={() => setPlayerMode(playerMode === 'cdn' ? 'embed' : 'cdn')}
-            className="text-[11px] text-blue-600 hover:underline font-bold"
-          >
-            {playerMode === 'cdn' ? "Switch to Embed Player" : "Switch to Native Direct Player"}
-          </button>
-        </div>
-      )}
 
       {/* In-App Fullscreen Theater Modal */}
       {isFullscreenModalOpen && (
@@ -291,18 +281,15 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
           </div>
 
           <div className="flex-1 w-full h-full relative rounded-xl overflow-hidden bg-black flex items-center justify-center">
-            {driveFileId && playerMode === 'cdn' ? (
-              <video
-                controls
-                autoPlay
-                playsInline
-                preload="metadata"
-                className="w-full h-full object-contain"
-                onError={() => setPlayerMode('embed')}
-              >
-                <source src={googleCdnUrl} type="video/mp4" />
-                <source src={`https://drive.google.com/uc?export=open&id=${driveFileId}`} type="video/mp4" />
-              </video>
+            {isYouTube || (!isDirectVideo && embedUrl) ? (
+              <iframe
+                src={`${embedUrl || url}${ (embedUrl || url).includes('?') ? '&' : '?' }autoplay=1`}
+                className="w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                allowFullScreen
+                referrerPolicy="no-referrer"
+                title={title}
+              />
             ) : isDirectVideo ? (
               <video
                 controls
@@ -313,16 +300,16 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
               >
                 <source src={url} />
               </video>
-            ) : embedUrl ? (
+            ) : (
               <iframe
-                src={`${embedUrl}${embedUrl.includes('?') ? '&' : '?'}autoplay=1`}
+                src={`${embedUrl || url}${ (embedUrl || url).includes('?') ? '&' : '?' }autoplay=1`}
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                 allowFullScreen
                 referrerPolicy="no-referrer"
                 title={title}
               />
-            ) : null}
+            )}
           </div>
 
           {/* Bottom Control Bar with explicit Exit / Go Back button */}
