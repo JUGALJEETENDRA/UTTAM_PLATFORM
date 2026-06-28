@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { module1Quizzes } from "@/data/module1QuizData";
 import { module2Quizzes } from "@/data/module2QuizData";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 import { redirect, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -347,15 +347,13 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [showDriveEmbed, setShowDriveEmbed] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   if (!url) return null;
 
   const driveFileId = getGoogleDriveFileId(url);
   const downloadMp3Url = driveFileId 
     ? `https://drive.google.com/uc?export=download&id=${driveFileId}` 
-    : url;
-  const openStreamUrl = driveFileId 
-    ? `https://docs.google.com/uc?export=open&id=${driveFileId}` 
     : url;
   const driveViewUrl = driveFileId 
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
@@ -364,11 +362,22 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
     ? `https://drive.google.com/file/d/${driveFileId}/preview` 
     : null;
 
-  const audioId = `audio-player-${driveFileId || title.replace(/\s+/g, '-')}`;
+  const audioSrc = driveFileId 
+    ? `https://lh3.googleusercontent.com/d/${driveFileId}` 
+    : url;
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.load();
+      setIsPlaying(false);
+    }
+  }, [audioSrc]);
 
   const togglePlay = () => {
-    const audioEl = document.getElementById(audioId) as HTMLAudioElement;
+    const audioEl = audioRef.current;
     if (audioEl) {
+      audioEl.volume = 1.0;
+      audioEl.muted = false;
       if (isPlaying) {
         audioEl.pause();
         setIsPlaying(false);
@@ -377,7 +386,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
           setIsPlaying(true);
         }).catch((err) => {
           console.log("Audio play error, falling back to drive embed", err);
-          setShowDriveEmbed(true);
+          if (driveFileId) setShowDriveEmbed(true);
         });
       }
     }
@@ -385,8 +394,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
 
   const handleSpeedChange = (speed: number) => {
     setPlaybackRate(speed);
-    const audioEl = document.getElementById(audioId) as HTMLAudioElement;
-    if (audioEl) audioEl.playbackRate = speed;
+    if (audioRef.current) audioRef.current.playbackRate = speed;
   };
 
   return (
@@ -463,7 +471,8 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
 
           <div className="flex-1">
             <audio 
-              id={audioId}
+              ref={audioRef}
+              src={audioSrc}
               controls 
               playsInline 
               preload="auto" 
@@ -472,16 +481,6 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
               onEnded={() => setIsPlaying(false)}
               className="w-full h-10 rounded-md accent-blue-600"
             >
-              {driveFileId && (
-                <>
-                  <source src={openStreamUrl} type="audio/mpeg" />
-                  <source src={`https://drive.google.com/uc?export=open&id=${driveFileId}`} type="audio/mpeg" />
-                  <source src={downloadMp3Url} type="audio/mpeg" />
-                </>
-              )}
-              <source src={url} type="audio/mpeg" />
-              <source src={url} type="audio/wav" />
-              <source src={url} />
               Your browser does not support the audio element.
             </audio>
           </div>
