@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  turbopack: {},
   ...(isGithubActions && { basePath, assetPrefix }),
   webpack: (config) => {
     config.resolve.alias.canvas = false;
