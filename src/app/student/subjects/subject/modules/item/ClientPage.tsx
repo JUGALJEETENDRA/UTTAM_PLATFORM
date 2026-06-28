@@ -144,17 +144,34 @@ function getGoogleDriveFileId(url: string | null | undefined): string | null {
 
 const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
   const [isFullscreenModalOpen, setIsFullscreenModalOpen] = useState(false);
+  const [useEmbed, setUseEmbed] = useState(false);
   if (!url) return null;
 
   const lowerUrl = url.toLowerCase();
   const isDirectVideo = lowerUrl.endsWith(".mp4") || lowerUrl.endsWith(".webm") || lowerUrl.endsWith(".ogg") || lowerUrl.includes(".mp4?") || lowerUrl.includes(".webm?");
+  const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getEmbedUrl(url);
+
+  const openStreamUrl = driveFileId ? `https://docs.google.com/uc?export=open&id=${driveFileId}` : url;
+  const downloadVideoUrl = driveFileId ? `https://drive.google.com/uc?export=download&id=${driveFileId}` : url;
+  const driveAppUrl = driveFileId ? `https://drive.google.com/file/d/${driveFileId}/view` : url;
 
   return (
     <div className="w-full flex flex-col select-none">
       {/* Video Viewport Container */}
-      <div className="w-full aspect-video bg-black rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
-        {isDirectVideo ? (
+      <div className="w-full aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
+        {driveFileId && !useEmbed ? (
+          <video
+            controls
+            playsInline
+            preload="metadata"
+            className="w-full h-full object-contain bg-black"
+          >
+            <source src={openStreamUrl} type="video/mp4" />
+            <source src={url} type="video/mp4" />
+            Your browser does not support HTML5 video streaming.
+          </video>
+        ) : isDirectVideo ? (
           <video
             controls
             playsInline
@@ -167,7 +184,7 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
         ) : embedUrl ? (
           <iframe
             src={embedUrl}
-            className="w-full h-full border-0"
+            className="w-full h-full border-0 bg-black"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
             allowFullScreen
             referrerPolicy="no-referrer"
@@ -176,33 +193,62 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
         ) : null}
       </div>
 
-      {/* White Action Bar Positioned Below Video */}
-      <div className="mt-3 flex items-center justify-between gap-3 p-3 bg-white text-slate-800 rounded-xl border border-slate-200 shadow-sm">
+      {/* White Action Bar Positioned Below Video - Mobile Optimized */}
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2.5 p-3 bg-white text-slate-800 rounded-xl border border-slate-200 shadow-sm">
         <div className="flex items-center space-x-2 truncate">
           <PlayCircle className="w-4 h-4 text-blue-600 shrink-0" />
-          <span className="text-xs font-bold text-slate-800 truncate max-w-[160px] sm:max-w-md">{title || "Video Lesson"}</span>
+          <span className="text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[150px] sm:max-w-md">{title || "Video Lesson"}</span>
         </div>
 
-        <div className="flex items-center space-x-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+          {/* Mobile App Open Button */}
+          {driveFileId && (
+            <a
+              href={driveAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs h-8 px-3 rounded-lg shadow-xs flex items-center gap-1.5 transition-all shrink-0"
+              title="Open in Drive App / Native Player"
+            >
+              <ExternalLink className="w-3.5 h-3.5" /> Open Drive App
+            </a>
+          )}
+
+          {/* Download Video Button */}
+          <a
+            href={downloadVideoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            download={`${title || 'video-lesson'}.mp4`}
+            className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs h-8 px-2.5 rounded-lg border border-slate-200 flex items-center gap-1 transition-all shrink-0"
+            title="Download Video Copy"
+          >
+            <Download className="w-3.5 h-3.5 text-blue-600" /> Download
+          </a>
+
+          {/* Full-App Player Modal Trigger */}
           <Button
             type="button"
             size="sm"
             onClick={() => setIsFullscreenModalOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs h-8 px-3 rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs h-8 px-3 rounded-lg shadow-xs flex items-center gap-1.5 transition-all shrink-0"
           >
             <Maximize2 className="w-3.5 h-3.5" /> Full-App Player
           </Button>
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[11px] font-medium text-slate-600 hover:text-slate-900 px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors flex items-center gap-1"
-            title="External Source"
-          >
-            <ExternalLink className="w-3.5 h-3.5" /> Source
-          </a>
         </div>
       </div>
+
+      {driveFileId && (
+        <div className="flex justify-end pt-1 px-1">
+          <button
+            type="button"
+            onClick={() => setUseEmbed(!useEmbed)}
+            className="text-[11px] text-blue-600 hover:underline font-bold"
+          >
+            {useEmbed ? "Switch to Direct HTML5 Player" : "Switch to Drive Embed Player"}
+          </button>
+        </div>
+      )}
 
       {/* In-App Fullscreen Theater Modal */}
       {isFullscreenModalOpen && (
@@ -236,7 +282,18 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
           </div>
 
           <div className="flex-1 w-full h-full relative rounded-xl overflow-hidden bg-black flex items-center justify-center">
-            {isDirectVideo ? (
+            {driveFileId && !useEmbed ? (
+              <video
+                controls
+                autoPlay
+                playsInline
+                preload="metadata"
+                className="w-full h-full object-contain"
+              >
+                <source src={openStreamUrl} type="video/mp4" />
+                <source src={url} type="video/mp4" />
+              </video>
+            ) : isDirectVideo ? (
               <video
                 controls
                 autoPlay
@@ -259,11 +316,21 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
           </div>
 
           {/* Bottom Control Bar with explicit Exit / Go Back button */}
-          <div className="mt-3 flex justify-end items-center pt-2 border-t border-zinc-800">
+          <div className="mt-3 flex justify-between items-center pt-2 border-t border-zinc-800">
+            {driveFileId && (
+              <a
+                href={driveAppUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 h-8 rounded-lg flex items-center gap-1.5"
+              >
+                <ExternalLink className="w-3.5 h-3.5" /> Open in Drive App
+              </a>
+            )}
             <Button
               type="button"
               onClick={() => setIsFullscreenModalOpen(false)}
-              className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-4 py-2 h-9 rounded-lg shadow-md flex items-center gap-2"
+              className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-4 py-2 h-9 rounded-lg shadow-md flex items-center gap-2 ml-auto"
             >
               <ChevronLeft className="w-4 h-4" /> Return to Lesson Page
             </Button>
