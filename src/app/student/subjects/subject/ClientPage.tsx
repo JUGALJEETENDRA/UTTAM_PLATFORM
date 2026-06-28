@@ -492,7 +492,7 @@ const highlightPythonCode = (code: string) => {
 };
 
 // Premium 3D Tilt Card (Overlays removed per request)
-const DesignStudioCard = ({ children, className = "", style = {}, ...props }: any) => {
+const DesignStudioCard = ({ children, className = "", style = {}, isPremium, label, ...props }: any) => {
   return (
     <div
       className={`relative transition-all duration-300 ease-out rounded-lg ${className}`}

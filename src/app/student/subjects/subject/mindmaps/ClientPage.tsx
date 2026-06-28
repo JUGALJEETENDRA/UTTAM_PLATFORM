@@ -62,7 +62,7 @@ const DEFAULT_THEME = {
 };
 
 // Premium Figma-style component bounding box selection frame (Overlays removed per request)
-const DesignStudioCard = ({ children, className = "", style = {}, ...props }: any) => {
+const DesignStudioCard = ({ children, className = "", style = {}, isPremium, label, ...props }: any) => {
   return (
     <div
       className={`relative transition-all duration-300 ease-out rounded-lg ${className}`}

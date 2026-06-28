@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   ChevronLeft, PlayCircle, FileText, CheckCircle2, Gamepad2, Target, 
   Download, Book, BookOpen, BrainCircuit, CreditCard, Link as LinkIcon, 
-  HelpCircle, Layers, Headphones, Lightbulb, Clock, Terminal, Activity, Code, Settings, ChevronRight, MousePointer
+  HelpCircle, Layers, Headphones, Lightbulb, Clock, Terminal, Activity, Code, Settings, ChevronRight, MousePointer, ExternalLink, X, Maximize2, Volume2, Play, Pause
 } from "lucide-react";
 import { module1Quizzes } from "@/data/module1QuizData";
 import { module2Quizzes } from "@/data/module2QuizData";
@@ -63,8 +63,16 @@ const DEFAULT_THEME = {
 function getEmbedUrl(url: string | null | undefined): string | null {
   if (!url) return null;
   
-  if (url.includes("drive.google.com/file/d/")) {
-    return url.replace(/\/view.*$/, "/preview");
+  if (url.includes("drive.google.com")) {
+    if (url.includes("/file/d/")) {
+      return url.replace(/\/view.*$/, "/preview").replace(/\/edit.*$/, "/preview").replace(/\/sharing.*$/, "/preview");
+    }
+    if (url.includes("id=")) {
+      const match = url.match(/id=([^&]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/file/d/${match[1]}/preview`;
+      }
+    }
   }
   
   let embedUrl = url;
@@ -107,14 +115,337 @@ function getEmbedUrl(url: string | null | undefined): string | null {
 
 function getExternalEmbedUrl(url: string | null | undefined): string | null {
   if (!url) return null;
-  if (url.includes("drive.google.com/file/d/")) {
-    return url.replace(/\/view.*$/, "/preview");
+  if (url.includes("drive.google.com")) {
+    if (url.includes("/file/d/")) {
+      return url.replace(/\/view.*$/, "/preview").replace(/\/edit.*$/, "/preview");
+    }
+    if (url.includes("id=")) {
+      const match = url.match(/id=([^&]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/file/d/${match[1]}/preview`;
+      }
+    }
   }
   return url;
 }
 
+function getGoogleDriveFileId(url: string | null | undefined): string | null {
+  if (!url) return null;
+  if (url.includes("/file/d/")) {
+    const match = url.match(/\/file\/d\/([^\/\?]+)/);
+    if (match && match[1]) return match[1];
+  }
+  if (url.includes("id=")) {
+    const match = url.match(/id=([^&]+)/);
+    if (match && match[1]) return match[1];
+  }
+  return null;
+}
+
+const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
+  const [isFullscreenModalOpen, setIsFullscreenModalOpen] = useState(false);
+  if (!url) return null;
+
+  const lowerUrl = url.toLowerCase();
+  const isDirectVideo = lowerUrl.endsWith(".mp4") || lowerUrl.endsWith(".webm") || lowerUrl.endsWith(".ogg") || lowerUrl.includes(".mp4?") || lowerUrl.includes(".webm?");
+  const embedUrl = getEmbedUrl(url);
+
+  return (
+    <div className="w-full flex flex-col select-none">
+      {/* Video Viewport Container */}
+      <div className="w-full aspect-video bg-black rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
+        {isDirectVideo ? (
+          <video
+            controls
+            playsInline
+            preload="metadata"
+            className="w-full h-full object-contain bg-black"
+          >
+            <source src={url} />
+            Your browser does not support the video tag.
+          </video>
+        ) : embedUrl ? (
+          <iframe
+            src={embedUrl}
+            className="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+            allowFullScreen
+            referrerPolicy="no-referrer"
+            title={title}
+          />
+        ) : null}
+      </div>
+
+      {/* White Action Bar Positioned Below Video */}
+      <div className="mt-3 flex items-center justify-between gap-3 p-3 bg-white text-slate-800 rounded-xl border border-slate-200 shadow-sm">
+        <div className="flex items-center space-x-2 truncate">
+          <PlayCircle className="w-4 h-4 text-blue-600 shrink-0" />
+          <span className="text-xs font-bold text-slate-800 truncate max-w-[160px] sm:max-w-md">{title || "Video Lesson"}</span>
+        </div>
+
+        <div className="flex items-center space-x-2 shrink-0">
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => setIsFullscreenModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs h-8 px-3 rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
+          >
+            <Maximize2 className="w-3.5 h-3.5" /> Full-App Player
+          </Button>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] font-medium text-slate-600 hover:text-slate-900 px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors flex items-center gap-1"
+            title="External Source"
+          >
+            <ExternalLink className="w-3.5 h-3.5" /> Source
+          </a>
+        </div>
+      </div>
+
+      {/* In-App Fullscreen Theater Modal */}
+      {isFullscreenModalOpen && (
+        <div className="fixed inset-0 z-[200] bg-slate-950/98 backdrop-blur-2xl flex flex-col p-3 sm:p-6 animate-in fade-in duration-200">
+          {/* Top Bar with Prominent Go Back / Return Button */}
+          <div className="flex items-center justify-between mb-3 border-b border-zinc-800 pb-3 gap-2">
+            <div className="flex items-center space-x-3 truncate">
+              <Button
+                type="button"
+                onClick={() => setIsFullscreenModalOpen(false)}
+                className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs px-3 py-1.5 h-8 rounded-lg flex items-center gap-1.5 shrink-0 border border-zinc-700 shadow-sm"
+              >
+                <ChevronLeft className="w-4 h-4" /> Go Back
+              </Button>
+              <div className="flex items-center space-x-2 truncate">
+                <PlayCircle className="w-4 h-4 text-blue-500 shrink-0 hidden sm:block" />
+                <h3 className="text-white font-bold text-xs sm:text-base truncate max-w-[180px] sm:max-w-xl">{title}</h3>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsFullscreenModalOpen(false)}
+              className="text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full h-8 w-8 shrink-0"
+              title="Close Fullscreen"
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+
+          <div className="flex-1 w-full h-full relative rounded-xl overflow-hidden bg-black flex items-center justify-center">
+            {isDirectVideo ? (
+              <video
+                controls
+                autoPlay
+                playsInline
+                preload="metadata"
+                className="w-full h-full object-contain"
+              >
+                <source src={url} />
+              </video>
+            ) : embedUrl ? (
+              <iframe
+                src={`${embedUrl}${embedUrl.includes('?') ? '&' : '?'}autoplay=1`}
+                className="w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                allowFullScreen
+                referrerPolicy="no-referrer"
+                title={title}
+              />
+            ) : null}
+          </div>
+
+          {/* Bottom Control Bar with explicit Exit / Go Back button */}
+          <div className="mt-3 flex justify-end items-center pt-2 border-t border-zinc-800">
+            <Button
+              type="button"
+              onClick={() => setIsFullscreenModalOpen(false)}
+              className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-4 py-2 h-9 rounded-lg shadow-md flex items-center gap-2"
+            >
+              <ChevronLeft className="w-4 h-4" /> Return to Lesson Page
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [showDriveEmbed, setShowDriveEmbed] = useState(false);
+
+  if (!url) return null;
+
+  const driveFileId = getGoogleDriveFileId(url);
+  const downloadMp3Url = driveFileId 
+    ? `https://drive.google.com/uc?export=download&id=${driveFileId}` 
+    : url;
+  const openStreamUrl = driveFileId 
+    ? `https://docs.google.com/uc?export=open&id=${driveFileId}` 
+    : url;
+  const driveViewUrl = driveFileId 
+    ? `https://drive.google.com/file/d/${driveFileId}/view` 
+    : url;
+  const driveEmbedUrl = driveFileId 
+    ? `https://drive.google.com/file/d/${driveFileId}/preview` 
+    : null;
+
+  const audioId = `audio-player-${driveFileId || title.replace(/\s+/g, '-')}`;
+
+  const togglePlay = () => {
+    const audioEl = document.getElementById(audioId) as HTMLAudioElement;
+    if (audioEl) {
+      if (isPlaying) {
+        audioEl.pause();
+        setIsPlaying(false);
+      } else {
+        audioEl.play().then(() => {
+          setIsPlaying(true);
+        }).catch((err) => {
+          console.log("Audio play error, falling back to drive embed", err);
+          setShowDriveEmbed(true);
+        });
+      }
+    }
+  };
+
+  const handleSpeedChange = (speed: number) => {
+    setPlaybackRate(speed);
+    const audioEl = document.getElementById(audioId) as HTMLAudioElement;
+    if (audioEl) audioEl.playbackRate = speed;
+  };
+
+  return (
+    <div className="w-full bg-white text-slate-800 p-3 sm:p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2.5">
+      {/* Top Header Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center space-x-2 shrink-0">
+          <Headphones className="w-4 h-4 text-blue-600 animate-pulse shrink-0" />
+          <span className="text-xs sm:text-sm font-bold tracking-wide text-slate-800 truncate max-w-[150px] sm:max-w-xs">
+            {title || "Audio Lesson"}
+          </span>
+          <span className="text-[9px] bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded font-mono font-bold uppercase shrink-0">MP3</span>
+        </div>
+
+        <div className="flex items-center space-x-1.5 shrink-0">
+          {/* Speed Controls */}
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-md border border-slate-200">
+            {[1, 1.25, 1.5, 2].map((speed) => (
+              <button
+                key={speed}
+                type="button"
+                onClick={() => handleSpeedChange(speed)}
+                className={`text-[9px] font-bold px-1.5 py-0.5 rounded transition-colors ${
+                  playbackRate === speed
+                    ? "bg-blue-600 text-white shadow-2xs"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200"
+                }`}
+              >
+                {speed}x
+              </button>
+            ))}
+          </div>
+
+          {/* Download MP3 Button */}
+          <a
+            href={downloadMp3Url}
+            target="_blank"
+            rel="noopener noreferrer"
+            download={`${title || 'audio-lesson'}.mp3`}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] h-7 px-2.5 rounded-md shadow-2xs flex items-center gap-1 transition-all shrink-0"
+            title="Download MP3 Copy to Device"
+          >
+            <Download className="w-3 h-3" /> Download MP3
+          </a>
+
+          {/* External Drive Source Link */}
+          <a
+            href={driveViewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] font-medium text-slate-500 hover:text-slate-800 p-1.5 rounded bg-slate-100 border border-slate-200 transition-colors flex items-center shrink-0"
+            title="Open Source Link"
+          >
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+      </div>
+
+      {/* Primary Interactive Audio Bar with Explicit Guaranteed Play/Pause Button */}
+      <div className="w-full flex flex-col gap-2">
+        <div className="flex items-center gap-2.5 bg-slate-50 p-2 rounded-lg border border-slate-200">
+          <Button
+            type="button"
+            onClick={togglePlay}
+            className={`font-bold text-xs h-9 px-4 rounded-md shadow-xs flex items-center gap-2 transition-all shrink-0 ${
+              isPlaying ? "bg-amber-600 hover:bg-amber-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
+          >
+            {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+            <span>{isPlaying ? "PAUSE AUDIO" : "PLAY AUDIO"}</span>
+          </Button>
+
+          <div className="flex-1">
+            <audio 
+              id={audioId}
+              controls 
+              playsInline 
+              preload="auto" 
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              onEnded={() => setIsPlaying(false)}
+              className="w-full h-10 rounded-md accent-blue-600"
+            >
+              {driveFileId && (
+                <>
+                  <source src={openStreamUrl} type="audio/mpeg" />
+                  <source src={`https://drive.google.com/uc?export=open&id=${driveFileId}`} type="audio/mpeg" />
+                  <source src={downloadMp3Url} type="audio/mpeg" />
+                </>
+              )}
+              <source src={url} type="audio/mpeg" />
+              <source src={url} type="audio/wav" />
+              <source src={url} />
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+
+        {driveFileId && (
+          <div className="flex justify-between items-center px-1">
+            <span className="text-[10px] text-slate-500 font-medium">Having cross-origin audio blocks on your browser?</span>
+            <button
+              type="button"
+              onClick={() => setShowDriveEmbed(!showDriveEmbed)}
+              className="text-[10px] text-blue-600 hover:underline font-bold"
+            >
+              {showDriveEmbed ? "Hide Drive Embed Player" : "Show Drive Embed Player"}
+            </button>
+          </div>
+        )}
+
+        {showDriveEmbed && driveEmbedUrl && (
+          <div className="w-full h-32 rounded-xl overflow-hidden bg-slate-950 border border-slate-200 shadow-inner mt-1">
+            <iframe
+              src={driveEmbedUrl}
+              className="w-full h-full border-0"
+              allow="autoplay; fullscreen; encrypted-media"
+              title={title || "Audio Player"}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Premium Figma-style component bounding box selection frame (Overlays removed per request)
-const DesignStudioCard = ({ children, className = "", style = {}, ...props }: any) => {
+const DesignStudioCard = ({ children, className = "", style = {}, isPremium, label, ...props }: any) => {
   return (
     <div
       className={`relative transition-all duration-300 ease-out rounded-lg ${className}`}
@@ -286,7 +617,7 @@ export default function ModuleDetailPage() {
               const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
               const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
 
-              const defaultVideoUrl = subtopic.videoUrl || (subtopic.videoLanguages?.[0]?.url || "");
+              const defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
               const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
 
               return (
@@ -303,7 +634,7 @@ export default function ModuleDetailPage() {
                         </div>
 
                         {/* Video Content */}
-                        {(subtopic.videoUrl || (subtopic.videoLanguages && subtopic.videoLanguages.length > 0)) && (
+                        {(defaultVideoUrl || (subtopic.videoLanguages && subtopic.videoLanguages.length > 0)) && (
                           <div className="w-full mb-5">
                             {subtopic.videoLanguages && subtopic.videoLanguages.length > 0 && (
                               <div className="flex justify-end mb-2 max-w-3xl mx-auto">
@@ -312,57 +643,39 @@ export default function ModuleDetailPage() {
                                   value={selectedLanguages[subtopic.id]?.video || defaultVideoUrl}
                                   onChange={(e) => handleLanguageChange(subtopic.id, 'video', e.target.value)}
                                 >
-                                  {subtopic.videoUrl && <option value={subtopic.videoUrl}>English (Default)</option>}
+                                  {defaultVideoUrl && <option value={defaultVideoUrl}>English (Default)</option>}
                                   {subtopic.videoLanguages.map((lang: any, i: number) => (
                                     <option key={i} value={lang.url}>{lang.language}</option>
                                   ))}
                                 </select>
                               </div>
                             )}
-                            <div className="w-full rounded-lg overflow-hidden border border-slate-200 bg-slate-950 aspect-video shadow-sm max-w-3xl mx-auto">
-                              <iframe
-                                src={getEmbedUrl(selectedLanguages[subtopic.id]?.video || defaultVideoUrl) || ""}
-                                className="w-full h-full border-0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                title={subtopic.title}
-                              ></iframe>
+                            <div className="w-full max-w-3xl mx-auto">
+                              <InlineVideoPlayer url={selectedLanguages[subtopic.id]?.video || defaultVideoUrl} title={subtopic.title} />
                             </div>
                           </div>
                         )}
 
                         {/* Audio Content */}
-                        {(subtopic.audioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
-                          <div className="w-full mb-5 max-w-3xl mx-auto bg-slate-50 p-4 border border-slate-200 rounded-lg shadow-inner">
-                            <div className="flex justify-between items-center mb-2">
-                              <p className="text-xs font-bold text-slate-750 flex items-center">
-                                <Headphones className="w-4 h-4 mr-2 text-[#1E3A8A]" /> Audio Lesson
-                              </p>
-                              {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
+                        {(defaultAudioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
+                          <div className="w-full mb-5 max-w-3xl mx-auto">
+                            {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
+                              <div className="flex justify-end mb-2">
                                 <select 
                                   className="bg-white border border-slate-200 rounded-lg text-[10px] px-2 py-1 text-slate-750 font-medium focus:outline-none focus:border-[#1E3A8A] shadow-sm"
                                   value={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl}
                                   onChange={(e) => handleLanguageChange(subtopic.id, 'audio', e.target.value)}
                                 >
-                                  {subtopic.audioUrl && <option value={subtopic.audioUrl}>English (Default)</option>}
+                                  {defaultAudioUrl && <option value={defaultAudioUrl}>English (Default)</option>}
                                   {subtopic.audioLanguages.map((lang: any, i: number) => (
                                     <option key={i} value={lang.url}>{lang.language}</option>
                                   ))}
                                 </select>
-                              )}
-                            </div>
+                              </div>
+                            )}
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="audio">
-                              <iframe 
-                                className="w-full h-14 rounded bg-transparent border-0"
-                                src={getExternalEmbedUrl(selectedLanguages[subtopic.id]?.audio || defaultAudioUrl) || ""}
-                                allow="autoplay"
-                              ></iframe>
+                              <InlineAudioPlayer url={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl} title={subtopic.title} />
                             </ResourceLinkTracker>
-                            <div className="mt-2 text-right">
-                               <a href={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-[#1E3A8A] font-mono hover:underline">
-                                 Open Audio Source
-                               </a>
-                            </div>
                           </div>
                         )}
 
@@ -575,7 +888,7 @@ export default function ModuleDetailPage() {
               const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
               const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
 
-              const defaultVideoUrl = subtopic.videoUrl || (subtopic.videoLanguages?.[0]?.url || "");
+              const defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
               const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
 
               return (
@@ -600,7 +913,7 @@ export default function ModuleDetailPage() {
                     </div>
 
                     {/* Video Box */}
-                    {(subtopic.videoUrl || (subtopic.videoLanguages && subtopic.videoLanguages.length > 0)) && (
+                    {(defaultVideoUrl || (subtopic.videoLanguages && subtopic.videoLanguages.length > 0)) && (
                       <div className="w-full mb-5 pl-4 border-l border-slate-200">
                         {subtopic.videoLanguages && subtopic.videoLanguages.length > 0 && (
                           <div className="flex justify-end mb-2 max-w-3xl mx-auto">
@@ -609,51 +922,38 @@ export default function ModuleDetailPage() {
                               value={selectedLanguages[subtopic.id]?.video || defaultVideoUrl}
                               onChange={(e) => handleLanguageChange(subtopic.id, 'video', e.target.value)}
                             >
-                              {subtopic.videoUrl && <option value={subtopic.videoUrl}>English (Default)</option>}
+                              {defaultVideoUrl && <option value={defaultVideoUrl}>English (Default)</option>}
                               {subtopic.videoLanguages.map((lang: any, i: number) => (
                                 <option key={i} value={lang.url}>{lang.language}</option>
                               ))}
                             </select>
                           </div>
                         )}
-                        <div className="w-full rounded overflow-hidden border border-slate-200 bg-slate-950 aspect-video shadow-xs max-w-2xl">
-                          <iframe
-                            src={getEmbedUrl(selectedLanguages[subtopic.id]?.video || defaultVideoUrl) || ""}
-                            className="w-full h-full border-0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            title={subtopic.title}
-                          ></iframe>
+                        <div className="w-full max-w-2xl">
+                          <InlineVideoPlayer url={selectedLanguages[subtopic.id]?.video || defaultVideoUrl} title={subtopic.title} />
                         </div>
                       </div>
                     )}
 
                     {/* Audio Box */}
-                    {(subtopic.audioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
-                      <div className="w-full mb-5 pl-4 border-l border-slate-200 max-w-2xl bg-slate-50/50 p-3.5 border border-slate-200 rounded font-mono">
-                        <div className="flex justify-between items-center mb-2">
-                          <p className="text-[10px] font-bold text-slate-750 flex items-center">
-                            <Headphones className="w-3.5 h-3.5 mr-1.5 text-[#3776AB]" /> audio_lesson.mp3
-                          </p>
-                          {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
+                    {(defaultAudioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
+                      <div className="w-full mb-5 max-w-2xl">
+                        {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
+                          <div className="flex justify-end mb-2">
                             <select 
                               className="bg-white border border-slate-200 rounded font-mono text-[9px] px-2 py-0.5 text-slate-700 focus:outline-none focus:border-[#3776AB]"
                               value={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl}
                               onChange={(e) => handleLanguageChange(subtopic.id, 'audio', e.target.value)}
                             >
-                              {subtopic.audioUrl && <option value={subtopic.audioUrl}>English (Default)</option>}
+                              {defaultAudioUrl && <option value={defaultAudioUrl}>English (Default)</option>}
                               {subtopic.audioLanguages.map((lang: any, i: number) => (
                                 <option key={i} value={lang.url}>{lang.language}</option>
                               ))}
                             </select>
-                          )}
-                        </div>
+                          </div>
+                        )}
                         <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="audio">
-                          <iframe 
-                            className="w-full h-12 rounded bg-transparent border-0"
-                            src={getExternalEmbedUrl(selectedLanguages[subtopic.id]?.audio || defaultAudioUrl) || ""}
-                            allow="autoplay"
-                          ></iframe>
+                          <InlineAudioPlayer url={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl} title={subtopic.title} />
                         </ResourceLinkTracker>
                       </div>
                     )}
@@ -900,7 +1200,7 @@ export default function ModuleDetailPage() {
             const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
             const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
 
-            const defaultVideoUrl = subtopic.videoUrl || (subtopic.videoLanguages?.[0]?.url || "");
+            const defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
             const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
 
             const cardContentNode = (
@@ -923,7 +1223,7 @@ export default function ModuleDetailPage() {
                   </div>
 
                   {/* Video Content */}
-                  {(subtopic.videoUrl || (subtopic.videoLanguages && subtopic.videoLanguages.length > 0)) && (
+                  {(defaultVideoUrl || (subtopic.videoLanguages && subtopic.videoLanguages.length > 0)) && (
                     <div className="w-full mb-5">
                       {subtopic.videoLanguages && subtopic.videoLanguages.length > 0 && (
                         <div className="flex justify-end mb-2 max-w-3xl mx-auto">
@@ -936,41 +1236,24 @@ export default function ModuleDetailPage() {
                             value={selectedLanguages[subtopic.id]?.video || defaultVideoUrl}
                             onChange={(e) => handleLanguageChange(subtopic.id, 'video', e.target.value)}
                           >
-                            {subtopic.videoUrl && <option value={subtopic.videoUrl}>English (Default)</option>}
+                            {defaultVideoUrl && <option value={defaultVideoUrl}>English (Default)</option>}
                             {subtopic.videoLanguages.map((lang: any, i: number) => (
                               <option key={i} value={lang.url}>{lang.language}</option>
                             ))}
                           </select>
                         </div>
                       )}
-                      <div className={`w-full aspect-video max-w-3xl mx-auto overflow-hidden ${
-                        isPremiumTheme 
-                          ? 'border border-slate-200 bg-zinc-950 shadow-sm rounded-lg' 
-                          : 'border-4 border-black bg-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-                      }`}>
-                        <iframe
-                          src={getEmbedUrl(selectedLanguages[subtopic.id]?.video || defaultVideoUrl) || ""}
-                          className="w-full h-full border-0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          title={subtopic.title}
-                        ></iframe>
+                      <div className="w-full max-w-3xl mx-auto">
+                        <InlineVideoPlayer url={selectedLanguages[subtopic.id]?.video || defaultVideoUrl} title={subtopic.title} />
                       </div>
                     </div>
                   )}
 
                   {/* Audio Content */}
-                  {(subtopic.audioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
-                    <div className={`w-full mb-5 max-w-3xl mx-auto ${
-                      isPremiumTheme 
-                        ? 'border border-slate-200 bg-slate-50 p-4 rounded-lg shadow-inner' 
-                        : 'border-2 border-black bg-zinc-50 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-                    }`}>
-                      <div className="flex justify-between items-center mb-2">
-                        <p className={`text-sm font-bold flex items-center ${isPremiumTheme ? 'text-slate-800' : 'text-black font-black'}`}>
-                          <Headphones className="w-4 h-4 mr-2 text-slate-500" /> Audio Lesson
-                        </p>
-                        {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
+                  {(defaultAudioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
+                    <div className="w-full mb-5 max-w-3xl mx-auto">
+                      {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
+                        <div className="flex justify-end mb-2">
                           <select 
                             className={`focus:outline-none text-xs font-bold px-2 py-1 ${
                               isPremiumTheme 
@@ -980,29 +1263,16 @@ export default function ModuleDetailPage() {
                             value={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl}
                             onChange={(e) => handleLanguageChange(subtopic.id, 'audio', e.target.value)}
                           >
-                            {subtopic.audioUrl && <option value={subtopic.audioUrl}>English (Default)</option>}
+                            {defaultAudioUrl && <option value={defaultAudioUrl}>English (Default)</option>}
                             {subtopic.audioLanguages.map((lang: any, i: number) => (
                               <option key={i} value={lang.url}>{lang.language}</option>
                             ))}
                           </select>
-                        )}
-                      </div>
+                        </div>
+                      )}
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="audio">
-                        <iframe 
-                          className={`w-full h-16 bg-white ${
-                            isPremiumTheme 
-                              ? 'border border-slate-100 rounded-lg shadow-sm' 
-                              : 'border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
-                          }`}
-                          src={getExternalEmbedUrl(selectedLanguages[subtopic.id]?.audio || defaultAudioUrl) || ""}
-                          allow="autoplay"
-                        ></iframe>
+                        <InlineAudioPlayer url={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl} title={subtopic.title} />
                       </ResourceLinkTracker>
-                      <div className="mt-2 text-right">
-                         <a href={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl} target="_blank" rel="noopener noreferrer" className={`text-xs font-bold ${isPremiumTheme ? 'text-slate-500 hover:text-slate-900 hover:underline' : 'text-black hover:underline'}`}>
-                           Open Audio Source
-                         </a>
-                      </div>
                     </div>
                   )}
 

@@ -71,7 +71,7 @@ const DEFAULT_THEME = {
 };
 
 // Premium Figma-style component bounding box selection frame (Overlays removed per request)
-const DesignStudioCard = ({ children, className = "", style = {}, ...props }: any) => {
+const DesignStudioCard = ({ children, className = "", style = {}, isPremium, label, ...props }: any) => {
   return (
     <div
       className={`relative transition-all duration-300 ease-out rounded-lg ${className}`}
@@ -363,11 +363,11 @@ export default function ModulesPage() {
                   shortTitle = "GUI Databases.py";
                   funcName = "studyGUIDatabases";
                 } else {
-                  const cleanTitle = titleStr.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
+                  const cleanTitle = title.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
                   const words = cleanTitle.split(" ");
                   const shortWords = words.slice(0, 2);
                   shortTitle = shortWords.join(" ") + ".py";
-                  funcName = "study" + shortWords.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
+                  funcName = "study" + shortWords.map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
                 }
 
                 return { shortTitle, funcName };

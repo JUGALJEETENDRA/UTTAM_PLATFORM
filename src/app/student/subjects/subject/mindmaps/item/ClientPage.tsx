@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { fetchGAS } from "@/lib/apiClient";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ZoomIn, ZoomOut, Maximize, Brain } from "lucide-react";
+import { ArrowLeft, ZoomIn, ZoomOut, Maximize, Brain, Download } from "lucide-react";
 
 export default function MindMapViewerClientPage() {
   const searchParams = useSearchParams();
@@ -17,6 +17,26 @@ export default function MindMapViewerClientPage() {
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [imageError, setImageError] = useState(false);
+
+  const handleDownload = () => {
+    if (!mindMap || !mindMap.imageUrl) return;
+    const url = mindMap.imageUrl;
+    let downloadUrl = url;
+    const isDriveLink = url.includes('drive.google.com');
+    if (isDriveLink) {
+      const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        downloadUrl = `https://drive.google.com/uc?export=download&id=${match[1]}`;
+      }
+    }
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.target = '_blank';
+    a.download = `${mindMap.title || 'mindmap'}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   const loadData = async () => {
     try {
@@ -87,6 +107,17 @@ export default function MindMapViewerClientPage() {
             </h1>
             <p className="text-white/60 text-xs mt-0.5">Interactive Viewer</p>
           </div>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={handleDownload}
+            className="bg-purple-600 hover:bg-purple-500 text-white border-none font-semibold text-xs px-3.5 py-2 rounded-lg shadow-lg flex items-center gap-1.5 transition-all"
+          >
+            <Download className="w-4 h-4" /> Download Copy
+          </Button>
         </div>
       </div>
 

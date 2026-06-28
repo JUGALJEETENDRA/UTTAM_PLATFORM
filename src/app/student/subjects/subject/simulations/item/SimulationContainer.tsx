@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, Play, AlertCircle, Trophy, CheckCircle2, Eye, ShieldAlert, Sparkles, RefreshCcw } from "lucide-react";
+import { ChevronLeft, Play, AlertCircle, Trophy, CheckCircle2, Eye, ShieldAlert, Sparkles, RefreshCcw, Maximize2, Minimize2, LogOut } from "lucide-react";
 
 interface SimulationContainerProps {
   simulation: {
@@ -23,6 +23,7 @@ interface SimulationContainerProps {
 
 export function SimulationContainer({ simulation, category }: SimulationContainerProps) {
   const [started, setStarted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
@@ -50,6 +51,28 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
   const handleRetrySimulation = () => {
     setFoundFlaws([]);
     setRetryCount(prev => prev + 1);
+  };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.log(`Error requesting fullscreen: ${err.message}`);
+      });
+      setIsFullscreen(true);
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => { });
+      }
+      setIsFullscreen(false);
+    }
+  };
+
+  const handleLaunchSandbox = () => {
+    setStarted(true);
+    setIsFullscreen(true);
+    document.documentElement.requestFullscreen().catch(() => {
+      // Browser full screen fallback
+    });
   };
 
   if (completed) {
@@ -88,39 +111,103 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
 
   if (started) {
     return (
-      <div className={`container mx-auto px-4 py-6 ${simulation.frontendUrl ? 'max-w-[1600px]' : 'max-w-4xl'}`}>
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-zinc-900">{simulation.title}</h1>
-            <p className="text-zinc-500 text-sm">Interactive UI Sandbox</p>
+      <div className={isFullscreen ? "fixed inset-0 z-50 bg-zinc-950 text-zinc-100 flex flex-col h-screen w-screen overflow-hidden animate-in fade-in duration-200 touch-none" : "container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-[1600px] flex flex-col h-[calc(100vh-6rem)]"}>
+        {/* Fullscreen Sandbox Action Header - Optimized for Mobile & Desktop */}
+        <div className="bg-zinc-900 border-b border-zinc-800 px-3 sm:px-6 py-2.5 sm:py-3 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 shrink-0 shadow-md">
+          <div className="flex items-center space-x-2 sm:space-x-3 truncate max-w-[60%] sm:max-w-md">
+            <Badge className="bg-primary/20 text-primary-300 border border-primary/40 text-[10px] sm:text-xs font-mono uppercase px-2 py-0.5 hidden sm:inline-flex shrink-0">
+              Live Sandbox
+            </Badge>
+            <div className="truncate">
+              <h1 className="text-sm sm:text-lg font-bold text-zinc-100 leading-tight truncate">{simulation.title}</h1>
+              <p className="text-zinc-400 text-[11px] sm:text-xs truncate">{category}</p>
+            </div>
           </div>
-          <Button variant="outline" size="sm" onClick={() => setStarted(false)} className="border-zinc-300">
-            Exit Sandbox
-          </Button>
+
+          <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRetrySimulation}
+              className="border-zinc-700 bg-zinc-800/80 text-zinc-200 hover:bg-zinc-700 hover:text-white text-[11px] sm:text-xs font-semibold h-7 sm:h-8 px-2 sm:px-3"
+            >
+              <RefreshCcw className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" /> Reset
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={toggleFullscreen}
+              className="border-zinc-700 bg-zinc-800/80 text-zinc-200 hover:bg-zinc-700 hover:text-white text-[11px] sm:text-xs font-semibold h-7 sm:h-8 px-2 sm:px-3"
+            >
+              {isFullscreen ? <Minimize2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" /> : <Maximize2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" />}
+              <span className="hidden sm:inline">{isFullscreen ? "Exit Fullscreen" : "Fullscreen"}</span>
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => {
+                if (document.fullscreenElement) {
+                  document.exitFullscreen().catch(() => { });
+                }
+                setStarted(false);
+              }}
+              className="bg-red-600/90 hover:bg-red-600 text-white text-[11px] sm:text-xs font-semibold px-2.5 sm:px-4 h-7 sm:h-8"
+            >
+              <LogOut className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" /> <span className="hidden sm:inline">Exit Sandbox</span>
+            </Button>
+          </div>
         </div>
 
-        {simulation.id === "sim1" ? (
-          <div key={retryCount} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Sandbox Content Body */}
+        {simulation.frontendUrl ? (
+          /* Deployed Frontend HTML Simulation Embedded in IFrame - Mobile Touch Compatible */
+          <div className="flex-1 w-full h-full p-1.5 sm:p-4 bg-zinc-950 flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col w-full h-full border border-zinc-800 rounded-lg sm:rounded-xl overflow-hidden bg-white shadow-2xl relative">
+              <div className="bg-zinc-900 text-zinc-400 px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-mono flex items-center justify-between border-b border-zinc-800 shrink-0">
+                <span className="truncate text-zinc-300 max-w-[200px] sm:max-w-xl">{simulation.frontendUrl}</span>
+                <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+                  <span className="text-[10px] sm:text-[11px] text-zinc-500 hidden xs:inline">Mobile & Desktop Sandbox</span>
+                  <div className="flex space-x-1.5">
+                    <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-500/80 block"></span>
+                    <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-yellow-500/80 block"></span>
+                    <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-green-500/80 block"></span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1 relative w-full h-full bg-white overflow-auto touch-auto">
+                <iframe
+                  key={retryCount}
+                  src={`${simulation.frontendUrl}${simulation.frontendUrl?.includes('?') ? '&' : '?'}retry=${retryCount}`}
+                  className="absolute inset-0 w-full h-full border-none"
+                  title={simulation.title}
+                  sandbox="allow-scripts allow-forms allow-popups allow-same-origin allow-modals"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </div>
+        ) : simulation.id === "sim1" ? (
+          <div key={retryCount} className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 p-3 sm:p-6 overflow-y-auto lg:overflow-hidden bg-zinc-950 h-full">
             {/* The E-Commerce Mockup Sandbox */}
-            <div className="lg:col-span-2 space-y-4">
-              <Card className="border-2 border-zinc-300 shadow-lg overflow-hidden">
-                <div className="bg-zinc-800 text-zinc-300 px-4 py-2 text-xs font-mono flex items-center justify-between">
-                  <span>http://mock-checkout.edu/cart</span>
+            <div className="lg:col-span-2 flex flex-col min-h-[420px] lg:h-full overflow-hidden">
+              <Card className="border-zinc-800 shadow-xl overflow-hidden flex flex-col h-full bg-white">
+                <div className="bg-zinc-900 text-zinc-300 px-4 py-2.5 text-xs font-mono flex items-center justify-between shrink-0">
+                  <span className="text-zinc-400">http://mock-checkout.edu/cart</span>
                   <div className="flex space-x-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-red-500 block"></span>
                     <span className="w-2.5 h-2.5 rounded-full bg-yellow-500 block"></span>
                     <span className="w-2.5 h-2.5 rounded-full bg-green-500 block"></span>
                   </div>
                 </div>
-                <CardContent className="p-6 bg-white select-none">
+                <CardContent className="p-4 sm:p-6 bg-white select-none overflow-y-auto flex-1">
                   {/* Flaw 3: No step indicator */}
-                  <div 
+                  <div
                     onClick={() => handleFlawClick("flaw3")}
-                    className={`p-3 rounded-lg border-2 mb-6 cursor-pointer transition-all ${
-                      foundFlaws.includes("flaw3") 
-                        ? "border-green-500 bg-green-50/50" 
+                    className={`p-3 rounded-lg border-2 mb-6 cursor-pointer transition-all ${foundFlaws.includes("flaw3")
+                        ? "border-green-500 bg-green-50/50"
                         : "border-zinc-200 hover:border-primary/50"
-                    }`}
+                      }`}
                   >
                     <div className="flex justify-between text-xs font-semibold text-zinc-400 mb-2">
                       <span>Checkout Flow Step</span>
@@ -130,15 +217,14 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                   </div>
 
                   <h3 className="text-xl font-bold mb-4 text-zinc-800">Secure Checkout</h3>
-                  
+
                   {/* Flaw 5: Missing Labels */}
-                  <div 
+                  <div
                     onClick={() => handleFlawClick("flaw5")}
-                    className={`p-3 rounded-lg border-2 mb-4 cursor-pointer transition-all ${
-                      foundFlaws.includes("flaw5") 
-                        ? "border-green-500 bg-green-50/50" 
+                    className={`p-3 rounded-lg border-2 mb-4 cursor-pointer transition-all ${foundFlaws.includes("flaw5")
+                        ? "border-green-500 bg-green-50/50"
                         : "border-zinc-200 hover:border-primary/50"
-                    }`}
+                      }`}
                   >
                     <div className="flex justify-between items-center text-xs font-semibold text-zinc-500 mb-1">
                       <span>Customer Details</span>
@@ -146,42 +232,40 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                     </div>
                     <div className="space-y-3">
                       {/* Flaw 1: Low contrast placeholders */}
-                      <div 
+                      <div
                         onClick={(e) => { e.stopPropagation(); handleFlawClick("flaw1"); }}
-                        className={`p-2 rounded border-2 transition-all ${
-                          foundFlaws.includes("flaw1") 
-                            ? "border-green-500 bg-green-50/50" 
+                        className={`p-2 rounded border-2 transition-all ${foundFlaws.includes("flaw1")
+                            ? "border-green-500 bg-green-50/50"
                             : "border-transparent hover:border-primary/50"
-                        }`}
+                          }`}
                       >
                         <div className="flex justify-between text-[10px] text-zinc-400 mb-0.5">
                           <span>Full Name</span>
                           {foundFlaws.includes("flaw1") && <span className="text-green-600 font-bold">Contrast Flaw Spotted!</span>}
                         </div>
-                        <input 
-                          type="text" 
-                          placeholder="John Doe" 
-                          disabled 
+                        <input
+                          type="text"
+                          placeholder="John Doe"
+                          disabled
                           className="w-full border border-zinc-200 rounded px-3 py-1.5 text-xs placeholder-zinc-100 bg-zinc-50"
                         />
                       </div>
-                      <input 
-                        type="email" 
-                        placeholder="Email Address" 
-                        disabled 
-                        className="w-full border border-zinc-200 rounded px-3 py-1.5 text-xs placeholder-zinc-400 bg-zinc-50" 
+                      <input
+                        type="email"
+                        placeholder="Email Address"
+                        disabled
+                        className="w-full border border-zinc-200 rounded px-3 py-1.5 text-xs placeholder-zinc-400 bg-zinc-50"
                       />
                     </div>
                   </div>
 
                   {/* Flaw 2: Confusing Error Message */}
-                  <div 
+                  <div
                     onClick={() => handleFlawClick("flaw2")}
-                    className={`p-3 rounded-lg border-2 mb-6 cursor-pointer transition-all ${
-                      foundFlaws.includes("flaw2") 
-                        ? "border-green-500 bg-green-50/50" 
+                    className={`p-3 rounded-lg border-2 mb-6 cursor-pointer transition-all ${foundFlaws.includes("flaw2")
+                        ? "border-green-500 bg-green-50/50"
                         : "border-zinc-200 hover:border-primary/50"
-                    }`}
+                      }`}
                   >
                     <div className="flex justify-between items-center text-xs font-semibold text-zinc-500 mb-1">
                       <span>Payment Info</span>
@@ -194,13 +278,12 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                   </div>
 
                   {/* Flaw 4: Microscopic Checkout Button */}
-                  <div 
+                  <div
                     onClick={() => handleFlawClick("flaw4")}
-                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex justify-center ${
-                      foundFlaws.includes("flaw4") 
-                        ? "border-green-500 bg-green-50/50" 
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex justify-center ${foundFlaws.includes("flaw4")
+                        ? "border-green-500 bg-green-50/50"
                         : "border-zinc-200 hover:border-primary/50"
-                    }`}
+                      }`}
                   >
                     <div className="text-center w-full">
                       {foundFlaws.includes("flaw4") && (
@@ -216,122 +299,91 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
             </div>
 
             {/* Checklist Panel */}
-            <div className="space-y-4">
-              <Card className="border-zinc-200 shadow-md">
-                <CardHeader>
-                  <CardTitle className="text-lg font-bold flex items-center">
+            <div className="flex flex-col min-h-[350px] lg:h-full overflow-hidden">
+              <Card className="border-zinc-800 shadow-xl flex flex-col h-full bg-zinc-900 text-zinc-100">
+                <CardHeader className="border-b border-zinc-800 pb-4 shrink-0">
+                  <CardTitle className="text-lg font-bold flex items-center text-zinc-100">
                     <Eye className="w-5 h-5 mr-2 text-primary" /> Audit Checklist
                   </CardTitle>
-                  <p className="text-zinc-500 text-xs">Click elements on the mockup page to identify all 5 usability errors.</p>
+                  <p className="text-zinc-400 text-xs">Click elements on the mockup page to identify all 5 usability errors.</p>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-3 p-4 overflow-y-auto flex-1">
                   {flawsList.map((flaw) => {
                     const found = foundFlaws.includes(flaw.id);
                     return (
-                      <div 
-                        key={flaw.id} 
-                        className={`p-3 rounded-lg border transition-all text-sm ${
-                          found 
-                            ? "bg-green-50 border-green-200 text-green-800" 
-                            : "bg-zinc-50 border-zinc-150 text-zinc-500"
-                        }`}
+                      <div
+                        key={flaw.id}
+                        className={`p-3 rounded-lg border transition-all text-sm ${found
+                            ? "bg-green-950/40 border-green-700/50 text-green-300"
+                            : "bg-zinc-800/60 border-zinc-700/60 text-zinc-400"
+                          }`}
                       >
                         <div className="flex items-center space-x-2 font-bold mb-1">
-                          <CheckCircle2 className={`w-4 h-4 ${found ? "text-green-600 fill-green-100" : "text-zinc-300"}`} />
-                          <span>{flaw.name}</span>
+                          <CheckCircle2 className={`w-4 h-4 ${found ? "text-green-400 fill-green-950" : "text-zinc-600"}`} />
+                          <span className={found ? "text-green-200" : "text-zinc-300"}>{flaw.name}</span>
                         </div>
-                        {found && <p className="text-xs text-green-700/90 leading-relaxed">{flaw.desc}</p>}
+                        {found && <p className="text-xs text-green-300/90 leading-relaxed pl-6">{flaw.desc}</p>}
                       </div>
                     );
                   })}
                 </CardContent>
-                <CardFooter className="pt-2">
-                  <Button 
+                <CardFooter className="pt-3 border-t border-zinc-800 shrink-0 p-4 bg-zinc-900/90">
+                  <Button
                     onClick={handleRetrySimulation}
                     className="w-full bg-primary hover:bg-primary/90 text-white font-bold"
                   >
-                    <RefreshCcw className="w-4 h-4 mr-2" /> Retry Simulation
+                    <RefreshCcw className="w-4 h-4 mr-2" /> Reset Checklist
                   </Button>
                 </CardFooter>
               </Card>
             </div>
           </div>
-        ) : simulation.frontendUrl ? (
-          /* Deployed Frontend HTML Simulation Embedded in IFrame */
-          <div className="space-y-4">
-            <Card className="border border-zinc-200 shadow-lg overflow-hidden bg-white">
-              <div className="bg-zinc-800 text-zinc-300 px-4 py-2 text-xs font-mono flex items-center justify-between">
-                <span className="truncate">{simulation.frontendUrl}</span>
-                <div className="flex space-x-1.5 flex-shrink-0">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 block"></span>
-                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500 block"></span>
-                  <span className="w-2.5 h-2.5 rounded-full bg-green-500 block"></span>
-                </div>
-              </div>
-              <div className="relative w-full h-[85vh] min-h-[700px] bg-white">
-                <iframe 
-                  key={retryCount}
-                  src={`${simulation.frontendUrl}${simulation.frontendUrl?.includes('?') ? '&' : '?'}retry=${retryCount}`} 
-                  className="absolute inset-0 w-full h-full border-none"
-                  title={simulation.title}
-                  sandbox="allow-scripts allow-forms allow-popups"
-                  allowFullScreen
-                />
-              </div>
-            </Card>
-            <div className="flex justify-end pt-4">
-              <Button 
-                onClick={handleRetrySimulation}
-                className="bg-primary hover:bg-primary/95 text-white font-bold px-8 shadow-md"
-              >
-                <RefreshCcw className="w-4 h-4 mr-2" /> Retry Simulation
-              </Button>
-            </div>
-          </div>
         ) : (
           /* Generic Simulation Simulator */
-          <Card key={retryCount} className="border-zinc-200 max-w-2xl mx-auto shadow-lg">
-            <CardHeader className="bg-zinc-50 border-b border-zinc-100 text-center py-8">
-              <Sparkles className="w-12 h-12 text-primary mx-auto mb-4 animate-pulse" />
-              <CardTitle className="text-2xl font-bold text-zinc-900">{simulation.title} Sandbox</CardTitle>
-              <p className="text-zinc-500 mt-2 max-w-md mx-auto">{simulation.description}</p>
-            </CardHeader>
-            <CardContent className="p-8 space-y-6">
-              <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-6">
-                <h4 className="font-bold text-zinc-800 mb-3 text-sm uppercase tracking-wider">Sandbox Checklist</h4>
-                <ul className="space-y-3 text-sm text-zinc-600">
-                  <li className="flex items-center space-x-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <span>Review information architecture guidelines.</span>
-                  </li>
-                  <li className="flex items-center space-x-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <span>Arrange and map nodes inside UI canvas.</span>
-                  </li>
-                  <li className="flex items-center space-x-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <span>Perform layout balance validation checks.</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 flex items-start space-x-3 text-blue-800">
-                <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                <div className="text-sm">
-                  <p className="font-semibold mb-1">Interactive Sandbox Environment</p>
-                  <p>In this sandbox, you are tasked with aligning page components to ensure ideal scanning. When ready, submit the final build to complete the simulation.</p>
+          <div className="flex-1 flex items-center justify-center p-6 bg-zinc-950 overflow-y-auto">
+            <Card key={retryCount} className="border-zinc-800 max-w-2xl w-full shadow-2xl bg-zinc-900 text-zinc-100">
+              <CardHeader className="bg-zinc-900/80 border-b border-zinc-800 text-center py-8">
+                <Sparkles className="w-12 h-12 text-primary mx-auto mb-4 animate-pulse" />
+                <CardTitle className="text-2xl font-bold text-zinc-100">{simulation.title} Sandbox</CardTitle>
+                <p className="text-zinc-400 mt-2 max-w-md mx-auto">{simulation.description}</p>
+              </CardHeader>
+              <CardContent className="p-8 space-y-6">
+                <div className="bg-zinc-800/60 border border-zinc-700/60 rounded-lg p-6">
+                  <h4 className="font-bold text-zinc-200 mb-3 text-sm uppercase tracking-wider">Sandbox Checklist</h4>
+                  <ul className="space-y-3 text-sm text-zinc-300">
+                    <li className="flex items-center space-x-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      <span>Review information architecture guidelines.</span>
+                    </li>
+                    <li className="flex items-center space-x-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      <span>Arrange and map nodes inside UI canvas.</span>
+                    </li>
+                    <li className="flex items-center space-x-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      <span>Perform layout balance validation checks.</span>
+                    </li>
+                  </ul>
                 </div>
-              </div>
-            </CardContent>
-            <CardFooter className="bg-zinc-50 border-t border-zinc-100 p-6 flex justify-end">
-              <Button 
-                onClick={handleRetrySimulation}
-                className="bg-primary hover:bg-primary/90 text-white font-bold px-8"
-              >
-                <RefreshCcw className="w-4 h-4 mr-2" /> Retry Simulation
-              </Button>
-            </CardFooter>
-          </Card>
+
+                <div className="bg-blue-950/40 border border-blue-800/50 rounded-lg p-4 flex items-start space-x-3 text-blue-300">
+                  <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0 text-blue-400" />
+                  <div className="text-sm">
+                    <p className="font-semibold mb-1 text-blue-200">Interactive Sandbox Environment</p>
+                    <p>In this sandbox, you are tasked with aligning page components to ensure ideal scanning. When ready, submit the final build to complete the simulation.</p>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="bg-zinc-900/90 border-t border-zinc-800 p-6 flex justify-end">
+                <Button
+                  onClick={handleRetrySimulation}
+                  className="bg-primary hover:bg-primary/90 text-white font-bold px-8"
+                >
+                  <RefreshCcw className="w-4 h-4 mr-2" /> Retry Simulation
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
         )}
       </div>
     );
@@ -351,8 +403,8 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
               <Play className="w-16 h-16 text-primary mx-auto mb-4 opacity-80" />
               <h2 className="text-2xl font-bold text-white mb-2">{simulation.title}</h2>
               <p className="text-zinc-400 mb-6 max-w-md mx-auto">{simulation.description}</p>
-              <Button size="lg" onClick={() => setStarted(true)} className="bg-primary hover:bg-primary/90 text-white font-bold px-8">
-                Launch Sandbox
+              <Button size="lg" onClick={handleLaunchSandbox} className="bg-primary hover:bg-primary/90 text-white font-bold px-8 shadow-lg">
+                Launch Fullscreen Sandbox
               </Button>
             </div>
           </div>
@@ -389,3 +441,4 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
     </div>
   );
 }
+

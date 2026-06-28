@@ -11,22 +11,22 @@ export function MainNavbar() {
 
   return (
     <nav className="w-full bg-white/90 backdrop-blur-md border-b border-zinc-200 sticky top-0 z-50 shadow-sm transition-all duration-300">
-      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center space-x-3 group">
-          <div className="w-9 h-9 bg-primary text-white rounded-lg flex items-center justify-center group-hover:bg-primary/90 transition-all shadow-md">
-            <GraduationCap className="w-5 h-5 animate-pulse" />
+      <div className="container mx-auto px-3 sm:px-4 h-14 flex items-center justify-between">
+        <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group min-w-0">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 bg-primary text-white rounded-lg flex items-center justify-center group-hover:bg-primary/90 transition-all shadow-md shrink-0">
+            <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
           </div>
-          <div className="flex flex-col">
-            <span className="text-base font-extrabold text-zinc-900 leading-none tracking-tight">Gamified Learning Platform</span>
-            <span className="text-[10px] font-semibold text-primary mt-0.5">Somaiya EdTech Portal</span>
+          <div className="flex flex-col min-w-0">
+            <span className="text-xs sm:text-base font-extrabold text-zinc-900 leading-none tracking-tight truncate max-w-[140px] xs:max-w-[200px] sm:max-w-none">Gamified Platform</span>
+            <span className="text-[9px] sm:text-[10px] font-semibold text-primary mt-0.5 hidden xs:inline truncate">Somaiya EdTech Portal</span>
           </div>
         </Link>
         
         {/* Navigation Links */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-1.5 sm:space-x-4 shrink-0">
           {isLoaded && !isAuthenticated && (
             <Link href="/faculty/login">
-              <Button variant="ghost" className="text-zinc-500 hover:text-primary font-medium">
+              <Button variant="ghost" size="sm" className="text-zinc-600 hover:text-primary font-medium text-xs px-2 sm:px-3">
                 Faculty Login
               </Button>
             </Link>
@@ -35,12 +35,12 @@ export function MainNavbar() {
           {isLoaded && isAuthenticated && (
             <>
               <Link href="/faculty/dashboard">
-                <Button variant="ghost" className="text-zinc-700 hover:text-primary font-medium flex items-center space-x-2">
-                  <Shield className="w-4 h-4" /> <span>Faculty Dashboard</span>
+                <Button variant="ghost" size="sm" className="text-zinc-700 hover:text-primary font-medium flex items-center space-x-1.5 text-xs px-2 sm:px-3">
+                  <Shield className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Faculty Dashboard</span><span className="xs:hidden">Dashboard</span>
                 </Button>
               </Link>
-              <Button onClick={() => logout()} variant="outline" className="border-zinc-200 text-zinc-700 hover:text-primary hover:bg-zinc-50 flex items-center space-x-2">
-                <LogOut className="w-4 h-4" /> <span>Sign Out</span>
+              <Button onClick={() => logout()} variant="outline" size="sm" className="border-zinc-200 text-zinc-700 hover:text-primary hover:bg-zinc-50 flex items-center space-x-1.5 text-xs px-2 sm:px-3">
+                <LogOut className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Sign Out</span>
               </Button>
             </>
           )}
