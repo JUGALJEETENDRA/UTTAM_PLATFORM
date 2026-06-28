@@ -144,6 +144,7 @@ function getGoogleDriveFileId(url: string | null | undefined): string | null {
 
 const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
   const [isFullscreenModalOpen, setIsFullscreenModalOpen] = useState(false);
+  const [playerMode, setPlayerMode] = useState<'cdn' | 'embed'>('cdn');
   if (!url) return null;
 
   const lowerUrl = url.toLowerCase();
@@ -151,6 +152,7 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getEmbedUrl(url);
 
+  const googleCdnUrl = driveFileId ? `https://lh3.googleusercontent.com/d/${driveFileId}` : url;
   const downloadVideoUrl = driveFileId ? `https://drive.google.com/uc?export=download&id=${driveFileId}` : url;
   const driveAppUrl = driveFileId ? `https://drive.google.com/file/d/${driveFileId}/view` : url;
 
@@ -158,7 +160,19 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
     <div className="w-full flex flex-col select-none">
       {/* Video Viewport Container */}
       <div className="w-full aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
-        {isDirectVideo ? (
+        {driveFileId && playerMode === 'cdn' ? (
+          <video
+            controls
+            playsInline
+            preload="metadata"
+            className="w-full h-full object-contain bg-black"
+            onError={() => setPlayerMode('embed')}
+          >
+            <source src={googleCdnUrl} type="video/mp4" />
+            <source src={`https://drive.google.com/uc?export=open&id=${driveFileId}`} type="video/mp4" />
+            Your browser does not support raw video streaming.
+          </video>
+        ) : isDirectVideo ? (
           <video
             controls
             playsInline
@@ -225,6 +239,18 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
         </div>
       </div>
 
+      {driveFileId && (
+        <div className="flex justify-end pt-1 px-1">
+          <button
+            type="button"
+            onClick={() => setPlayerMode(playerMode === 'cdn' ? 'embed' : 'cdn')}
+            className="text-[11px] text-blue-600 hover:underline font-bold"
+          >
+            {playerMode === 'cdn' ? "Switch to Embed Player" : "Switch to Native Direct Player"}
+          </button>
+        </div>
+      )}
+
       {/* In-App Fullscreen Theater Modal */}
       {isFullscreenModalOpen && (
         <div className="fixed inset-0 z-[200] bg-slate-950/98 backdrop-blur-2xl flex flex-col p-3 sm:p-6 animate-in fade-in duration-200">
@@ -257,7 +283,19 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
           </div>
 
           <div className="flex-1 w-full h-full relative rounded-xl overflow-hidden bg-black flex items-center justify-center">
-            {isDirectVideo ? (
+            {driveFileId && playerMode === 'cdn' ? (
+              <video
+                controls
+                autoPlay
+                playsInline
+                preload="metadata"
+                className="w-full h-full object-contain"
+                onError={() => setPlayerMode('embed')}
+              >
+                <source src={googleCdnUrl} type="video/mp4" />
+                <source src={`https://drive.google.com/uc?export=open&id=${driveFileId}`} type="video/mp4" />
+              </video>
+            ) : isDirectVideo ? (
               <video
                 controls
                 autoPlay
