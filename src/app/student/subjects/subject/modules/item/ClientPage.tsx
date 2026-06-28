@@ -144,7 +144,7 @@ function getGoogleDriveFileId(url: string | null | undefined): string | null {
 
 const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
   const [isFullscreenModalOpen, setIsFullscreenModalOpen] = useState(false);
-  const [useEmbed, setUseEmbed] = useState(false);
+  const [useEmbed, setUseEmbed] = useState(true);
   if (!url) return null;
 
   const lowerUrl = url.toLowerCase();
@@ -160,7 +160,16 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
     <div className="w-full flex flex-col select-none">
       {/* Video Viewport Container */}
       <div className="w-full aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
-        {driveFileId && !useEmbed ? (
+        {embedUrl && useEmbed ? (
+          <iframe
+            src={embedUrl}
+            className="w-full h-full border-0 bg-black"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+            allowFullScreen
+            referrerPolicy="no-referrer"
+            title={title}
+          />
+        ) : driveFileId ? (
           <video
             controls
             playsInline
@@ -181,15 +190,6 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
             <source src={url} />
             Your browser does not support the video tag.
           </video>
-        ) : embedUrl ? (
-          <iframe
-            src={embedUrl}
-            className="w-full h-full border-0 bg-black"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-            allowFullScreen
-            referrerPolicy="no-referrer"
-            title={title}
-          />
         ) : null}
       </div>
 
@@ -282,7 +282,16 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
           </div>
 
           <div className="flex-1 w-full h-full relative rounded-xl overflow-hidden bg-black flex items-center justify-center">
-            {driveFileId && !useEmbed ? (
+            {embedUrl && useEmbed ? (
+              <iframe
+                src={`${embedUrl}${embedUrl.includes('?') ? '&' : '?'}autoplay=1`}
+                className="w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                allowFullScreen
+                referrerPolicy="no-referrer"
+                title={title}
+              />
+            ) : driveFileId ? (
               <video
                 controls
                 autoPlay
@@ -303,15 +312,6 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
               >
                 <source src={url} />
               </video>
-            ) : embedUrl ? (
-              <iframe
-                src={`${embedUrl}${embedUrl.includes('?') ? '&' : '?'}autoplay=1`}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                allowFullScreen
-                referrerPolicy="no-referrer"
-                title={title}
-              />
             ) : null}
           </div>
 
@@ -694,10 +694,10 @@ export default function ModuleDetailPage() {
                       <div className="bg-slate-50/60 w-full md:w-16 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-100 py-4 md:py-0 flex-shrink-0 select-none group-hover:bg-indigo-50/20 transition-colors duration-300">
                         <span className="text-2xl font-extrabold text-slate-300 group-hover:text-indigo-600 transition-colors duration-300">0{index + 1}</span>
                       </div>
-                      <div className="flex-1 p-6 flex flex-col">
+                      <div className="flex-1 p-3.5 sm:p-6 flex flex-col">
                         <div className="mb-4">
-                          <CardTitle className="text-lg font-bold text-slate-800 mb-1.5">{subtopic.title}</CardTitle>
-                          <CardDescription className="text-sm text-slate-500 font-medium leading-relaxed">{subtopic.description}</CardDescription>
+                          <CardTitle className="text-base sm:text-lg font-bold text-slate-800 mb-1.5">{subtopic.title}</CardTitle>
+                          <CardDescription className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">{subtopic.description}</CardDescription>
                         </div>
 
                         {/* Video Content */}
@@ -746,31 +746,31 @@ export default function ModuleDetailPage() {
                           </div>
                         )}
 
-                        {/* Buttons grid */}
-                        <div className="flex flex-wrap items-center gap-3 border-t border-slate-100 pt-5 mt-auto">
+                        {/* Buttons grid - Mobile Compact Grid */}
+                        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-3 border-t border-slate-100 pt-4 sm:pt-5 mt-auto">
                           {subtopic.notesUrl && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
-                              <a href={subtopic.notesUrl} target="_blank" rel="noopener noreferrer">
-                                <Button variant="outline" className="bg-white hover:bg-red-50/30 border-slate-200 hover:border-red-300 text-slate-700 hover:text-red-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
-                                  <FileText className="w-4 h-4 text-red-500" /> Read Notes
+                              <a href={subtopic.notesUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-red-50/30 border-slate-200 hover:border-red-300 text-slate-700 hover:text-red-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                  <FileText className="w-3.5 h-3.5 text-red-500 shrink-0" /> Read Notes
                                 </Button>
                               </a>
                             </ResourceLinkTracker>
                           )}
                           {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
-                              <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`}>
-                                <Button variant="outline" className="bg-white hover:bg-emerald-50/30 border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
-                                  <Target className="w-4 h-4 text-emerald-500" /> Attempt Quiz
+                              <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`} className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-emerald-50/30 border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                  <Target className="w-3.5 h-3.5 text-emerald-500 shrink-0" /> Attempt Quiz
                                 </Button>
                               </Link>
                             </ResourceLinkTracker>
                           )}
                           {subtopicMindMaps.length > 0 && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="mindmap">
-                              <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${subtopicMindMaps[0].id}`}>
-                                <Button variant="outline" className="bg-white hover:bg-purple-50/30 border-slate-200 hover:border-purple-300 text-slate-700 hover:text-purple-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
-                                  <BrainCircuit className="w-4 h-4 text-purple-500" /> View Mind Map
+                              <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${subtopicMindMaps[0].id}`} className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-purple-50/30 border-slate-200 hover:border-purple-300 text-slate-700 hover:text-purple-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                  <BrainCircuit className="w-3.5 h-3.5 text-purple-500 shrink-0" /> View Mind Map
                                 </Button>
                               </Link>
                             </ResourceLinkTracker>
@@ -781,44 +781,44 @@ export default function ModuleDetailPage() {
                                 subtopicSims.length > 0 
                                   ? `/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${subtopicSims[0].id}`
                                   : `/student/subjects/subject/modules/item/simulations/subtopic?subjectId=${subjectId}&id=${id}&subtopicId=${subtopic.id}`
-                              }>
-                                <Button variant="outline" className="bg-white hover:bg-blue-50/30 border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
-                                  <Gamepad2 className="w-4 h-4 text-blue-500" /> View Simulation
+                              } className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-blue-50/30 border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                  <Gamepad2 className="w-3.5 h-3.5 text-blue-500 shrink-0" /> View Simulation
                                 </Button>
                               </Link>
                             </ResourceLinkTracker>
                           )}
                           {subtopic.didYouKnowUrl && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
-                              <a href={subtopic.didYouKnowUrl} target="_blank" rel="noopener noreferrer">
-                                <Button variant="outline" className="bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
-                                  <Lightbulb className="w-4 h-4 text-amber-500" /> Did You Know
+                              <a href={subtopic.didYouKnowUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                  <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Did You Know
                                 </Button>
                               </a>
                             </ResourceLinkTracker>
                           )}
                           {subtopic.referenceUrl && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="reference">
-                              <a href={subtopic.referenceUrl} target="_blank" rel="noopener noreferrer">
-                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-350 text-slate-700 hover:text-slate-900 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
-                                  <Book className="w-4 h-4 text-zinc-550" /> Reference Material
+                              <a href={subtopic.referenceUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-350 text-slate-700 hover:text-slate-900 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                  <Book className="w-3.5 h-3.5 text-zinc-550 shrink-0" /> Reference
                                 </Button>
                               </a>
                             </ResourceLinkTracker>
                           )}
                           {subtopic.otherUrl && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="other">
-                              <a href={subtopic.otherUrl} target="_blank" rel="noopener noreferrer">
-                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-350 text-slate-700 hover:text-slate-900 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
-                                  <LinkIcon className="w-4 h-4 text-slate-500" /> External Link
+                              <a href={subtopic.otherUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-350 text-slate-700 hover:text-slate-900 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                  <LinkIcon className="w-3.5 h-3.5 text-slate-500 shrink-0" /> External Link
                                 </Button>
                               </a>
                             </ResourceLinkTracker>
                           )}
                           {subtopicFlashcards.length > 0 && (
-                            <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}`}>
-                              <Button variant="outline" className="bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
-                                <Layers className="w-4 h-4 text-amber-500" /> Study Flashcards
+                            <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}`} className="w-full sm:w-auto">
+                              <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                <Layers className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Flashcards
                               </Button>
                             </Link>
                           )}
@@ -1279,12 +1279,12 @@ export default function ModuleDetailPage() {
                 }`}>
                   <span className="text-2xl font-black">{index + 1}</span>
                 </div>
-                <div className="flex-1 p-6 flex flex-col">
+                <div className="flex-1 p-3.5 sm:p-6 flex flex-col">
                   <div className="mb-4">
-                    <CardTitle className={`text-xl mb-2 ${
+                    <CardTitle className={`text-lg sm:text-xl mb-1.5 ${
                       isPremiumTheme ? 'text-slate-800 font-semibold font-sans tracking-tight' : 'text-black font-black uppercase tracking-tight'
                     }`}>{subtopic.title}</CardTitle>
-                    <CardDescription className={`text-sm ${
+                    <CardDescription className={`text-xs sm:text-sm ${
                       isPremiumTheme ? 'text-slate-550 font-medium font-sans leading-relaxed' : 'text-zinc-800 font-bold leading-relaxed'
                     }`}>{subtopic.description}</CardDescription>
                   </div>
@@ -1343,20 +1343,20 @@ export default function ModuleDetailPage() {
                     </div>
                   )}
 
-                  {/* Buttons */}
-                  <div className={`flex flex-wrap items-center gap-3 mt-auto pt-5 ${
+                  {/* Buttons - Mobile Grid Responsive */}
+                  <div className={`grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-3 mt-auto pt-4 sm:pt-5 ${
                     isPremiumTheme ? 'border-t border-slate-100' : 'border-t-2 border-black'
                   }`}>
                     {subtopic.notesUrl && (
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
-                        <a href={subtopic.notesUrl} target="_blank" rel="noopener noreferrer">
-                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
+                        <a href={subtopic.notesUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
                             <Button variant="outline" className={
-                              isPremiumTheme 
+                              (isPremiumTheme 
                                 ? t.btnGhost 
-                                : t.btnPrimary + ' flex items-center gap-1.5'
+                                : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
                             }>
-                              <FileText className="w-4 h-4 text-red-500" /> Read Notes
+                              <FileText className="w-3.5 h-3.5 text-red-500 shrink-0" /> Read Notes
                             </Button>
                           </motion.div>
                         </a>
@@ -1364,14 +1364,14 @@ export default function ModuleDetailPage() {
                     )}
                     {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
-                        <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`}>
-                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
+                        <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`} className="w-full sm:w-auto">
+                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
                             <Button variant="outline" className={
-                              isPremiumTheme 
+                              (isPremiumTheme 
                                 ? t.btnGhost 
-                                : t.btnPrimary + ' flex items-center gap-1.5'
+                                : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
                             }>
-                              <Target className="w-4 h-4 text-emerald-500" /> Attempt Quiz
+                              <Target className="w-3.5 h-3.5 text-emerald-500 shrink-0" /> Attempt Quiz
                             </Button>
                           </motion.div>
                         </Link>
@@ -1379,14 +1379,14 @@ export default function ModuleDetailPage() {
                     )}
                     {subtopicMindMaps.length > 0 && (
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="mindmap">
-                        <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${subtopicMindMaps[0].id}`}>
-                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
+                        <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${subtopicMindMaps[0].id}`} className="w-full sm:w-auto">
+                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
                             <Button variant="outline" className={
-                              isPremiumTheme 
+                              (isPremiumTheme 
                                 ? t.btnGhost 
-                                : t.btnPrimary + ' flex items-center gap-1.5'
+                                : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
                             }>
-                              <BrainCircuit className="w-4 h-4 text-purple-500" /> View Mind Map
+                              <BrainCircuit className="w-3.5 h-3.5 text-purple-500 shrink-0" /> View Mind Map
                             </Button>
                           </motion.div>
                         </Link>
@@ -1398,14 +1398,14 @@ export default function ModuleDetailPage() {
                           subtopicSims.length > 0 
                             ? `/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${subtopicSims[0].id}`
                             : `/student/subjects/subject/modules/item/simulations/subtopic?subjectId=${subjectId}&id=${id}&subtopicId=${subtopic.id}`
-                        }>
-                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
+                        } className="w-full sm:w-auto">
+                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
                             <Button variant="outline" className={
-                              isPremiumTheme 
+                              (isPremiumTheme 
                                 ? t.btnGhost 
-                                : t.btnPrimary + ' flex items-center gap-1.5'
+                                : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
                             }>
-                              <Gamepad2 className="w-4 h-4 text-blue-500" /> View Simulation
+                              <Gamepad2 className="w-3.5 h-3.5 text-blue-500 shrink-0" /> View Simulation
                             </Button>
                           </motion.div>
                         </Link>
