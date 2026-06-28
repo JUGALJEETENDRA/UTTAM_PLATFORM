@@ -177,7 +177,6 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
             className="w-full h-full border-0 bg-black"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
             allowFullScreen
-            referrerPolicy="no-referrer"
             title={title}
           />
         ) : isDirectVideo ? (
@@ -196,7 +195,6 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
             className="w-full h-full border-0 bg-black"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
             allowFullScreen
-            referrerPolicy="no-referrer"
             title={title}
           />
         )}
@@ -287,7 +285,6 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                 allowFullScreen
-                referrerPolicy="no-referrer"
                 title={title}
               />
             ) : isDirectVideo ? (
@@ -306,7 +303,6 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                 allowFullScreen
-                referrerPolicy="no-referrer"
                 title={title}
               />
             )}
