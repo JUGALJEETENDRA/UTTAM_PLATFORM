@@ -382,12 +382,15 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
         audioEl.pause();
         setIsPlaying(false);
       } else {
-        audioEl.play().then(() => {
-          setIsPlaying(true);
-        }).catch((err) => {
-          console.log("Audio play error, falling back to drive embed", err);
-          if (driveFileId) setShowDriveEmbed(true);
-        });
+        const playPromise = audioEl.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            setIsPlaying(true);
+          }).catch((err) => {
+            console.log("Audio play error, falling back to drive embed", err);
+            if (driveFileId) setShowDriveEmbed(true);
+          });
+        }
       }
     }
   };
@@ -481,6 +484,9 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
               onEnded={() => setIsPlaying(false)}
               className="w-full h-10 rounded-md accent-blue-600"
             >
+              <source src={audioSrc} type="audio/mpeg" />
+              <source src={url} type="audio/mpeg" />
+              <source src={url} type="audio/wav" />
               Your browser does not support the audio element.
             </audio>
           </div>
