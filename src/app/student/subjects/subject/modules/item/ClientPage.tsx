@@ -95,6 +95,14 @@ function getEmbedUrl(url: string | null | undefined): string | null {
         embedUrl = `https://www.youtube.com/embed/${videoId}`;
       }
     }
+  } else if (url.includes("youtube.com/shorts/")) {
+    const parts = url.split("youtube.com/shorts/");
+    if (parts.length > 1) {
+      const videoId = parts[1].split(/[?#]/)[0];
+      if (videoId) {
+        embedUrl = `https://www.youtube.com/embed/${videoId}`;
+      }
+    }
   }
   
   // Force playsinline and rel parameters for YouTube embeds to fix mobile browser playback
