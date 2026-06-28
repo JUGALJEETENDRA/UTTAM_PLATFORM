@@ -478,6 +478,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
               src={audioSrc}
               controls 
               playsInline 
+              crossOrigin="anonymous"
               preload="auto" 
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
