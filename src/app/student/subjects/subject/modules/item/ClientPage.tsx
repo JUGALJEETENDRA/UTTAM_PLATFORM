@@ -32,18 +32,18 @@ const THEME_MAP: Record<string, {
   pattern: string;
 }> = {
   "ui programming": {
-    bg: "bg-[#F9F6F0]",
+    bg: "bg-slate-50 text-slate-800 font-sans",
     cardBg: "bg-white",
-    borderClass: "border-4 border-black rounded-none",
-    shadowClass: "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1.5 hover:translate-y-1.5",
-    btnPrimary: "bg-[#A855F7] text-white hover:bg-[#A855F7]/90 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1",
-    btnGhost: "text-[#A855F7] font-black hover:bg-[#A855F7]/10 rounded-none",
-    titleHover: "group-hover:text-[#A855F7]",
-    textHeading: "text-black font-black uppercase tracking-tight",
-    textMuted: "text-zinc-800 font-bold",
-    badge: "bg-[#A855F7] text-white border-2 border-black rounded-none font-bold",
-    pattern: "ui-blueprint-grid"
-  }
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-550 hover:text-indigo-650 font-sans text-xs hover:bg-slate-55 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-indigo-600",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
+    pattern: ""
+  },
 };
 
 const DEFAULT_THEME = {
@@ -62,31 +62,47 @@ const DEFAULT_THEME = {
 
 function getEmbedUrl(url: string | null | undefined): string | null {
   if (!url) return null;
-  if (url.includes("/embed/")) return url;
   
   if (url.includes("drive.google.com/file/d/")) {
     return url.replace(/\/view.*$/, "/preview");
   }
   
+  let embedUrl = url;
+  
   if (url.includes("youtube.com/watch")) {
     try {
       const urlObj = new URL(url);
       const videoId = urlObj.searchParams.get("v");
-      if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+      if (videoId) {
+        embedUrl = `https://www.youtube.com/embed/${videoId}`;
+      }
     } catch (e) {
       // ignore
     }
-  }
-  
-  if (url.includes("youtu.be/")) {
+  } else if (url.includes("youtu.be/")) {
     const parts = url.split("youtu.be/");
     if (parts.length > 1) {
       const videoId = parts[1].split(/[?#]/)[0];
-      if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+      if (videoId) {
+        embedUrl = `https://www.youtube.com/embed/${videoId}`;
+      }
     }
   }
   
-  return url;
+  // Force playsinline and rel parameters for YouTube embeds to fix mobile browser playback
+  if (embedUrl.includes("youtube.com/embed/")) {
+    try {
+      const urlObj = new URL(embedUrl);
+      urlObj.searchParams.set("playsinline", "1");
+      urlObj.searchParams.set("rel", "0");
+      return urlObj.toString();
+    } catch (e) {
+      const separator = embedUrl.includes("?") ? "&" : "?";
+      return `${embedUrl}${separator}playsinline=1&rel=0`;
+    }
+  }
+  
+  return embedUrl;
 }
 
 function getExternalEmbedUrl(url: string | null | undefined): string | null {
@@ -97,59 +113,15 @@ function getExternalEmbedUrl(url: string | null | undefined): string | null {
   return url;
 }
 
-// Premium 3D Tilt Card with moving light glare reflection effect
-const DesignStudioCard = ({ children, className = "", style = {}, isPremium = true, ...props }: any) => {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isPremium) return;
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    // Rotate maximum 4deg in X and Y directions
-    const rotateX = -((y / rect.height) - 0.5) * 8;
-    const rotateY = ((x / rect.width) - 0.5) * 8;
-
-    // Glare position percentage tracking cursor
-    const glareX = (x / rect.width) * 100;
-    const glareY = (y / rect.height) * 100;
-
-    setTilt({ x: rotateX, y: rotateY });
-    setGlare({ x: glareX, y: glareY, opacity: 0.12 });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-    setGlare(prev => ({ ...prev, opacity: 0 }));
-  };
-
+// Premium Figma-style component bounding box selection frame (Overlays removed per request)
+const DesignStudioCard = ({ children, className = "", style = {}, ...props }: any) => {
   return (
     <div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        transform: isPremium ? `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` : 'none',
-        transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1)',
-        transformStyle: 'preserve-3d',
-        position: 'relative',
-        ...style
-      }}
-      className={className}
+      className={`relative transition-all duration-300 ease-out rounded-lg ${className}`}
+      style={style}
       {...props}
     >
       {children}
-      {isPremium && (
-        <div
-          className="pointer-events-none absolute inset-0 rounded-[inherit] transition-opacity duration-300 z-30"
-          style={{
-            background: `radial-gradient(circle 120px at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.12), transparent)`,
-            opacity: glare.opacity
-          }}
-        />
-      )}
     </div>
   );
 };
@@ -226,61 +198,51 @@ export default function ModuleDetailPage() {
   // ==========================================
   if (isDigitalBusiness) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden antialiased selection:bg-[#2563eb]/10 selection:text-[#2563eb] font-sans">
-        
-        {/* Ambient Grid Background */}
-        <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.06]" style={{
-          backgroundImage: `radial-gradient(circle, #2563eb 1.2px, transparent 1.2px)`,
-          backgroundSize: "28px 28px"
+      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden antialiased selection:bg-[#1E3A8A]/10 selection:text-[#1E3A8A] font-sans">
+        {/* Strategy-board dot pattern grid overlay */}
+        <div className="absolute inset-0 pointer-events-none z-0" style={{
+          backgroundImage: `radial-gradient(#e2e8f0 1.2px, transparent 1.2px)`,
+          backgroundSize: "24px 24px"
         }} />
 
-        {/* Dynamic Vector Backings */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-20">
-          <div className="absolute top-[15%] left-[5%] w-96 h-96 bg-[#2563eb]/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-[20%] right-[5%] w-80 h-80 bg-[#16a34a]/5 rounded-full blur-3xl" />
-        </div>
-
-        <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl space-y-8">
+        <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl space-y-6">
           
-          {/* Dashboard Back Nav Bar */}
-          <div className="flex justify-between items-center bg-white p-3 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] rounded-lg">
+          {/* Subtle Breadcrumb Navigation - Removed */}
+
+          {/* Return Button */}
+          <div className="mb-4">
             <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
-              <Button className="bg-slate-900 hover:bg-[#2563eb] text-white text-[10px] font-mono tracking-widest px-4 py-1.5 h-8 uppercase rounded-md shadow-sm transition-all flex items-center gap-1.5">
-                ← Back to Modules
+              <Button className="bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 hover:text-slate-900 shadow-sm rounded-lg px-4 py-2 text-xs font-mono font-bold uppercase transition-all duration-150">
+                ← Return to Modules
               </Button>
             </Link>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#16a34a] animate-pulse" />
-              <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider">LIVE NODE DESK</span>
-            </div>
           </div>
 
           {/* Section Header */}
-          <div className="bg-white p-6 border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.02)] rounded-xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2563eb] to-[#16a34a]" />
+          <div className="bg-white p-6 border border-slate-200 shadow-sm rounded-lg">
             <div className="flex items-center gap-3.5 mb-2.5">
-              <Badge className="bg-[#2563eb]/10 text-[#2563eb] hover:bg-[#2563eb]/20 border-none px-2.5 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider uppercase">
+              <Badge className="bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider uppercase">
                 {moduleData.id.toUpperCase()}
               </Badge>
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">// DBT_MODULE_INSPECT</span>
+              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">DBT_MODULE_DETAIL</span>
             </div>
-            <h1 className="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
-              <Layers className="w-7 h-7 text-[#2563eb]" />
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3 font-sans">
+              <Layers className="w-7 h-7 text-[#1E3A8A]" />
               {moduleData.title}
             </h1>
-            <p className="text-slate-500 mt-2 text-sm leading-relaxed max-w-2xl font-medium">
+            <p className="text-slate-500 mt-2 text-sm leading-relaxed max-w-2xl font-sans font-medium">
               {moduleData.description}
             </p>
-            <div className="mt-4 flex flex-wrap gap-2 text-xs font-mono font-bold text-slate-450">
-              <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-md text-[#2563eb]">CO: {moduleData.co}</span>
-              <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-md text-[#16a34a] flex items-center gap-1">
+            <div className="mt-4 flex flex-wrap gap-2 text-xs font-mono font-bold">
+              <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-md text-[#1E3A8A]">CO: {moduleData.co}</span>
+              <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-md text-[#0F766E] flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5" /> {moduleData.hours} Hours
               </span>
             </div>
           </div>
 
           {/* Subtopics stack */}
-          <h2 className="text-sm font-black uppercase tracking-widest text-[#2563eb]">Subtopic Nodes</h2>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-[#1E3A8A]">Subtopics</h2>
 
           <motion.div 
             variants={containerVariants}
@@ -329,10 +291,10 @@ export default function ModuleDetailPage() {
 
               return (
                 <motion.div key={subtopic.id} variants={itemVariants}>
-                  <Card className="border-slate-200/80 shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:shadow-[0_15px_35px_rgba(37,99,235,0.06)] hover:border-[#2563eb]/45 transition-all overflow-hidden bg-white rounded-xl">
+                  <Card className="border-slate-200 shadow-sm hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:border-[#1E3A8A] hover:bg-slate-50/30 transition-all duration-300 overflow-hidden bg-white rounded-lg group">
                     <div className="flex flex-col md:flex-row">
-                      <div className="bg-slate-50/50 w-full md:w-16 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-100 py-4 md:py-0 flex-shrink-0 select-none">
-                        <span className="text-2xl font-black text-slate-300">0{index + 1}</span>
+                      <div className="bg-slate-50/60 w-full md:w-16 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-100 py-4 md:py-0 flex-shrink-0 select-none group-hover:bg-indigo-50/20 transition-colors duration-300">
+                        <span className="text-2xl font-extrabold text-slate-300 group-hover:text-indigo-600 transition-colors duration-300">0{index + 1}</span>
                       </div>
                       <div className="flex-1 p-6 flex flex-col">
                         <div className="mb-4">
@@ -346,7 +308,7 @@ export default function ModuleDetailPage() {
                             {subtopic.videoLanguages && subtopic.videoLanguages.length > 0 && (
                               <div className="flex justify-end mb-2 max-w-3xl mx-auto">
                                 <select 
-                                  className="bg-white border border-slate-200 rounded-lg text-xs px-2.5 py-1.5 text-slate-750 font-medium focus:outline-none focus:border-[#2563eb] shadow-sm"
+                                  className="bg-white border border-slate-200 rounded-lg text-xs px-2.5 py-1.5 text-slate-750 font-medium focus:outline-none focus:border-[#1E3A8A] shadow-sm"
                                   value={selectedLanguages[subtopic.id]?.video || defaultVideoUrl}
                                   onChange={(e) => handleLanguageChange(subtopic.id, 'video', e.target.value)}
                                 >
@@ -371,14 +333,14 @@ export default function ModuleDetailPage() {
 
                         {/* Audio Content */}
                         {(subtopic.audioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
-                          <div className="w-full mb-5 max-w-3xl mx-auto bg-slate-50 p-4 border border-slate-200/80 rounded-lg shadow-inner">
+                          <div className="w-full mb-5 max-w-3xl mx-auto bg-slate-50 p-4 border border-slate-200 rounded-lg shadow-inner">
                             <div className="flex justify-between items-center mb-2">
                               <p className="text-xs font-bold text-slate-750 flex items-center">
-                                <Headphones className="w-4 h-4 mr-2 text-[#2563eb]" /> Audio Lesson
+                                <Headphones className="w-4 h-4 mr-2 text-[#1E3A8A]" /> Audio Lesson
                               </p>
                               {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
                                 <select 
-                                  className="bg-white border border-slate-200 rounded-lg text-[10px] px-2 py-1 text-slate-750 font-medium focus:outline-none focus:border-[#2563eb] shadow-sm"
+                                  className="bg-white border border-slate-200 rounded-lg text-[10px] px-2 py-1 text-slate-750 font-medium focus:outline-none focus:border-[#1E3A8A] shadow-sm"
                                   value={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl}
                                   onChange={(e) => handleLanguageChange(subtopic.id, 'audio', e.target.value)}
                                 >
@@ -397,7 +359,7 @@ export default function ModuleDetailPage() {
                               ></iframe>
                             </ResourceLinkTracker>
                             <div className="mt-2 text-right">
-                               <a href={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-[#2563eb] font-mono hover:underline">
+                               <a href={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-[#1E3A8A] font-mono hover:underline">
                                  Open Audio Source
                                </a>
                             </div>
@@ -409,7 +371,7 @@ export default function ModuleDetailPage() {
                           {subtopic.notesUrl && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
                               <a href={subtopic.notesUrl} target="_blank" rel="noopener noreferrer">
-                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                                <Button variant="outline" className="bg-white hover:bg-red-50/30 border-slate-200 hover:border-red-300 text-slate-700 hover:text-red-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
                                   <FileText className="w-4 h-4 text-red-500" /> Read Notes
                                 </Button>
                               </a>
@@ -418,7 +380,7 @@ export default function ModuleDetailPage() {
                           {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
                               <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`}>
-                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                                <Button variant="outline" className="bg-white hover:bg-emerald-50/30 border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
                                   <Target className="w-4 h-4 text-emerald-500" /> Attempt Quiz
                                 </Button>
                               </Link>
@@ -427,7 +389,7 @@ export default function ModuleDetailPage() {
                           {subtopicMindMaps.length > 0 && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="mindmap">
                               <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${subtopicMindMaps[0].id}`}>
-                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                                <Button variant="outline" className="bg-white hover:bg-purple-50/30 border-slate-200 hover:border-purple-300 text-slate-700 hover:text-purple-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
                                   <BrainCircuit className="w-4 h-4 text-purple-500" /> View Mind Map
                                 </Button>
                               </Link>
@@ -440,7 +402,7 @@ export default function ModuleDetailPage() {
                                   ? `/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${subtopicSims[0].id}`
                                   : `/student/subjects/subject/modules/item/simulations/subtopic?subjectId=${subjectId}&id=${id}&subtopicId=${subtopic.id}`
                               }>
-                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                                <Button variant="outline" className="bg-white hover:bg-blue-50/30 border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
                                   <Gamepad2 className="w-4 h-4 text-blue-500" /> View Simulation
                                 </Button>
                               </Link>
@@ -449,7 +411,7 @@ export default function ModuleDetailPage() {
                           {subtopic.didYouKnowUrl && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
                               <a href={subtopic.didYouKnowUrl} target="_blank" rel="noopener noreferrer">
-                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                                <Button variant="outline" className="bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
                                   <Lightbulb className="w-4 h-4 text-amber-500" /> Did You Know
                                 </Button>
                               </a>
@@ -458,7 +420,7 @@ export default function ModuleDetailPage() {
                           {subtopic.referenceUrl && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="reference">
                               <a href={subtopic.referenceUrl} target="_blank" rel="noopener noreferrer">
-                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-350 text-slate-700 hover:text-slate-900 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
                                   <Book className="w-4 h-4 text-zinc-550" /> Reference Material
                                 </Button>
                               </a>
@@ -467,7 +429,7 @@ export default function ModuleDetailPage() {
                           {subtopic.otherUrl && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="other">
                               <a href={subtopic.otherUrl} target="_blank" rel="noopener noreferrer">
-                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                                <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-350 text-slate-700 hover:text-slate-900 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
                                   <LinkIcon className="w-4 h-4 text-slate-500" /> External Link
                                 </Button>
                               </a>
@@ -475,7 +437,7 @@ export default function ModuleDetailPage() {
                           )}
                           {subtopicFlashcards.length > 0 && (
                             <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}`}>
-                              <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                              <Button variant="outline" className="bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-xs font-bold h-10 px-4 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
                                 <Layers className="w-4 h-4 text-amber-500" /> Study Flashcards
                               </Button>
                             </Link>
@@ -552,7 +514,7 @@ export default function ModuleDetailPage() {
             <div className="absolute top-0 left-0 bottom-0 w-1 bg-[#3776AB]" />
             <div className="flex items-center gap-3 mb-2">
               <span className="text-[10px] font-bold text-[#3776AB] bg-[#3776AB]/10 px-2 py-0.5 border border-[#3776AB]/30 rounded">DOCSTRING</span>
-              <span className="text-[10px] text-slate-400 font-mono">// READ-ONLY SCHEMA</span>
+              <span className="text-[10px] text-slate-400 font-mono">READ-ONLY SCHEMA</span>
             </div>
             <h1 className="text-2xl font-bold uppercase tracking-widest text-[#3776AB] flex items-center gap-3 font-jetbrains">
               <Terminal className="w-6 h-6 text-[#3776AB]" />
@@ -822,77 +784,12 @@ export default function ModuleDetailPage() {
         }
       `}</style>
 
-      {/* Layered Design-System inspired Background */}
-      {isPremiumTheme && (
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none">
-          {/* Subtle Grid Pattern (2%-6% opacity overall) */}
-          <div className="absolute inset-0 bg-[#F8F9FC]" style={{
-            backgroundImage: "radial-gradient(circle, rgba(148, 163, 184, 0.12) 1.5px, transparent 1.5px)",
-            backgroundSize: "24px 24px"
-          }} />
-
-          {/* Blueprint-style guides, nodes, outlines and connections */}
-          <svg className="absolute inset-0 w-full h-full text-slate-400" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="ruler-x" width="100" height="20" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="0" y2="10" stroke="currentColor" strokeWidth="1" opacity="0.04" />
-                <line x1="10" y1="0" x2="10" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="20" y1="0" x2="20" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="30" y1="0" x2="30" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="40" y1="0" x2="40" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="50" y1="0" x2="50" y2="8" stroke="currentColor" strokeWidth="1" opacity="0.04" />
-                <line x1="60" y1="0" x2="60" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="70" y1="0" x2="70" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="80" y1="0" x2="80" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="90" y1="0" x2="90" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-              </pattern>
-              <pattern id="ruler-y" width="20" height="100" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="10" y2="0" stroke="currentColor" strokeWidth="1" opacity="0.04" />
-                <line x1="0" y1="10" x2="5" y2="10" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="20" x2="5" y2="20" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="30" x2="5" y2="30" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="40" x2="5" y2="40" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="50" x2="8" y2="50" stroke="currentColor" strokeWidth="1" opacity="0.04" />
-                <line x1="0" y1="60" x2="5" y2="60" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="70" x2="5" y2="70" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="80" x2="5" y2="80" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="90" x2="5" y2="90" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-              </pattern>
-            </defs>
-
-            {/* Ruler guides */}
-            <rect x="0" y="0" width="100%" height="20" fill="url(#ruler-x)" />
-            <rect x="0" y="0" width="20" height="100%" fill="url(#ruler-y)" />
-
-            {/* Connection lines and node circles (opacity 2% - 6%) */}
-            <line x1="15%" y1="0" x2="15%" y2="100%" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" opacity="0.03" />
-            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.02" />
-            <line x1="82%" y1="0" x2="82%" y2="100%" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" opacity="0.03" />
-            <line x1="0" y1="220" x2="100%" y2="220" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-            <line x1="0" y1="720" x2="100%" y2="720" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.03" />
-
-            {/* Large Design Circles */}
-            <circle cx="20%" cy="35%" r="300" stroke="currentColor" strokeWidth="1.2" fill="none" opacity="0.03" />
-            <circle cx="85%" cy="60%" r="400" stroke="currentColor" strokeWidth="1" fill="none" strokeDasharray="8 8" opacity="0.02" />
-
-            {/* Outlines of UI Components */}
-            <rect x="8%" y="150" width="160" height="120" rx="8" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.03" />
-            <circle cx="8%" cy="150" r="3" fill="currentColor" opacity="0.04" />
-            <circle cx="168" cy="270" r="3" fill="currentColor" opacity="0.04" />
-
-            {/* Technical text canvas indicators */}
-            <text x="35" y="45" fill="currentColor" opacity="0.04" fontSize="9" fontFamily="monospace">GRID_SCALE: 24PX</text>
-            <text x="83%" y="90" fill="currentColor" opacity="0.04" fontSize="9" fontFamily="monospace">CANVAS // 1024X768</text>
-          </svg>
-
-          {/* Glowing colorful auras for design depth */}
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-tr from-[#7C3AED]/5 to-[#3B82F6]/5 rounded-full blur-3xl opacity-60 animate-pulse-slow" />
-          <div className="absolute bottom-10 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-[#10B981]/5 to-[#F59E0B]/5 rounded-full blur-3xl opacity-40 animate-pulse-slow" style={{ animationDelay: '2s' }} />
-        </div>
-      )}
+      {/* Layered Design-System inspired Background - Disabled for Clean EdTech Minimal */}
 
       <div className="container mx-auto px-4 max-w-4xl space-y-6 relative z-10">
         
+        {/* Subtle Breadcrumb Navigation - Removed */}
+
         {/* Back button */}
         <div className="mb-4 flex justify-between items-center">
           <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
@@ -900,12 +797,11 @@ export default function ModuleDetailPage() {
               whileHover={isPremiumTheme ? { x: -3 } : {}}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
-              <Button className={`font-black uppercase tracking-wider ${
-                isPremiumTheme 
-                  ? "bg-white hover:bg-slate-50 border border-slate-200/80 text-[#7C3AED] shadow-sm rounded-xl px-5 py-4 font-bold" 
-                  : t.btnPrimary
-              }`}>
-                ← Modules Canvas
+              <Button className={`font-black uppercase tracking-wider ${isPremiumTheme
+                ? "bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 hover:text-slate-900 shadow-xs rounded-lg px-4 py-2 text-xs font-mono font-bold uppercase transition-all duration-150"
+                : t.btnPrimary
+                }`}>
+                ← Back to Modules
               </Button>
             </motion.div>
           </Link>
@@ -914,52 +810,40 @@ export default function ModuleDetailPage() {
         {/* Section Header Card */}
         <Card className={`${
           isPremiumTheme 
-            ? 'bg-white/92 backdrop-blur-md border-none shadow-[0_8px_32px_rgba(0,0,0,0.04)] rounded-[22px]' 
+            ? 'bg-white border border-slate-200 shadow-xs' 
             : t.borderClass + ' ' + t.cardBg + ' ' + t.shadowClass
-        } brutalist-transition mb-8 relative overflow-hidden`}>
-          {isPremiumTheme && (
-            <div className="absolute inset-0 rounded-[22px] pointer-events-none p-[1.2px] bg-gradient-to-br from-white/80 via-[#7C3AED]/20 to-slate-200/50 -z-10" />
-          )}
-          {isPremiumTheme && (
-            <motion.div
-              className="absolute right-8 top-8 text-[#7C3AED] pointer-events-none select-none z-10"
-              animate={{
-                x: [0, -15, -5, 0],
-                y: [0, -10, -20, 0]
-              }}
-              transition={{ duration: 10, ease: "easeInOut", repeat: Infinity }}
-            >
-              <MousePointer className="w-8 h-8 fill-current stroke-white stroke-[1.5]" />
-              <span className="absolute left-6 top-6 bg-[#7C3AED] text-[8px] text-white px-1.5 py-0.5 rounded font-sans font-bold shadow-sm whitespace-nowrap">Inspector</span>
-            </motion.div>
-          )}
-          <CardHeader className="pt-10 pb-6 relative z-10">
+        } brutalist-transition mb-8 relative overflow-hidden rounded-lg`}>
+          <CardHeader className="pt-8 pb-6 relative z-10">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Badge className={`text-xs px-2.5 py-1 ${
-                  isPremiumTheme 
-                    ? "bg-[#7C3AED]/10 text-[#7C3AED] hover:bg-[#7C3AED]/20 border-none font-bold rounded-lg" 
-                    : t.badge
-                }`}>
-                  CANVAS: {moduleData.id.toUpperCase()}
-                </Badge>
-                <span className="font-mono text-xs font-bold text-zinc-400">// COMPONENT_METRICS</span>
-              </div>
-              <CardTitle className={`text-3xl md:text-4xl ${isPremiumTheme ? 'text-slate-800 font-semibold tracking-tight' : t.textHeading} flex items-center gap-3`}>
-                {isPremiumTheme ? <Layers className="w-8 h-8 text-[#7C3AED]" /> : <BookOpen className="w-8 h-8" />} {moduleData.title}
+              {isPremiumTheme ? (
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200/50">
+                    Workspace
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">module.console</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge className={`text-[10px] font-mono px-2.5 py-1 ${t.badge}`}>
+                    Workspace
+                  </Badge>
+                </div>
+              )}
+              <CardTitle className={`text-2xl md:text-3xl ${isPremiumTheme ? 'text-slate-900 font-semibold tracking-tight' : t.textHeading} flex items-center gap-3`}>
+                {isPremiumTheme ? <Layers className="w-6 h-6 text-slate-500" /> : <BookOpen className="w-8 h-8" />} {moduleData.title}
               </CardTitle>
-              <CardDescription className={`${isPremiumTheme ? 'text-slate-500 font-medium' : t.textMuted} mt-2 text-base`}>
+              <CardDescription className={`${isPremiumTheme ? 'text-slate-550 font-medium font-sans' : t.textMuted} mt-2 text-sm leading-relaxed`}>
                 {moduleData.description}
               </CardDescription>
               <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold font-sans">
                 <span className={`px-2.5 py-1 border ${
                   isPremiumTheme 
-                    ? 'bg-slate-100/80 text-slate-700 border-slate-200/60 rounded-lg font-bold' 
+                    ? 'bg-slate-100 text-slate-700 border border-slate-200 rounded font-semibold' 
                     : 'bg-zinc-100 border-2 border-black'
                 }`}>{moduleData.co}</span>
                 <span className={`px-2.5 py-1 border flex items-center gap-1 ${
                   isPremiumTheme 
-                    ? 'bg-slate-100/80 text-slate-700 border-slate-200/60 rounded-lg font-bold' 
+                    ? 'bg-slate-100 text-slate-700 border border-slate-200 rounded font-semibold' 
                     : 'bg-zinc-100 border-2 border-black'
                 }`}>
                   <Clock className="w-3.5 h-3.5" /> {moduleData.hours} Hours
@@ -970,7 +854,9 @@ export default function ModuleDetailPage() {
         </Card>
 
         {/* Subtopics stack */}
-        <h2 className={`text-xl font-bold uppercase tracking-tight ${isPremiumTheme ? 'text-slate-800' : 'text-black'}`}>Subtopics List</h2>
+        <h2 className={`text-xs font-mono uppercase tracking-wider text-slate-500 font-bold mb-4`}>
+          [ SUBTOPICS | SCHEMA ]
+        </h2>
 
         <motion.div 
           variants={containerVariants}
@@ -1021,7 +907,7 @@ export default function ModuleDetailPage() {
               <div className="flex flex-col md:flex-row w-full">
                 <div className={`w-full md:w-16 flex items-center justify-center py-4 md:py-0 flex-shrink-0 select-none ${
                   isPremiumTheme 
-                    ? 'bg-[#7C3AED]/5 text-[#7C3AED] border-b md:border-b-0 md:border-r border-slate-100' 
+                    ? 'bg-slate-50/80 text-slate-400 border-b md:border-b-0 md:border-r border-slate-100' 
                     : 'bg-zinc-100 border-b-4 md:border-b-0 md:border-r-4 border-black text-black'
                 }`}>
                   <span className="text-2xl font-black">{index + 1}</span>
@@ -1032,7 +918,7 @@ export default function ModuleDetailPage() {
                       isPremiumTheme ? 'text-slate-800 font-semibold font-sans tracking-tight' : 'text-black font-black uppercase tracking-tight'
                     }`}>{subtopic.title}</CardTitle>
                     <CardDescription className={`text-sm ${
-                      isPremiumTheme ? 'text-slate-500 font-medium font-sans' : 'text-zinc-800 font-bold leading-relaxed'
+                      isPremiumTheme ? 'text-slate-550 font-medium font-sans leading-relaxed' : 'text-zinc-800 font-bold leading-relaxed'
                     }`}>{subtopic.description}</CardDescription>
                   </div>
 
@@ -1059,7 +945,7 @@ export default function ModuleDetailPage() {
                       )}
                       <div className={`w-full aspect-video max-w-3xl mx-auto overflow-hidden ${
                         isPremiumTheme 
-                          ? 'border border-slate-200/80 bg-zinc-950 shadow-md rounded-[16px]' 
+                          ? 'border border-slate-200 bg-zinc-950 shadow-sm rounded-lg' 
                           : 'border-4 border-black bg-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
                       }`}>
                         <iframe
@@ -1077,12 +963,12 @@ export default function ModuleDetailPage() {
                   {(subtopic.audioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
                     <div className={`w-full mb-5 max-w-3xl mx-auto ${
                       isPremiumTheme 
-                        ? 'border border-slate-200/60 bg-white/92 backdrop-blur-md p-4 rounded-xl shadow-sm' 
+                        ? 'border border-slate-200 bg-slate-50 p-4 rounded-lg shadow-inner' 
                         : 'border-2 border-black bg-zinc-50 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
                     }`}>
                       <div className="flex justify-between items-center mb-2">
                         <p className={`text-sm font-bold flex items-center ${isPremiumTheme ? 'text-slate-800' : 'text-black font-black'}`}>
-                          <Headphones className="w-4 h-4 mr-2 text-[#7C3AED]" /> Audio Lesson
+                          <Headphones className="w-4 h-4 mr-2 text-slate-500" /> Audio Lesson
                         </p>
                         {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
                           <select 
@@ -1113,7 +999,7 @@ export default function ModuleDetailPage() {
                         ></iframe>
                       </ResourceLinkTracker>
                       <div className="mt-2 text-right">
-                         <a href={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl} target="_blank" rel="noopener noreferrer" className={`text-xs font-bold ${isPremiumTheme ? 'text-[#7C3AED] hover:underline' : 'text-black hover:underline'}`}>
+                         <a href={selectedLanguages[subtopic.id]?.audio || defaultAudioUrl} target="_blank" rel="noopener noreferrer" className={`text-xs font-bold ${isPremiumTheme ? 'text-slate-500 hover:text-slate-900 hover:underline' : 'text-black hover:underline'}`}>
                            Open Audio Source
                          </a>
                       </div>
@@ -1130,7 +1016,7 @@ export default function ModuleDetailPage() {
                           <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
                             <Button variant="outline" className={
                               isPremiumTheme 
-                                ? 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-xl shadow-sm flex items-center gap-1.5 font-sans' 
+                                ? t.btnGhost 
                                 : t.btnPrimary + ' flex items-center gap-1.5'
                             }>
                               <FileText className="w-4 h-4 text-red-500" /> Read Notes
@@ -1145,7 +1031,7 @@ export default function ModuleDetailPage() {
                           <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
                             <Button variant="outline" className={
                               isPremiumTheme 
-                                ? 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-xl shadow-sm flex items-center gap-1.5 font-sans' 
+                                ? t.btnGhost 
                                 : t.btnPrimary + ' flex items-center gap-1.5'
                             }>
                               <Target className="w-4 h-4 text-emerald-500" /> Attempt Quiz
@@ -1160,7 +1046,7 @@ export default function ModuleDetailPage() {
                           <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
                             <Button variant="outline" className={
                               isPremiumTheme 
-                                ? 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-xl shadow-sm flex items-center gap-1.5 font-sans' 
+                                ? t.btnGhost 
                                 : t.btnPrimary + ' flex items-center gap-1.5'
                             }>
                               <BrainCircuit className="w-4 h-4 text-purple-500" /> View Mind Map
@@ -1179,7 +1065,7 @@ export default function ModuleDetailPage() {
                           <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
                             <Button variant="outline" className={
                               isPremiumTheme 
-                                ? 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-xl shadow-sm flex items-center gap-1.5 font-sans' 
+                                ? t.btnGhost 
                                 : t.btnPrimary + ' flex items-center gap-1.5'
                             }>
                               <Gamepad2 className="w-4 h-4 text-blue-500" /> View Simulation
@@ -1194,7 +1080,7 @@ export default function ModuleDetailPage() {
                           <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
                             <Button variant="outline" className={
                               isPremiumTheme 
-                                ? 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-xl shadow-sm flex items-center gap-1.5 font-sans' 
+                                ? t.btnGhost 
                                 : t.btnPrimary + ' flex items-center gap-1.5'
                             }>
                               <Lightbulb className="w-4 h-4 text-amber-500" /> Did You Know
@@ -1209,7 +1095,7 @@ export default function ModuleDetailPage() {
                           <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
                             <Button variant="outline" className={
                               isPremiumTheme 
-                                ? 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-xl shadow-sm flex items-center gap-1.5 font-sans' 
+                                ? t.btnGhost 
                                 : t.btnPrimary + ' flex items-center gap-1.5'
                             }>
                               <Book className="w-4 h-4 text-zinc-550" /> Reference Material
@@ -1224,7 +1110,7 @@ export default function ModuleDetailPage() {
                           <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
                             <Button variant="outline" className={
                               isPremiumTheme 
-                                ? 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-xl shadow-sm flex items-center gap-1.5 font-sans' 
+                                ? t.btnGhost 
                                 : t.btnPrimary + ' flex items-center gap-1.5'
                             }>
                               <LinkIcon className="w-4 h-4 text-slate-550" /> External Link
@@ -1238,7 +1124,7 @@ export default function ModuleDetailPage() {
                         <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
                           <Button variant="outline" className={
                             isPremiumTheme 
-                              ? 'bg-white hover:bg-slate-50 border border-slate-200 text-[#7C3AED] text-xs font-semibold px-4 py-2 rounded-xl shadow-sm flex items-center gap-1.5 font-sans' 
+                              ? t.btnGhost 
                               : t.btnPrimary + ' flex items-center gap-1.5'
                           }>
                             <Layers className="w-4 h-4 text-amber-500" /> Study Flashcards
@@ -1255,7 +1141,9 @@ export default function ModuleDetailPage() {
             return (
               <motion.div key={subtopic.id} variants={itemVariants}>
                 {isPremiumTheme ? (
-                  <DesignStudioCard isPremium={isPremiumTheme} className="bg-white border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-slate-300 hover:shadow-[0_12px_36px_rgba(0,0,0,0.06)] rounded-[22px] overflow-hidden">
+                  <DesignStudioCard isPremium={isPremiumTheme} label={`Subtopic.Card S0${index + 1}`} className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group relative`}
+                  >
+                    {/* Clean layout */}
                     {cardContentNode}
                   </DesignStudioCard>
                 ) : (

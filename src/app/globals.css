@@ -102,3 +102,176 @@
     @apply font-sans;
   }
 }
+
+/* suda-code hover animation styling for View All buttons */
+.view-all-btn {
+  transition: all 0.5s !important;
+  -webkit-transition: all 0.5s !important;
+}
+
+.view-all-btn:hover {
+  background-color: #6fc5ff !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px #6fc5ff50 !important;
+  transform: scale(1.1) !important;
+}
+
+.view-all-btn:active {
+  background-color: #3d94cf !important;
+  transition: all 0.25s !important;
+  -webkit-transition: all 0.25s !important;
+  box-shadow: none !important;
+  transform: scale(0.98) !important;
+}
+
+/* UI Programming - Design Studio Workbench Styles */
+.ui-design-workbench {
+  background-color: #F3F4F7 !important;
+  background-image: 
+    radial-gradient(#d1d5db 1px, transparent 1px) !important;
+  background-size: 16px 16px !important;
+  position: relative;
+}
+
+/* Figma-style Artboard Card styling */
+.artboard-card {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid #CBD5E1 !important;
+  border-radius: 6px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.artboard-card:hover {
+  border-color: #3B82F6 !important;
+  box-shadow: 0 0 0 1px #3B82F6, 0 10px 25px -5px rgba(59, 130, 246, 0.08) !important;
+  transform: translateY(-2px);
+}
+
+/* Crop marks at corners */
+.artboard-card::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  border-top: 1.5px solid #94A3B8;
+  border-left: 1.5px solid #94A3B8;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.artboard-card::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 1.5px solid #94A3B8;
+  border-right: 1.5px solid #94A3B8;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Extra crop marks helper inside card to get all 4 corners */
+.artboard-reticles-ur::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border-top: 1.5px solid #94A3B8;
+  border-right: 1.5px solid #94A3B8;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.artboard-reticles-ur::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 1.5px solid #94A3B8;
+  border-left: 1.5px solid #94A3B8;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Figma frame coordinates label */
+.artboard-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  font-weight: 600;
+  color: #64748B;
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 1px 4px;
+  border-radius: 3px;
+  position: absolute;
+  top: -14px;
+  left: 6px;
+  z-index: 20;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.artboard-card:hover .artboard-label {
+  color: #3B82F6;
+  border-color: #3B82F6;
+  background-color: #EFF6FF;
+}
+
+/* Hover auto-layout guide lines overlay */
+.spacing-guide-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px dashed rgba(239, 68, 68, 0);
+  transition: border-color 0.2s ease;
+  z-index: 10;
+}
+
+.artboard-card:hover .spacing-guide-overlay {
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+/* Red outline specs for padding visualizer */
+.spacing-guide-pad {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  border: 1.5px dashed rgba(239, 68, 68, 0);
+  pointer-events: none;
+  transition: border-color 0.2s ease;
+}
+
+.artboard-card:hover .spacing-guide-pad {
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+/* Collaborative designer cursors float animation */
+@keyframes float-cursor-sarah {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(12px, -8px) scale(0.98); }
+  66% { transform: translate(-8px, 14px) scale(1.02); }
+}
+
+@keyframes float-cursor-alex {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-15px, -12px); }
+}
+
+.animate-cursor-sarah {
+  animation: float-cursor-sarah 8s ease-in-out infinite;
+}
+
+.animate-cursor-alex {
+  animation: float-cursor-alex 10s ease-in-out infinite;
+}

@@ -14,6 +14,8 @@ interface Question {
   questionText: string;
   options: string[];
   marks: number;
+  correctAnswer: string;
+  explanation?: string;
 }
 
 interface QuizContainerProps {

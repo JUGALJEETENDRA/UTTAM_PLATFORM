@@ -3,9 +3,9 @@ import { Phone, Mail, HelpCircle } from "lucide-react";
 
 export function TopUtilityBar() {
   return (
-    <div className="w-full bg-zinc-100 border-b border-zinc-200 text-sm py-2 px-4">
+    <div className="w-full bg-zinc-100 border-b border-zinc-200 text-xs py-1 px-4">
       <div className="container mx-auto flex flex-wrap justify-between items-center">
-        <div className="flex items-center space-x-6 text-zinc-600">
+        <div className="flex items-center space-x-6 text-zinc-650">
           <span className="hidden md:flex items-center space-x-2">
             <Phone className="w-4 h-4 text-primary" />
             <span>+91 22 6728 3000</span>

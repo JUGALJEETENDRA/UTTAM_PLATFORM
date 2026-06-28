@@ -64,7 +64,13 @@ export default function QuickUpdatePage() {
         setModules(data);
         
         // Initialize inputs
-        const initialInputs: Record<string, { videoUrl: string; notesUrl: string }> = {};
+        const initialInputs: Record<string, { 
+          videoUrl: string; 
+          notesUrl: string; 
+          videoLanguages: { language: string; url: string }[];
+          audioUrl: string;
+          audioLanguages: { language: string; url: string }[];
+        }> = {};
         data.forEach((mod: Module) => {
           mod.subtopics.forEach((st: any) => {
             let simData: any = {};

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, BookOpen, ChevronRight } from "lucide-react";
-import { Prisma } from "@prisma/client";
 
 export interface ModuleWithSubtopics {
   id: string;

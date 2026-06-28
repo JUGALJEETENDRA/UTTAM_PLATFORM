@@ -320,7 +320,7 @@ export default function ManageModulesPage() {
         handleCancelEdit();
         fetchModules();
       } else {
-        toast.error(res?.error || "Failed to save module");
+        toast.error(data?.error || "Failed to save module");
       }
     } catch (err: any) {
       toast.error(err.message || "An unexpected error occurred");

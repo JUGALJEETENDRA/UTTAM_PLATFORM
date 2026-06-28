@@ -15,7 +15,7 @@ interface Question {
   options: string[];
   marks: number;
   correctAnswer: string;
-  explanation: string;
+  explanation?: string;
 }
 
 interface QuizActiveProps {
@@ -23,7 +23,7 @@ interface QuizActiveProps {
     id: string;
     title: string;
     timeLimit: number;
-    xpReward: number;
+    xpReward?: number;
     questions: Question[];
   };
   onBack: () => void;

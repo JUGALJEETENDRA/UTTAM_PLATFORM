@@ -28,17 +28,17 @@ const THEME_MAP: Record<string, {
   pattern: string;
 }> = {
   "ui programming": {
-    bg: "bg-[#F9F6F0]",
+    bg: "bg-slate-50 text-slate-800 font-sans",
     cardBg: "bg-white",
-    borderClass: "border-4 border-black rounded-none",
-    shadowClass: "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-2",
-    btnPrimary: "bg-[#A855F7] text-white hover:bg-[#A855F7]/90 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1",
-    btnGhost: "text-[#A855F7] font-black hover:bg-[#A855F7]/10 rounded-none",
-    titleHover: "group-hover:text-[#A855F7]",
-    textHeading: "text-black font-black uppercase tracking-tight",
-    textMuted: "text-zinc-800 font-bold",
-    badge: "bg-[#A855F7] text-white border-2 border-black rounded-none font-bold",
-    pattern: "ui-blueprint-grid"
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-500 hover:text-indigo-655 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-indigo-600",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
+    pattern: ""
   },
 
   "python programming": {
@@ -70,59 +70,15 @@ const DEFAULT_THEME = {
   pattern: ""
 };
 
-// Premium 3D Tilt Card with moving light glare reflection effect
-const DesignStudioCard = ({ children, className = "", style = {}, isPremium = true, ...props }: any) => {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isPremium) return;
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    // Rotate maximum 4deg in X and Y directions
-    const rotateX = -((y / rect.height) - 0.5) * 8;
-    const rotateY = ((x / rect.width) - 0.5) * 8;
-
-    // Glare position percentage tracking cursor
-    const glareX = (x / rect.width) * 100;
-    const glareY = (y / rect.height) * 100;
-
-    setTilt({ x: rotateX, y: rotateY });
-    setGlare({ x: glareX, y: glareY, opacity: 1 });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-    setGlare(prev => ({ ...prev, opacity: 0 }));
-  };
-
+// Premium Figma-style component bounding box selection frame (Overlays removed per request)
+const DesignStudioCard = ({ children, className = "", style = {}, ...props }: any) => {
   return (
     <div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        transform: isPremium ? `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` : 'none',
-        transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1)',
-        transformStyle: 'preserve-3d',
-        position: 'relative',
-        ...style
-      }}
-      className={className}
+      className={`relative transition-all duration-300 ease-out rounded-lg ${className}`}
+      style={style}
       {...props}
     >
       {children}
-      {isPremium && (
-        <div
-          className="pointer-events-none absolute inset-0 rounded-[inherit] transition-opacity duration-300 z-30"
-          style={{
-            background: `radial-gradient(circle 160px at ${glare.x}% ${glare.y}%, rgba(124, 58, 237, 0.06), transparent 80%)`,
-            opacity: glare.opacity
-          }}
-        />
-      )}
     </div>
   );
 };
@@ -132,13 +88,21 @@ export default function ModulesPage() {
   const subjectId = searchParams.get('subjectId');
 
   const [data, setData] = useState<any>(null);
+  const [subjectName, setSubjectName] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadModules = async () => {
       try {
-        const result = await fetchGAS("getModules", { subjectId, userId: "anonymous" });
+        const [result, subjects] = await Promise.all([
+          fetchGAS("getModules", { subjectId, userId: "anonymous" }),
+          fetchGAS("getSubjects")
+        ]);
         setData(result);
+        if (Array.isArray(subjects)) {
+          const currentSub = subjects.find((s: any) => s.id === subjectId);
+          if (currentSub) setSubjectName(currentSub.name || "");
+        }
       } catch (err) {
         console.error("Failed to load modules", err);
       } finally {
@@ -163,10 +127,10 @@ export default function ModulesPage() {
 
   const modules = data || [];
 
-  // Theme Identification based strictly on query params to keep data fetching unchanged
-  const isUiProgramming = subjectId === 'id_mn573l5e5';
-  const isDigitalBusiness = subjectId === 'id_pryay1ykw';
-  const isPythonProgramming = subjectId === 'id_hdzqxse2n';
+  // Theme Identification based on dynamic name matching and subjectId checks
+  const isUiProgramming = subjectId === 'id_mn573l5e5' || subjectName.toLowerCase().includes("ui programming");
+  const isDigitalBusiness = subjectId === 'id_pryay1ykw' || subjectName.toLowerCase().includes("digital business");
+  const isPythonProgramming = subjectId === 'id_hdzqxse2n' || subjectName.toLowerCase().includes("python");
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -184,54 +148,48 @@ export default function ModulesPage() {
   };
 
   // ==========================================
-  // RENDER VARIANT A: DIGITAL BUSINESS & TRANSFORMATION (STRIPE/BLOOMBERG SAAS LOOK)
+  // RENDER VARIANT A: DIGITAL BUSINESS & TRANSFORMATION (PREMIUM LIGHT THEME)
   // ==========================================
   if (isDigitalBusiness) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden antialiased selection:bg-[#2563eb]/10 selection:text-[#2563eb] font-sans">
-
-        {/* Ambient Grid Background */}
-        <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.06]" style={{
-          backgroundImage: `radial-gradient(circle, #2563eb 1.2px, transparent 1.2px)`,
-          backgroundSize: "28px 28px"
+      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden antialiased selection:bg-[#1E3A8A]/10 selection:text-[#1E3A8A] font-sans">
+        {/* Strategy-board dot pattern grid overlay */}
+        <div className="absolute inset-0 pointer-events-none z-0" style={{
+          backgroundImage: `radial-gradient(#e2e8f0 1.2px, transparent 1.2px)`,
+          backgroundSize: "24px 24px"
         }} />
 
-        {/* Dynamic Financial Flow Vector Backings */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-20">
-          <div className="absolute top-[15%] left-[5%] w-96 h-96 bg-[#2563eb]/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-[20%] right-[5%] w-80 h-80 bg-[#16a34a]/5 rounded-full blur-3xl" />
-        </div>
-
-        <div className="container mx-auto px-4 py-8 relative z-10 max-w-6xl space-y-8">
+        <div className="container mx-auto px-4 py-8 relative z-10 max-w-6xl space-y-6">
+          
+          {/* Subtle Breadcrumb Navigation - Removed */}
 
           {/* Dashboard Back Nav Bar */}
-          <div className="flex justify-between items-center bg-white p-3 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] rounded-lg">
+          <div className="flex justify-between items-center bg-white p-3 border border-slate-200 shadow-sm rounded-lg">
             <Link href={`/student/subjects/subject?subjectId=${subjectId}`}>
-              <Button className="bg-slate-900 hover:bg-[#2563eb] text-white text-[10px] font-mono tracking-widest px-4 py-1.5 h-8 uppercase rounded-md shadow-sm transition-all flex items-center gap-1.5">
-                ← Return to Terminal
+              <Button className="bg-gradient-to-r from-blue-700 to-indigo-750 hover:from-blue-800 hover:to-indigo-900 border-none text-white text-[10px] font-mono tracking-widest px-4 py-1.5 h-8 uppercase rounded-md shadow-md transition-all flex items-center gap-1.5">
+                ← Return to Workspace
               </Button>
             </Link>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#16a34a] animate-pulse" />
-              <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider">LIVE NODE DESK</span>
+              <span className="w-2 h-2 rounded-full bg-[#0F766E]" />
+              <span className="text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider">WORKSPACE</span>
             </div>
           </div>
 
           {/* Section Header */}
-          <div className="bg-white p-6 border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.02)] rounded-xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2563eb] to-[#16a34a]" />
+          <div className="bg-white p-6 border border-slate-200 shadow-sm rounded-lg">
             <div className="flex items-center gap-3.5 mb-2.5">
-              <Badge className="bg-[#2563eb]/10 text-[#2563eb] hover:bg-[#2563eb]/20 border-none px-2.5 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider uppercase">
-                Core Assets
+              <Badge className="bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider uppercase">
+                Course Outline
               </Badge>
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">// DBT_LEDGER</span>
+              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">DBT_MODULES</span>
             </div>
-            <h1 className="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
-              <Layers className="w-7 h-7 text-[#2563eb]" />
-              Learning Sectors
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3 font-sans">
+              <Layers className="w-7 h-7 text-[#1E3A8A]" />
+              Modules
             </h1>
-            <p className="text-slate-500 mt-2 text-sm leading-relaxed max-w-2xl font-medium">
-              Explore strategic topics across {modules.length} operational study sectors. Expand segments below to engage prototype components.
+            <p className="text-slate-500 mt-2 text-sm leading-relaxed max-w-2xl font-sans font-medium">
+              Explore the core learning modules of the Digital Business & Transformation course. Select a module below to view detailed subtopics and content.
             </p>
           </div>
 
@@ -242,75 +200,52 @@ export default function ModulesPage() {
             animate="show"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {modules.map((mod: any) => {
-              const moduleWithProps = { ...mod, totalXpAvailable: 0, xpEarned: 0 };
-
-              // Generate custom mock metrics based on module index for data richness
-              const coverageVal = (mod.subtopics?.length || 0) * 12.5 + 25;
+            {modules.map((mod: any, index: number) => {
+              const hourLabel = mod.hours ? `${mod.hours} Hours` : "3 Hours";
+              const subtopicsCount = mod.subtopics?.length || 0;
 
               return (
                 <motion.div key={mod.id} variants={itemVariants}>
-                  <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`} className="block h-full">
-                    <div className="bg-white border border-slate-200/80 p-5 rounded-xl transition-all duration-300 flex flex-col justify-between h-full group cursor-pointer shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:shadow-[0_15px_35px_rgba(37,99,235,0.06)] hover:border-[#2563eb]/60 hover:-translate-y-1">
-
+                  <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`} className="block h-full font-sans">
+                    <div className="bg-white border border-slate-200 p-5 rounded-lg transition-all duration-300 flex flex-col justify-between h-full group cursor-pointer shadow-sm hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:border-[#1E3A8A] hover:bg-slate-50/30 hover:-translate-y-1 hover:scale-[1.01]">
                       <div>
                         {/* Top Indicator Line */}
                         <div className="flex justify-between items-center mb-3">
-                          <span className="text-[10px] font-mono text-slate-400 font-bold">SECTOR 0{mod.moduleNo}</span>
-                          <span className="flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#16a34a] animate-ping" />
-                            <span className="text-[9px] font-mono text-[#16a34a] font-black uppercase tracking-wider">Active</span>
+                          <span className="text-[9px] font-mono text-slate-400 font-bold uppercase tracking-wider">Module 0{mod.moduleNo || (index + 1)}</span>
+                          <span className="flex items-center gap-2">
+                            <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
+                              (mod.moduleNo || (index + 1)) <= 2 
+                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200" 
+                                : (mod.moduleNo || (index + 1)) <= 4
+                                  ? "bg-amber-50 text-amber-700 border border-amber-250"
+                                  : "bg-rose-50 text-rose-700 border border-rose-250"
+                            }`}>
+                              {(mod.moduleNo || (index + 1)) <= 2 ? "Beginner" : (mod.moduleNo || (index + 1)) <= 4 ? "Intermediate" : "Advanced"}
+                            </span>
+                            <span className="text-[9px] font-mono text-teal-700 border border-teal-200/60 px-1.5 py-0.5 rounded bg-teal-500/10 font-semibold uppercase group-hover:bg-teal-650 group-hover:text-white group-hover:border-teal-650 transition-colors duration-300">
+                              Active
+                            </span>
                           </span>
                         </div>
 
                         {/* Title & Description */}
-                        <h3 className="text-sm font-bold text-slate-700 uppercase tracking-widest line-clamp-2 pr-4 mb-2 group-hover:text-[#2563eb] transition-colors">
+                        <h3 className="text-[13.5px] font-bold font-sans text-slate-800 tracking-tight leading-snug group-hover:text-[#1E3A8A] transition-colors pr-2 mb-2">
                           {mod.title}
                         </h3>
-                        <p className="text-xs text-slate-450 line-clamp-2 leading-relaxed font-medium mb-4">
+                        <p className="text-[11px] text-slate-500 font-sans leading-relaxed line-clamp-3 mb-4">
                           {mod.co || "Analyze foundational strategies, operational metrics, and structural transformation objectives."}
                         </p>
                       </div>
 
-                      {/* Details & Custom Visualizations */}
-                      <div className="space-y-4">
-                        {/* Mock Sparkline graph */}
-                        <div className="h-6 w-full flex items-end gap-1 select-none opacity-40 group-hover:opacity-90 transition-opacity">
-                          {[...Array(15)].map((_, i) => (
-                            <div
-                              key={i}
-                              className="flex-1 bg-slate-200 group-hover:bg-[#2563eb]/20 rounded-xs"
-                              style={{
-                                height: `${Math.max(15, (Math.sin(i * 0.4 + mod.moduleNo) + 1.1) * 45)}%`,
-                                transition: 'height 0.3s ease, background-color 0.2s ease'
-                              }}
-                            />
-                          ))}
-                        </div>
-
-                        {/* Custom Coverage Progress bar */}
-                        <div>
-                          <div className="flex justify-between items-center text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1 font-mono">
-                            <span>Sector coverage</span>
-                            <span className="text-slate-700">{coverageVal}%</span>
-                          </div>
-                          <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-[#2563eb] to-[#16a34a] rounded-full transition-all duration-500"
-                              style={{ width: `${coverageVal}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Core details footer */}
-                        <div className="pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400 font-mono font-bold">
-                          <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {mod.hours || 3}h VOL</span>
-                          <span className="text-[#2563eb] group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
-                            Engage <ChevronRight className="w-3.5 h-3.5" />
-                          </span>
-                        </div>
+                      {/* Details & Standard Action footer */}
+                      <div className="pt-3 border-t border-slate-100 flex justify-between items-center text-[9.5px] font-mono text-slate-500">
+                        <span className="flex items-center gap-1 font-semibold uppercase">
+                          {hourLabel} | {subtopicsCount} Units
+                        </span>
+                        <span className="text-[#1E3A8A] font-semibold flex items-center gap-1 group-hover:text-indigo-750 transition-colors duration-300">
+                          Start Learning <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                        </span>
                       </div>
-
                     </div>
                   </Link>
                 </motion.div>
@@ -320,7 +255,7 @@ export default function ModulesPage() {
 
           {modules.length === 0 && (
             <div className="p-12 text-center bg-white border border-slate-200 rounded-xl text-slate-400 font-mono text-xs">
-              NO OPERATIONS SECTORS INSTANTIATED.
+              NO ACTIVE MODULES FOUND.
             </div>
           )}
         </div>
@@ -388,7 +323,7 @@ export default function ModulesPage() {
             <div className="absolute top-0 left-0 bottom-0 w-1 bg-[#3776AB]" />
             <div className="flex items-center gap-3 mb-2">
               <span className="text-[10px] font-bold text-[#3776AB] bg-[#3776AB]/10 px-2 py-0.5 border border-[#3776AB]/30 rounded">INDEX</span>
-              <span className="text-[10px] text-slate-400 font-mono">// READ-ONLY STREAM</span>
+              <span className="text-[10px] text-slate-400 font-mono">READ-ONLY STREAM</span>
             </div>
             <h1 className="text-2xl font-bold uppercase tracking-widest text-[#3776AB] flex items-center gap-3">
               <Terminal className="w-6 h-6 text-[#3776AB]" />
@@ -407,9 +342,9 @@ export default function ModulesPage() {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
           >
             {modules.map((mod: any, idx: number) => {
-              // Custom helper to resolve clean short titles and func names without underscores
-              const getCleanPythonDetails = (title: string) => {
-                const lower = title.toLowerCase();
+              const getCleanPythonDetails = (title: any) => {
+                const titleStr = String(title || "");
+                const lower = titleStr.toLowerCase();
                 let shortTitle = "";
                 let funcName = "";
 
@@ -429,7 +364,7 @@ export default function ModulesPage() {
                   shortTitle = "GUI Databases.py";
                   funcName = "studyGUIDatabases";
                 } else {
-                  const cleanTitle = title.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
+                  const cleanTitle = titleStr.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
                   const words = cleanTitle.split(" ");
                   const shortWords = words.slice(0, 2);
                   shortTitle = shortWords.join(" ") + ".py";
@@ -493,8 +428,8 @@ export default function ModulesPage() {
   // ==========================================
   // RENDER VARIANT B: UI PROGRAMMING (NEUBRUTALISM /FIGMA CANVAS WORKBENCH)
   // ==========================================
-  const renderModulePreview = (moduleNo: number, title: string) => {
-    const normalizedTitle = title.toLowerCase();
+  const renderModulePreview = (moduleNo: number, title?: string) => {
+    const normalizedTitle = String(title || "").toLowerCase();
 
     // Module 1: User Persona Card, User Journey, Profile Layout
     if (normalizedTitle.includes("intro") || normalizedTitle.includes("thinking") || moduleNo === 1) {
@@ -534,14 +469,7 @@ export default function ModulesPage() {
           <circle cx="110" cy="55" r="3" fill="#10B981" />
           <circle cx="125" cy="35" r="3" fill="#10B981" />
           <circle cx="145" cy="45" r="3" fill="#10B981" />
-          <circle cx="165" cy="15" r="3" fill="#10B981" className="animate-ping" />
-          <motion.circle
-            cx="165" cy="15" r="3" fill="#10B981"
-            variants={{
-              rest: { scale: 1 },
-              hover: { scale: [1, 1.3, 1], transition: { repeat: Infinity, duration: 1.2 } }
-            }}
-          />
+          <circle cx="165" cy="15" r="3" fill="#10B981" />
           <circle cx="185" cy="25" r="3" fill="#10B981" />
 
           {/* Guidelines */}
@@ -845,80 +773,10 @@ export default function ModulesPage() {
         }
       `}</style>
 
-      {/* Layered Design-System inspired Background */}
-      {isPremiumTheme && (
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none">
-          {/* Subtle Grid Pattern (2%-6% opacity overall) */}
-          <div className="absolute inset-0 bg-[#F8F9FC]" style={{
-            backgroundImage: "radial-gradient(circle, rgba(148, 163, 184, 0.12) 1.5px, transparent 1.5px)",
-            backgroundSize: "24px 24px"
-          }} />
-
-          {/* Blueprint-style guides, nodes, outlines and connections */}
-          <svg className="absolute inset-0 w-full h-full text-slate-400" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="ruler-x" width="100" height="20" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="0" y2="10" stroke="currentColor" strokeWidth="1" opacity="0.04" />
-                <line x1="10" y1="0" x2="10" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="20" y1="0" x2="20" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="30" y1="0" x2="30" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="40" y1="0" x2="40" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="50" y1="0" x2="50" y2="8" stroke="currentColor" strokeWidth="1" opacity="0.04" />
-                <line x1="60" y1="0" x2="60" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="70" y1="0" x2="70" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="80" y1="0" x2="80" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="90" y1="0" x2="90" y2="5" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-              </pattern>
-              <pattern id="ruler-y" width="20" height="100" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="10" y2="0" stroke="currentColor" strokeWidth="1" opacity="0.04" />
-                <line x1="0" y1="10" x2="5" y2="10" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="20" x2="5" y2="20" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="30" x2="5" y2="30" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="40" x2="5" y2="40" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="50" x2="8" y2="50" stroke="currentColor" strokeWidth="1" opacity="0.04" />
-                <line x1="0" y1="60" x2="5" y2="60" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="70" x2="5" y2="70" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="80" x2="5" y2="80" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-                <line x1="0" y1="90" x2="5" y2="90" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-              </pattern>
-            </defs>
-
-            {/* Ruler guides */}
-            <rect x="0" y="0" width="100%" height="20" fill="url(#ruler-x)" />
-            <rect x="0" y="0" width="20" height="100%" fill="url(#ruler-y)" />
-
-            {/* Connection lines and node circles (opacity 2% - 6%) */}
-            <line x1="15%" y1="0" x2="15%" y2="100%" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" opacity="0.03" />
-            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.02" />
-            <line x1="82%" y1="0" x2="82%" y2="100%" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" opacity="0.03" />
-            <line x1="0" y1="220" x2="100%" y2="220" stroke="currentColor" strokeWidth="1" opacity="0.03" />
-            <line x1="0" y1="720" x2="100%" y2="720" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.03" />
-
-            {/* Large Design Circles */}
-            <circle cx="20%" cy="35%" r="300" stroke="currentColor" strokeWidth="1.2" fill="none" opacity="0.03" />
-            <circle cx="85%" cy="60%" r="400" stroke="currentColor" strokeWidth="1" fill="none" strokeDasharray="8 8" opacity="0.02" />
-
-            {/* Abstract node networks */}
-            <g opacity="0.04">
-              <circle cx="78%" cy="260" r="4.5" fill="currentColor" />
-              <circle cx="84%" cy="320" r="4.5" fill="currentColor" />
-              <circle cx="75%" cy="360" r="4.5" fill="currentColor" />
-              <line x1="78%" y1="260" x2="84%" y2="320" stroke="currentColor" strokeWidth="1" />
-              <line x1="84%" y1="320" x2="75%" y2="360" stroke="currentColor" strokeWidth="1" />
-            </g>
-
-            {/* Technical text canvas indicators */}
-            <text x="35" y="45" fill="currentColor" opacity="0.04" fontSize="9" fontFamily="monospace">GRID_SCALE: 24PX</text>
-            <text x="83%" y="90" fill="currentColor" opacity="0.04" fontSize="9" fontFamily="monospace">CANVAS // 1024X768</text>
-          </svg>
-
-          {/* Glowing colorful auras for design depth */}
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-tr from-[#7C3AED]/5 to-[#3B82F6]/5 rounded-full blur-3xl opacity-60 animate-pulse-slow" />
-          <div className="absolute bottom-10 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-[#10B981]/5 to-[#F59E0B]/5 rounded-full blur-3xl opacity-40 animate-pulse-slow" style={{ animationDelay: '2s' }} />
-        </div>
-      )}
+      {/* Layered Design-System inspired Background - Disabled for Clean EdTech Minimal */}
 
       <div className="container mx-auto px-4 max-w-5xl space-y-6 relative z-10">
+        {/* Subtle Breadcrumb Navigation - Removed */}
 
         {/* Back button */}
         <div className="mb-4 flex justify-between items-center">
@@ -928,10 +786,10 @@ export default function ModulesPage() {
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
               <Button className={`font-black uppercase tracking-wider ${isPremiumTheme
-                ? "bg-white hover:bg-slate-50 border border-slate-200/80 text-[#7C3AED] shadow-sm rounded-xl px-5 py-4 font-bold"
+                ? "bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 hover:text-slate-900 shadow-xs rounded-lg px-4 py-2 text-xs font-mono font-bold uppercase transition-all duration-150"
                 : t.btnPrimary
                 }`}>
-                ← Figma Dashboard
+                ← Back to Dashboard
               </Button>
             </motion.div>
           </Link>
@@ -939,40 +797,29 @@ export default function ModulesPage() {
 
         {/* Section Header Card */}
         <Card className={`${isPremiumTheme
-          ? 'bg-white/92 backdrop-blur-md border-none shadow-[0_8px_32px_rgba(0,0,0,0.04)] rounded-[22px]'
+          ? 'bg-white border border-slate-200 shadow-xs'
           : t.borderClass + ' ' + t.cardBg + ' ' + t.shadowClass
-          } brutalist-transition mb-8 relative overflow-hidden`}>
-          {isPremiumTheme && (
-            <div className="absolute inset-0 rounded-[22px] pointer-events-none p-[1.2px] bg-gradient-to-br from-white/80 via-[#7C3AED]/20 to-slate-200/50 -z-10" />
-          )}
-          {isPremiumTheme && (
-            <motion.div
-              className="absolute right-8 top-8 text-[#7C3AED] pointer-events-none select-none z-10"
-              animate={{
-                x: [0, -15, -5, 0],
-                y: [0, -10, -20, 0]
-              }}
-              transition={{ duration: 10, ease: "easeInOut", repeat: Infinity }}
-            >
-              <MousePointer className="w-8 h-8 fill-current stroke-white stroke-[1.5]" />
-              <span className="absolute left-6 top-6 bg-[#7C3AED] text-[8px] text-white px-1.5 py-0.5 rounded font-sans font-bold shadow-sm whitespace-nowrap">Inspector</span>
-            </motion.div>
-          )}
-          <CardHeader className="pt-10 pb-6 relative z-10">
+          } brutalist-transition mb-8 relative overflow-hidden rounded-lg`}>
+          <CardHeader className="pt-8 pb-6 relative z-10">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Badge className={`text-xs px-2.5 py-1 ${isPremiumTheme
-                  ? "bg-[#7C3AED]/10 text-[#7C3AED] hover:bg-[#7C3AED]/20 border-none font-bold rounded-lg"
-                  : t.badge
-                  }`}>
-                  CANVAS: LAYOUT
-                </Badge>
-                <span className="font-mono text-xs font-bold text-zinc-400">// COMPONENT_SYSTEM</span>
-              </div>
-              <CardTitle className={`text-3xl md:text-4xl ${isPremiumTheme ? 'text-slate-800 font-semibold tracking-tight' : t.textHeading} flex items-center gap-3`}>
-                {isPremiumTheme ? <Layers className="w-8 h-8 text-[#7C3AED]" /> : <BookOpen className="w-8 h-8" />} Component Inspector
+              {isPremiumTheme ? (
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200/50">
+                    Workspace
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">modules.console</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge className={`text-[10px] font-mono px-2.5 py-1 ${t.badge}`}>
+                    Workspace
+                  </Badge>
+                </div>
+              )}
+              <CardTitle className={`text-2xl md:text-3xl ${isPremiumTheme ? 'text-slate-900 font-semibold tracking-tight' : t.textHeading} flex items-center gap-3`}>
+                {isPremiumTheme ? <Layers className="w-6 h-6 text-slate-500" /> : <BookOpen className="w-8 h-8" />} Component Inspector
               </CardTitle>
-              <CardDescription className={`${isPremiumTheme ? 'text-slate-500 font-medium' : t.textMuted} mt-2 text-base`}>
+              <CardDescription className={`${isPremiumTheme ? 'text-slate-550 font-medium font-sans' : t.textMuted} mt-2 text-sm leading-relaxed`}>
                 Master UI layout constraints across {modules.length} design canvas frames.
               </CardDescription>
             </div>
@@ -988,68 +835,81 @@ export default function ModulesPage() {
         >
           {modules.map((mod: any) => (
             <motion.div key={mod.id} variants={itemVariants}>
-              <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`} className="block h-full">
-                <motion.div
-                  whileHover={isPremiumTheme ? "hover" : ""}
-                  animate="rest"
-                  className="h-full"
-                >
-                  <motion.div
-                    variants={{
-                      rest: { y: 0, scale: 1 },
-                      hover: { y: -8, scale: 1.012 }
-                    }}
-                    transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                    className="h-full"
-                  >
-                    <DesignStudioCard isPremium={isPremiumTheme} className={`h-full ${isPremiumTheme
-                      ? 'bg-gradient-to-br from-white/98 via-white/95 to-[#7C3AED]/10 hover:from-[#8B5CF6] hover:via-[#8B5CF6] hover:to-[#8B5CF6] backdrop-blur-md border border-slate-200/80 group-hover:border-[#7C3AED] shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.06)] rounded-[22px]'
-                      : t.borderClass + ' ' + t.cardBg + ' ' + t.shadowClass + ' flex flex-col justify-between'
-                      } brutalist-transition overflow-hidden group`}>
-                      <CardHeader className={isPremiumTheme ? "p-3 md:p-4 pb-1.5 md:pb-2 relative z-10" : "pb-3 relative z-10"}>
-                        <div className="flex justify-between items-start mb-2">
+               <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`} className="block h-full">
+                 <motion.div
+                   whileHover={isPremiumTheme ? "hover" : ""}
+                   animate="rest"
+                   className="h-full"
+                 >
+                   <motion.div
+                     variants={{
+                       rest: { y: 0, scale: 1 },
+                       hover: { y: -8, scale: 1.03 }
+                     }}
+                     transition={{ type: "spring", stiffness: 350, damping: 22 }}
+                     className="h-full"
+                   >
+                     <DesignStudioCard isPremium={isPremiumTheme} className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group relative`}>
+                      
+                      <CardHeader className={isPremiumTheme ? "p-5 md:p-6 pb-2 relative z-10" : "pb-3 relative z-10"}>
+                        <div className="flex justify-between items-center mb-3">
                           <motion.span
                             variants={{
                               rest: { y: 0, boxShadow: "0 0px 0px rgba(0,0,0,0)" },
-                              hover: { y: -2, boxShadow: "0 4px 12px rgba(124, 58, 237, 0.08)" }
+                              hover: { y: -1, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.03)" }
                             }}
                             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                            className={`text-xs px-2.5 py-1 transition-all duration-300 ${isPremiumTheme
-                              ? "bg-slate-100 text-slate-600 border-none font-bold rounded-md group-hover:bg-white group-hover:text-[#8B5CF6]"
+                            className={`text-[10px] px-2.5 py-1 transition-all duration-150 font-sans ${isPremiumTheme
+                              ? "bg-indigo-50 text-indigo-850 border border-indigo-200/50 rounded-lg font-semibold group-hover:bg-indigo-100 group-hover:text-indigo-950"
                               : t.badge
                               }`}
                           >
-                            Frame 0{mod.moduleNo}
+                            Module 0{mod.moduleNo}
                           </motion.span>
+                          {isPremiumTheme && (
+                            <span className={`text-[9px] font-sans font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
+                              mod.moduleNo <= 2 
+                                ? "bg-green-100 text-green-800" 
+                                : mod.moduleNo <= 4
+                                  ? "bg-amber-100 text-amber-850"
+                                  : "bg-red-100 text-red-800"
+                            }`}>
+                              {mod.moduleNo <= 2 ? "Beginner" : mod.moduleNo <= 4 ? "Intermediate" : "Advanced"}
+                            </span>
+                          )}
                         </div>
                         {isPremiumTheme && (
-                          <div className="w-full h-24 bg-white border border-slate-100 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden pointer-events-none">
-                            <motion.div
-                              variants={{ hover: { x: 6, y: -4 } }}
-                              className="w-full h-full"
-                            >
+                          <motion.div
+                            variants={{
+                              rest: { opacity: 1, scale: 1 },
+                              hover: { opacity: 1, scale: 1.02 }
+                            }}
+                            className="w-full h-24 bg-slate-50/50 border border-slate-200/60 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden pointer-events-none"
+                          >
+                            <div className="w-full h-full">
                               {renderModulePreview(mod.moduleNo, mod.title)}
-                            </motion.div>
-                            <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{
-                              backgroundImage: `linear-gradient(to right, #7C3AED 1px, transparent 1px), linear-gradient(to bottom, #7C3AED 1px, transparent 1px)`,
+                            </div>
+                            <div className="absolute inset-0 opacity-[0.015] pointer-events-none" style={{
+                              backgroundImage: `linear-gradient(to right, #3B82F6 1px, transparent 1px), linear-gradient(to bottom, #3B82F6 1px, transparent 1px)`,
                               backgroundSize: '8px 8px'
                             }} />
-                          </div>
+                          </motion.div>
                         )}
-                        <CardTitle className={`text-lg transition-colors duration-300 line-clamp-2 ${isPremiumTheme
-                          ? 'font-semibold font-sans tracking-tight text-slate-800 group-hover:text-white'
+                        <CardTitle className={`text-base transition-colors duration-150 line-clamp-2 ${isPremiumTheme
+                          ? 'font-bold font-sans tracking-tight text-slate-800'
                           : t.titleHover + ' font-black leading-tight'
                           }`}>
                           {mod.title}
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className={isPremiumTheme ? "p-3 md:p-4 pt-0 relative z-10" : "flex-1 flex flex-col justify-between"}>
-                        <p className={`text-xs leading-relaxed line-clamp-3 mb-4 transition-colors duration-300 ${isPremiumTheme ? 'text-slate-500 font-medium font-sans group-hover:text-white/85' : 'text-zinc-700 font-bold'
-                          }`}>
-                          {mod.co || "Inspect component spacing, flex grids, nested outline boxes, and micro-interactions guidelines."}
-                        </p>
+                      <CardContent className={isPremiumTheme ? "p-5 md:p-6 pt-0 relative z-10 flex-1 flex flex-col justify-end" : "flex-1 flex flex-col justify-between"}>
+                        {!isPremiumTheme && (
+                          <p className={`text-xs leading-relaxed line-clamp-3 mb-4 text-zinc-700 font-bold`}>
+                            {mod.co || "Inspect component spacing, flex grids, nested outline boxes, and micro-interactions guidelines."}
+                          </p>
+                        )}
 
-                        <div className={`pt-3 flex justify-between items-center text-xs font-bold transition-all duration-300 ${isPremiumTheme ? 'border-t border-slate-100 text-slate-400 font-sans group-hover:text-white/85 group-hover:border-white/20' : 'border-t-2 border-black text-zinc-500'
+                        <div className={`pt-3 flex justify-between items-center text-xs font-semibold transition-all duration-150 ${isPremiumTheme ? 'border-t border-slate-100 text-slate-500 font-sans' : 'border-t-2 border-black text-zinc-500'
                           }`}>
                           <div className="flex gap-3">
                             <span className="flex items-center"><Clock className="w-3.5 h-3.5 mr-1" /> {mod.hours || 3} Hours</span>
@@ -1057,8 +917,8 @@ export default function ModulesPage() {
                           </div>
                           {isPremiumTheme && (
                             <motion.span
-                              variants={{ hover: { x: 8 } }}
-                              className="text-[#7C3AED] group-hover:text-white flex items-center transition-colors duration-300"
+                              variants={{ hover: { x: 4 } }}
+                              className="text-slate-655 flex items-center transition-colors"
                             >
                               <ArrowRight className="w-4 h-4" />
                             </motion.span>

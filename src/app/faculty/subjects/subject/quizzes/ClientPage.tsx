@@ -164,7 +164,7 @@ export default function ManageQuizzesPage() {
       let answer = "A";
       let explanation = "";
 
-      const answerMatch = block.match(/Answer:\s*([A-D])[\.\s]*(.*)/is);
+      const answerMatch = block.match(/Answer:\s*([A-D])[\.\s]*([\s\S]*)/i);
       if (answerMatch) {
         answer = answerMatch[1].toUpperCase();
         explanation = answerMatch[2].trim();
