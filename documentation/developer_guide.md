@@ -55,3 +55,15 @@ When adding a new feature:
 2. Implement the handler function (e.g., `handleNewFeature(payload)`).
 3. If writing data, remember to call `invalidateCache(sheetName)` to ensure the Next.js frontend gets the updated data on subsequent reads.
 4. Copy the updated code to the Apps Script editor and deploy a **New Version**.
+
+## Automated Deployment Pipeline (CI/CD)
+
+The platform leverages GitHub Actions for continuous deployment, ensuring the static frontend remains perfectly in sync with the Google Sheets database.
+
+![GitHub Pipeline Overview](screenshots/github_pipeline.png)
+
+**Workflow Breakdown:**
+1. **Content Update:** Faculty edits content in the CMS and triggers a deployment.
+2. **GAS Webhook:** `handleTriggerDeploy()` in `GAS_Backend_Code.js` fires a `POST` request to the GitHub API using a Personal Access Token (`GITHUB_PAT`), dispatching a custom event.
+3. **Static Generation:** The GitHub Action (`.github/workflows/deploy.yml`) starts the Next.js build process. `fetchGAS` retrieves the latest data and caches it into `data.json`.
+4. **Hosting:** The fully static application is published. This architecture guarantees maximum performance and zero cost for the frontend hosting.

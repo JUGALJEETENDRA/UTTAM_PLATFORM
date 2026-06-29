@@ -61,6 +61,14 @@ npm run dev
 
 Open your browser and navigate to `http://localhost:3000`. You can access the student portal at `/student` and the admin/faculty portal at `/faculty`.
 
-## 5. Deployment (Optional)
+## 5. Deployment & GitHub Pipeline
 
 You can deploy the Next.js frontend to platforms like Vercel or GitHub Pages. The backend includes a webhook trigger for GitHub Actions to automatically redeploy static builds when curriculum content is updated by faculty.
+
+![GitHub Pipeline](screenshots/github_pipeline.png)
+
+**How the Pipeline Works:**
+1. **Trigger:** When faculty updates content (like adding a quiz or flashcard) and hits "Deploy to Production" from the faculty dashboard, Google Apps Script sends a `repository_dispatch` event to GitHub.
+2. **Action:** A GitHub Actions workflow (defined in `.github/workflows/deploy.yml`) is triggered.
+3. **Build:** Next.js fetches the latest data from the Google Apps Script API and statically generates the student portal (`next build`).
+4. **Deploy:** The newly built static files are deployed to GitHub Pages (or another configured host), giving students instant access to the latest content with zero database latency.

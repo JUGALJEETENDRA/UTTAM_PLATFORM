@@ -6,7 +6,7 @@ Welcome to the Faculty portal. This dashboard acts as your Content Management Sy
 Navigate to `/faculty` in your browser. This is your command center.
 
 ![Faculty Dashboard Overview](screenshots/faculty_dashboard.png)
-*Note: Insert a screenshot of the main faculty dashboard here.*
+
 
 ## 1. Managing Subjects & Modules
 
@@ -27,7 +27,7 @@ You can create interactive flashcards for students to review.
 4. The system will parse the `.csv` and instantly generate the deck.
 
 ![Flashcard Creation](screenshots/flashcard_creation.png)
-*Note: Insert a screenshot of the flashcard creation UI.*
+
 
 ### Quizzes
 Assess student knowledge with timed quizzes.
@@ -49,4 +49,4 @@ Once you have finished adding or modifying content:
 2. If the deployment trigger is configured, you can click the **Deploy to Production** button. This uses a GitHub Action to rebuild the student portal with your latest content, ensuring students get lightning-fast page loads.
 
 ![Deployment Button](screenshots/deploy_button.png)
-*Note: Insert a screenshot of the deploy button.*
+

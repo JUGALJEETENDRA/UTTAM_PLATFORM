@@ -34,10 +34,8 @@ Built entirely using modern React technologies, it focuses on performance, scala
 - 🧠 Flashcards
 - 🗺️ Mind Maps
 - 🎮 Educational Simulations
-- 📥 Download Learning Material
 - 📊 Learning Progress Tracking
 - 🔗 Resource Access
-- ✅ Module Completion Tracking
 
 ---
 
@@ -50,7 +48,6 @@ Built entirely using modern React technologies, it focuses on performance, scala
 - Upload Mind Maps
 - Manage Simulations
 - Publish Quizzes
-- Student Analytics Dashboard
 - Quick Content Updates
 
 ---
@@ -62,8 +59,6 @@ Built entirely using modern React technologies, it focuses on performance, scala
 - Simulation Player
 - Mind Map Viewer
 - PDF Learning Resources
-- Analytics Dashboard
-- Progress Monitoring
 
 ---
 
@@ -181,100 +176,25 @@ Faculty dashboard providing learning insights and student engagement statistics.
 
 # ⚡ Installation
 
-Clone the repository
+For installation Please check documentation/installation_guide.md
 
-```bash
-git clone https://sourishashtikar.github.io/PS-3-Pages-Client-Only/
-```
-
-Navigate into the project
-
-```bash
-cd student-platform
-```
-
-Install dependencies
-
-```bash
-npm install
-```
-
-Start development server
-
-```bash
-npm run dev
-```
-
-Open
-
-```
-http://localhost:3000
-```
-
----
-
-# 📦 Available Scripts
-
-```bash
-npm run dev
-```
-
-Runs the development server.
-
-```bash
-npm run build
-```
-
-Creates a production build.
-
-```bash
-npm run start
-```
-
-Runs the production server.
-
-```bash
-npm run lint
-```
-
-Checks for linting issues.
-
----
 
 # 📸 Screenshots
 
-> Add screenshots here
+Home Page :
+![Home Page screenshot](screenshots/home.png)
 
-```
-Home Page
+Student Dashboard :
+![Student Dashboard screenshot](screenshots/subject_dashboard.png)
 
-Student Dashboard
-
-Faculty Dashboard
-
-Quiz Interface
-
-Flashcards
-
-Simulation
-
-Analytics Dashboard
-```
-
----
-
-# 🌟 Highlights
-
-- Modern UI
-- Responsive Design
-- Component-based Architecture
-- Client-side Rendering
-- Interactive Learning Experience
-- Clean TypeScript Codebase
-- Modular Structure
-- Easy to Extend
-
----
+Faculty Dashboard : 
+![Faculty Dashboard screenshot](screenshots/faculty_dashboard.png)
+Quiz Interface :
+![Quiz Interface screenshot](screenshots/quiz.png)
+Flashcards :
+![Flashcards screenshot](screenshots/flashcard.png)
+Simulation :
+![Simulation screenshot](screenshots/simulation.png)
 
 
 </div>
