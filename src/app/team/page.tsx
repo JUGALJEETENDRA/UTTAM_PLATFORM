@@ -16,7 +16,7 @@ interface TeamMember {
 
 const team: TeamMember[] = [
   {
-    name: "Jugal Manek",
+    name: "Prof. Jugal Manek",
     role: "Team Mentor",
     avatarBg: "from-blue-500 to-cyan-500",
     icon: <Terminal className="w-5 h-5 text-white" />,
@@ -67,10 +67,10 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
-  show: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { type: "spring" as const, stiffness: 260, damping: 20 } 
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring" as const, stiffness: 260, damping: 20 }
   }
 };
 
@@ -84,11 +84,11 @@ export default function TeamPage() {
       }} />
 
       <div className="container mx-auto px-4 max-w-5xl relative z-10 space-y-8">
-        
+
         {/* Back Link */}
         <div className="mb-2">
           <Link href="/">
-            <motion.span 
+            <motion.span
               whileHover={{ x: -3 }}
               className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
             >
@@ -99,7 +99,7 @@ export default function TeamPage() {
 
         {/* Title Area */}
         <div className="text-center space-y-3 max-w-2xl mx-auto py-4">
-          <motion.div 
+          <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.4 }}
@@ -107,7 +107,7 @@ export default function TeamPage() {
           >
             <Users className="w-6 h-6 text-indigo-600" />
           </motion.div>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.4 }}
@@ -115,7 +115,7 @@ export default function TeamPage() {
           >
             Meet the Team
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.4 }}
@@ -126,7 +126,7 @@ export default function TeamPage() {
         </div>
 
         {/* Team Grid */}
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="show"
@@ -152,11 +152,10 @@ export default function TeamPage() {
                     <h3 className="font-bold text-slate-900 text-base leading-tight">
                       {member.name}
                     </h3>
-                    <span className={`inline-block mt-1 text-[11px] font-bold font-mono px-2 py-0.5 rounded ${
-                      member.role === "Team Mentor" 
-                        ? "bg-blue-50 text-blue-700 border border-blue-200" 
-                        : "bg-slate-100 text-slate-700 border border-slate-200"
-                    }`}>
+                    <span className={`inline-block mt-1 text-[11px] font-bold font-mono px-2 py-0.5 rounded ${member.role === "Team Mentor"
+                      ? "bg-blue-50 text-blue-700 border border-blue-200"
+                      : "bg-slate-100 text-slate-700 border border-slate-200"
+                      }`}>
                       {member.role}
                     </span>
                   </div>
@@ -165,9 +164,9 @@ export default function TeamPage() {
 
               {/* Social Icons Link Footer */}
               <div className="mt-6 pt-4 border-t border-slate-100 flex items-center space-x-4 text-slate-500 text-xs">
-                <a 
-                  href={member.githubUrl || "#"} 
-                  target="_blank" 
+                <a
+                  href={member.githubUrl || "#"}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-slate-900 transition-colors flex items-center gap-1.5 p-1 rounded hover:bg-slate-100"
                   title="GitHub Profile"
@@ -178,9 +177,9 @@ export default function TeamPage() {
                   </svg>
                   <span className="text-xs font-mono font-bold">GitHub</span>
                 </a>
-                <a 
-                  href={member.linkedinUrl || "#"} 
-                  target="_blank" 
+                <a
+                  href={member.linkedinUrl || "#"}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-600 transition-colors flex items-center gap-1.5 p-1 rounded hover:bg-slate-100"
                   title="LinkedIn Profile"

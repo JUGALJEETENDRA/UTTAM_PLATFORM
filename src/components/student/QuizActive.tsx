@@ -34,7 +34,8 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
   const subjectId = params?.subjectId as string;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
-  const [timeLeft, setTimeLeft] = useState(quiz.timeLimit * 60);
+  const isUnlimited = !quiz.timeLimit || Number(quiz.timeLimit) <= 0;
+  const [timeLeft, setTimeLeft] = useState(isUnlimited ? 0 : quiz.timeLimit * 60);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
@@ -97,6 +98,8 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
 
   // Countdown timer
   useEffect(() => {
+    if (isUnlimited) return;
+
     if (timeLeft <= 0 && !result) {
       const timer = setTimeout(() => {
         handleSubmit();
@@ -111,9 +114,10 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, result]);
+  }, [timeLeft, result, isUnlimited]);
 
   const formatTime = (seconds: number) => {
+    if (isUnlimited) return "∞ Unlimited";
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;

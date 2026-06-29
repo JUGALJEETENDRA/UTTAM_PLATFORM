@@ -285,7 +285,7 @@ export default function QuizzesPage() {
                     {quizStatus === 'pending' ? (
                       <>
                         <div className="flex items-center space-x-2">
-                          <Clock className="w-4 h-4 text-slate-400" /> <span>Time Limit: {quiz.timeLimit} mins</span>
+                          <Clock className="w-4 h-4 text-slate-400" /> <span>Time Limit: {!quiz.timeLimit || Number(quiz.timeLimit) <= 0 ? "∞ Unlimited" : `${quiz.timeLimit} mins`}</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Target className="w-4 h-4 text-slate-400" /> <span>{quiz.totalQuestionsToAsk || (quiz.questions && quiz.questions.length) || 0} Questions</span>

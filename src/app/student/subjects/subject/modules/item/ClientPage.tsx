@@ -239,7 +239,7 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
           )}
 
           {/* Download Video Button */}
-          {!isYouTube && (
+          {(!isYouTube || (downloadUrl && downloadUrl.trim() !== "")) && (
             <a
               href={downloadVideoUrl}
               target="_blank"

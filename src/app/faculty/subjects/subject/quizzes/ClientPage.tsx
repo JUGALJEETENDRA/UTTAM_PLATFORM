@@ -33,7 +33,7 @@ export default function ManageQuizzesPage() {
   const [selectedSubtopicId, setSelectedSubtopicId] = useState("");
   const [title, setTitle] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
-  const [timeLimit, setTimeLimit] = useState("");
+  const [timeLimit, setTimeLimit] = useState("0");
   const [xpReward, setXpReward] = useState("100");
   const [totalQuestionsToAsk, setTotalQuestionsToAsk] = useState("");
   const [documentUrl, setDocumentUrl] = useState<string | null>(null);
@@ -328,7 +328,7 @@ export default function ManageQuizzesPage() {
   const handleCancelEdit = () => {
     setEditingQuizId(null);
     setTitle("");
-    setTimeLimit("");
+    setTimeLimit("0");
     setXpReward("100");
     setTotalQuestionsToAsk("");
     setDocumentUrl(null);
@@ -343,7 +343,7 @@ export default function ManageQuizzesPage() {
     e.preventDefault();
     setLoading(true);
 
-    if (!selectedModuleId || !title || !timeLimit) {
+    if (!selectedModuleId || !title || (timeLimit === undefined || timeLimit === null || timeLimit === "")) {
       toast.error("Please fill in all required fields.");
       setLoading(false);
       return;
@@ -481,15 +481,34 @@ export default function ManageQuizzesPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-zinc-700 mb-1">Time Limit (mins) *</label>
-                    <input
-                      type="number"
-                      required
-                      placeholder="e.g. 15"
-                      value={timeLimit}
-                      onChange={(e) => setTimeLimit(e.target.value)}
-                      className="w-full px-3 py-2 border border-zinc-300 rounded-lg text-zinc-900 focus:outline-none focus:border-primary"
-                    />
+                    <label className="block text-sm font-bold text-zinc-700 mb-1">Time Limit *</label>
+                    <div className="flex gap-2">
+                      <select
+                        value={timeLimit === "0" || timeLimit === "" ? "0" : "custom"}
+                        onChange={(e) => {
+                          if (e.target.value === "0") {
+                            setTimeLimit("0");
+                          } else {
+                            setTimeLimit("15");
+                          }
+                        }}
+                        className="w-1/2 px-3 py-2 border border-zinc-300 rounded-lg bg-white text-zinc-900 focus:outline-none focus:border-primary text-xs font-bold"
+                      >
+                        <option value="0">∞ Infinity (Default)</option>
+                        <option value="custom">Set Timer (Mins)</option>
+                      </select>
+                      {timeLimit !== "0" && (
+                        <input
+                          type="number"
+                          required
+                          min="1"
+                          placeholder="Mins (e.g. 15)"
+                          value={timeLimit}
+                          onChange={(e) => setTimeLimit(e.target.value)}
+                          className="w-1/2 px-3 py-2 border border-zinc-300 rounded-lg text-zinc-900 focus:outline-none focus:border-primary text-sm font-medium"
+                        />
+                      )}
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-zinc-700 mb-1">Total Questions to Ask</label>
