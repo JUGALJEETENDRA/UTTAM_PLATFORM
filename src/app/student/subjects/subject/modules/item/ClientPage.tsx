@@ -196,16 +196,7 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
         )}
       </div>
 
-      {/* White Action Bar Positioned Below Video */}
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2.5 p-3 bg-white text-slate-800 rounded-xl border border-slate-200 shadow-sm">
-        <div className="flex items-center space-x-2 truncate">
-          <PlayCircle className="w-4 h-4 text-blue-600 shrink-0" />
-          <span className="text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[150px] sm:max-w-md">{title || "Video Lesson"}</span>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-        </div>
-      </div>
     </div>
   );
 };
