@@ -33,6 +33,7 @@ function setupDatabase() {
     "FlashcardDecks": ["id", "subjectId", "moduleId", "subtopicId", "title", "cards"],
     "Simulations": ["id", "subjectId", "moduleId", "subtopicId", "title", "description", "difficulty", "estimatedTime", "learningOutcome", "frontendUrl"],
     "MindMaps": ["id", "subjectId", "moduleId", "title", "imageUrl", "downloadUrl", "createdAt"],
+    "Infographics": ["id", "subjectId", "moduleId", "title", "imageUrl", "downloadUrl", "createdAt"],
     "Resources": ["id", "subjectId", "title", "type", "link", "detail"]
   };
 
@@ -284,6 +285,17 @@ function handleRequest(e, isPost) {
         result = handleDeleteMindMap(payload);
         break;
 
+      // --- Infographics Endpoints ---
+      case "getInfographics":
+        result = handleGetInfographics(payload);
+        break;
+      case "saveInfographic":
+        result = handleSaveInfographic(payload);
+        break;
+      case "deleteInfographic":
+        result = handleDeleteInfographic(payload);
+        break;
+
       // --- Resources Endpoints ---
       case "getResources":
         result = handleGetResources(payload);
@@ -375,6 +387,7 @@ function handleGetStudentDashboard(payload) {
   });
 
   const mindmaps = getSheetData("MindMaps").filter(m => m.subjectId === payload.subjectId) || [];
+  const infographics = getSheetData("Infographics").filter(m => m.subjectId === payload.subjectId) || [];
   const subjectResources = getSheetData("Resources").filter(r => r.subjectId === payload.subjectId) || [];
 
   return {
@@ -383,6 +396,7 @@ function handleGetStudentDashboard(payload) {
     quizzesWithAttempts: allQuizzes,
     flashcardDecks: flashcardDecks,
     mindmaps: mindmaps,
+    infographics: infographics,
     subjectResources: subjectResources
   };
 }
@@ -462,6 +476,42 @@ function handleSaveMindMap(payload) {
 function handleDeleteMindMap(payload) {
   const { mindMapId } = payload;
   return { success: deleteRow("MindMaps", "id", mindMapId) };
+}
+
+// --- NEW INFOGRAPHICS FUNCTIONS ---
+function handleGetInfographics(payload) {
+  const { subjectId } = payload;
+  let infographics = getSheetData("Infographics");
+  if (subjectId) {
+    infographics = infographics.filter(m => m.subjectId === subjectId);
+  }
+  return infographics;
+}
+
+function handleSaveInfographic(payload) {
+  const { id, subjectId, moduleId, title, imageUrl, downloadUrl } = payload;
+  const newId = id || generateId();
+  const data = {
+    id: newId,
+    subjectId,
+    moduleId: moduleId || "",
+    title,
+    imageUrl: imageUrl || "",
+    downloadUrl: downloadUrl || "",
+    createdAt: new Date().toISOString()
+  };
+
+  if (id) {
+    updateRow("Infographics", "id", id, data);
+  } else {
+    writeRow("Infographics", data);
+  }
+  return { success: true, id: newId };
+}
+
+function handleDeleteInfographic(payload) {
+  const { infographicId } = payload;
+  return { success: deleteRow("Infographics", "id", infographicId) };
 }
 
 // --- NEW RESOURCES FUNCTIONS ---
@@ -567,6 +617,7 @@ function handleGetModule(payload) {
   mod.flashcardDecks = getSheetData("FlashcardDecks").filter(f => f.moduleId === moduleId);
   mod.simulations = getSheetData("Simulations").filter(s => s.moduleId === moduleId);
   mod.mindmaps = getSheetData("MindMaps").filter(m => m.moduleId === moduleId);
+  mod.infographics = getSheetData("Infographics").filter(m => m.moduleId === moduleId);
   return mod;
 }
 
@@ -676,6 +727,10 @@ function handleDeleteModule(payload) {
   // Delete associated MindMaps
   const mindmaps = getSheetData("MindMaps").filter(m => m.moduleId === moduleId);
   mindmaps.forEach(m => deleteRow("MindMaps", "id", m.id));
+
+  // Delete associated Infographics
+  const infographics = getSheetData("Infographics").filter(m => m.moduleId === moduleId);
+  infographics.forEach(m => deleteRow("Infographics", "id", m.id));
 
   return { success: moduleDeleted };
 }

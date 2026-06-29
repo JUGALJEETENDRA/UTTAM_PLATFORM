@@ -59,7 +59,8 @@ async function main() {
     getSimulation: {},
     getFlashcardDecks: {},
     getFlashcardDeck: {},
-    getMindMaps: {}
+    getMindMaps: {},
+    getInfographics: {}
   };
 
   try {
@@ -76,6 +77,7 @@ async function main() {
         fetchGAS('getQuizzes', { subjectId: subject.id }),
         fetchGAS('getSimulations', { subjectId: subject.id }),
         fetchGAS('getMindMaps', { subjectId: subject.id }),
+        fetchGAS('getInfographics', { subjectId: subject.id }),
         fetchGAS('getFlashcardDecks', { subjectId: subject.id }).catch(e => {
           console.warn(`  Warning: getFlashcardDecks failed for subject ${subject.id}: ${e.message}`);
           return [];
@@ -88,6 +90,7 @@ async function main() {
         quizzes,
         simulations,
         mindmaps,
+        infographics,
         decks
       ] = await Promise.all(topLevelTasks);
       
@@ -96,6 +99,7 @@ async function main() {
       db.getQuizzes[subject.id] = quizzes;
       db.getSimulations[subject.id] = simulations;
       db.getMindMaps[subject.id] = mindmaps;
+      db.getInfographics[subject.id] = infographics;
       db.getFlashcardDecks[subject.id] = decks || [];
 
       const childTasks = [];

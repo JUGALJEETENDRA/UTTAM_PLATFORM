@@ -34,6 +34,7 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
         if (action === 'getFlashcardDecks') return dataJson.getFlashcardDecks[payload.subjectId] || [];
         if (action === 'getFlashcardDeck') return dataJson.getFlashcardDeck[payload.deckId] || null;
         if (action === 'getMindMaps') return dataJson.getMindMaps[payload.subjectId] || [];
+        if (action === 'getInfographics') return dataJson.getInfographics[payload.subjectId] || [];
         
         // If not a read action or not handled, it will fall through to GAS (though likely fail if offline/static)
       } catch (err) {
