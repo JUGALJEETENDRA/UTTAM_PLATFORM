@@ -45,7 +45,7 @@ To ensure high performance for students, if `NEXT_PUBLIC_IS_DEPLOYED` is `true`,
 - **Shadcn UI:** The base component library. Components are located in `src/components/ui`. You can customize them directly.
 - **Icons:** We use `lucide-react`.
 
-![Developer Architecture Diagram](screenshots/architecture_diagram.png)
+![Developer Architecture Diagram](../screenshots/architecture_diagram.png)
 
 ## Backend Modification (GAS)
 
@@ -60,7 +60,7 @@ When adding a new feature:
 
 The platform leverages GitHub Actions for continuous deployment, ensuring the static frontend remains perfectly in sync with the Google Sheets database.
 
-![GitHub Pipeline Overview](screenshots/github_pipeline.png)
+![GitHub Pipeline Overview](../screenshots/github_pipeline.png)
 
 **Workflow Breakdown:**
 1. **Content Update:** Faculty edits content in the CMS and triggers a deployment.

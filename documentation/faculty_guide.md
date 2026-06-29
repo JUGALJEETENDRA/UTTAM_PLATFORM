@@ -5,7 +5,7 @@ Welcome to the Faculty portal. This dashboard acts as your Content Management Sy
 ## Accessing the Dashboard
 Navigate to `/faculty` in your browser. This is your command center.
 
-![Faculty Dashboard Overview](screenshots/faculty_dashboard.png)
+![Faculty Dashboard Overview](../screenshots/faculty_dashboard.png)
 
 
 ## 1. Managing Subjects & Modules
@@ -23,10 +23,10 @@ You can create interactive flashcards for students to review.
 1. Navigate to the desired module.
 2. Select **Add Flashcard Deck**.
 3. You can either create cards manually or upload a `.csv` file. 
-   - **Tip:** You can easily generate flashcard CSVs using the [NotebookLM Flashcards Exporter](https://chromewebstore.google.com/detail/notebooklm-flashcards-exp/gfpdgeimnjeibphkimmeeigedjffdnnp) extension.
+   - **Tip:** You can easily generate flashcard CSVs using the [NotebookLM Flashcards Exporter](https://chromewebstore.google.com/detail/notebooklm-flashcards-exp/gfpdgeimnjeibphkimmeeigedjffdnnp) extension. If your generated content has a watermark, you can remove it using [NotebookLM Watermark Remover](https://notebooklmremover.com/en).
 4. The system will parse the `.csv` and instantly generate the deck.
 
-![Flashcard Creation](screenshots/flashcard_creation.png)
+![Flashcard Creation](../screenshots/flashcard_creation.png)
 
 
 ### Quizzes
@@ -34,7 +34,9 @@ Assess student knowledge with timed quizzes.
 1. Select **Add Quiz**.
 2. Define the quiz parameters (Time limit, passing score).
 3. Add multiple-choice questions.
-   - **Tip:** You can generate a CSV of questions using the [NotebookLM Quiz Exporter](https://chromewebstore.google.com/detail/notebooklm-quiz-exporter/pndhmfhdeoiekihofmklndionkfabbdm) extension. Ensure that the "hints" button is unclicked before downloading the CSV.
+   - **Tip:** You can generate a CSV of questions using the [NotebookLM Quiz Exporter](https://chromewebstore.google.com/detail/notebooklm-quiz-exporter/pndhmfhdeoiekihofmklndionkfabbdm) extension. Ensure that the "hints" button is unclicked before downloading the CSV. If your generated content has a watermark, you can remove it using [NotebookLM Watermark Remover](https://notebooklmremover.com/en).
+
+![Quiz Creation](../screenshots/quiz_creation.png)
 
 ## 3. Data Storage (Google Sheets)
 
@@ -48,5 +50,5 @@ Once you have finished adding or modifying content:
 1. The platform will automatically sync changes to the database.
 2. If the deployment trigger is configured, you can click the **Deploy to Production** button. This uses a GitHub Action to rebuild the student portal with your latest content, ensuring students get lightning-fast page loads.
 
-![Deployment Button](screenshots/deploy_button.png)
+![Deployment Button](../screenshots/deploy_button.png)
 

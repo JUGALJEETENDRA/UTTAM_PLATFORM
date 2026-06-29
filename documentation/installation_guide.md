@@ -36,7 +36,7 @@ The backend runs entirely on Google Apps Script (GAS) using Google Sheets as a d
    - Click **Deploy** and authorize the necessary permissions.
    - Copy the generated **Web app URL**.
 
-![Deploying Apps Script](screenshots/gas_deploy.png)
+![Deploying Apps Script](../screenshots/gas_deploy.png)
 
 
 ## 3. Environment Variables
@@ -65,7 +65,7 @@ Open your browser and navigate to `http://localhost:3000`. You can access the st
 
 You can deploy the Next.js frontend to platforms like Vercel or GitHub Pages. The backend includes a webhook trigger for GitHub Actions to automatically redeploy static builds when curriculum content is updated by faculty.
 
-![GitHub Pipeline](screenshots/github_pipeline.png)
+![GitHub Pipeline](../screenshots/github_pipeline.png)
 
 **How the Pipeline Works:**
 1. **Trigger:** When faculty updates content (like adding a quiz or flashcard) and hits "Deploy to Production" from the faculty dashboard, Google Apps Script sends a `repository_dispatch` event to GitHub.
