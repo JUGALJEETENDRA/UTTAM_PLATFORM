@@ -150,7 +150,7 @@ function getGoogleDriveFileId(url: string | null | undefined): string | null {
   return null;
 }
 
-const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
+const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: string; downloadUrl?: string }) => {
   const [isFullscreenModalOpen, setIsFullscreenModalOpen] = useState(false);
   if (!url) return null;
 
@@ -160,15 +160,32 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getEmbedUrl(url);
 
-  const downloadVideoUrl = driveFileId 
-    ? `https://drive.google.com/uc?export=download&id=${driveFileId}` 
-    : url;
+  const downloadVideoUrl = (downloadUrl && downloadUrl.trim() !== "")
+    ? downloadUrl
+    : driveFileId 
+      ? `https://drive.google.com/uc?export=download&id=${driveFileId}` 
+      : url;
   const driveAppUrl = driveFileId 
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
 
   return (
     <div className="w-full flex flex-col select-none">
+      {/* Upper Top Bar with Thin Download Button on Right */}
+      <div className="w-full flex items-center justify-end mb-1.5 px-0.5">
+        <a
+          href={downloadVideoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          download={`${title || 'video-lesson'}.mp4`}
+          className="inline-flex items-center gap-1 bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-700 text-[11px] font-semibold py-0.5 px-2.5 rounded-full border border-slate-200 shadow-2xs transition-all"
+          title="Download Video via Drive"
+        >
+          <Download className="w-3 h-3 text-blue-600" />
+          <span>Download Video via Drive</span>
+        </a>
+      </div>
+
       {/* Video Viewport Container - Responsive Aspect Ratio */}
       <div className="w-full aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
         {isYouTube || (!isDirectVideo && embedUrl) ? (
@@ -719,7 +736,11 @@ export default function ModuleDetailPage() {
                               </div>
                             )}
                             <div className="w-full max-w-3xl mx-auto">
-                              <InlineVideoPlayer url={selectedLanguages[subtopic.id]?.video || defaultVideoUrl} title={subtopic.title} />
+                              <InlineVideoPlayer 
+                                url={selectedLanguages[subtopic.id]?.video || defaultVideoUrl} 
+                                title={subtopic.title} 
+                                downloadUrl={subtopic.videoDownloadUrl}
+                              />
                             </div>
                           </div>
                         )}

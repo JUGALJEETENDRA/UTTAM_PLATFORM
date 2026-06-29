@@ -10,50 +10,50 @@ interface TeamMember {
   role: string;
   avatarBg: string;
   icon: React.ReactNode;
-  tags: string[];
-  description: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
 }
 
 const team: TeamMember[] = [
   {
     name: "Jugal Manek",
-    role: "Full Stack Developer & Team Lead",
+    role: "Team Mentor",
     avatarBg: "from-blue-500 to-cyan-500",
     icon: <Terminal className="w-5 h-5 text-white" />,
-    tags: ["Next.js", "React", "TypeScript", "System Design"],
-    description: "Architected the core system flow and modular container architecture. Led integration across student and faculty modules."
+    githubUrl: "https://github.com",
+    linkedinUrl: "https://linkedin.com"
   },
   {
     name: "Jainam Davda",
-    role: "UI/UX Designer & Frontend Engineer",
+    role: "Team Member",
     avatarBg: "from-indigo-500 to-purple-500",
     icon: <Layout className="w-5 h-5 text-white" />,
-    tags: ["Figma Design", "Tailwind CSS", "Micro-Animations", "UX Research"],
-    description: "Designed the high-fidelity interactive wireframes and implemented neubrutalist and premium layout systems."
+    githubUrl: "https://github.com",
+    linkedinUrl: "https://linkedin.com"
   },
   {
     name: "Chinmay Chavan",
-    role: "Backend Architect & DevOps Engineer",
+    role: "Team Member",
     avatarBg: "from-emerald-500 to-teal-500",
     icon: <Cpu className="w-5 h-5 text-white" />,
-    tags: ["Node.js", "API Design", "Deployment", "CI/CD"],
-    description: "Designed database models and API integrations. Set up compilation verifiers and deployment pipelines."
+    githubUrl: "https://github.com",
+    linkedinUrl: "https://linkedin.com"
   },
   {
     name: "Sourish Ashtikar",
-    role: "Product Manager & QA Lead",
+    role: "Team Member",
     avatarBg: "from-rose-500 to-orange-500",
     icon: <Shield className="w-5 h-5 text-white" />,
-    tags: ["Agile PM", "Unit Testing", "Heuristic Evaluation", "Metrics"],
-    description: "Managed project scope, defined milestones, and conducted thorough testing for mobile responsiveness and performance."
+    githubUrl: "https://github.com",
+    linkedinUrl: "https://linkedin.com"
   },
   {
     name: "Rohan Patil",
-    role: "HCI Researcher & Content Specialist",
+    role: "Team Member",
     avatarBg: "from-amber-500 to-yellow-500",
     icon: <Compass className="w-5 h-5 text-white" />,
-    tags: ["HCI Principles", "Cognitive load", "Fitts's Law", "Content Strategy"],
-    description: "Curated learning curriculum, simulations, and quiz datasets centered on usability laws and interaction standards."
+    githubUrl: "https://github.com",
+    linkedinUrl: "https://linkedin.com"
   }
 ];
 
@@ -121,7 +121,7 @@ export default function TeamPage() {
             transition={{ delay: 0.2, duration: 0.4 }}
             className="text-sm md:text-base text-slate-550 font-medium"
           >
-            The designers, engineers, and researchers behind the Gamified HCI EdTech Platform.
+            The team behind the Gamified HCI EdTech Platform.
           </motion.p>
         </div>
 
@@ -145,55 +145,53 @@ export default function TeamPage() {
               <div className="space-y-4">
                 {/* Header with avatar / icon */}
                 <div className="flex items-center space-x-3.5">
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${member.avatarBg} flex items-center justify-center shadow-sm`}>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${member.avatarBg} flex items-center justify-center shadow-sm shrink-0`}>
                     {member.icon}
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-800 text-base leading-tight">
+                    <h3 className="font-bold text-slate-900 text-base leading-tight">
                       {member.name}
                     </h3>
-                    <p className="text-xs text-slate-450 font-medium font-sans">
+                    <span className={`inline-block mt-1 text-[11px] font-bold font-mono px-2 py-0.5 rounded ${
+                      member.role === "Team Mentor" 
+                        ? "bg-blue-50 text-blue-700 border border-blue-200" 
+                        : "bg-slate-100 text-slate-700 border border-slate-200"
+                    }`}>
                       {member.role}
-                    </p>
+                    </span>
                   </div>
                 </div>
-
-                {/* Description */}
-                <p className="text-xs text-slate-500 font-sans leading-relaxed font-medium">
-                  {member.description}
-                </p>
               </div>
 
-              {/* Tags and Socials */}
-              <div className="mt-6 pt-4 border-t border-slate-100 space-y-4">
-                <div className="flex flex-wrap gap-1.5">
-                  {member.tags.map((tag, tIndex) => (
-                    <span 
-                      key={tIndex} 
-                      className="text-[9px] font-bold font-mono px-2 py-0.5 bg-slate-50 text-slate-600 rounded border border-slate-150"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex items-center space-x-3 text-slate-450 text-xs">
-                  <span className="hover:text-slate-800 transition-colors cursor-pointer flex items-center gap-1.5">
-                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                      <path d="M9 18c-4.51 2-5-2-7-2" />
-                    </svg>
-                    <span className="text-[10px] font-mono font-semibold">GitHub</span>
-                  </span>
-                  <span className="hover:text-slate-800 transition-colors cursor-pointer flex items-center gap-1.5">
-                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                      <rect width="4" height="12" x="2" y="9" />
-                      <circle cx="4" cy="4" r="2" />
-                    </svg>
-                    <span className="text-[10px] font-mono font-semibold">LinkedIn</span>
-                  </span>
-                </div>
+              {/* Social Icons Link Footer */}
+              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center space-x-4 text-slate-500 text-xs">
+                <a 
+                  href={member.githubUrl || "#"} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-slate-900 transition-colors flex items-center gap-1.5 p-1 rounded hover:bg-slate-100"
+                  title="GitHub Profile"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                    <path d="M9 18c-4.51 2-5-2-7-2" />
+                  </svg>
+                  <span className="text-xs font-mono font-bold">GitHub</span>
+                </a>
+                <a 
+                  href={member.linkedinUrl || "#"} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-600 transition-colors flex items-center gap-1.5 p-1 rounded hover:bg-slate-100"
+                  title="LinkedIn Profile"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                    <rect width="4" height="12" x="2" y="9" />
+                    <circle cx="4" cy="4" r="2" />
+                  </svg>
+                  <span className="text-xs font-mono font-bold">LinkedIn</span>
+                </a>
               </div>
             </motion.div>
           ))}

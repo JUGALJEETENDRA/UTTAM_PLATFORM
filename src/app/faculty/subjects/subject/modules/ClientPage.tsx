@@ -13,6 +13,7 @@ interface SubtopicForm {
   description: string;
   learningOutcome: string;
   videoUrl: string;
+  videoDownloadUrl?: string;
   videoLanguages: { language: string; url: string }[];
   notesUrl: string;
   notesDownloadUrl?: string;
@@ -31,7 +32,7 @@ interface SubtopicForm {
 }
 const initialSubtopicState = { 
   title: "", description: "", learningOutcome: "", 
-  videoUrl: "", videoLanguages: [], 
+  videoUrl: "", videoDownloadUrl: "", videoLanguages: [], 
   notesUrl: "", notesDownloadUrl: "", 
   otherUrl: "", otherDownloadUrl: "", 
   audioUrl: "", audioLanguages: [], audioDownloadUrl: "",
@@ -314,6 +315,7 @@ export default function ManageModulesPage() {
         didYouKnowDownloadUrl: didYouKnowDownloadUrl || "",
         referenceUrl: referenceUrl || "",
         referenceDownloadUrl: referenceDownloadUrl || "",
+        videoDownloadUrl: st.videoDownloadUrl || "",
       };
       const hasAnyOtherField = Object.values(otherFields).some(val => val !== "");
       const packedOtherUrl = hasAnyOtherField ? JSON.stringify(otherFields) : "";
@@ -608,14 +610,28 @@ export default function ManageModulesPage() {
                           </select>
                           {st.selectedResourceType === "videoUrl" && (
                             <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
-                              <label className="block text-xs font-bold text-zinc-700 mb-1">English Video URL (Default)</label>
-                              <input
-                                type="text"
-                                placeholder="https://drive.google.com/..."
-                                value={st.videoUrl}
-                                onChange={(e) => handleSubtopicChange(index, "videoUrl", e.target.value)}
-                                className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary mb-4"
-                              />
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                                <div>
+                                  <label className="block text-xs font-bold text-zinc-700 mb-1">English Video URL (Default)</label>
+                                  <input
+                                    type="text"
+                                    placeholder="https://drive.google.com/..."
+                                    value={st.videoUrl}
+                                    onChange={(e) => handleSubtopicChange(index, "videoUrl", e.target.value)}
+                                    className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-xs font-bold text-zinc-700 mb-1">Download Video Drive Link</label>
+                                  <input
+                                    type="text"
+                                    placeholder="https://drive.google.com/uc?export=download&id=..."
+                                    value={st.videoDownloadUrl || ""}
+                                    onChange={(e) => handleSubtopicChange(index, "videoDownloadUrl", e.target.value)}
+                                    className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
+                                  />
+                                </div>
+                              </div>
                               <div className="pt-3 border-t border-zinc-200">
                                 <div className="flex justify-between items-center mb-3">
                                   <label className="block text-xs font-bold text-zinc-700">Additional Video Languages</label>

@@ -47,6 +47,7 @@ export default function QuickUpdatePage() {
   // Track input values locally for each subtopic to prevent re-rendering the whole page
   const [inputStates, setInputStates] = useState<Record<string, { 
     videoUrl: string; 
+    videoDownloadUrl: string;
     notesUrl: string; 
     videoLanguages: { language: string; url: string }[];
     audioUrl: string;
@@ -67,6 +68,7 @@ export default function QuickUpdatePage() {
         // Initialize inputs
         const initialInputs: Record<string, { 
           videoUrl: string; 
+          videoDownloadUrl: string;
           notesUrl: string; 
           videoLanguages: { language: string; url: string }[];
           audioUrl: string;
@@ -80,8 +82,13 @@ export default function QuickUpdatePage() {
             } else if (typeof st.simulationData === 'object') {
               simData = st.simulationData || {};
             }
+            let parsedOther: any = {};
+            if (typeof st.otherUrl === 'string' && st.otherUrl.trim().startsWith("{")) {
+              try { parsedOther = JSON.parse(st.otherUrl); } catch (e) {}
+            }
             initialInputs[st.id] = {
               videoUrl: st.videoUrl || simData.videoUrl || (st.type === 'videoUrl' ? st.mediaUrl : ""),
+              videoDownloadUrl: st.videoDownloadUrl || parsedOther.videoDownloadUrl || "",
               notesUrl: st.notesUrl || simData.notesUrl || (st.type === 'notes' ? st.mediaUrl : ""),
               videoLanguages: st.videoLanguages || simData.videoLanguages || [],
               audioUrl: st.audioUrl || simData.audioUrl || (st.type === 'audio' ? st.mediaUrl : ""),
@@ -135,7 +142,7 @@ export default function QuickUpdatePage() {
     }
   };
 
-  const handleInputChange = (subtopicId: string, field: "videoUrl" | "notesUrl" | "videoLanguages" | "audioUrl" | "audioLanguages", value: string | { language: string; url: string }[]) => {
+  const handleInputChange = (subtopicId: string, field: "videoUrl" | "videoDownloadUrl" | "notesUrl" | "videoLanguages" | "audioUrl" | "audioLanguages", value: string | { language: string; url: string }[]) => {
     setInputStates(prev => ({
       ...prev,
       [subtopicId]: {
@@ -188,6 +195,7 @@ export default function QuickUpdatePage() {
           const updatedSt = {
             ...st,
             videoUrl: inputs.videoUrl,
+            videoDownloadUrl: inputs.videoDownloadUrl,
             notesUrl: inputs.notesUrl,
             videoLanguages: inputs.videoLanguages,
             audioUrl: inputs.audioUrl,
@@ -202,6 +210,7 @@ export default function QuickUpdatePage() {
             didYouKnowDownloadUrl: updatedSt.didYouKnowDownloadUrl || "",
             referenceUrl: updatedSt.referenceUrl || "",
             referenceDownloadUrl: updatedSt.referenceDownloadUrl || "",
+            videoDownloadUrl: inputs.videoDownloadUrl || "",
           };
           const hasAnyOtherField = Object.values(otherFields).some(val => val !== "");
           updatedSt.otherUrl = hasAnyOtherField ? JSON.stringify(otherFields) : "";
@@ -209,6 +218,10 @@ export default function QuickUpdatePage() {
           return updatedSt;
         } else {
           // Re-pack other subtopics too since saveModule overwrites the whole module
+          let parsedOther: any = {};
+          if (typeof st.otherUrl === 'string' && st.otherUrl.trim().startsWith("{")) {
+            try { parsedOther = JSON.parse(st.otherUrl); } catch(e){}
+          }
           const otherFields = {
             otherUrl: st.otherUrl || "",
             otherDownloadUrl: st.otherDownloadUrl || "",
@@ -216,6 +229,7 @@ export default function QuickUpdatePage() {
             didYouKnowDownloadUrl: st.didYouKnowDownloadUrl || "",
             referenceUrl: st.referenceUrl || "",
             referenceDownloadUrl: st.referenceDownloadUrl || "",
+            videoDownloadUrl: st.videoDownloadUrl || parsedOther.videoDownloadUrl || "",
           };
           const hasAnyOtherField = Object.values(otherFields).some(val => val !== "");
           return {
@@ -249,6 +263,7 @@ export default function QuickUpdatePage() {
           ...prev,
           [subtopicId]: {
             videoUrl: inputs.videoUrl || "",
+            videoDownloadUrl: inputs.videoDownloadUrl || "",
             notesUrl: inputs.notesUrl || "",
             videoLanguages: inputs.videoLanguages || [],
             audioUrl: inputs.audioUrl || "",
@@ -419,15 +434,26 @@ export default function QuickUpdatePage() {
                                   + Add Language
                                 </button>
                               </label>
-                              <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
-                                <input
-                                  type="text"
-                                  placeholder="Paste video view/preview/sharing URL..."
-                                  value={inputs.videoUrl}
-                                  onChange={(e) => handleInputChange(st.id, "videoUrl", e.target.value)}
-                                  className="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
-                                />
+                              <div className="flex flex-col gap-2">
+                                <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
+                                  <input
+                                    type="text"
+                                    placeholder="Paste video view/preview/sharing URL..."
+                                    value={inputs.videoUrl}
+                                    onChange={(e) => handleInputChange(st.id, "videoUrl", e.target.value)}
+                                    className="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+                                  />
                                 </div>
+                                <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
+                                  <input
+                                    type="text"
+                                    placeholder="Video Download Link (Drive export=download)..."
+                                    value={inputs.videoDownloadUrl || ""}
+                                    onChange={(e) => handleInputChange(st.id, "videoDownloadUrl", e.target.value)}
+                                    className="w-full bg-transparent text-xs text-slate-800 placeholder-slate-400 focus:outline-none"
+                                  />
+                                </div>
+                              </div>
                               {(inputs.videoLanguages || []).map((lang, lIndex) => (
                                 <div key={lIndex} className="flex items-center gap-2 mt-2">
                                   <input 
