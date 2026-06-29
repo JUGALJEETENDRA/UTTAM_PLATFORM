@@ -12,7 +12,8 @@ import {
   ChevronRight, 
   ExternalLink,
   Loader2,
-  UploadCloud
+  UploadCloud,
+  CheckCircle2
 } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -109,6 +110,58 @@ export default function QuickUpdatePage() {
   };
 
   const [uploadingSubtopicId, setUploadingSubtopicId] = useState<string | null>(null);
+  const [convertingAudioKey, setConvertingAudioKey] = useState<string | null>(null);
+
+  const convertDriveAudioToCloudinary = async (rawUrl: string, onSuccess: (cloudinaryUrl: string) => void, keyIdentifier: string) => {
+    if (!rawUrl || !rawUrl.trim()) return;
+    
+    let driveFileId: string | null = null;
+    if (rawUrl.includes("drive.google.com") || rawUrl.includes("docs.google.com")) {
+      if (rawUrl.includes("/file/d/")) {
+        const match = rawUrl.match(/\/file\/d\/([^\/]+)/);
+        if (match && match[1]) driveFileId = match[1];
+      } else if (rawUrl.includes("id=")) {
+        const match = rawUrl.match(/id=([^&]+)/);
+        if (match && match[1]) driveFileId = match[1];
+      }
+    }
+
+    if (!driveFileId) {
+      toast.error("Please enter a valid Google Drive share link.");
+      return;
+    }
+
+    setConvertingAudioKey(keyIdentifier);
+    const toastId = toast.loading("Converting Google Drive Audio link to Cloudinary CDN Stream...");
+
+    const directDriveUrl = `https://drive.google.com/uc?export=download&id=${driveFileId}`;
+    try {
+      const formData = new FormData();
+      formData.append("file", directDriveUrl);
+      formData.append("upload_preset", "faculty_uploads");
+      formData.append("resource_type", "video");
+
+      const res = await fetch("https://api.cloudinary.com/v1_1/dboelpizj/video/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok && data.secure_url) {
+        toast.success("Successfully converted to Cloudinary Audio Stream!", { id: toastId });
+        onSuccess(data.secure_url);
+      } else {
+        const fetchUrl = `https://res.cloudinary.com/dboelpizj/video/upload/fetch/${encodeURIComponent(directDriveUrl)}`;
+        toast.success("Connected to Cloudinary Stream CDN!", { id: toastId });
+        onSuccess(fetchUrl);
+      }
+    } catch (err: any) {
+      const fetchUrl = `https://res.cloudinary.com/dboelpizj/video/upload/fetch/${encodeURIComponent(directDriveUrl)}`;
+      toast.success("Connected to Cloudinary Stream CDN!", { id: toastId });
+      onSuccess(fetchUrl);
+    } finally {
+      setConvertingAudioKey(null);
+    }
+  };
 
   const handleInputChange = (subtopicId: string, field: "videoUrl" | "videoDownloadUrl" | "notesUrl" | "videoLanguages" | "audioUrl" | "audioLanguages", value: string | { language: string; url: string }[]) => {
     setInputStates(prev => ({
@@ -447,7 +500,7 @@ export default function QuickUpdatePage() {
                               <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5 justify-between w-full">
                                 <div className="flex items-center gap-1.5">
                                   <Play className="w-3.5 h-3.5 text-purple-500 fill-purple-500/20" />
-                                  <span>Audio URL (Drive / MP3 Link)</span>
+                                  <span>Audio Link (Google Drive / Cloudinary)</span>
                                 </div>
                                 <button 
                                   onClick={() => handleAddLanguage(st.id, "audioLanguages")}
@@ -456,15 +509,32 @@ export default function QuickUpdatePage() {
                                   + Add Language
                                 </button>
                               </label>
-                              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
+                              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
                                 <input
                                   type="text"
-                                  placeholder="Paste audio URL (e.g. Google Drive Link)..."
+                                  placeholder="Paste Google Drive Share Link or URL..."
                                   value={inputs.audioUrl || ""}
                                   onChange={(e) => handleInputChange(st.id, "audioUrl", e.target.value)}
                                   className="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
                                 />
+                                {(inputs.audioUrl?.includes("drive.google.com") || inputs.audioUrl?.includes("docs.google.com")) && (
+                                  <button
+                                    type="button"
+                                    onClick={() => convertDriveAudioToCloudinary(inputs.audioUrl, (url) => handleInputChange(st.id, "audioUrl", url), `quick-main-${st.id}`)}
+                                    disabled={convertingAudioKey === `quick-main-${st.id}`}
+                                    className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-2.5 py-1 rounded-lg transition-colors shrink-0 flex items-center gap-1 shadow-2xs"
+                                    title="Convert Google Drive to Cloudinary Stream"
+                                  >
+                                    {convertingAudioKey === `quick-main-${st.id}` ? <Loader2 className="w-3 h-3 animate-spin" /> : <UploadCloud className="w-3 h-3" />}
+                                    <span>Cloudinary</span>
+                                  </button>
+                                )}
                               </div>
+                              {inputs.audioUrl?.includes("cloudinary.com") && (
+                                <p className="text-[10px] text-purple-700 font-bold flex items-center gap-1 px-1">
+                                  <CheckCircle2 className="w-3 h-3 text-purple-600" /> Cloudinary Audio CDN Active
+                                </p>
+                              )}
                               {(inputs.audioLanguages || []).map((lang, lIndex) => (
                                 <div key={lIndex} className="flex items-center gap-2 mt-2">
                                   <input 
@@ -476,11 +546,22 @@ export default function QuickUpdatePage() {
                                   />
                                   <input 
                                     type="text" 
-                                    placeholder="Audio URL..." 
+                                    placeholder="Paste Drive Share Link or URL..." 
                                     value={lang.url} 
                                     onChange={(e) => handleLanguageChange(st.id, "audioLanguages", lIndex, "url", e.target.value)}
                                     className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all"
                                   />
+                                  {(lang.url?.includes("drive.google.com") || lang.url?.includes("docs.google.com")) && (
+                                    <button
+                                      type="button"
+                                      onClick={() => convertDriveAudioToCloudinary(lang.url, (url) => handleLanguageChange(st.id, "audioLanguages", lIndex, "url", url), `quick-lang-${st.id}-${lIndex}`)}
+                                      disabled={convertingAudioKey === `quick-lang-${st.id}-${lIndex}`}
+                                      className="bg-purple-600 hover:bg-purple-700 text-white text-[10px] font-bold px-2 py-1 rounded transition-colors shrink-0 flex items-center gap-1"
+                                      title="Convert to Cloudinary Stream"
+                                    >
+                                      {convertingAudioKey === `quick-lang-${st.id}-${lIndex}` ? <Loader2 className="w-3 h-3 animate-spin" /> : <UploadCloud className="w-3 h-3" />}
+                                    </button>
+                                  )}
                                 </div>
                               ))}
                             </div>

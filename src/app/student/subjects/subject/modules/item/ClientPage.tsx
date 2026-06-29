@@ -325,11 +325,9 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
 const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   if (!url) return null;
 
+  const isCloudinary = url.includes("cloudinary.com");
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getExternalEmbedUrl(url);
-  const downloadUrl = driveFileId 
-    ? `https://drive.google.com/uc?export=download&id=${driveFileId}` 
-    : url;
   const viewUrl = driveFileId 
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
@@ -342,7 +340,11 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
           <span className="text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[200px] sm:max-w-xs">
             {title || "Audio Lesson"}
           </span>
-          <span className="text-[9px] bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded font-mono font-bold uppercase">Drive Audio</span>
+          <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase ${
+            isCloudinary ? "bg-purple-50 text-purple-700 border border-purple-200" : "bg-blue-50 text-blue-700 border border-blue-200"
+          }`}>
+            {isCloudinary ? "Cloudinary CDN" : "Drive Audio"}
+          </span>
         </div>
 
         <div className="flex items-center space-x-2 shrink-0">
@@ -360,15 +362,29 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
         </div>
       </div>
 
-      {/* Google Drive Embed Audio Player Container */}
-      <div className="w-full h-16 bg-slate-50 rounded-lg overflow-hidden border border-slate-200">
-        <iframe
-          src={embedUrl || url}
-          className="w-full h-full border-0"
-          allow="autoplay"
-          title={title || "Drive Audio Player"}
-        />
-      </div>
+      {/* Audio Player Container */}
+      {isCloudinary || (!driveFileId && url.match(/\.(mp3|wav|ogg|m4a|aac)($|\?)/i)) ? (
+        <div className="w-full bg-slate-50 p-2 rounded-lg border border-slate-200 flex items-center">
+          <audio 
+            src={url} 
+            controls 
+            playsInline
+            preload="metadata"
+            className="w-full h-10 accent-blue-600 rounded-md"
+          >
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      ) : (
+        <div className="w-full h-16 bg-slate-50 rounded-lg overflow-hidden border border-slate-200">
+          <iframe
+            src={embedUrl || url}
+            className="w-full h-full border-0"
+            allow="autoplay"
+            title={title || "Drive Audio Player"}
+          />
+        </div>
+      )}
     </div>
   );
 };
