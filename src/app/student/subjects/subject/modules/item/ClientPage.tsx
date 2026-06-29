@@ -204,18 +204,6 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-          {/* Mobile App Open Button */}
-          {driveFileId && (
-            <a
-              href={driveAppUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs h-8 px-3 rounded-lg shadow-xs flex items-center gap-1.5 transition-all shrink-0"
-              title="Open in Drive App / Native Player"
-            >
-              <ExternalLink className="w-3.5 h-3.5" /> Open Drive App
-            </a>
-          )}
         </div>
       </div>
     </div>
