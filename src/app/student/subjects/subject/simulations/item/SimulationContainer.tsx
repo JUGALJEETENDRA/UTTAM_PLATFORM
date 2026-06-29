@@ -27,6 +27,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
+  const [isResetting, setIsResetting] = useState(false);
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
 
@@ -59,7 +60,11 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
     e?.preventDefault();
     e?.stopPropagation();
     setFoundFlaws([]);
+    
+    // Trigger visual reset and increment retry count
+    setIsResetting(true);
     setRetryCount(prev => prev + 1);
+    setTimeout(() => setIsResetting(false), 100);
   };
 
   const toggleFullscreen = () => {
@@ -185,15 +190,62 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                 </div>
               </div>
               <div className="flex-1 relative w-full h-full bg-white overflow-auto touch-auto">
-                <iframe
-                  key={retryCount}
-                  src={simulation.frontendUrl || ''}
-                  className="absolute inset-0 w-full h-full border-none"
-                  title={simulation.title}
-                  sandbox="allow-scripts allow-forms allow-popups allow-same-origin allow-modals"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                  allowFullScreen
-                />
+                {isResetting ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-zinc-100">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  </div>
+                ) : (
+                  <iframe
+                    key={retryCount}
+                    src={(() => {
+                      let urlStr = simulation.frontendUrl || '';
+                      if (!urlStr) return '';
+                      if (retryCount > 0) {
+                        try {
+                          const url = new URL(urlStr);
+                          url.searchParams.set('level', '1');
+                          url.searchParams.set('reset', 'true');
+                          url.searchParams.set('retry', retryCount.toString());
+                          url.searchParams.set('t', Date.now().toString());
+                          
+                          // Force hash to 1 for games like Flexbox Froggy or CSS Diner
+                          if (url.hash && url.hash.includes('level')) {
+                            url.hash = 'level1';
+                          } else {
+                            url.hash = '1'; 
+                          }
+                          return url.toString();
+                        } catch (e) {
+                          // Fallback for invalid URLs or relative paths
+                          if (urlStr.includes('#')) {
+                            // Replace any number after # with 1
+                            urlStr = urlStr.replace(/#\d+/, '#1');
+                            urlStr = urlStr.replace(/#level\d+/, '#level1');
+                          } else {
+                            urlStr += '#1';
+                          }
+                          
+                          if (urlStr.includes('?')) {
+                            if (urlStr.includes('level=')) {
+                              urlStr = urlStr.replace(/level=\d+/, 'level=1');
+                            } else {
+                              urlStr = urlStr.replace('#', '&level=1&reset=true#');
+                            }
+                          } else {
+                            urlStr = urlStr.replace('#', '?level=1&reset=true#');
+                          }
+                          return urlStr;
+                        }
+                      }
+                      return urlStr;
+                    })()}
+                    className="absolute inset-0 w-full h-full border-none"
+                    title={simulation.title}
+                    sandbox="allow-scripts allow-forms allow-popups allow-same-origin allow-modals"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                    allowFullScreen
+                  />
+                )}
               </div>
             </div>
           </div>
