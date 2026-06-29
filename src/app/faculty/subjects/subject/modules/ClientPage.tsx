@@ -95,15 +95,18 @@ export default function ManageModulesPage() {
       });
       const data = await res.json();
       if (res.ok && data.secure_url) {
+        const mp3Url = data.secure_url.includes("/upload/") 
+          ? data.secure_url.replace("/upload/", "/upload/f_mp3/") 
+          : data.secure_url;
         toast.success("Successfully converted to Cloudinary Audio Stream!", { id: toastId });
-        onSuccess(data.secure_url);
+        onSuccess(mp3Url);
       } else {
-        const fetchUrl = `https://res.cloudinary.com/dboelpizj/video/upload/fetch/${encodeURIComponent(directDriveUrl)}`;
+        const fetchUrl = `https://res.cloudinary.com/dboelpizj/video/upload/f_mp3/fetch/${encodeURIComponent(directDriveUrl)}`;
         toast.success("Connected to Cloudinary Stream CDN!", { id: toastId });
         onSuccess(fetchUrl);
       }
     } catch (err: any) {
-      const fetchUrl = `https://res.cloudinary.com/dboelpizj/video/upload/fetch/${encodeURIComponent(directDriveUrl)}`;
+      const fetchUrl = `https://res.cloudinary.com/dboelpizj/video/upload/f_mp3/fetch/${encodeURIComponent(directDriveUrl)}`;
       toast.success("Connected to Cloudinary Stream CDN!", { id: toastId });
       onSuccess(fetchUrl);
     } finally {

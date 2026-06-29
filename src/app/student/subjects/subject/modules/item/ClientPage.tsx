@@ -151,7 +151,6 @@ function getGoogleDriveFileId(url: string | null | undefined): string | null {
 }
 
 const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: string; downloadUrl?: string }) => {
-  const [isFullscreenModalOpen, setIsFullscreenModalOpen] = useState(false);
   if (!url) return null;
 
   const lowerUrl = url.toLowerCase();
@@ -160,11 +159,6 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getEmbedUrl(url);
 
-  const downloadVideoUrl = (downloadUrl && downloadUrl.trim() !== "")
-    ? downloadUrl
-    : driveFileId 
-      ? `https://drive.google.com/uc?export=download&id=${driveFileId}` 
-      : url;
   const driveAppUrl = driveFileId 
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
@@ -202,7 +196,7 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
         )}
       </div>
 
-      {/* White Action Bar Positioned Below Video - Mobile Grid Responsive */}
+      {/* White Action Bar Positioned Below Video */}
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2.5 p-3 bg-white text-slate-800 rounded-xl border border-slate-200 shadow-sm">
         <div className="flex items-center space-x-2 truncate">
           <PlayCircle className="w-4 h-4 text-blue-600 shrink-0" />
@@ -222,102 +216,8 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
               <ExternalLink className="w-3.5 h-3.5" /> Open Drive App
             </a>
           )}
-
-          {/* Full-App Player Modal Trigger */}
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => setIsFullscreenModalOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs h-8 px-3 rounded-lg shadow-xs flex items-center gap-1.5 transition-all shrink-0"
-          >
-            <Maximize2 className="w-3.5 h-3.5" /> Full-App Player
-          </Button>
         </div>
       </div>
-
-      {/* In-App Fullscreen Theater Modal */}
-      {isFullscreenModalOpen && (
-        <div className="fixed inset-0 z-[200] bg-slate-950/98 backdrop-blur-2xl flex flex-col p-3 sm:p-6 animate-in fade-in duration-200">
-          {/* Top Bar with Prominent Go Back / Return Button */}
-          <div className="flex items-center justify-between mb-3 border-b border-zinc-800 pb-3 gap-2">
-            <div className="flex items-center space-x-3 truncate">
-              <Button
-                type="button"
-                onClick={() => setIsFullscreenModalOpen(false)}
-                className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs px-3 py-1.5 h-8 rounded-lg flex items-center gap-1.5 shrink-0 border border-zinc-700 shadow-sm"
-              >
-                <ChevronLeft className="w-4 h-4" /> Go Back
-              </Button>
-              <div className="flex items-center space-x-2 truncate">
-                <PlayCircle className="w-4 h-4 text-blue-500 shrink-0 hidden sm:block" />
-                <h3 className="text-white font-bold text-xs sm:text-base truncate max-w-[180px] sm:max-w-xl">{title}</h3>
-              </div>
-            </div>
-
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsFullscreenModalOpen(false)}
-              className="text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full h-8 w-8 shrink-0"
-              title="Close Fullscreen"
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
-
-          <div className="flex-1 w-full h-full relative rounded-xl overflow-hidden bg-black flex items-center justify-center">
-            {isYouTube || (!isDirectVideo && embedUrl) ? (
-              <iframe
-                src={`${embedUrl || url}${ (embedUrl || url).includes('?') ? '&' : '?' }autoplay=1`}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                allowFullScreen
-                title={title}
-              />
-            ) : isDirectVideo ? (
-              <video
-                controls
-                autoPlay
-                playsInline
-                preload="metadata"
-                className="w-full h-full object-contain"
-              >
-                <source src={url} />
-              </video>
-            ) : (
-              <iframe
-                src={`${embedUrl || url}${ (embedUrl || url).includes('?') ? '&' : '?' }autoplay=1`}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                allowFullScreen
-                title={title}
-              />
-            )}
-          </div>
-
-          {/* Bottom Control Bar with explicit Exit / Go Back button */}
-          <div className="mt-3 flex justify-between items-center pt-2 border-t border-zinc-800">
-            {driveFileId && (
-              <a
-                href={driveAppUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 h-8 rounded-lg flex items-center gap-1.5"
-              >
-                <ExternalLink className="w-3.5 h-3.5" /> Open in Drive App
-              </a>
-            )}
-            <Button
-              type="button"
-              onClick={() => setIsFullscreenModalOpen(false)}
-              className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-4 py-2 h-9 rounded-lg shadow-md flex items-center gap-2 ml-auto"
-            >
-              <ChevronLeft className="w-4 h-4" /> Return to Lesson Page
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -334,7 +234,9 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
     : url;
   const googleCdnUrl = driveFileId ? `https://lh3.googleusercontent.com/d/${driveFileId}` : url;
 
-  const activeAudioSrc = isCloudinary ? url : googleCdnUrl;
+  const activeAudioSrc = isCloudinary 
+    ? (url.includes("/upload/") && !url.includes("f_mp3") ? url.replace("/upload/", "/upload/f_mp3/") : url) 
+    : googleCdnUrl;
 
   return (
     <div className="w-full bg-white text-slate-800 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
@@ -379,15 +281,17 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
       {!useDriveFallback && (isCloudinary || activeAudioSrc) ? (
         <div className="w-full bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col gap-1.5">
           <audio 
-            src={activeAudioSrc} 
             controls 
             playsInline
-            preload="metadata"
+            preload="auto"
             className="w-full h-10 accent-blue-600 rounded-md"
             onError={() => {
               if (driveFileId) setUseDriveFallback(true);
             }}
           >
+            <source src={activeAudioSrc} type="audio/mpeg" />
+            <source src={activeAudioSrc} type="audio/mp3" />
+            <source src={activeAudioSrc} />
             Your browser does not support the audio element.
           </audio>
           {driveFileId && (
