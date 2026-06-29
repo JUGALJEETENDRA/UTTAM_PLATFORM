@@ -352,178 +352,61 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
 };
 
 const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [showDriveEmbed, setShowDriveEmbed] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
   if (!url) return null;
 
   const driveFileId = getGoogleDriveFileId(url);
-  const downloadMp3Url = driveFileId 
+  const embedUrl = getExternalEmbedUrl(url);
+  const downloadUrl = driveFileId 
     ? `https://drive.google.com/uc?export=download&id=${driveFileId}` 
     : url;
-  const driveViewUrl = driveFileId 
+  const viewUrl = driveFileId 
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
-  const driveEmbedUrl = driveFileId 
-    ? `https://drive.google.com/file/d/${driveFileId}/preview` 
-    : null;
-
-  const audioSrc = driveFileId 
-    ? `https://lh3.googleusercontent.com/d/${driveFileId}` 
-    : url;
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.load();
-      setIsPlaying(false);
-    }
-  }, [audioSrc]);
-
-  const togglePlay = () => {
-    const audioEl = audioRef.current;
-    if (audioEl) {
-      audioEl.volume = 1.0;
-      audioEl.muted = false;
-      if (isPlaying) {
-        audioEl.pause();
-        setIsPlaying(false);
-      } else {
-        const playPromise = audioEl.play();
-        if (playPromise !== undefined) {
-          playPromise.then(() => {
-            setIsPlaying(true);
-          }).catch((err) => {
-            console.log("Audio play error, falling back to drive embed", err);
-            if (driveFileId) setShowDriveEmbed(true);
-          });
-        }
-      }
-    }
-  };
-
-  const handleSpeedChange = (speed: number) => {
-    setPlaybackRate(speed);
-    if (audioRef.current) audioRef.current.playbackRate = speed;
-  };
 
   return (
-    <div className="w-full bg-white text-slate-800 p-3 sm:p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2.5">
-      {/* Top Header Bar */}
+    <div className="w-full bg-white text-slate-800 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center space-x-2 shrink-0">
-          <Headphones className="w-4 h-4 text-blue-600 animate-pulse shrink-0" />
-          <span className="text-xs sm:text-sm font-bold tracking-wide text-slate-800 truncate max-w-[150px] sm:max-w-xs">
+          <Headphones className="w-4 h-4 text-blue-600 shrink-0" />
+          <span className="text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[200px] sm:max-w-xs">
             {title || "Audio Lesson"}
           </span>
-          <span className="text-[9px] bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded font-mono font-bold uppercase shrink-0">MP3</span>
+          <span className="text-[9px] bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded font-mono font-bold uppercase">Drive Audio</span>
         </div>
 
-        <div className="flex items-center space-x-1.5 shrink-0">
-          {/* Speed Controls */}
-          <div className="flex items-center bg-slate-100 p-0.5 rounded-md border border-slate-200">
-            {[1, 1.25, 1.5, 2].map((speed) => (
-              <button
-                key={speed}
-                type="button"
-                onClick={() => handleSpeedChange(speed)}
-                className={`text-[9px] font-bold px-1.5 py-0.5 rounded transition-colors ${
-                  playbackRate === speed
-                    ? "bg-blue-600 text-white shadow-2xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200"
-                }`}
-              >
-                {speed}x
-              </button>
-            ))}
-          </div>
-
-          {/* Download MP3 Button */}
+        <div className="flex items-center space-x-2 shrink-0">
           <a
-            href={downloadMp3Url}
+            href={downloadUrl}
             target="_blank"
             rel="noopener noreferrer"
             download={`${title || 'audio-lesson'}.mp3`}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] h-7 px-2.5 rounded-md shadow-2xs flex items-center gap-1 transition-all shrink-0"
-            title="Download MP3 Copy to Device"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] h-7 px-2.5 rounded-md shadow-2xs flex items-center gap-1 transition-all"
+            title="Download MP3"
           >
-            <Download className="w-3 h-3" /> Download MP3
+            <Download className="w-3.5 h-3.5" /> Download
           </a>
-
-          {/* External Drive Source Link */}
           {driveFileId && (
             <a
-              href={driveViewUrl}
+              href={viewUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[10px] font-medium text-slate-500 hover:text-slate-800 p-1.5 rounded bg-slate-100 border border-slate-200 transition-colors flex items-center shrink-0"
-              title="Open Source Link"
+              className="text-slate-500 hover:text-slate-800 p-1.5 rounded bg-slate-100 border border-slate-200 transition-colors"
+              title="Open in Google Drive"
             >
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
           )}
         </div>
       </div>
 
-      {/* Primary Interactive Audio Bar with Explicit Guaranteed Play/Pause Button */}
-      <div className="w-full flex flex-col gap-2">
-        <div className="flex items-center gap-2.5 bg-slate-50 p-2 rounded-lg border border-slate-200">
-          <Button
-            type="button"
-            onClick={togglePlay}
-            className={`font-bold text-xs h-9 px-4 rounded-md shadow-xs flex items-center gap-2 transition-all shrink-0 ${
-              isPlaying ? "bg-amber-600 hover:bg-amber-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"
-            }`}
-          >
-            {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
-            <span>{isPlaying ? "PAUSE AUDIO" : "PLAY AUDIO"}</span>
-          </Button>
-
-          <div className="flex-1">
-            <audio 
-              ref={audioRef}
-              src={audioSrc}
-              controls 
-              playsInline 
-              crossOrigin="anonymous"
-              preload="auto" 
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              onEnded={() => setIsPlaying(false)}
-              className="w-full h-10 rounded-md accent-blue-600"
-            >
-              <source src={audioSrc} type="audio/mpeg" />
-              <source src={url} type="audio/mpeg" />
-              <source src={url} type="audio/wav" />
-              Your browser does not support the audio element.
-            </audio>
-          </div>
-        </div>
-
-        {driveFileId && (
-          <div className="flex justify-between items-center px-1">
-            <span className="text-[10px] text-slate-500 font-medium">Having cross-origin audio blocks on your browser?</span>
-            <button
-              type="button"
-              onClick={() => setShowDriveEmbed(!showDriveEmbed)}
-              className="text-[10px] text-blue-600 hover:underline font-bold"
-            >
-              {showDriveEmbed ? "Hide Drive Embed Player" : "Show Drive Embed Player"}
-            </button>
-          </div>
-        )}
-
-        {showDriveEmbed && driveEmbedUrl && (
-          <div className="w-full h-32 rounded-xl overflow-hidden bg-slate-950 border border-slate-200 shadow-inner mt-1">
-            <iframe
-              src={driveEmbedUrl}
-              className="w-full h-full border-0"
-              allow="autoplay; fullscreen; encrypted-media"
-              title={title || "Audio Player"}
-            />
-          </div>
-        )}
+      {/* Google Drive Embed Audio Player Container */}
+      <div className="w-full h-16 bg-slate-50 rounded-lg overflow-hidden border border-slate-200">
+        <iframe
+          src={embedUrl || url}
+          className="w-full h-full border-0"
+          allow="autoplay"
+          title={title || "Drive Audio Player"}
+        />
       </div>
     </div>
   );

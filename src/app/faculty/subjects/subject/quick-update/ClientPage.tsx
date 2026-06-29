@@ -110,38 +110,6 @@ export default function QuickUpdatePage() {
 
   const [uploadingSubtopicId, setUploadingSubtopicId] = useState<string | null>(null);
 
-  const handleCloudinaryAudioUpload = async (subtopicId: string, e: React.ChangeEvent<HTMLInputElement>, langIndex?: number) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadingSubtopicId(subtopicId + (langIndex !== undefined ? `-${langIndex}` : ''));
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "faculty_uploads");
-
-      const res = await fetch("https://api.cloudinary.com/v1_1/dboelpizj/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      if (res.ok && data.secure_url) {
-        toast.success("Audio uploaded to Cloudinary!");
-        if (langIndex !== undefined) {
-          handleLanguageChange(subtopicId, "audioLanguages", langIndex, "url", data.secure_url);
-        } else {
-          handleInputChange(subtopicId, "audioUrl", data.secure_url);
-        }
-      } else {
-        toast.error(data.error?.message || "Failed to upload audio");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Cloudinary upload error");
-    } finally {
-      setUploadingSubtopicId(null);
-      e.target.value = "";
-    }
-  };
-
   const handleInputChange = (subtopicId: string, field: "videoUrl" | "videoDownloadUrl" | "notesUrl" | "videoLanguages" | "audioUrl" | "audioLanguages", value: string | { language: string; url: string }[]) => {
     setInputStates(prev => ({
       ...prev,
@@ -479,7 +447,7 @@ export default function QuickUpdatePage() {
                               <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5 justify-between w-full">
                                 <div className="flex items-center gap-1.5">
                                   <Play className="w-3.5 h-3.5 text-purple-500 fill-purple-500/20" />
-                                  <span>Audio URL (Cloudinary / Direct MP3)</span>
+                                  <span>Audio URL (Drive / MP3 Link)</span>
                                 </div>
                                 <button 
                                   onClick={() => handleAddLanguage(st.id, "audioLanguages")}
@@ -488,35 +456,14 @@ export default function QuickUpdatePage() {
                                   + Add Language
                                 </button>
                               </label>
-                              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
+                              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
                                 <input
                                   type="text"
-                                  placeholder="Paste audio URL or upload file..."
+                                  placeholder="Paste audio URL (e.g. Google Drive Link)..."
                                   value={inputs.audioUrl || ""}
                                   onChange={(e) => handleInputChange(st.id, "audioUrl", e.target.value)}
                                   className="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
                                 />
-                                <input
-                                  type="file"
-                                  accept="audio/*"
-                                  id={`cloudinary-quick-${st.id}`}
-                                  className="hidden"
-                                  onChange={(e) => handleCloudinaryAudioUpload(st.id, e)}
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() => document.getElementById(`cloudinary-quick-${st.id}`)?.click()}
-                                  disabled={uploadingSubtopicId === st.id}
-                                  className="bg-purple-100 hover:bg-purple-200 text-purple-700 text-xs font-bold px-2.5 py-1 rounded-lg transition-colors shrink-0 flex items-center gap-1"
-                                  title="Upload MP3 to Cloudinary"
-                                >
-                                  {uploadingSubtopicId === st.id ? (
-                                    <Loader2 className="w-3 h-3 animate-spin" />
-                                  ) : (
-                                    <UploadCloud className="w-3 h-3 text-purple-600" />
-                                  )}
-                                  Upload
-                                </button>
                               </div>
                               {(inputs.audioLanguages || []).map((lang, lIndex) => (
                                 <div key={lIndex} className="flex items-center gap-2 mt-2">
@@ -529,26 +476,11 @@ export default function QuickUpdatePage() {
                                   />
                                   <input 
                                     type="text" 
-                                    placeholder="Hybrid URL..." 
+                                    placeholder="Audio URL..." 
                                     value={lang.url} 
                                     onChange={(e) => handleLanguageChange(st.id, "audioLanguages", lIndex, "url", e.target.value)}
                                     className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all"
                                   />
-                                  <input
-                                    type="file"
-                                    accept="audio/*"
-                                    id={`cloudinary-quick-${st.id}-${lIndex}`}
-                                    className="hidden"
-                                    onChange={(e) => handleCloudinaryAudioUpload(st.id, e, lIndex)}
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={() => document.getElementById(`cloudinary-quick-${st.id}-${lIndex}`)?.click()}
-                                    className="text-purple-600 hover:bg-purple-100 p-1 rounded transition-colors"
-                                    title="Upload MP3 to Cloudinary for this language"
-                                  >
-                                    <UploadCloud className="w-3.5 h-3.5" />
-                                  </button>
                                 </div>
                               ))}
                             </div>
