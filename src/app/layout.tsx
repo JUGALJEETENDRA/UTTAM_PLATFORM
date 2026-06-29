@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import { MainNavbar } from "@/components/layout/MainNavbar";
 import { Footer } from "@/components/layout/Footer";
 import { Providers } from "@/components/Providers";
 
-const inter = Inter({
-  variable: "--font-inter",
+const outfit = Outfit({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} font-sans antialiased bg-zinc-50 flex flex-col min-h-screen`}
+        className={`${outfit.variable} font-sans antialiased bg-zinc-50 flex flex-col min-h-screen`}
       >
         <Providers>
           <Toaster />
