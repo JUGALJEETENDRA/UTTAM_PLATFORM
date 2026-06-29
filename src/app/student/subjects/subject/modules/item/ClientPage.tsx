@@ -171,21 +171,6 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
 
   return (
     <div className="w-full flex flex-col select-none">
-      {/* Upper Top Bar with Thin Download Button on Right */}
-      <div className="w-full flex items-center justify-end mb-1.5 px-0.5">
-        <a
-          href={downloadVideoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          download={`${title || 'video-lesson'}.mp4`}
-          className="inline-flex items-center gap-1 bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-700 text-[11px] font-semibold py-0.5 px-2.5 rounded-full border border-slate-200 shadow-2xs transition-all"
-          title="Download Video via Drive"
-        >
-          <Download className="w-3 h-3 text-blue-600" />
-          <span>Download Video via Drive</span>
-        </a>
-      </div>
-
       {/* Video Viewport Container - Responsive Aspect Ratio */}
       <div className="w-full aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
         {isYouTube || (!isDirectVideo && embedUrl) ? (
@@ -235,20 +220,6 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
               title="Open in Drive App / Native Player"
             >
               <ExternalLink className="w-3.5 h-3.5" /> Open Drive App
-            </a>
-          )}
-
-          {/* Download Video Button */}
-          {(!isYouTube || (downloadUrl && downloadUrl.trim() !== "")) && (
-            <a
-              href={downloadVideoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              download={`${title || 'video-lesson'}.mp4`}
-              className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs h-8 px-2.5 rounded-lg border border-slate-200 flex items-center gap-1 transition-all shrink-0"
-              title="Download Video Copy"
-            >
-              <Download className="w-3.5 h-3.5 text-blue-600" /> Download
             </a>
           )}
 
@@ -375,16 +346,6 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
         </div>
 
         <div className="flex items-center space-x-2 shrink-0">
-          <a
-            href={downloadUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            download={`${title || 'audio-lesson'}.mp3`}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] h-7 px-2.5 rounded-md shadow-2xs flex items-center gap-1 transition-all"
-            title="Download MP3"
-          >
-            <Download className="w-3.5 h-3.5" /> Download
-          </a>
           {driveFileId && (
             <a
               href={viewUrl}
