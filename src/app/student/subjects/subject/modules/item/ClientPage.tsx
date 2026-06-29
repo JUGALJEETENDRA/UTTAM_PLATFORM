@@ -323,6 +323,7 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
 };
 
 const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
+  const [useDriveFallback, setUseDriveFallback] = useState(false);
   if (!url) return null;
 
   const isCloudinary = url.includes("cloudinary.com");
@@ -331,6 +332,9 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   const viewUrl = driveFileId 
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
+  const googleCdnUrl = driveFileId ? `https://lh3.googleusercontent.com/d/${driveFileId}` : url;
+
+  const activeAudioSrc = isCloudinary ? url : googleCdnUrl;
 
   return (
     <div className="w-full bg-white text-slate-800 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
@@ -349,11 +353,20 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
 
         <div className="flex items-center space-x-2 shrink-0">
           {driveFileId && (
+            <button
+              type="button"
+              onClick={() => setUseDriveFallback(!useDriveFallback)}
+              className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2 py-1 rounded border border-slate-200 transition-colors"
+            >
+              {useDriveFallback ? "Use Direct Stream" : "Switch Player Mode"}
+            </button>
+          )}
+          {driveFileId && (
             <a
               href={viewUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-500 hover:text-slate-800 p-1.5 rounded bg-slate-100 border border-slate-200 transition-colors"
+              className="text-slate-500 hover:text-slate-800 p-1 rounded bg-slate-100 border border-slate-200 transition-colors"
               title="Open in Google Drive"
             >
               <ExternalLink className="w-3.5 h-3.5" />
@@ -363,17 +376,31 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
       </div>
 
       {/* Audio Player Container */}
-      {isCloudinary || (!driveFileId && url.match(/\.(mp3|wav|ogg|m4a|aac)($|\?)/i)) ? (
-        <div className="w-full bg-slate-50 p-2 rounded-lg border border-slate-200 flex items-center">
+      {!useDriveFallback && (isCloudinary || activeAudioSrc) ? (
+        <div className="w-full bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col gap-1.5">
           <audio 
-            src={url} 
+            src={activeAudioSrc} 
             controls 
             playsInline
             preload="metadata"
             className="w-full h-10 accent-blue-600 rounded-md"
+            onError={() => {
+              if (driveFileId) setUseDriveFallback(true);
+            }}
           >
             Your browser does not support the audio element.
           </audio>
+          {driveFileId && (
+            <div className="flex justify-end px-1">
+              <button
+                type="button"
+                onClick={() => setUseDriveFallback(true)}
+                className="text-[10px] text-blue-600 hover:underline font-semibold"
+              >
+                No sound output? Switch to Drive Embed Player
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="w-full h-16 bg-slate-50 rounded-lg overflow-hidden border border-slate-200">

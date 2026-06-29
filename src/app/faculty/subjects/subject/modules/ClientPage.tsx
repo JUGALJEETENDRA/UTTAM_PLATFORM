@@ -82,7 +82,7 @@ export default function ManageModulesPage() {
     setConvertingAudioKey(keyIdentifier);
     const toastId = toast.loading("Converting Google Drive Audio link to Cloudinary CDN Stream...");
 
-    const directDriveUrl = `https://drive.google.com/uc?export=download&id=${driveFileId}`;
+    const directDriveUrl = `https://lh3.googleusercontent.com/d/${driveFileId}`;
     try {
       const formData = new FormData();
       formData.append("file", directDriveUrl);
