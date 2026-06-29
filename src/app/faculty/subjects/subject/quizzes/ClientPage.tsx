@@ -349,7 +349,13 @@ export default function ManageQuizzesPage() {
       return;
     }
 
-    const validQuestions = questions.filter(q => q.questionText.trim() !== "");
+    const validQuestions = questions.filter(q => q.questionText.trim() !== "").map(q => {
+      const optionsList = [q.optionA, q.optionB, q.optionC, q.optionD].filter(opt => opt && opt.trim() !== "");
+      return {
+        ...q,
+        options: optionsList
+      };
+    });
     if (validQuestions.length === 0) {
       toast.error("At least one question is required.");
       setLoading(false);
@@ -618,22 +624,20 @@ export default function ManageQuizzesPage() {
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-bold text-zinc-700 mb-1">Option C *</label>
+                            <label className="block text-xs font-bold text-zinc-700 mb-1">Option C (Optional)</label>
                             <input
                               type="text"
-                              required
-                              placeholder="Option C"
+                              placeholder="Option C (Optional)"
                               value={q.optionC}
                               onChange={(e) => handleQuestionChange(index, "optionC", e.target.value)}
                               className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-bold text-zinc-700 mb-1">Option D *</label>
+                            <label className="block text-xs font-bold text-zinc-700 mb-1">Option D (Optional)</label>
                             <input
                               type="text"
-                              required
-                              placeholder="Option D"
+                              placeholder="Option D (Optional)"
                               value={q.optionD}
                               onChange={(e) => handleQuestionChange(index, "optionD", e.target.value)}
                               className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
