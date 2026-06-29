@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -48,7 +48,16 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
     }
   };
 
-  const handleRetrySimulation = () => {
+  useEffect(() => {
+    if (simulation.id === "sim1" && foundFlaws.length === flawsList.length && flawsList.length > 0) {
+      const timer = setTimeout(() => setCompleted(true), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [foundFlaws, simulation.id, flawsList.length]);
+
+  const handleRetrySimulation = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     setFoundFlaws([]);
     setRetryCount(prev => prev + 1);
   };
@@ -126,6 +135,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
 
           <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
             <Button
+              type="button"
               variant="outline"
               size="sm"
               onClick={handleRetrySimulation}
@@ -177,7 +187,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
               <div className="flex-1 relative w-full h-full bg-white overflow-auto touch-auto">
                 <iframe
                   key={retryCount}
-                  src={`${simulation.frontendUrl}${simulation.frontendUrl?.includes('?') ? '&' : '?'}retry=${retryCount}`}
+                  src={simulation.frontendUrl || ''}
                   className="absolute inset-0 w-full h-full border-none"
                   title={simulation.title}
                   sandbox="allow-scripts allow-forms allow-popups allow-same-origin allow-modals"
@@ -329,6 +339,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                 </CardContent>
                 <CardFooter className="pt-3 border-t border-zinc-800 shrink-0 p-4 bg-zinc-900/90">
                   <Button
+                    type="button"
                     onClick={handleRetrySimulation}
                     className="w-full bg-primary hover:bg-primary/90 text-white font-bold"
                   >
@@ -376,6 +387,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
               </CardContent>
               <CardFooter className="bg-zinc-900/90 border-t border-zinc-800 p-6 flex justify-end">
                 <Button
+                  type="button"
                   onClick={handleRetrySimulation}
                   className="bg-primary hover:bg-primary/90 text-white font-bold px-8"
                 >

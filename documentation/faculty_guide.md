@@ -15,7 +15,8 @@ The curriculum is structured hierarchically: **Subjects -> Modules -> Subtopics*
 - **Create a Subject:** Click on "Add Subject". Provide a title and description.
 - **Add Modules:** Within a subject, you can add multiple modules (chapters).
 - **Subtopics:** Inside modules, you can create specific lessons, flashcards, or quizzes.
-
+ - **Tip:**You can use the [NotebookLM](https://notebooklm.google.com/) to generate the content and to remove any notebooklm watermark use this website, 
+[NotebookLM Watermark Remover](https://notebooklmremover.com/en).
 ## 2. Creating Content Types
 
 ### Flashcards
@@ -26,7 +27,7 @@ You can create interactive flashcards for students to review.
    - **Tip:** You can easily generate flashcard CSVs using the [NotebookLM Flashcards Exporter](https://chromewebstore.google.com/detail/notebooklm-flashcards-exp/gfpdgeimnjeibphkimmeeigedjffdnnp) extension. If your generated content has a watermark, you can remove it using [NotebookLM Watermark Remover](https://notebooklmremover.com/en).
 4. The system will parse the `.csv` and instantly generate the deck.
 
-![Flashcard Creation](../screenshots/flashcard_creation.png)
+![Flashcard Creation](../screenshots/faculty_flashcard.png)
 
 
 ### Quizzes
@@ -34,14 +35,14 @@ Assess student knowledge with timed quizzes.
 1. Select **Add Quiz**.
 2. Define the quiz parameters (Time limit, passing score).
 3. Add multiple-choice questions.
-   - **Tip:** You can generate a CSV of questions using the [NotebookLM Quiz Exporter](https://chromewebstore.google.com/detail/notebooklm-quiz-exporter/pndhmfhdeoiekihofmklndionkfabbdm) extension. Ensure that the "hints" button is unclicked before downloading the CSV. If your generated content has a watermark, you can remove it using [NotebookLM Watermark Remover](https://notebooklmremover.com/en).
+   - **Tip:** You can generate a CSV of questions using the [NotebookLM Quiz Exporter](https://chromewebstore.google.com/detail/notebooklm-quiz-exporter/pndhmfhdeoiekihofmklndionkfabbdm) extension. Ensure that the "hints" button is unclicked before downloading the CSV. If your generated content has a watermark, you can remove it using 
 
 ![Quiz Creation](../screenshots/quiz_creation.png)
 
 ## 3. Data Storage (Google Sheets)
 
 Because the system uses Google Sheets as a backend, all your data is safely stored in a spreadsheet you can access anytime.
-If you need to make bulk edits or fix typos quickly, you can open the connected Google Sheet and edit the cells directly. 
+*Any changes made to the sheet directly will not reflect in the front end or even not show up at all, all the changes must be made form the faculty dashboard only.*
 *Warning: Do not change the column headers or the sheet names, as this will break the connection.*
 
 ## 4. Deploying Updates
