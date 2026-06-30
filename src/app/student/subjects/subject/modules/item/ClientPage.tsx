@@ -208,16 +208,20 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   const viewUrl = driveFileId 
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
-  const googleCdnUrl = driveFileId ? `https://lh3.googleusercontent.com/d/${driveFileId}` : url;
+  
+  // Use corsproxy to bypass Google Drive's strict Cross-Origin-Resource-Policy headers
+  const googleDriveProxyUrl = driveFileId 
+    ? `https://corsproxy.io/?${encodeURIComponent(`https://drive.google.com/uc?export=download&id=${driveFileId}`)}` 
+    : url;
 
-  // Default to fallback iframe for Drive files to ensure reliable playback across all browsers (like Chrome on Mac)
-  const [useDriveFallback, setUseDriveFallback] = useState(!!driveFileId);
+  // Default to native player using the proxy
+  const [useDriveFallback, setUseDriveFallback] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   if (!url) return null;
 
-  // Use the exact url for Cloudinary, or googleCdnUrl for drive files
-  const activeAudioSrc = isCloudinary ? url : googleCdnUrl;
+  // Use the exact url for Cloudinary, or proxy for drive files
+  const activeAudioSrc = isCloudinary ? url : googleDriveProxyUrl;
 
   return (
     <div className="w-full bg-white text-slate-800 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
