@@ -212,10 +212,10 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   const viewUrl = driveFileId 
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
-  const googleCdnUrl = driveFileId ? `https://lh3.googleusercontent.com/d/${driveFileId}` : url;
+  const driveProxyUrl = driveFileId ? `/api/proxy-audio?id=${driveFileId}` : url;
 
-  // Use the exact url for Cloudinary, or googleCdnUrl for drive files
-  const activeAudioSrc = isCloudinary ? url : googleCdnUrl;
+  // Use the exact url for Cloudinary, or proxy url for drive files
+  const activeAudioSrc = isCloudinary ? url : driveProxyUrl;
 
   return (
     <div className="w-full bg-white text-slate-800 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
