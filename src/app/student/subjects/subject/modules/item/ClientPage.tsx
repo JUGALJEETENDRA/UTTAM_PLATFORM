@@ -204,6 +204,18 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
 const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   const [useDriveFallback, setUseDriveFallback] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const ua = navigator.userAgent;
+      const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isSafari || isIOS) {
+        setUseDriveFallback(true);
+      }
+    }
+  }, []);
+
   if (!url) return null;
 
   const isCloudinary = url.includes("cloudinary.com");
@@ -212,10 +224,10 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   const viewUrl = driveFileId 
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
-  const driveProxyUrl = driveFileId ? `/api/proxy-audio?id=${driveFileId}` : url;
+  const googleCdnUrl = driveFileId ? `https://lh3.googleusercontent.com/d/${driveFileId}` : url;
 
-  // Use the exact url for Cloudinary, or proxy url for drive files
-  const activeAudioSrc = isCloudinary ? url : driveProxyUrl;
+  // Use the exact url for Cloudinary, or googleCdnUrl for drive files
+  const activeAudioSrc = isCloudinary ? url : googleCdnUrl;
 
   return (
     <div className="w-full bg-white text-slate-800 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
