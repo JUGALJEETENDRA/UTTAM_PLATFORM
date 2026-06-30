@@ -271,6 +271,9 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
             playsInline
             preload="auto"
             className="w-full h-10 accent-blue-600 rounded-md"
+            onError={() => {
+              if (driveFileId) setUseDriveFallback(true);
+            }}
           >
             Your browser does not support the audio element.
           </audio>
@@ -473,8 +476,9 @@ export default function ModuleDetailPage() {
               const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
               const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
 
-              const defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
+              let defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
               const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
+              if (defaultVideoUrl === defaultAudioUrl && defaultVideoUrl) defaultVideoUrl = "";
 
               return (
                 <motion.div key={subtopic.id} variants={itemVariants}>
@@ -748,8 +752,9 @@ export default function ModuleDetailPage() {
               const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
               const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
 
-              const defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
+              let defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
               const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
+              if (defaultVideoUrl === defaultAudioUrl && defaultVideoUrl) defaultVideoUrl = "";
 
               return (
                 <motion.div key={subtopic.id} variants={itemVariants}>
@@ -1060,8 +1065,9 @@ export default function ModuleDetailPage() {
             const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
             const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
 
-            const defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
+            let defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
             const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
+            if (defaultVideoUrl === defaultAudioUrl && defaultVideoUrl) defaultVideoUrl = "";
 
             const cardContentNode = (
               <div className="flex flex-col md:flex-row w-full">
