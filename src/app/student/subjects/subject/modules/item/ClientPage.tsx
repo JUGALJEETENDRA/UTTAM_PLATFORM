@@ -209,19 +209,19 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
   
-  // Use corsproxy to bypass Google Drive's strict Cross-Origin-Resource-Policy headers
-  const googleDriveProxyUrl = driveFileId 
-    ? `https://corsproxy.io/?${encodeURIComponent(`https://drive.google.com/uc?export=download&id=${driveFileId}`)}` 
+  // Use the standard Google Docs direct download endpoint
+  const googleDriveDirectUrl = driveFileId 
+    ? `https://docs.google.com/uc?export=download&id=${driveFileId}` 
     : url;
 
-  // Default to native player using the proxy
+  // Default to native player
   const [useDriveFallback, setUseDriveFallback] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   if (!url) return null;
 
-  // Use the exact url for Cloudinary, or proxy for drive files
-  const activeAudioSrc = isCloudinary ? url : googleDriveProxyUrl;
+  // Use the exact url for Cloudinary, or direct for drive files
+  const activeAudioSrc = isCloudinary ? url : googleDriveDirectUrl;
 
   return (
     <div className="w-full bg-white text-slate-800 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
@@ -271,9 +271,6 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
             playsInline
             preload="auto"
             className="w-full h-10 accent-blue-600 rounded-md"
-            onError={() => {
-              if (driveFileId) setUseDriveFallback(true);
-            }}
           >
             Your browser does not support the audio element.
           </audio>
