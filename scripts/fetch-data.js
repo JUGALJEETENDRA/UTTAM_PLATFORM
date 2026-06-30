@@ -8,40 +8,51 @@ if (!GAS_WEB_APP_URL) {
   process.exit(1);
 }
 
-async function fetchGAS(action, payload = {}) {
+async function fetchGAS(action, payload = {}, retries = 3) {
   const url = new URL(GAS_WEB_APP_URL);
   url.searchParams.append('action', action);
   
-  const response = await fetch(url.toString(), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'text/plain;charset=utf-8', 
-    },
-    body: JSON.stringify(payload)
-  });
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(url.toString(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8', 
+        },
+        body: JSON.stringify(payload)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const text = await response.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        throw new Error(`Invalid response from server: ${text.substring(0, 100)}...`);
+      }
+      
+      if (data && data.error) {
+        throw new Error(data.error);
+      }
+      return data;
+    } catch (error) {
+      if (attempt === retries) {
+        throw error;
+      }
+      console.warn(`    Retry ${attempt}/${retries} for action ${action} after error: ${error.message}`);
+      await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
+    }
   }
-  
-  const text = await response.text();
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch (e) {
-    throw new Error(`Invalid response from server: ${text.substring(0, 100)}...`);
-  }
-  
-  if (data && data.error) {
-    throw new Error(data.error);
-  }
-  return data;
 }
 
-async function executeInChunks(tasks, chunkSize = 15) {
+async function executeInChunks(tasks, chunkSize = 5) {
   for (let i = 0; i < tasks.length; i += chunkSize) {
     const chunk = tasks.slice(i, i + chunkSize);
     await Promise.all(chunk.map(task => task()));
+    await new Promise(resolve => setTimeout(resolve, 500)); // Delay between chunks
   }
 }
 
