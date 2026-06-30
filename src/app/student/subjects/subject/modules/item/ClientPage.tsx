@@ -202,22 +202,6 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
 };
 
 const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
-  const [useDriveFallback, setUseDriveFallback] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const ua = navigator.userAgent;
-      const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
-      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      if (isSafari || isIOS) {
-        setUseDriveFallback(true);
-      }
-    }
-  }, []);
-
-  if (!url) return null;
-
   const isCloudinary = url.includes("cloudinary.com");
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getExternalEmbedUrl(url);
@@ -225,6 +209,12 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
   const googleCdnUrl = driveFileId ? `https://lh3.googleusercontent.com/d/${driveFileId}` : url;
+
+  // Default to fallback iframe for Drive files to ensure reliable playback across all browsers (like Chrome on Mac)
+  const [useDriveFallback, setUseDriveFallback] = useState(!!driveFileId);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  if (!url) return null;
 
   // Use the exact url for Cloudinary, or googleCdnUrl for drive files
   const activeAudioSrc = isCloudinary ? url : googleCdnUrl;
