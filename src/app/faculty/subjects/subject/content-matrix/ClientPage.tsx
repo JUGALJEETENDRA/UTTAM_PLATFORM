@@ -111,10 +111,11 @@ export default function ContentMatrixClientPage() {
     );
 
     // Mindmaps and Infographics map by subtopicId OR (title and moduleId)
+    const normalize = (str: string) => (str || "").replace(/[^a-z0-9]/gi, '').toLowerCase();
     const isMappedByTitle = (items: any[]) => items.some(item => 
       (item.subtopicId && (item.subtopicId === st.id || item.subtopicId === st.subtopicNo)) ||
-      ((item.title || "").trim() === (st.title || "").trim() && item.moduleId === mod.id) ||
-      ((item.title || "").trim() === (mod.title || "").trim() && item.moduleId === mod.id)
+      (normalize(item.title) === normalize(st.title) && item.moduleId === mod.id) ||
+      (normalize(item.title) === normalize(mod.title) && item.moduleId === mod.id)
     );
 
     return {
