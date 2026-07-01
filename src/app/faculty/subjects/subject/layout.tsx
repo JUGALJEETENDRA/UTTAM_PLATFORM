@@ -46,7 +46,7 @@ function FacultySubjectLayoutInner({ children }: { children: React.ReactNode }) 
     { name: "Infographics", href: `/faculty/subjects/subject/infographics?subjectId=${subjectId}`, icon: Brain },
     { name: "Quizzes", href: `/faculty/subjects/subject/quizzes?subjectId=${subjectId}`, icon: Brain },
     { name: "Flashcards", href: `/faculty/subjects/subject/flashcards?subjectId=${subjectId}`, icon: Layers },
-    { name: "Live Link Editor", href: `/faculty/subjects/subject/quick-update?subjectId=${subjectId}`, icon: Sparkles },
+    { name: "Content Matrix", href: `/faculty/subjects/subject/content-matrix?subjectId=${subjectId}`, icon: Activity },
   ];
 
   return (

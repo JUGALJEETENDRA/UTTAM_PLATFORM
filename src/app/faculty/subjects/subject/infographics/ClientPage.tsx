@@ -252,15 +252,20 @@ export default function InfographicsClientPage() {
                 <p className="text-xs text-zinc-500 mt-1">Provide a direct link to the image or a local path (e.g. <code>/infographics/test_infographic.png</code>)</p>
               </div>
             </div>
-            <div className="flex justify-end space-x-2 pt-4">
-              <Button variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
-              <Button 
-                className="bg-purple-600 hover:bg-purple-700 text-white" 
-                onClick={handleSave} 
-                disabled={saving}
-              >
-                {saving ? "Saving..." : <><Save className="w-4 h-4 mr-2" /> Save Infographic</>}
-              </Button>
+            <div className="flex flex-col items-end pt-4">
+              <div className="flex space-x-2">
+                <Button variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
+                <Button 
+                  className="bg-purple-600 hover:bg-purple-700 text-white" 
+                  onClick={handleSave} 
+                  disabled={saving}
+                >
+                  {saving ? "Saving..." : <><Save className="w-4 h-4 mr-2" /> Save Infographic</>}
+                </Button>
+              </div>
+              <p className="text-xs text-zinc-500 mt-3 text-right">
+                Note: The changes will not be visible on the student dashboard until the "Publish to Student Dashboard" button is clicked.
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -271,7 +276,7 @@ export default function InfographicsClientPage() {
           {infographics.map(map => {
             const module = modules.find(m => m.id === map.moduleId);
             return (
-              <Card key={map.id} className="overflow-hidden hover:shadow-lg transition-all group">
+              <Card key={map.id} className="overflow-hidden hover:shadow-lg transition-all group p-0 gap-0">
                 <div className="h-40 w-full bg-zinc-100 border-b border-zinc-200 overflow-hidden relative">
                   {map.imageUrl && !imageErrors[map.id!] ? (
                     // eslint-disable-next-line @next/next/no-img-element

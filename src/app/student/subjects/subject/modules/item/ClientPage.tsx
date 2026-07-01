@@ -339,6 +339,21 @@ export default function ModuleDetailPage() {
       const loadModule = async () => {
         try {
           const result = await fetchGAS("getModule", { moduleId: id, userId: "anonymous" });
+          if (result && result.subtopics) {
+            result.subtopics = result.subtopics.filter((st: any) => {
+              let isVisible = true;
+              if (st.isVisible === false) isVisible = false;
+              if (typeof st.simulationData === 'string') {
+                try {
+                  const simData = JSON.parse(st.simulationData);
+                  if (simData.isVisible === false) isVisible = false;
+                } catch(e) {}
+              } else if (typeof st.simulationData === 'object' && st.simulationData !== null) {
+                if (st.simulationData.isVisible === false) isVisible = false;
+              }
+              return isVisible;
+            });
+          }
           setModuleData(result);
         } catch (err) {
           console.error("Failed to load module", err);

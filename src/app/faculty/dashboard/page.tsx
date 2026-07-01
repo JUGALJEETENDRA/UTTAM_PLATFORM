@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, BookOpen, Target, Gamepad2, PlusCircle, Activity, HardDrive, GraduationCap, Trophy, Sparkles } from "lucide-react";
+import { Users, BookOpen, Target, Gamepad2, PlusCircle, Activity, HardDrive, GraduationCap, Trophy, Sparkles, Loader2 } from "lucide-react";
 import { CreateSubjectForm } from "@/components/faculty/CreateSubjectForm";
 import { DeleteSubjectButton } from "@/components/faculty/DeleteSubjectButton";
 import { EditSubjectButton } from "@/components/faculty/EditSubjectButton";
 import { useSession } from "@/components/AuthProvider";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { fetchGAS } from "@/lib/apiClient";
 import { useEffect, useState } from "react";
 
@@ -16,6 +16,7 @@ export default function FacultyDashboardPage() {
   const { isAuthenticated, status } = useSession();
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     if (status !== "loading" && !isAuthenticated) {
@@ -38,7 +39,12 @@ export default function FacultyDashboardPage() {
   }, [status, isAuthenticated]);
 
   if (status === "loading" || loading) {
-    return <div className="p-8 text-center">Loading faculty dashboard...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+        <p className="text-zinc-500 font-medium">Loading faculty dashboard...</p>
+      </div>
+    );
   }
 
   if (!dashboardData) {
@@ -66,24 +72,26 @@ export default function FacultyDashboardPage() {
             <h2 className="text-xl font-bold text-zinc-900">Your Subjects</h2>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {subjects && subjects.length > 0 ? (
               subjects.map((subject: any) => (
-                <Link key={subject.id} href={`/faculty/subjects/subject/modules?subjectId=${subject.id}`}>
-                  <Card className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer h-full border-zinc-200 relative">
-                    <DeleteSubjectButton subjectId={subject.id} />
-                    <EditSubjectButton subject={subject} />
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg text-primary">{subject.name}</CardTitle>
-                      <CardDescription className="line-clamp-2 min-h-[40px]">{subject.description || "No description provided."}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center gap-4 text-sm text-zinc-500">
-                        <span className="flex items-center gap-1"><BookOpen className="w-4 h-4" /> {subject._count?.modules || 0} Modules</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+                <Card 
+                  key={subject.id} 
+                  onClick={() => router.push(`/faculty/subjects/subject/modules?subjectId=${subject.id}`)}
+                  className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer h-full border-zinc-200 relative min-h-[150px]"
+                >
+                  <DeleteSubjectButton subjectId={subject.id} />
+                  <EditSubjectButton subject={subject} />
+                  <CardHeader className="pb-2 pr-16">
+                    <CardTitle className="text-xl text-primary">{subject.name}</CardTitle>
+                    <CardDescription className="line-clamp-2 min-h-[40px] text-sm">{subject.description || "No description provided."}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center gap-4 text-sm text-zinc-500 mt-2">
+                      <span className="flex items-center gap-1"><BookOpen className="w-4 h-4" /> {subject._count?.modules || 0} Modules</span>
+                    </div>
+                  </CardContent>
+                </Card>
               ))
             ) : (
               <div className="col-span-1 sm:col-span-3 p-8 text-center border border-dashed border-zinc-300 rounded-lg bg-zinc-50">
@@ -151,9 +159,9 @@ export default function FacultyDashboardPage() {
                 }}
               >
                 <Target className="w-4 h-4 mr-2" />
-                Commit to Main (Deploy)
+                Publish to Student Dashboard
               </Button>
-              <p className="text-xs text-zinc-500 mt-2 text-center">Save changes and rebuild the live web application.</p>
+              <p className="text-xs text-zinc-500 mt-2 text-center">Make all your recent changes live and visible to students.</p>
             </CardContent>
           </Card>
 

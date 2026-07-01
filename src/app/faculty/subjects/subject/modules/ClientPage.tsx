@@ -29,6 +29,7 @@ interface SubtopicForm {
   selectedResourceType?: string;
   type?: string;
   mediaUrl?: string;
+  isVisible?: boolean;
 }
 const initialSubtopicState = { 
   title: "", description: "", learningOutcome: "", 
@@ -39,7 +40,8 @@ const initialSubtopicState = {
   didYouKnowUrl: "", didYouKnowDownloadUrl: "",
   referenceUrl: "", referenceDownloadUrl: "",
   selectedResourceType: "none",
-  type: "", mediaUrl: ""
+  type: "", mediaUrl: "",
+  isVisible: true
 };
 export default function ManageModulesPage() {
   const searchParams = useSearchParams();
@@ -245,6 +247,7 @@ export default function ManageModulesPage() {
           referenceDownloadUrl: unpackedOther.referenceDownloadUrl || parsedData.referenceDownloadUrl || st.referenceDownloadUrl || "",
           type: st.type || "",
           mediaUrl: st.mediaUrl || "",
+          isVisible: st.isVisible !== false,
         };
       }));
     } else {
@@ -577,7 +580,18 @@ export default function ManageModulesPage() {
                             <Trash2 className="w-5 h-5" />
                           </button>
                         )}
-                        <h4 className="font-bold text-zinc-800 text-sm">Subtopic #{index + 1}</h4>
+                        <div className="flex items-center justify-between mt-2 mb-4">
+                          <h4 className="font-bold text-zinc-800 text-sm">Subtopic #{index + 1}</h4>
+                          <label className="flex items-center space-x-2 text-sm font-medium text-zinc-700 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={st.isVisible !== false}
+                              onChange={(e) => handleSubtopicChange(index, "isVisible", e.target.checked)}
+                              className="w-4 h-4 text-primary rounded border-zinc-300 focus:ring-primary"
+                            />
+                            <span>Visible to Students</span>
+                          </label>
+                        </div>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
@@ -620,16 +634,16 @@ export default function ManageModulesPage() {
                             className="w-full sm:w-1/2 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary mb-4"
                           >
                             <option value="none">Select resource type...</option>
-                            <option value="videoUrl">Video (Hybrid)</option>
-                            <option value="notes">Notes (Link)</option>
-                            <option value="audio">Audio (Link)</option>
-                            <option value="didYouKnow">Did You Know (Link)</option>
+                            <option value="videoUrl">Video</option>
+                            <option value="notes">Notes</option>
+                            <option value="audio">Audio</option>
+                            <option value="didYouKnow">Did You Know</option>
                             <option value="reference">Reference</option>
-                            <option value="other">Other (Link)</option>
+                            <option value="other">Other</option>
                           </select>
                           {st.selectedResourceType === "videoUrl" && (
                             <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                              <div className="mb-4">
                                 <div>
                                   <label className="block text-xs font-bold text-zinc-700 mb-1">English Video URL (Default)</label>
                                   <input
@@ -637,16 +651,6 @@ export default function ManageModulesPage() {
                                     placeholder="https://drive.google.com/..."
                                     value={st.videoUrl}
                                     onChange={(e) => handleSubtopicChange(index, "videoUrl", e.target.value)}
-                                    className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-xs font-bold text-zinc-700 mb-1">Download Video Drive Link</label>
-                                  <input
-                                    type="text"
-                                    placeholder="https://drive.google.com/uc?export=download&id=..."
-                                    value={st.videoDownloadUrl || ""}
-                                    onChange={(e) => handleSubtopicChange(index, "videoDownloadUrl", e.target.value)}
                                     className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
                                   />
                                 </div>
@@ -797,6 +801,9 @@ export default function ManageModulesPage() {
                 >
                   {loading ? "Saving..." : (editingModuleId ? "Save Changes" : "Create Module & Subtopics")}
                 </Button>
+                <p className="text-xs text-zinc-500 text-center mt-3">
+                  Note: The changes will not be visible on the student dashboard until the "Publish to Student Dashboard" button is clicked.
+                </p>
               </form>
             </CardContent>
           </Card>
@@ -806,7 +813,7 @@ export default function ManageModulesPage() {
           <h3 className="text-lg font-bold text-zinc-900">Current Course Syllabus</h3>
           <div className="space-y-3">
             {modules.map((mod) => (
-              <Card key={mod.id} className="border-zinc-200 shadow-sm overflow-hidden">
+              <Card key={mod.id} className="border-zinc-200 shadow-sm p-0 gap-0 overflow-hidden">
                 <div
                   onClick={() => setExpandedModuleId(expandedModuleId === mod.id ? null : mod.id)}
                   className="p-4 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between cursor-pointer hover:bg-zinc-100/70 transition-colors"

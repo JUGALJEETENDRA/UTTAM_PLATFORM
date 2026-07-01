@@ -3,6 +3,10 @@
 
 const SPREADSHEET_ID = "ADD_YOUR_OWN_SHEET_HERE"; // Replace with your Spreadsheet ID
 
+// --- GITHUB PAGES DEPLOYMENT CONFIGURATION ---
+// Change these to your own GitHub username and repository name where this platform will be hosted.
+const GITHUB_OWNER = "SourishAshtikar"; // e.g. "YourGitHubUsername"
+const GITHUB_REPO = "PS-3-Pages-Client-Only"; // e.g. "Your-Repo-Name"
 let __ssCache = null;
 function getSpreadsheet() {
   if (!__ssCache) {
@@ -26,7 +30,7 @@ function setupDatabase() {
   const ss = getSpreadsheet();
 
   const schemas = {
-    "Subjects": ["id", "name", "description", "resources", "createdAt"],
+    "Subjects": ["id", "name", "description", "password", "resources", "createdAt"],
     "Modules": ["id", "subjectId", "moduleNo", "title", "hours", "co", "description", "createdAt"],
     "Subtopics": ["id", "moduleId", "subtopicNo", "title", "learningOutcome", "type", "content", "mediaUrl", "simulationData", "order", "createdAt"],
     "Quizzes": ["id", "subjectId", "moduleId", "subtopicId", "title", "timeLimit", "totalMarks", "documentUrl", "totalQuestionsToAsk", "questions"],
@@ -235,6 +239,7 @@ function handleRequest(e, isPost) {
           id: generateId(),
           name: payload.name,
           description: payload.description,
+          password: payload.password || "",
           resources: JSON.stringify([]),
           createdAt: new Date().toISOString()
         });
@@ -245,7 +250,8 @@ function handleRequest(e, isPost) {
       case "updateSubject":
         result = { success: updateRow("Subjects", "id", payload.subjectId, {
           name: payload.name,
-          description: payload.description
+          description: payload.description,
+          password: payload.password || ""
         }) !== null };
         break;
       case "setupDatabase":
@@ -367,7 +373,15 @@ function handleGetStudentDashboard(payload) {
 
   const allSubtopicsData = getSheetData("Subtopics");
   subjectModules.forEach(mod => {
-    mod.subtopics = allSubtopicsData.filter(s => s.moduleId === mod.id);
+    mod.subtopics = allSubtopicsData.filter(s => s.moduleId === mod.id).map(st => {
+      let simData = {};
+      if (typeof st.simulationData === 'string') {
+        try { simData = JSON.parse(st.simulationData); } catch (e) { }
+      } else if (typeof st.simulationData === 'object' && st.simulationData !== null) {
+        simData = st.simulationData;
+      }
+      return { ...st, ...simData };
+    });
   });
 
   const allQuizzes = getSheetData("Quizzes").filter(q => q.subjectId === payload.subjectId) || [];
@@ -673,7 +687,7 @@ function handleSaveModule(payload) {
   if (subtopics && subtopics.length > 0) {
     subtopics.forEach((st, index) => {
       writeRow("Subtopics", {
-        id: generateId(),
+        id: st.id || generateId(),
         moduleId: newModuleId,
         subtopicNo: index + 1,
         title: st.title,
@@ -690,7 +704,8 @@ function handleSaveModule(payload) {
           otherUrl: st.otherUrl || "",
           otherDownloadUrl: st.otherDownloadUrl || "",
           audioUrl: st.audioUrl || "",
-          audioDownloadUrl: st.audioDownloadUrl || ""
+          audioDownloadUrl: st.audioDownloadUrl || "",
+          isVisible: st.isVisible !== false
         }),
         order: index + 1,
         createdAt: new Date().toISOString()
@@ -874,8 +889,8 @@ function handleTriggerDeploy(payload) {
     return { error: "GitHub token is required to trigger deployment. Please add GITHUB_PAT to Script Properties." };
   }
 
-  const owner = "SourishAshtikar";
-  const repo = "PS-3-Pages-Client-Only";
+  const owner = GITHUB_OWNER;
+  const repo = GITHUB_REPO;
   const url = `https://api.github.com/repos/${owner}/${repo}/dispatches`;
 
   const options = {

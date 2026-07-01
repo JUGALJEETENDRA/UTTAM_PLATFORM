@@ -596,6 +596,9 @@ export default function StudentDashboard() {
   const [aiMessages, setAiMessages] = useState([
     { role: "assistant", content: "Executive Strategy Portal active. Quarterly targets prioritize Module 1 operational scalability. Proceed?" }
   ]);
+  const [isLocked, setIsLocked] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   // Python Development Studio State
   const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({ "basics": true });
@@ -688,6 +691,26 @@ export default function StudentDashboard() {
     }
   }, [subjectId]);
 
+  useEffect(() => {
+    if (data && data.subject?.password) {
+      const unlocked = localStorage.getItem(`subject_unlocked_${data.subject.id}`);
+      if (unlocked !== "true") {
+        setIsLocked(true);
+      }
+    }
+  }, [data]);
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === data?.subject?.password) {
+      localStorage.setItem(`subject_unlocked_${data.subject.id}`, "true");
+      setIsLocked(false);
+      setPasswordError("");
+    } else {
+      setPasswordError("Incorrect password");
+    }
+  };
+
   // Live horizontal trading ticker animation loop for Digital Business
   useEffect(() => {
     const interval = setInterval(() => {
@@ -713,7 +736,50 @@ export default function StudentDashboard() {
     );
   }
 
-  const { subject, modules = [], quizzesWithAttempts = [], flashcardDecks = [], mindmaps = [], infographics = [], subjectResources = [] } = data;
+  if (isLocked) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md shadow-xl border-slate-200">
+          <CardHeader className="text-center space-y-2 pb-6">
+            <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-2">
+              <ShieldAlert className="w-6 h-6 text-indigo-600" />
+            </div>
+            <CardTitle className="text-2xl font-bold text-slate-900">Protected Subject</CardTitle>
+            <CardDescription className="text-slate-500">
+              This subject requires a password for access.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="password"
+                  required
+                  placeholder="Enter password..."
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 transition-all"
+                />
+                {passwordError && <p className="text-sm text-red-500 mt-2">{passwordError}</p>}
+              </div>
+              <Button type="submit" className="w-full py-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-md">
+                Unlock Subject
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  let { subject, modules = [], quizzesWithAttempts = [], flashcardDecks = [], mindmaps = [], infographics = [], subjectResources = [] } = data;
+  
+  // Filter out invisible subtopics
+  modules = modules.map((mod: any) => ({
+    ...mod,
+    subtopics: (mod.subtopics || []).filter((st: any) => st.isVisible !== false)
+  }));
+
   const activeModule = modules.length > 0 ? modules[0] : null;
 
   const handleSendMessage = (e: React.FormEvent) => {

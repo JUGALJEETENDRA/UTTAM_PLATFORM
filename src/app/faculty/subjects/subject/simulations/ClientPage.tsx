@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gamepad2, Plus, Info, Globe, Clock, CheckCircle, Edit, Trash } from "lucide-react";
+import { Gamepad2, Plus, Info, Globe, Clock, CheckCircle, Edit, Trash, Pencil, Trash2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { fetchGAS } from "@/lib/apiClient";
@@ -18,6 +18,7 @@ export default function ManageSimulationsPage() {
   // Form states
   const [selectedModuleId, setSelectedModuleId] = useState("");
   const [selectedSubtopicId, setSelectedSubtopicId] = useState("");
+  const [showAllSimulations, setShowAllSimulations] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("Intermediate");
@@ -300,6 +301,9 @@ export default function ManageSimulationsPage() {
                     </Button>
                   )}
                 </div>
+                <p className="text-xs text-zinc-500 text-center mt-3">
+                  Note: The changes will not be visible on the student dashboard until the "Publish to Student Dashboard" button is clicked.
+                </p>
               </form>
             </CardContent>
           </Card>
@@ -307,58 +311,54 @@ export default function ManageSimulationsPage() {
 
         {/* Existing Simulations List */}
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-zinc-900">Current Simulations</h3>
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-bold text-zinc-900">Current Simulations</h3>
+          </div>
           <div className="space-y-3">
             {simulations.length > 0 ? (
-              simulations.map((sim) => (
-                <Card key={sim.id} className="border-zinc-200 shadow-sm">
+              <>
+                {(showAllSimulations ? simulations : simulations.slice(0, 5)).map((sim) => (
+                <Card key={sim.id} className="border-zinc-200 shadow-sm p-0 gap-0 overflow-hidden">
                   <CardHeader className="p-4 bg-zinc-50 border-b border-zinc-100 flex flex-col space-y-1">
-                    <div className="flex justify-between items-start">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        sim.difficulty === "Easy" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
-                        sim.difficulty === "Intermediate" ? "bg-blue-50 text-blue-700 border border-blue-100" :
-                        "bg-purple-50 text-purple-700 border border-purple-100"
-                      }`}>
-                        {sim.difficulty}
-                      </span>
-                      <div className="flex items-center space-x-3">
-                        <button type="button" onClick={() => handleEdit(sim)} className="text-blue-600 hover:text-blue-800 transition-colors" title="Edit">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button type="button" onClick={() => handleDelete(sim.id)} className="text-red-600 hover:text-red-800 transition-colors" title="Delete">
-                          <Trash className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
+
                     <CardTitle className="text-sm font-bold text-zinc-900 mt-1">{sim.title}</CardTitle>
                     <p className="text-[10px] text-zinc-500">Module: {sim.module?.title}</p>
                   </CardHeader>
                   <CardContent className="p-4 space-y-3 text-xs text-zinc-600">
-                    <p className="leading-relaxed">{sim.description}</p>
-                    
                     {sim.estimatedTime && (
-                      <div className="flex items-center space-x-1.5 text-zinc-500">
+                      <div className="flex items-center space-x-1.5 text-zinc-500 font-medium">
                         <Clock className="w-3.5 h-3.5" /> <span>Duration: {sim.estimatedTime}</span>
                       </div>
                     )}
-                    
-                    {sim.learningOutcome && (
-                      <div className="flex items-start space-x-1.5 text-zinc-600 bg-zinc-50 p-2 rounded-lg border border-zinc-100">
-                        <Info className="w-3.5 h-3.5 text-zinc-400 mt-0.5" />
-                        <div>
-                          <span className="font-semibold block text-[10px] text-zinc-500 uppercase">Outcome:</span>
-                          <p className="text-[10px] leading-normal">{sim.learningOutcome}</p>
-                        </div>
+                    {sim.frontendUrl && (
+                      <div className="pt-2 border-t border-zinc-100 flex items-center space-x-1 text-[10px] text-zinc-400">
+                        <Globe className="w-3.5 h-3.5 text-blue-500" />
+                        <a href={sim.frontendUrl} target="_blank" rel="noopener noreferrer" className="truncate hover:text-blue-600 transition-colors">
+                          URL: {sim.frontendUrl}
+                        </a>
                       </div>
                     )}
-
-                    <div className="pt-2 border-t border-zinc-100 flex items-center space-x-1 text-[10px] text-zinc-400">
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                      <span className="truncate">URL: {sim.frontendUrl}</span>
-                    </div>
                   </CardContent>
+                  <div className="p-3 bg-zinc-50 border-t border-zinc-100 flex justify-end space-x-2">
+                    <Button variant="outline" size="sm" onClick={() => handleEdit(sim)} className="h-8 text-xs">
+                      <Pencil className="w-3 h-3 mr-1" /> Edit
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => handleDelete(sim.id)} className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
+                      <Trash2 className="w-3 h-3 mr-1" /> Delete
+                    </Button>
+                  </div>
                 </Card>
-              ))
+              ))}
+              {simulations.length > 5 && (
+                <Button 
+                  variant="outline" 
+                  className="w-full mt-2" 
+                  onClick={() => setShowAllSimulations(!showAllSimulations)}
+                >
+                  {showAllSimulations ? "Show Less" : `View All ${simulations.length} Simulations`}
+                </Button>
+              )}
+            </>
             ) : (
               <p className="text-xs text-zinc-500 italic text-center py-6">No simulations created yet.</p>
             )}
