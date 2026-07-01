@@ -128,6 +128,7 @@ export default function InfographicsClientPage() {
         id: editingId,
         subjectId,
         moduleId,
+        subtopicId: targetType === "subtopic" ? subtopicId : "",
         title: finalTitle,
         imageUrl
       };

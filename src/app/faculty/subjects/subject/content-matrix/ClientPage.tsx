@@ -110,9 +110,11 @@ export default function ContentMatrixClientPage() {
       item.subtopicId === st.id || item.subtopicId === st.subtopicNo
     );
 
-    // Mindmaps and Infographics map by title and moduleId
+    // Mindmaps and Infographics map by subtopicId OR (title and moduleId)
     const isMappedByTitle = (items: any[]) => items.some(item => 
-      item.title === st.title && item.moduleId === mod.id
+      (item.subtopicId && (item.subtopicId === st.id || item.subtopicId === st.subtopicNo)) ||
+      ((item.title || "").trim() === (st.title || "").trim() && item.moduleId === mod.id) ||
+      ((item.title || "").trim() === (mod.title || "").trim() && item.moduleId === mod.id)
     );
 
     return {
