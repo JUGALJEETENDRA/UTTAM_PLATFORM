@@ -252,10 +252,12 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
           <span className="text-sm font-semibold text-zinc-500">
             Question {currentQuestionIndex + 1} of {totalQuestions}
           </span>
-          <div className="flex items-center text-primary font-bold text-lg bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-            <Clock className="w-5 h-5 mr-1.5 animate-pulse" />
-            {formatTime(timeLeft)}
-          </div>
+          {!isUnlimited && (
+            <div className="flex items-center text-primary font-bold text-lg bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+              <Clock className="w-5 h-5 mr-1.5 animate-pulse" />
+              {formatTime(timeLeft)}
+            </div>
+          )}
         </div>
         <Progress value={progressPercent} className="h-2 bg-zinc-200" />
       </CardHeader>

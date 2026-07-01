@@ -60,7 +60,13 @@ export function Footer() {
 
         <div className="border-t border-zinc-800 pt-4 mt-4 flex flex-col md:flex-row justify-between items-center text-[11px] text-zinc-550">
           <p>© {new Date().getFullYear()} HCI EdTech Platform. All rights reserved.</p>
-          <p className="mt-1 md:mt-0">Designed for Educational Purposes</p>
+          <div className="flex flex-col md:flex-row md:items-center gap-2 mt-1 md:mt-0 text-right md:text-left">
+            <p>Designed for Educational Purposes</p>
+            <span className="hidden md:inline">•</span>
+            <p suppressHydrationWarning>
+              Last updated: {new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} IST
+            </p>
+          </div>
         </div>
       </div>
     </footer>

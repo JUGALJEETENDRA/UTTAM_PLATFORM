@@ -3,6 +3,10 @@
 
 const SPREADSHEET_ID = "ADD_YOUR_OWN_SHEET_HERE"; // Replace with your Spreadsheet ID
 
+// --- GITHUB PAGES DEPLOYMENT CONFIGURATION ---
+// Change these to your own GitHub username and repository name where this platform will be hosted.
+const GITHUB_OWNER = "SourishAshtikar"; // e.g. "YourGitHubUsername"
+const GITHUB_REPO = "PS-3-Pages-Client-Only"; // e.g. "Your-Repo-Name"
 let __ssCache = null;
 function getSpreadsheet() {
   if (!__ssCache) {
@@ -26,13 +30,14 @@ function setupDatabase() {
   const ss = getSpreadsheet();
 
   const schemas = {
-    "Subjects": ["id", "name", "description", "resources", "createdAt"],
+    "Subjects": ["id", "name", "description", "password", "resources", "createdAt"],
     "Modules": ["id", "subjectId", "moduleNo", "title", "hours", "co", "description", "createdAt"],
     "Subtopics": ["id", "moduleId", "subtopicNo", "title", "learningOutcome", "type", "content", "mediaUrl", "simulationData", "order", "createdAt"],
     "Quizzes": ["id", "subjectId", "moduleId", "subtopicId", "title", "timeLimit", "totalMarks", "documentUrl", "totalQuestionsToAsk", "questions"],
     "FlashcardDecks": ["id", "subjectId", "moduleId", "subtopicId", "title", "cards"],
     "Simulations": ["id", "subjectId", "moduleId", "subtopicId", "title", "description", "difficulty", "estimatedTime", "learningOutcome", "frontendUrl"],
     "MindMaps": ["id", "subjectId", "moduleId", "title", "imageUrl", "downloadUrl", "createdAt"],
+    "Infographics": ["id", "subjectId", "moduleId", "title", "imageUrl", "downloadUrl", "createdAt"],
     "Resources": ["id", "subjectId", "title", "type", "link", "detail"]
   };
 
@@ -234,6 +239,7 @@ function handleRequest(e, isPost) {
           id: generateId(),
           name: payload.name,
           description: payload.description,
+          password: payload.password || "",
           resources: JSON.stringify([]),
           createdAt: new Date().toISOString()
         });
@@ -244,7 +250,8 @@ function handleRequest(e, isPost) {
       case "updateSubject":
         result = { success: updateRow("Subjects", "id", payload.subjectId, {
           name: payload.name,
-          description: payload.description
+          description: payload.description,
+          password: payload.password || ""
         }) !== null };
         break;
       case "setupDatabase":
@@ -282,6 +289,17 @@ function handleRequest(e, isPost) {
         break;
       case "deleteMindMap":
         result = handleDeleteMindMap(payload);
+        break;
+
+      // --- Infographics Endpoints ---
+      case "getInfographics":
+        result = handleGetInfographics(payload);
+        break;
+      case "saveInfographic":
+        result = handleSaveInfographic(payload);
+        break;
+      case "deleteInfographic":
+        result = handleDeleteInfographic(payload);
         break;
 
       // --- Resources Endpoints ---
@@ -355,7 +373,15 @@ function handleGetStudentDashboard(payload) {
 
   const allSubtopicsData = getSheetData("Subtopics");
   subjectModules.forEach(mod => {
-    mod.subtopics = allSubtopicsData.filter(s => s.moduleId === mod.id);
+    mod.subtopics = allSubtopicsData.filter(s => s.moduleId === mod.id).map(st => {
+      let simData = {};
+      if (typeof st.simulationData === 'string') {
+        try { simData = JSON.parse(st.simulationData); } catch (e) { }
+      } else if (typeof st.simulationData === 'object' && st.simulationData !== null) {
+        simData = st.simulationData;
+      }
+      return { ...st, ...simData };
+    });
   });
 
   const allQuizzes = getSheetData("Quizzes").filter(q => q.subjectId === payload.subjectId) || [];
@@ -375,6 +401,7 @@ function handleGetStudentDashboard(payload) {
   });
 
   const mindmaps = getSheetData("MindMaps").filter(m => m.subjectId === payload.subjectId) || [];
+  const infographics = getSheetData("Infographics").filter(m => m.subjectId === payload.subjectId) || [];
   const subjectResources = getSheetData("Resources").filter(r => r.subjectId === payload.subjectId) || [];
 
   return {
@@ -383,6 +410,7 @@ function handleGetStudentDashboard(payload) {
     quizzesWithAttempts: allQuizzes,
     flashcardDecks: flashcardDecks,
     mindmaps: mindmaps,
+    infographics: infographics,
     subjectResources: subjectResources
   };
 }
@@ -462,6 +490,42 @@ function handleSaveMindMap(payload) {
 function handleDeleteMindMap(payload) {
   const { mindMapId } = payload;
   return { success: deleteRow("MindMaps", "id", mindMapId) };
+}
+
+// --- NEW INFOGRAPHICS FUNCTIONS ---
+function handleGetInfographics(payload) {
+  const { subjectId } = payload;
+  let infographics = getSheetData("Infographics");
+  if (subjectId) {
+    infographics = infographics.filter(m => m.subjectId === subjectId);
+  }
+  return infographics;
+}
+
+function handleSaveInfographic(payload) {
+  const { id, subjectId, moduleId, title, imageUrl, downloadUrl } = payload;
+  const newId = id || generateId();
+  const data = {
+    id: newId,
+    subjectId,
+    moduleId: moduleId || "",
+    title,
+    imageUrl: imageUrl || "",
+    downloadUrl: downloadUrl || "",
+    createdAt: new Date().toISOString()
+  };
+
+  if (id) {
+    updateRow("Infographics", "id", id, data);
+  } else {
+    writeRow("Infographics", data);
+  }
+  return { success: true, id: newId };
+}
+
+function handleDeleteInfographic(payload) {
+  const { infographicId } = payload;
+  return { success: deleteRow("Infographics", "id", infographicId) };
 }
 
 // --- NEW RESOURCES FUNCTIONS ---
@@ -567,6 +631,7 @@ function handleGetModule(payload) {
   mod.flashcardDecks = getSheetData("FlashcardDecks").filter(f => f.moduleId === moduleId);
   mod.simulations = getSheetData("Simulations").filter(s => s.moduleId === moduleId);
   mod.mindmaps = getSheetData("MindMaps").filter(m => m.moduleId === moduleId);
+  mod.infographics = getSheetData("Infographics").filter(m => m.moduleId === moduleId);
   return mod;
 }
 
@@ -622,7 +687,7 @@ function handleSaveModule(payload) {
   if (subtopics && subtopics.length > 0) {
     subtopics.forEach((st, index) => {
       writeRow("Subtopics", {
-        id: generateId(),
+        id: st.id || generateId(),
         moduleId: newModuleId,
         subtopicNo: index + 1,
         title: st.title,
@@ -639,7 +704,8 @@ function handleSaveModule(payload) {
           otherUrl: st.otherUrl || "",
           otherDownloadUrl: st.otherDownloadUrl || "",
           audioUrl: st.audioUrl || "",
-          audioDownloadUrl: st.audioDownloadUrl || ""
+          audioDownloadUrl: st.audioDownloadUrl || "",
+          isVisible: st.isVisible !== false
         }),
         order: index + 1,
         createdAt: new Date().toISOString()
@@ -676,6 +742,10 @@ function handleDeleteModule(payload) {
   // Delete associated MindMaps
   const mindmaps = getSheetData("MindMaps").filter(m => m.moduleId === moduleId);
   mindmaps.forEach(m => deleteRow("MindMaps", "id", m.id));
+
+  // Delete associated Infographics
+  const infographics = getSheetData("Infographics").filter(m => m.moduleId === moduleId);
+  infographics.forEach(m => deleteRow("Infographics", "id", m.id));
 
   return { success: moduleDeleted };
 }
@@ -819,8 +889,8 @@ function handleTriggerDeploy(payload) {
     return { error: "GitHub token is required to trigger deployment. Please add GITHUB_PAT to Script Properties." };
   }
 
-  const owner = "SourishAshtikar";
-  const repo = "PS-3-Pages-Client-Only";
+  const owner = GITHUB_OWNER;
+  const repo = GITHUB_REPO;
   const url = `https://api.github.com/repos/${owner}/${repo}/dispatches`;
 
   const options = {

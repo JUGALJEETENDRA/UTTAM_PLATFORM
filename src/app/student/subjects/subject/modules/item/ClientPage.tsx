@@ -151,7 +151,6 @@ function getGoogleDriveFileId(url: string | null | undefined): string | null {
 }
 
 const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: string; downloadUrl?: string }) => {
-  const [isFullscreenModalOpen, setIsFullscreenModalOpen] = useState(false);
   if (!url) return null;
 
   const lowerUrl = url.toLowerCase();
@@ -160,32 +159,12 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getEmbedUrl(url);
 
-  const downloadVideoUrl = (downloadUrl && downloadUrl.trim() !== "")
-    ? downloadUrl
-    : driveFileId 
-      ? `https://drive.google.com/uc?export=download&id=${driveFileId}` 
-      : url;
   const driveAppUrl = driveFileId 
     ? `https://drive.google.com/file/d/${driveFileId}/view` 
     : url;
 
   return (
     <div className="w-full flex flex-col select-none">
-      {/* Upper Top Bar with Thin Download Button on Right */}
-      <div className="w-full flex items-center justify-end mb-1.5 px-0.5">
-        <a
-          href={downloadVideoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          download={`${title || 'video-lesson'}.mp4`}
-          className="inline-flex items-center gap-1 bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-700 text-[11px] font-semibold py-0.5 px-2.5 rounded-full border border-slate-200 shadow-2xs transition-all"
-          title="Download Video via Drive"
-        >
-          <Download className="w-3 h-3 text-blue-600" />
-          <span>Download Video via Drive</span>
-        </a>
-      </div>
-
       {/* Video Viewport Container - Responsive Aspect Ratio */}
       <div className="w-full aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
         {isYouTube || (!isDirectVideo && embedUrl) ? (
@@ -217,314 +196,109 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
         )}
       </div>
 
-      {/* White Action Bar Positioned Below Video - Mobile Grid Responsive */}
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2.5 p-3 bg-white text-slate-800 rounded-xl border border-slate-200 shadow-sm">
-        <div className="flex items-center space-x-2 truncate">
-          <PlayCircle className="w-4 h-4 text-blue-600 shrink-0" />
-          <span className="text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[150px] sm:max-w-md">{title || "Video Lesson"}</span>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-          {/* Mobile App Open Button */}
-          {driveFileId && (
-            <a
-              href={driveAppUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs h-8 px-3 rounded-lg shadow-xs flex items-center gap-1.5 transition-all shrink-0"
-              title="Open in Drive App / Native Player"
-            >
-              <ExternalLink className="w-3.5 h-3.5" /> Open Drive App
-            </a>
-          )}
-
-          {/* Download Video Button */}
-          {(!isYouTube || (downloadUrl && downloadUrl.trim() !== "")) && (
-            <a
-              href={downloadVideoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              download={`${title || 'video-lesson'}.mp4`}
-              className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs h-8 px-2.5 rounded-lg border border-slate-200 flex items-center gap-1 transition-all shrink-0"
-              title="Download Video Copy"
-            >
-              <Download className="w-3.5 h-3.5 text-blue-600" /> Download
-            </a>
-          )}
-
-          {/* Full-App Player Modal Trigger */}
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => setIsFullscreenModalOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs h-8 px-3 rounded-lg shadow-xs flex items-center gap-1.5 transition-all shrink-0"
-          >
-            <Maximize2 className="w-3.5 h-3.5" /> Full-App Player
-          </Button>
-        </div>
-      </div>
-
-      {/* In-App Fullscreen Theater Modal */}
-      {isFullscreenModalOpen && (
-        <div className="fixed inset-0 z-[200] bg-slate-950/98 backdrop-blur-2xl flex flex-col p-3 sm:p-6 animate-in fade-in duration-200">
-          {/* Top Bar with Prominent Go Back / Return Button */}
-          <div className="flex items-center justify-between mb-3 border-b border-zinc-800 pb-3 gap-2">
-            <div className="flex items-center space-x-3 truncate">
-              <Button
-                type="button"
-                onClick={() => setIsFullscreenModalOpen(false)}
-                className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs px-3 py-1.5 h-8 rounded-lg flex items-center gap-1.5 shrink-0 border border-zinc-700 shadow-sm"
-              >
-                <ChevronLeft className="w-4 h-4" /> Go Back
-              </Button>
-              <div className="flex items-center space-x-2 truncate">
-                <PlayCircle className="w-4 h-4 text-blue-500 shrink-0 hidden sm:block" />
-                <h3 className="text-white font-bold text-xs sm:text-base truncate max-w-[180px] sm:max-w-xl">{title}</h3>
-              </div>
-            </div>
-
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsFullscreenModalOpen(false)}
-              className="text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full h-8 w-8 shrink-0"
-              title="Close Fullscreen"
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
-
-          <div className="flex-1 w-full h-full relative rounded-xl overflow-hidden bg-black flex items-center justify-center">
-            {isYouTube || (!isDirectVideo && embedUrl) ? (
-              <iframe
-                src={`${embedUrl || url}${ (embedUrl || url).includes('?') ? '&' : '?' }autoplay=1`}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                allowFullScreen
-                title={title}
-              />
-            ) : isDirectVideo ? (
-              <video
-                controls
-                autoPlay
-                playsInline
-                preload="metadata"
-                className="w-full h-full object-contain"
-              >
-                <source src={url} />
-              </video>
-            ) : (
-              <iframe
-                src={`${embedUrl || url}${ (embedUrl || url).includes('?') ? '&' : '?' }autoplay=1`}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                allowFullScreen
-                title={title}
-              />
-            )}
-          </div>
-
-          {/* Bottom Control Bar with explicit Exit / Go Back button */}
-          <div className="mt-3 flex justify-between items-center pt-2 border-t border-zinc-800">
-            {driveFileId && (
-              <a
-                href={driveAppUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 h-8 rounded-lg flex items-center gap-1.5"
-              >
-                <ExternalLink className="w-3.5 h-3.5" /> Open in Drive App
-              </a>
-            )}
-            <Button
-              type="button"
-              onClick={() => setIsFullscreenModalOpen(false)}
-              className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-4 py-2 h-9 rounded-lg shadow-md flex items-center gap-2 ml-auto"
-            >
-              <ChevronLeft className="w-4 h-4" /> Return to Lesson Page
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
 const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [showDriveEmbed, setShowDriveEmbed] = useState(false);
+  const isCloudinary = url.includes("cloudinary.com");
+  const driveFileId = getGoogleDriveFileId(url);
+  const embedUrl = getExternalEmbedUrl(url);
+  const viewUrl = driveFileId 
+    ? `https://drive.google.com/file/d/${driveFileId}/view` 
+    : url;
+  
+  // Use the standard Google Docs direct download endpoint
+  const googleDriveDirectUrl = driveFileId 
+    ? `https://docs.google.com/uc?export=download&id=${driveFileId}` 
+    : url;
+
+  // Default to native player
+  const [useDriveFallback, setUseDriveFallback] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   if (!url) return null;
 
-  const driveFileId = getGoogleDriveFileId(url);
-  const downloadMp3Url = driveFileId 
-    ? `https://drive.google.com/uc?export=download&id=${driveFileId}` 
-    : url;
-  const driveViewUrl = driveFileId 
-    ? `https://drive.google.com/file/d/${driveFileId}/view` 
-    : url;
-  const driveEmbedUrl = driveFileId 
-    ? `https://drive.google.com/file/d/${driveFileId}/preview` 
-    : null;
-
-  const audioSrc = driveFileId 
-    ? `https://lh3.googleusercontent.com/d/${driveFileId}` 
-    : url;
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.load();
-      setIsPlaying(false);
-    }
-  }, [audioSrc]);
-
-  const togglePlay = () => {
-    const audioEl = audioRef.current;
-    if (audioEl) {
-      audioEl.volume = 1.0;
-      audioEl.muted = false;
-      if (isPlaying) {
-        audioEl.pause();
-        setIsPlaying(false);
-      } else {
-        const playPromise = audioEl.play();
-        if (playPromise !== undefined) {
-          playPromise.then(() => {
-            setIsPlaying(true);
-          }).catch((err) => {
-            console.log("Audio play error, falling back to drive embed", err);
-            if (driveFileId) setShowDriveEmbed(true);
-          });
-        }
-      }
-    }
-  };
-
-  const handleSpeedChange = (speed: number) => {
-    setPlaybackRate(speed);
-    if (audioRef.current) audioRef.current.playbackRate = speed;
-  };
+  // Use the exact url for Cloudinary, or direct for drive files
+  const activeAudioSrc = isCloudinary ? url : googleDriveDirectUrl;
 
   return (
-    <div className="w-full bg-white text-slate-800 p-3 sm:p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2.5">
-      {/* Top Header Bar */}
+    <div className="w-full bg-white text-slate-800 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center space-x-2 shrink-0">
-          <Headphones className="w-4 h-4 text-blue-600 animate-pulse shrink-0" />
-          <span className="text-xs sm:text-sm font-bold tracking-wide text-slate-800 truncate max-w-[150px] sm:max-w-xs">
+          <Headphones className="w-4 h-4 text-blue-600 shrink-0" />
+          <span className="text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[200px] sm:max-w-xs">
             {title || "Audio Lesson"}
           </span>
-          <span className="text-[9px] bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded font-mono font-bold uppercase shrink-0">MP3</span>
+          <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase ${
+            isCloudinary ? "bg-purple-50 text-purple-700 border border-purple-200" : "bg-blue-50 text-blue-700 border border-blue-200"
+          }`}>
+            {isCloudinary ? "Cloudinary CDN" : "Drive Audio"}
+          </span>
         </div>
 
-        <div className="flex items-center space-x-1.5 shrink-0">
-          {/* Speed Controls */}
-          <div className="flex items-center bg-slate-100 p-0.5 rounded-md border border-slate-200">
-            {[1, 1.25, 1.5, 2].map((speed) => (
-              <button
-                key={speed}
-                type="button"
-                onClick={() => handleSpeedChange(speed)}
-                className={`text-[9px] font-bold px-1.5 py-0.5 rounded transition-colors ${
-                  playbackRate === speed
-                    ? "bg-blue-600 text-white shadow-2xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200"
-                }`}
-              >
-                {speed}x
-              </button>
-            ))}
-          </div>
-
-          {/* Download MP3 Button */}
-          <a
-            href={downloadMp3Url}
-            target="_blank"
-            rel="noopener noreferrer"
-            download={`${title || 'audio-lesson'}.mp3`}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] h-7 px-2.5 rounded-md shadow-2xs flex items-center gap-1 transition-all shrink-0"
-            title="Download MP3 Copy to Device"
-          >
-            <Download className="w-3 h-3" /> Download MP3
-          </a>
-
-          {/* External Drive Source Link */}
+        <div className="flex items-center space-x-2 shrink-0">
           {driveFileId && (
-            <a
-              href={driveViewUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[10px] font-medium text-slate-500 hover:text-slate-800 p-1.5 rounded bg-slate-100 border border-slate-200 transition-colors flex items-center shrink-0"
-              title="Open Source Link"
-            >
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          )}
-        </div>
-      </div>
-
-      {/* Primary Interactive Audio Bar with Explicit Guaranteed Play/Pause Button */}
-      <div className="w-full flex flex-col gap-2">
-        <div className="flex items-center gap-2.5 bg-slate-50 p-2 rounded-lg border border-slate-200">
-          <Button
-            type="button"
-            onClick={togglePlay}
-            className={`font-bold text-xs h-9 px-4 rounded-md shadow-xs flex items-center gap-2 transition-all shrink-0 ${
-              isPlaying ? "bg-amber-600 hover:bg-amber-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"
-            }`}
-          >
-            {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
-            <span>{isPlaying ? "PAUSE AUDIO" : "PLAY AUDIO"}</span>
-          </Button>
-
-          <div className="flex-1">
-            <audio 
-              ref={audioRef}
-              src={audioSrc}
-              controls 
-              playsInline 
-              crossOrigin="anonymous"
-              preload="auto" 
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              onEnded={() => setIsPlaying(false)}
-              className="w-full h-10 rounded-md accent-blue-600"
-            >
-              <source src={audioSrc} type="audio/mpeg" />
-              <source src={url} type="audio/mpeg" />
-              <source src={url} type="audio/wav" />
-              Your browser does not support the audio element.
-            </audio>
-          </div>
-        </div>
-
-        {driveFileId && (
-          <div className="flex justify-between items-center px-1">
-            <span className="text-[10px] text-slate-500 font-medium">Having cross-origin audio blocks on your browser?</span>
             <button
               type="button"
-              onClick={() => setShowDriveEmbed(!showDriveEmbed)}
-              className="text-[10px] text-blue-600 hover:underline font-bold"
+              onClick={() => setUseDriveFallback(!useDriveFallback)}
+              className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2 py-1 rounded border border-slate-200 transition-colors"
             >
-              {showDriveEmbed ? "Hide Drive Embed Player" : "Show Drive Embed Player"}
+              {useDriveFallback ? "Use Direct Stream" : "Switch Player Mode"}
             </button>
-          </div>
-        )}
-
-        {showDriveEmbed && driveEmbedUrl && (
-          <div className="w-full h-32 rounded-xl overflow-hidden bg-slate-950 border border-slate-200 shadow-inner mt-1">
-            <iframe
-              src={driveEmbedUrl}
-              className="w-full h-full border-0"
-              allow="autoplay; fullscreen; encrypted-media"
-              title={title || "Audio Player"}
-            />
-          </div>
-        )}
+          )}
+          <a
+            href={isCloudinary ? url : viewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-slate-500 hover:text-slate-800 p-1 rounded bg-slate-100 border border-slate-200 transition-colors flex items-center gap-1 text-[10px] font-medium"
+            title="Open direct media link"
+          >
+            <ExternalLink className="w-3.5 h-3.5" /> Direct Link
+          </a>
+        </div>
       </div>
+
+      {/* Audio Player Container */}
+      {!useDriveFallback && activeAudioSrc ? (
+        <div className="w-full bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col gap-1.5">
+          <audio 
+            key={activeAudioSrc}
+            ref={audioRef}
+            src={activeAudioSrc}
+            controls 
+            playsInline
+            preload="auto"
+            className="w-full h-10 accent-blue-600 rounded-md"
+            onError={() => {
+              if (driveFileId) setUseDriveFallback(true);
+            }}
+          >
+            Your browser does not support the audio element.
+          </audio>
+          {driveFileId && (
+            <div className="flex justify-end px-1">
+              <button
+                type="button"
+                onClick={() => setUseDriveFallback(true)}
+                className="text-[10px] text-blue-600 hover:underline font-semibold"
+              >
+                No sound output? Switch to Drive Embed Player
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="w-full h-16 bg-slate-50 rounded-lg overflow-hidden border border-slate-200">
+          <iframe
+            src={embedUrl || url}
+            className="w-full h-full border-0"
+            allow="autoplay"
+            title={title || "Drive Audio Player"}
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -565,6 +339,21 @@ export default function ModuleDetailPage() {
       const loadModule = async () => {
         try {
           const result = await fetchGAS("getModule", { moduleId: id, userId: "anonymous" });
+          if (result && result.subtopics) {
+            result.subtopics = result.subtopics.filter((st: any) => {
+              let isVisible = true;
+              if (st.isVisible === false) isVisible = false;
+              if (typeof st.simulationData === 'string') {
+                try {
+                  const simData = JSON.parse(st.simulationData);
+                  if (simData.isVisible === false) isVisible = false;
+                } catch(e) {}
+              } else if (typeof st.simulationData === 'object' && st.simulationData !== null) {
+                if (st.simulationData.isVisible === false) isVisible = false;
+              }
+              return isVisible;
+            });
+          }
           setModuleData(result);
         } catch (err) {
           console.error("Failed to load module", err);
@@ -702,8 +491,9 @@ export default function ModuleDetailPage() {
               const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
               const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
 
-              const defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
+              let defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
               const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
+              if (defaultVideoUrl === defaultAudioUrl && defaultVideoUrl) defaultVideoUrl = "";
 
               return (
                 <motion.div key={subtopic.id} variants={itemVariants}>
@@ -977,8 +767,9 @@ export default function ModuleDetailPage() {
               const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
               const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
 
-              const defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
+              let defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
               const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
+              if (defaultVideoUrl === defaultAudioUrl && defaultVideoUrl) defaultVideoUrl = "";
 
               return (
                 <motion.div key={subtopic.id} variants={itemVariants}>
@@ -1289,8 +1080,9 @@ export default function ModuleDetailPage() {
             const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
             const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
 
-            const defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
+            let defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
             const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
+            if (defaultVideoUrl === defaultAudioUrl && defaultVideoUrl) defaultVideoUrl = "";
 
             const cardContentNode = (
               <div className="flex flex-col md:flex-row w-full">

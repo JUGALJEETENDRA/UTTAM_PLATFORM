@@ -29,6 +29,7 @@ interface SubtopicForm {
   selectedResourceType?: string;
   type?: string;
   mediaUrl?: string;
+  isVisible?: boolean;
 }
 const initialSubtopicState = { 
   title: "", description: "", learningOutcome: "", 
@@ -39,7 +40,8 @@ const initialSubtopicState = {
   didYouKnowUrl: "", didYouKnowDownloadUrl: "",
   referenceUrl: "", referenceDownloadUrl: "",
   selectedResourceType: "none",
-  type: "", mediaUrl: ""
+  type: "", mediaUrl: "",
+  isVisible: true
 };
 export default function ManageModulesPage() {
   const searchParams = useSearchParams();
@@ -56,8 +58,60 @@ export default function ManageModulesPage() {
   const [subtopics, setSubtopics] = useState<SubtopicForm[]>([{...initialSubtopicState}]);
   const [loading, setLoading] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
+  const [convertingAudioKey, setConvertingAudioKey] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [isUploadingSyllabus, setIsUploadingSyllabus] = useState(false);
+
+  const convertDriveAudioToCloudinary = async (rawUrl: string, onSuccess: (cloudinaryUrl: string) => void, keyIdentifier: string) => {
+    if (!rawUrl || !rawUrl.trim()) return;
+    
+    let driveFileId: string | null = null;
+    if (rawUrl.includes("drive.google.com") || rawUrl.includes("docs.google.com")) {
+      if (rawUrl.includes("/file/d/")) {
+        const match = rawUrl.match(/\/file\/d\/([^\/]+)/);
+        if (match && match[1]) driveFileId = match[1];
+      } else if (rawUrl.includes("id=")) {
+        const match = rawUrl.match(/id=([^&]+)/);
+        if (match && match[1]) driveFileId = match[1];
+      }
+    }
+
+    if (!driveFileId) {
+      toast.error("Please enter a valid Google Drive share link.");
+      return;
+    }
+
+    setConvertingAudioKey(keyIdentifier);
+    const toastId = toast.loading("Converting Google Drive Audio link to Cloudinary CDN Stream...");
+
+    const directDriveUrl = `https://lh3.googleusercontent.com/d/${driveFileId}`;
+    try {
+      const formData = new FormData();
+      formData.append("file", directDriveUrl);
+      formData.append("upload_preset", "faculty_uploads");
+      formData.append("resource_type", "video");
+
+      const res = await fetch("https://api.cloudinary.com/v1_1/dboelpizj/video/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok && data.secure_url) {
+        toast.success("Successfully converted to Cloudinary Audio Stream!", { id: toastId });
+        onSuccess(data.secure_url);
+      } else {
+        const fetchUrl = `https://res.cloudinary.com/dboelpizj/video/upload/fetch/${encodeURIComponent(directDriveUrl)}`;
+        toast.success("Connected to Cloudinary Stream CDN!", { id: toastId });
+        onSuccess(fetchUrl);
+      }
+    } catch (err: any) {
+      const fetchUrl = `https://res.cloudinary.com/dboelpizj/video/upload/fetch/${encodeURIComponent(directDriveUrl)}`;
+      toast.success("Connected to Cloudinary Stream CDN!", { id: toastId });
+      onSuccess(fetchUrl);
+    } finally {
+      setConvertingAudioKey(null);
+    }
+  };
   useEffect(() => {
     fetchModules();
   }, []);
@@ -193,6 +247,7 @@ export default function ManageModulesPage() {
           referenceDownloadUrl: unpackedOther.referenceDownloadUrl || parsedData.referenceDownloadUrl || st.referenceDownloadUrl || "",
           type: st.type || "",
           mediaUrl: st.mediaUrl || "",
+          isVisible: st.isVisible !== false,
         };
       }));
     } else {
@@ -209,39 +264,6 @@ export default function ManageModulesPage() {
     setDescription("");
     setSubtopics([{...initialSubtopicState}]);
     setMessage(null);
-  };
-
-  const handleCloudinaryAudioUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>, langIndex?: number) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadingIndex(index);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "faculty_uploads");
-
-      const res = await fetch("https://api.cloudinary.com/v1_1/dboelpizj/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      if (res.ok && data.secure_url) {
-        toast.success("Audio uploaded to Cloudinary!");
-        if (langIndex !== undefined) {
-          handleLanguageChange(index, "audioLanguages", langIndex, "url", data.secure_url);
-        } else {
-          handleSubtopicChange(index, "audioUrl", data.secure_url);
-          handleSubtopicChange(index, "audioDownloadUrl" as any, data.secure_url);
-        }
-      } else {
-        toast.error(data.error?.message || "Failed to upload audio to Cloudinary");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Cloudinary upload error");
-    } finally {
-      setUploadingIndex(null);
-      e.target.value = "";
-    }
   };
 
   const handleUploadFile = async (subtopicId: string, index: number, resourceType: string) => {
@@ -558,7 +580,18 @@ export default function ManageModulesPage() {
                             <Trash2 className="w-5 h-5" />
                           </button>
                         )}
-                        <h4 className="font-bold text-zinc-800 text-sm">Subtopic #{index + 1}</h4>
+                        <div className="flex items-center justify-between mt-2 mb-4">
+                          <h4 className="font-bold text-zinc-800 text-sm">Subtopic #{index + 1}</h4>
+                          <label className="flex items-center space-x-2 text-sm font-medium text-zinc-700 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={st.isVisible !== false}
+                              onChange={(e) => handleSubtopicChange(index, "isVisible", e.target.checked)}
+                              className="w-4 h-4 text-primary rounded border-zinc-300 focus:ring-primary"
+                            />
+                            <span>Visible to Students</span>
+                          </label>
+                        </div>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
@@ -601,16 +634,16 @@ export default function ManageModulesPage() {
                             className="w-full sm:w-1/2 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary mb-4"
                           >
                             <option value="none">Select resource type...</option>
-                            <option value="videoUrl">Video (Hybrid)</option>
-                            <option value="notes">Notes (Link)</option>
-                            <option value="audio">Audio (Link)</option>
-                            <option value="didYouKnow">Did You Know (Link)</option>
+                            <option value="videoUrl">Video</option>
+                            <option value="notes">Notes</option>
+                            <option value="audio">Audio</option>
+                            <option value="didYouKnow">Did You Know</option>
                             <option value="reference">Reference</option>
-                            <option value="other">Other (Link)</option>
+                            <option value="other">Other</option>
                           </select>
                           {st.selectedResourceType === "videoUrl" && (
                             <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                              <div className="mb-4">
                                 <div>
                                   <label className="block text-xs font-bold text-zinc-700 mb-1">English Video URL (Default)</label>
                                   <input
@@ -618,16 +651,6 @@ export default function ManageModulesPage() {
                                     placeholder="https://drive.google.com/..."
                                     value={st.videoUrl}
                                     onChange={(e) => handleSubtopicChange(index, "videoUrl", e.target.value)}
-                                    className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-xs font-bold text-zinc-700 mb-1">Download Video Drive Link</label>
-                                  <input
-                                    type="text"
-                                    placeholder="https://drive.google.com/uc?export=download&id=..."
-                                    value={st.videoDownloadUrl || ""}
-                                    onChange={(e) => handleSubtopicChange(index, "videoDownloadUrl", e.target.value)}
                                     className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
                                   />
                                 </div>
@@ -665,39 +688,36 @@ export default function ManageModulesPage() {
                           )}
                           {st.selectedResourceType === "audio" && (
                             <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
-                              <label className="block text-xs font-bold text-zinc-700 mb-1">English Audio File / URL (Default)</label>
+                              <label className="block text-xs font-bold text-zinc-700 mb-1">English Audio Link (Default)</label>
                               <div className="flex flex-col sm:flex-row items-center gap-2 mb-4">
                                 <input
                                   type="text"
-                                  placeholder="Paste Audio URL or upload file..."
+                                  placeholder="Paste Google Drive Share Link or MP3 URL..."
                                   value={st.audioUrl}
                                   onChange={(e) => handleSubtopicChange(index, "audioUrl", e.target.value)}
                                   className="w-full sm:flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
                                 />
-                                <div className="w-full sm:w-auto relative shrink-0">
-                                  <input
-                                    type="file"
-                                    accept="audio/mp3,audio/wav,audio/m4a,audio/mpeg,audio/*"
-                                    id={`cloudinary-audio-${index}`}
-                                    className="hidden"
-                                    onChange={(e) => handleCloudinaryAudioUpload(index, e)}
-                                  />
+                                {(st.audioUrl.includes("drive.google.com") || st.audioUrl.includes("docs.google.com")) && (
                                   <Button
                                     type="button"
-                                    variant="outline"
-                                    onClick={() => document.getElementById(`cloudinary-audio-${index}`)?.click()}
-                                    disabled={uploadingIndex === index}
-                                    className="w-full sm:w-auto bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700 text-xs font-bold h-10 px-3 flex items-center justify-center gap-1.5"
+                                    onClick={() => convertDriveAudioToCloudinary(st.audioUrl, (url) => handleSubtopicChange(index, "audioUrl", url), `main-${index}`)}
+                                    disabled={convertingAudioKey === `main-${index}`}
+                                    className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold h-9 px-3 shrink-0 flex items-center justify-center gap-1.5 shadow-xs"
                                   >
-                                    {uploadingIndex === index ? (
+                                    {convertingAudioKey === `main-${index}` ? (
                                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
                                     ) : (
-                                      <UploadCloud className="w-3.5 h-3.5 text-purple-600" />
+                                      <UploadCloud className="w-3.5 h-3.5" />
                                     )}
-                                    Upload MP3 to Cloudinary
+                                    <span>Convert Drive to Cloudinary</span>
                                   </Button>
-                                </div>
+                                )}
                               </div>
+                              {st.audioUrl.includes("cloudinary.com") && (
+                                <p className="text-[11px] text-purple-700 font-bold mb-3 flex items-center gap-1">
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-purple-600" /> Powered by Cloudinary Audio Stream CDN
+                                </p>
+                              )}
 
                               <div className="pt-3 border-t border-zinc-200">
                                 <div className="flex justify-between items-center mb-3">
@@ -717,29 +737,25 @@ export default function ManageModulesPage() {
                                     />
                                     <input 
                                       type="text" 
-                                      placeholder="URL" 
+                                      placeholder="Paste Drive Share Link or URL..." 
                                       value={lang.url} 
                                       onChange={(e) => handleLanguageChange(index, "audioLanguages", lIndex, "url", e.target.value)}
                                       className="w-full sm:flex-1 px-2 py-1.5 bg-white border border-zinc-300 rounded text-xs focus:border-primary"
                                     />
                                     <div className="flex items-center gap-1 w-full sm:w-auto justify-end">
-                                      <input
-                                        type="file"
-                                        accept="audio/*"
-                                        id={`cloudinary-audio-${index}-${lIndex}`}
-                                        className="hidden"
-                                        onChange={(e) => handleCloudinaryAudioUpload(index, e, lIndex)}
-                                      />
-                                      <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => document.getElementById(`cloudinary-audio-${index}-${lIndex}`)?.click()}
-                                        className="text-purple-600 hover:bg-purple-50 text-xs px-2 h-7"
-                                        title="Upload file for this language"
-                                      >
-                                        <UploadCloud className="w-3.5 h-3.5" />
-                                      </Button>
+                                      {(lang.url.includes("drive.google.com") || lang.url.includes("docs.google.com")) && (
+                                        <Button
+                                          type="button"
+                                          size="sm"
+                                          onClick={() => convertDriveAudioToCloudinary(lang.url, (url) => handleLanguageChange(index, "audioLanguages", lIndex, "url", url), `lang-${index}-${lIndex}`)}
+                                          disabled={convertingAudioKey === `lang-${index}-${lIndex}`}
+                                          className="bg-purple-600 hover:bg-purple-700 text-white text-[11px] font-bold h-7 px-2 flex items-center gap-1"
+                                          title="Convert to Cloudinary Stream"
+                                        >
+                                          {convertingAudioKey === `lang-${index}-${lIndex}` ? <Loader2 className="w-3 h-3 animate-spin" /> : <UploadCloud className="w-3 h-3" />}
+                                          <span>Cloudinary</span>
+                                        </Button>
+                                      )}
                                       <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveLanguage(index, "audioLanguages", lIndex)} className="text-red-500 p-1 h-auto">
                                         <Trash2 className="w-4 h-4" />
                                       </Button>
@@ -785,6 +801,9 @@ export default function ManageModulesPage() {
                 >
                   {loading ? "Saving..." : (editingModuleId ? "Save Changes" : "Create Module & Subtopics")}
                 </Button>
+                <p className="text-xs text-zinc-500 text-center mt-3">
+                  Note: The changes will not be visible on the student dashboard until the "Publish to Student Dashboard" button is clicked.
+                </p>
               </form>
             </CardContent>
           </Card>
@@ -794,7 +813,7 @@ export default function ManageModulesPage() {
           <h3 className="text-lg font-bold text-zinc-900">Current Course Syllabus</h3>
           <div className="space-y-3">
             {modules.map((mod) => (
-              <Card key={mod.id} className="border-zinc-200 shadow-sm overflow-hidden">
+              <Card key={mod.id} className="border-zinc-200 shadow-sm p-0 gap-0 overflow-hidden">
                 <div
                   onClick={() => setExpandedModuleId(expandedModuleId === mod.id ? null : mod.id)}
                   className="p-4 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between cursor-pointer hover:bg-zinc-100/70 transition-colors"

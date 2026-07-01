@@ -10,6 +10,7 @@ export function EditSubjectButton({ subject }: { subject: any }) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(subject.name || "");
   const [description, setDescription] = useState(subject.description || "");
+  const [password, setPassword] = useState(subject.password || "");
   const [loading, setLoading] = useState(false);
 
   const handleEdit = async (e: React.MouseEvent) => {
@@ -24,7 +25,7 @@ export function EditSubjectButton({ subject }: { subject: any }) {
 
     setLoading(true);
     try {
-      const res = await fetchGAS("updateSubject", { subjectId: subject.id, name, description });
+      const res = await fetchGAS("updateSubject", { subjectId: subject.id, name, description, password });
       if (res && res.success) {
         toast.success("Subject updated successfully");
         window.location.reload();
@@ -50,7 +51,7 @@ export function EditSubjectButton({ subject }: { subject: any }) {
       </button>
 
       {isEditing && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={(e) => { e.preventDefault(); setIsEditing(false); }}
@@ -81,6 +82,18 @@ export function EditSubjectButton({ subject }: { subject: any }) {
                   className="w-full rounded-md border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px]"
                   disabled={loading}
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 mb-1">Access Password (Optional)</label>
+                <input
+                  type="text"
+                  value={password}
+                  placeholder="Leave blank for public access"
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full rounded-md border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  disabled={loading}
+                />
+                <p className="text-xs text-zinc-500 mt-1">If set, students must enter this password to access the subject.</p>
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <Button type="button" variant="outline" onClick={() => setIsEditing(false)} disabled={loading}>

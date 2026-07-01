@@ -31,6 +31,7 @@ export default function ManageQuizzesPage() {
   // Form states
   const [selectedModuleId, setSelectedModuleId] = useState("");
   const [selectedSubtopicId, setSelectedSubtopicId] = useState("");
+  const [showAllQuizzes, setShowAllQuizzes] = useState(false);
   const [title, setTitle] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
   const [timeLimit, setTimeLimit] = useState("0");
@@ -717,6 +718,9 @@ export default function ManageQuizzesPage() {
                     {loading ? (editingQuizId ? "Updating..." : "Creating...") : (editingQuizId ? "Update Quiz" : "Create Quiz")}
                   </Button>
                 </div>
+                <p className="text-xs text-zinc-500 text-center mt-3">
+                  Note: The changes will not be visible on the student dashboard until the "Publish to Student Dashboard" button is clicked.
+                </p>
               </form>
             </CardContent>
           </Card>
@@ -726,44 +730,24 @@ export default function ManageQuizzesPage() {
 
         {/* Existing Quizzes List */}
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-zinc-900">Current Quizzes</h3>
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-bold text-zinc-900">Current Quizzes</h3>
+          </div>
           <div className="space-y-3">
             {quizzes.length > 0 ? (
-              quizzes.map((q) => (
-                <Card key={q.id} className="border-zinc-200 shadow-sm">
+              <>
+                {(showAllQuizzes ? quizzes : quizzes.slice(0, 5)).map((q) => (
+                <Card key={q.id} className="border-zinc-200 shadow-sm p-0 gap-0 overflow-hidden">
                   <CardHeader className="p-4 bg-zinc-50 border-b border-zinc-100 flex flex-col space-y-1">
-                    <div className="flex justify-between items-start">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        q.difficulty === "Easy" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
-                        q.difficulty === "Medium" ? "bg-blue-50 text-blue-700 border border-blue-100" :
-                        "bg-purple-50 text-purple-700 border border-purple-100"
-                      }`}>
-                        {q.difficulty}
-                      </span>
-                      <span className="text-xs font-bold text-amber-600">+{q.xpReward} XP</span>
-                    </div>
+
                     <CardTitle className="text-sm font-bold text-zinc-900 mt-1">{q.title}</CardTitle>
                     <p className="text-[10px] text-zinc-500">Module: {q.module?.title}</p>
                   </CardHeader>
                   <CardContent className="p-4 space-y-2 text-xs text-zinc-600">
                     <div className="flex justify-between items-center text-zinc-500 font-medium">
                       <span>Questions: {q.questions?.length || 0}</span>
-                      <span>Time Limit: {q.timeLimit} mins</span>
+                      <span>Time Limit: {q.timeLimit === 0 || q.timeLimit === "0" ? "Infinity" : `${q.timeLimit} mins`}</span>
                     </div>
-                    {q.questions && q.questions.length > 0 && (
-                      <div className="pt-2 border-t border-zinc-100 space-y-2">
-                        {q.questions.slice(0, 3).map((quest: any, i: number) => (
-                          <p key={quest.id} className="truncate text-[10px] text-zinc-500">
-                            Q{i + 1}: {quest.questionText}
-                          </p>
-                        ))}
-                        {q.questions.length > 3 && (
-                          <p className="text-[9px] text-zinc-400 italic text-right">
-                            + {q.questions.length - 3} more questions
-                          </p>
-                        )}
-                      </div>
-                    )}
                   </CardContent>
                   <div className="p-3 bg-zinc-50 border-t border-zinc-100 flex justify-end space-x-2">
                     <Button variant="outline" size="sm" onClick={() => handleEdit(q)} className="h-8 text-xs">
@@ -774,7 +758,17 @@ export default function ManageQuizzesPage() {
                     </Button>
                   </div>
                 </Card>
-              ))
+              ))}
+              {quizzes.length > 5 && (
+                <Button 
+                  variant="outline" 
+                  className="w-full mt-2" 
+                  onClick={() => setShowAllQuizzes(!showAllQuizzes)}
+                >
+                  {showAllQuizzes ? "Show Less" : `View All ${quizzes.length} Quizzes`}
+                </Button>
+              )}
+            </>
             ) : (
               <p className="text-xs text-zinc-500 italic text-center py-6">No quizzes created yet.</p>
             )}

@@ -19,6 +19,7 @@ export default function ManageFlashcardsPage() {
   // Form states
   const [selectedModuleId, setSelectedModuleId] = useState("");
   const [selectedSubtopicId, setSelectedSubtopicId] = useState("");
+  const [showAllDecks, setShowAllDecks] = useState(false);
   const [title, setTitle] = useState("");
   const [documentUrl, setDocumentUrl] = useState<string | null>(null);
   const [cards, setCards] = useState<FlashcardForm[]>([
@@ -428,16 +429,22 @@ export default function ManageFlashcardsPage() {
                     {loading ? (editingDeckId ? "Updating..." : "Creating...") : (editingDeckId ? "Update Deck" : "Create Deck")}
                   </Button>
                 </div>
+                <p className="text-xs text-zinc-500 text-center mt-3">
+                  Note: The changes will not be visible on the student dashboard until the "Publish to Student Dashboard" button is clicked.
+                </p>
               </form>
             </CardContent>
           </Card>
         </div>
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-zinc-900">Current Decks</h3>
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-bold text-zinc-900">Current Decks</h3>
+          </div>
           <div className="space-y-3">
             {decks.length > 0 ? (
-              decks.map((deck) => (
-                <Card key={deck.id} className="border-zinc-200 shadow-sm">
+              <>
+                {(showAllDecks ? decks : decks.slice(0, 5)).map((deck) => (
+                <Card key={deck.id} className="border-zinc-200 shadow-sm p-0 gap-0 overflow-hidden">
                   <CardHeader className="p-4 bg-zinc-50 border-b border-zinc-100 flex flex-col space-y-1">
                     <CardTitle className="text-sm font-bold text-zinc-900 mt-1">{deck.title}</CardTitle>
                     <p className="text-[10px] text-zinc-500">Module: {deck.module?.title}</p>
@@ -456,7 +463,17 @@ export default function ManageFlashcardsPage() {
                     </Button>
                   </div>
                 </Card>
-              ))
+              ))}
+              {decks.length > 5 && (
+                <Button 
+                  variant="outline" 
+                  className="w-full mt-2" 
+                  onClick={() => setShowAllDecks(!showAllDecks)}
+                >
+                  {showAllDecks ? "Show Less" : `View All ${decks.length} Decks`}
+                </Button>
+              )}
+            </>
             ) : (
               <p className="text-xs text-zinc-500 italic text-center py-6">No flashcard decks created yet.</p>
             )}

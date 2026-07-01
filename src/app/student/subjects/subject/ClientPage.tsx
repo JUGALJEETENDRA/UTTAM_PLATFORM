@@ -596,6 +596,9 @@ export default function StudentDashboard() {
   const [aiMessages, setAiMessages] = useState([
     { role: "assistant", content: "Executive Strategy Portal active. Quarterly targets prioritize Module 1 operational scalability. Proceed?" }
   ]);
+  const [isLocked, setIsLocked] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   // Python Development Studio State
   const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({ "basics": true });
@@ -688,6 +691,26 @@ export default function StudentDashboard() {
     }
   }, [subjectId]);
 
+  useEffect(() => {
+    if (data && data.subject?.password) {
+      const unlocked = localStorage.getItem(`subject_unlocked_${data.subject.id}`);
+      if (unlocked !== "true") {
+        setIsLocked(true);
+      }
+    }
+  }, [data]);
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === data?.subject?.password) {
+      localStorage.setItem(`subject_unlocked_${data.subject.id}`, "true");
+      setIsLocked(false);
+      setPasswordError("");
+    } else {
+      setPasswordError("Incorrect password");
+    }
+  };
+
   // Live horizontal trading ticker animation loop for Digital Business
   useEffect(() => {
     const interval = setInterval(() => {
@@ -713,7 +736,50 @@ export default function StudentDashboard() {
     );
   }
 
-  const { subject, modules = [], quizzesWithAttempts = [], flashcardDecks = [], mindmaps = [], subjectResources = [] } = data;
+  if (isLocked) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md shadow-xl border-slate-200">
+          <CardHeader className="text-center space-y-2 pb-6">
+            <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-2">
+              <ShieldAlert className="w-6 h-6 text-indigo-600" />
+            </div>
+            <CardTitle className="text-2xl font-bold text-slate-900">Protected Subject</CardTitle>
+            <CardDescription className="text-slate-500">
+              This subject requires a password for access.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="password"
+                  required
+                  placeholder="Enter password..."
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 transition-all"
+                />
+                {passwordError && <p className="text-sm text-red-500 mt-2">{passwordError}</p>}
+              </div>
+              <Button type="submit" className="w-full py-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-md">
+                Unlock Subject
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  let { subject, modules = [], quizzesWithAttempts = [], flashcardDecks = [], mindmaps = [], infographics = [], subjectResources = [] } = data;
+  
+  // Filter out invisible subtopics
+  modules = modules.map((mod: any) => ({
+    ...mod,
+    subtopics: (mod.subtopics || []).filter((st: any) => st.isVisible !== false)
+  }));
+
   const activeModule = modules.length > 0 ? modules[0] : null;
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -1061,6 +1127,33 @@ export default function StudentDashboard() {
                     ))}
                     {mindmaps.length === 0 && (
                       <div className="p-3 border border-dashed border-slate-200 text-center text-slate-400 font-mono text-[9.5px] rounded-lg">NO MIND MAPS LOGGED</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* INFOGRAPHICS ARCHITECTURE SECTION */}
+                <div className="bg-white border border-slate-200 p-6 shadow-sm rounded-lg">
+                  <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-150">
+                    <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2 font-sans">
+                      <Brain className="w-3.5 h-3.5 text-pink-600" /> Infographics
+                    </h2>
+                    <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
+                      <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-650 hover:border-indigo-300/80 transition-colors cursor-pointer border border-slate-200 px-2.5 py-1 rounded bg-white shadow-xs view-all-btn inline-block">View All Infographics →</span>
+                    </Link>
+                  </div>
+                  <div className="space-y-3">
+                    {infographics.slice(0, 3).map((info: any) => (
+                      <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`}>
+                        <div className="bg-white border border-slate-200 p-3 hover:border-[#1E3A8A] hover:bg-slate-50/30 hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300 flex justify-between items-center font-mono text-xs rounded-lg group shadow-xs">
+                          <span className="font-semibold text-xs text-slate-700 tracking-tight line-clamp-1 group-hover:text-[#1E3A8A] transition-colors duration-300">{info.title}</span>
+                          <span className="text-slate-550 flex items-center gap-1 text-[9px] font-mono border border-slate-200 px-1.5 py-0.5 rounded bg-slate-50 font-bold group-hover:bg-[#1E3A8A] group-hover:text-white group-hover:border-[#1E3A8A] transition-all duration-300">
+                            VIEW <ExternalLink className="w-2.5 h-2.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                    {infographics.length === 0 && (
+                      <div className="p-3 border border-dashed border-slate-200 text-center text-slate-400 font-mono text-[9.5px] rounded-lg">NO INFOGRAPHICS LOGGED</div>
                     )}
                   </div>
                 </div>
@@ -1719,6 +1812,63 @@ export default function StudentDashboard() {
                             </div>
                             <h4 className="font-mono text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-1 group-hover:text-blue-650 transition-colors">{map.title}</h4>
                             <p className="text-[9px] text-slate-400 font-mono mt-1">Architecture Node</p>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* CONNECTED ARCHITECTURE DIAGRAMS (INFOGRAPHICS) */}
+          <div className="w-full relative z-10 mt-6">
+
+            {/* ARCHITECTURE DIAGRAM (INFOGRAPHICS) */}
+            <div className="bg-white border border-slate-200 rounded p-6 flex flex-col justify-between shadow-sm">
+              <div>
+                <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-[#842b6a] flex items-center gap-2">
+                    <Brain className="w-4 h-4 text-[#842b6a]" /> Infographics Topologies
+                  </h3>
+                  <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
+                    <Button variant="ghost" className="text-slate-700 hover:text-[#AB3788] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
+                      <span>View All Infographics</span>
+                      <ArrowRight className="w-4 h-4 ml-1.5" />
+                    </Button>
+                  </Link>
+                </div>
+
+                <div className="relative flex flex-col items-center justify-center py-6">
+                  {/* SVG Connector Lines */}
+                  <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
+                    <svg className="w-full h-full stroke-slate-200 stroke-[2]" style={{ strokeDasharray: "4 4" }}>
+                      <line x1="15%" y1="50%" x2="38%" y2="50%" />
+                      <line x1="38%" y1="50%" x2="62%" y2="50%" />
+                      <line x1="62%" y1="50%" x2="85%" y2="50%" />
+                    </svg>
+                  </div>
+
+                  <div className="relative z-10 flex flex-col md:flex-row justify-between items-center w-full gap-6 px-4">
+                    {infographics.slice(0, 4).map((info: any, idx: number) => {
+                      const nodeColors = [
+                        { bg: "bg-pink-50 text-pink-700 border-pink-200", hover: "group-hover:bg-pink-600 group-hover:border-pink-600" },
+                        { bg: "bg-teal-50 text-teal-700 border-teal-200", hover: "group-hover:bg-teal-600 group-hover:border-teal-600" },
+                        { bg: "bg-orange-50 text-orange-700 border-orange-200", hover: "group-hover:bg-orange-600 group-hover:border-orange-600" },
+                        { bg: "bg-indigo-50 text-indigo-700 border-indigo-200", hover: "group-hover:bg-indigo-600 group-hover:border-indigo-600" },
+                      ];
+                      const colors = nodeColors[idx % nodeColors.length];
+
+                      return (
+                        <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="w-full md:w-auto">
+                          <div className="bg-slate-50 border border-slate-200 hover:border-pink-500 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm min-w-[130px] transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md">
+                            <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
+                              I0{idx + 1}
+                            </div>
+                            <h4 className="font-mono text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-1 group-hover:text-pink-650 transition-colors">{info.title}</h4>
+                            <p className="text-[9px] text-slate-400 font-mono mt-1">Infographic Node</p>
                           </div>
                         </Link>
                       );
@@ -2767,6 +2917,117 @@ export default function StudentDashboard() {
                 {mindmaps.length === 0 && (
                   <div className={`col-span-full py-8 text-center font-bold ${t.borderClass} ${t.cardBg} border-dashed`}>
                     No mind maps available yet.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* 5. Infographics */}
+            <div className="mt-8">
+              <div className="flex justify-between items-center mb-5">
+                <div>
+                  <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
+                    {isPremiumTheme ? <Grid className="w-6 h-6 mr-2 text-[#ec4899]" /> : <Brain className="w-6 h-6 mr-2 text-pink-600" />} Infographics Topologies
+                  </h2>
+                  <p className={`text-sm ${t.textMuted} mt-1`}>Explore visual learning paths</p>
+                </div>
+                <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
+                  <Button variant="ghost" className={`${t.btnGhost} flex items-center view-all-btn`}>
+                    <span>View All Infographics</span>
+                    <ArrowRight className="w-4 h-4 ml-1.5" />
+                  </Button>
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {infographics.slice(0, 4).map((info: any) => {
+                  return (
+                    <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="block h-full">
+                      <motion.div
+                        whileHover={isPremiumTheme ? "hover" : ""}
+                        animate="rest"
+                        className="h-full"
+                      >
+                        <motion.div
+                          variants={{
+                            rest: { y: 0, scale: 1 },
+                            hover: { y: -8, scale: 1.012 }
+                          }}
+                          transition={{ type: "spring", stiffness: 350, damping: 22 }}
+                          className="h-full"
+                        >
+                          <DesignStudioCard isPremium={isPremiumTheme} label="Infographic.Card" className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group`}
+                          >
+                            <CardHeader className="p-5 md:p-6 pb-2">
+                              <div className="flex justify-between items-start mb-2">
+                                <motion.span
+                                  variants={{
+                                    rest: { y: 0, boxShadow: "0 0px 0px rgba(0,0,0,0)" },
+                                    hover: { y: -1, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.03)" }
+                                  }}
+                                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                                  className={`text-[10px] font-sans px-2.5 py-1 rounded-lg font-semibold transition-all duration-150 ${isPremiumTheme
+                                    ? "bg-pink-50 text-pink-800 border border-pink-200/50 group-hover:bg-pink-100 group-hover:text-pink-950"
+                                    : t.badge
+                                    }`}
+                                >
+                                  Infographic
+                                </motion.span>
+                              </div>
+                              {/* ── ILLUSTRATION — PROTECTED ZONE ── */}
+                              {isPremiumTheme && (
+                                <div className="w-full h-12 bg-slate-50/50 border border-slate-200/60 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden transition-all duration-300">
+                                  <motion.div
+                                    variants={{ hover: { x: 3, y: -2 } }}
+                                    className="w-full h-full flex items-center justify-center"
+                                  >
+                                    <svg className="w-full h-full text-slate-400" viewBox="0 0 150 40" fill="none" stroke="currentColor" strokeWidth="1.2">
+                                      {/* Left connection nodes */}
+                                      <circle cx="28" cy="20" r="2" fill="currentColor" opacity="0.5" />
+                                      <line x1="30" y1="20" x2="54" y2="20" stroke="currentColor" strokeDasharray="3 3" opacity="0.3" />
+
+                                      {/* Right connection nodes */}
+                                      <circle cx="122" cy="20" r="2" fill="currentColor" opacity="0.5" />
+                                      <line x1="96" y1="20" x2="120" y2="20" stroke="currentColor" strokeDasharray="3 3" opacity="0.3" />
+
+                                      <g transform="translate(59, 4) scale(1.3)">
+                                        <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M12 5v14" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M12 9h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-4" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M12 15h-4a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h4" strokeLinecap="round" strokeLinejoin="round" />
+                                      </g>
+                                    </svg>
+                                  </motion.div>
+                                </div>
+                              )}
+                              <CardTitle
+                                className={`text-base transition-colors line-clamp-2 ${isPremiumTheme
+                                  ? 'font-bold font-sans tracking-tight text-slate-800'
+                                  : t.titleHover + ' font-black leading-tight'
+                                  }`}
+                              >
+                                {info.title}
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-5 md:p-6 pt-0">
+                              <div
+                                className={`flex items-center text-xs font-semibold font-mono text-slate-450`}
+                              >
+                                <ExternalLink
+                                  className="w-3.5 h-3.5 mr-1.5 text-slate-450"
+                                />
+                                Interactive View
+                              </div>
+                            </CardContent>
+                          </DesignStudioCard>
+                        </motion.div>
+                      </motion.div>
+                    </Link>
+                  );
+                })}
+                {infographics.length === 0 && (
+                  <div className={`col-span-full py-8 text-center font-bold ${t.borderClass} ${t.cardBg} border-dashed`}>
+                    No infographics available yet.
                   </div>
                 )}
               </div>
