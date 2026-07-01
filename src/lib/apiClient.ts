@@ -47,15 +47,7 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
     const url = new URL(GAS_WEB_APP_URL);
     url.searchParams.append('action', action);
     url.searchParams.append('t', Date.now().toString());
-    
-    // Convert payload to search params so it survives the 302 POST -> GET redirect by Google Apps Script
-    Object.keys(payload).forEach(key => {
-      if (typeof payload[key] === 'object') {
-        url.searchParams.append(key, JSON.stringify(payload[key]));
-      } else {
-        url.searchParams.append(key, String(payload[key]));
-      }
-    });
+
     
     const response = await fetch(url.toString(), {
       method: 'POST',

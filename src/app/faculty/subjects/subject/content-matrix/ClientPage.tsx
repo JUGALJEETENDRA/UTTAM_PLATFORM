@@ -274,8 +274,7 @@ export default function ContentMatrixClientPage() {
       setModules(prevModules => prevModules.map(m => m.id === targetModule.id ? { ...m, subtopics: updatedSubtopics } : m));
       setEditingResource(null);
     } catch (err) {
-      console.error(err);
-      alert("Failed to save link.");
+      alert("Failed to save link. Error: " + (err.message || err));
     } finally {
       setIsSaving(false);
     }

@@ -692,7 +692,7 @@ function handleSaveModule(payload) {
         subtopicNo: index + 1,
         title: st.title,
         learningOutcome: st.learningOutcome || "",
-        type: st.selectedResourceType || "none",
+        type: st.selectedResourceType || st.type || "none",
         content: st.description || "",
         mediaUrl: st.videoUrl || st.notesUrl || st.audioUrl || st.otherUrl || "",
         simulationData: JSON.stringify({
