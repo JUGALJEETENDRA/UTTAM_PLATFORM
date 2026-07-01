@@ -198,11 +198,11 @@ export default function ContentMatrixClientPage() {
 
         if (st.id === editingResource.subtopicId) {
           if (editingResource.resourceType === 'video') st.videoUrl = newUrl;
-          if (editingResource.resourceType === 'audio') parsedData.audioUrl = newUrl;
-          if (editingResource.resourceType === 'notes') parsedData.notesUrl = newUrl;
-          if (editingResource.resourceType === 'other') unpackedOther.otherUrl = newUrl;
-          if (editingResource.resourceType === 'didYouKnow') unpackedOther.didYouKnowUrl = newUrl;
-          if (editingResource.resourceType === 'reference') unpackedOther.referenceUrl = newUrl;
+          if (editingResource.resourceType === 'audio') { parsedData.audioUrl = newUrl; st.audioUrl = newUrl; }
+          if (editingResource.resourceType === 'notes') { parsedData.notesUrl = newUrl; st.notesUrl = newUrl; }
+          if (editingResource.resourceType === 'other') { unpackedOther.otherUrl = newUrl; st.otherUrl = newUrl; }
+          if (editingResource.resourceType === 'didYouKnow') { unpackedOther.didYouKnowUrl = newUrl; st.didYouKnowUrl = newUrl; }
+          if (editingResource.resourceType === 'reference') { unpackedOther.referenceUrl = newUrl; st.referenceUrl = newUrl; }
         }
 
         const newSimulationData = JSON.stringify({
