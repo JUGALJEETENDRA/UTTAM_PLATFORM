@@ -112,11 +112,16 @@ export default function ContentMatrixClientPage() {
 
     // Mindmaps and Infographics map by subtopicId OR (title and moduleId)
     const normalize = (str: string) => (str || "").replace(/[^a-z0-9]/gi, '').toLowerCase();
-    const isMappedByTitle = (items: any[]) => items.some(item => 
-      (item.subtopicId && (item.subtopicId === st.id || item.subtopicId === st.subtopicNo)) ||
-      (normalize(item.title) === normalize(st.title) && item.moduleId === mod.id) ||
-      (normalize(item.title) === normalize(mod.title) && item.moduleId === mod.id)
-    );
+    const isMappedByTitle = (items: any[]) => items.some(item => {
+      if (item.subtopicId && (item.subtopicId === st.id || item.subtopicId === st.subtopicNo)) return true;
+      if (item.moduleId !== mod.id) return false;
+      const itemTitle = normalize(item.title);
+      const stTitle = normalize(st.title);
+      const modTitle = normalize(mod.title);
+      if (!itemTitle) return false;
+      return stTitle.includes(itemTitle) || itemTitle.includes(stTitle) || 
+             modTitle.includes(itemTitle) || itemTitle.includes(modTitle);
+    });
 
     return {
       video: hasVideo,
