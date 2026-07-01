@@ -91,9 +91,9 @@ export function QuizContainer({ quiz }: QuizContainerProps) {
           ) : (
             <div />
           )}
-          <Button 
-            size="lg" 
-            onClick={() => setStarted(true)} 
+          <Button
+            size="lg"
+            onClick={() => setStarted(true)}
             disabled={quiz.questions.length === 0}
             className="bg-primary hover:bg-primary/90 text-white font-bold px-8"
           >

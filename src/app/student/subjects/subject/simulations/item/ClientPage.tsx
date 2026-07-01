@@ -6,7 +6,7 @@ import { redirect, useSearchParams } from "next/navigation";
 export default function SimulationDetailPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get('id') || '';
-    const [simulation, setSimulation] = useState<any>(null);
+  const [simulation, setSimulation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const loadSimulation = async () => {

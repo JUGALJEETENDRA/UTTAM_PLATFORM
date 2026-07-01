@@ -61,7 +61,7 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
 
     let score = 0;
     const maxScore = quiz.questions.reduce((sum, q) => sum + (Number(q.marks) || 1), 0);
-    
+
     const answersData = quiz.questions.map((q) => {
       const selectedOption = selectedAnswers[q.id] || "";
       const isCorrect = selectedOption === q.correctAnswer;
@@ -192,7 +192,7 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
                       <p className="font-semibold text-zinc-900">{idx + 1}. {ans.questionText}</p>
                     </div>
                   </div>
-                  
+
                   <div className="ml-9 space-y-3">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
@@ -207,7 +207,7 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
                           </div>
                         )}
                       </div>
-                      
+
                       {!ans.isCorrect && (
                         <div>
                           <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider block mb-1">Correct Answer</span>
@@ -272,18 +272,16 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
                 <button
                   key={key}
                   onClick={() => handleSelectOption(key)}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center space-x-4 ${
-                    isSelected
+                  className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center space-x-4 ${isSelected
                       ? "border-primary bg-primary/5 text-primary font-semibold shadow-sm"
                       : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 text-zinc-700"
-                  }`}
+                    }`}
                 >
                   <span
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold border-2 ${
-                      isSelected
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold border-2 ${isSelected
                         ? "bg-primary text-white border-primary"
                         : "bg-zinc-100 text-zinc-500 border-zinc-300"
-                    }`}
+                      }`}
                   >
                     {key}
                   </span>

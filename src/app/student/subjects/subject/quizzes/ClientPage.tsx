@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Target, Clock, Trophy, ArrowLeft, Layers, Book, ChevronRight } from "lucide-react";
+import { Target, Clock, Trophy, ArrowLeft, Layers, Book, ChevronRight, Terminal, Code } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -96,9 +96,10 @@ export default function QuizzesPage() {
   }, [subjectId]);
 
   const isUiProgramming = subjectId === 'id_mn573l5e5' || String(subjectName || "").toLowerCase().includes("ui programming");
-  const themeKey = isUiProgramming ? "ui programming" : "";
+  const isPythonProgramming = subjectId === 'id_hdzqxse2n' || String(subjectName || "").toLowerCase().includes("python");
+  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : "";
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
-  const isPremiumTheme = isUiProgramming;
+  const isPremiumTheme = isUiProgramming || isPythonProgramming;
 
   const renderQuizPreview = (quizIndex: number, title?: string) => {
     const normalizedTitle = String(title || "").toLowerCase();
@@ -165,6 +166,138 @@ export default function QuizzesPage() {
     hidden: { opacity: 0, y: 15 },
     show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 120, damping: 14 } }
   };
+
+  if (isPythonProgramming) {
+    const getCleanPythonDetails = (title: string) => {
+      const cleanTitle = String(title || "").replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
+      const words = cleanTitle.split(" ");
+      const shortWords = words.slice(0, 2);
+      const shortTitle = shortWords.join(" ") + ".py";
+      const funcName = "study" + shortWords.map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
+      return { shortTitle, funcName };
+    };
+
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden font-mono antialiased selection:bg-[#3776AB]/10 selection:text-[#3776AB] font-jetbrains">
+        {/* Dynamic code syntax fragments in background */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-[0.05] text-[9px] font-mono leading-relaxed space-y-4 p-8 text-slate-400">
+          <div>import os, sys, json<br />from typing import List, Dict, Optional</div>
+          <div className="pl-6">class PyDevStudyWorkspace(object):<br />&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, node: str) -&gt; None:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.active_node = node</div>
+          <div>def resolve_xp_stream(stream: Dict[str, float]) -&gt; float:<br />&nbsp;&nbsp;&nbsp;&nbsp;return sum(stream.values()) * 0.98</div>
+        </div>
+
+        {/* Global style imports */}
+        <style jsx global>{`
+          @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+          .font-jetbrains {
+            font-family: 'JetBrains Mono', monospace;
+          }
+        `}</style>
+
+        <div className="container mx-auto px-4 py-8 relative z-10 max-w-5xl space-y-6">
+          {/* Header IDE Info bar */}
+          <div className="bg-white border border-slate-200 rounded px-4 py-2.5 flex flex-col md:flex-row justify-between items-center text-xs gap-3 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1.5 flex-shrink-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#eab308]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#22c55e]" />
+              </div>
+              <span className="text-slate-200">|</span>
+              <span className="font-bold text-[#3776AB]">PYTHON STUDIO</span>
+              <span className="text-slate-400">/</span>
+              <span className="text-slate-650 font-bold uppercase tracking-wider text-xs">Quizzes Config</span>
+            </div>
+            <div className="flex items-center gap-4 text-[10px] text-slate-500 font-mono">
+              <span>Environment: <span className="text-[#3776AB] font-bold">py3.9-study</span></span>
+              <span>Status: <span className="text-emerald-600 font-bold">ONLINE</span></span>
+            </div>
+          </div>
+
+          {/* Dashboard Back Nav Bar */}
+          <div className="flex justify-between items-center bg-white border border-slate-200 p-3 rounded shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+            <Link href={`/student/subjects/subject?subjectId=${subjectId}`}>
+              <Button className="bg-[#3776AB] hover:bg-[#3776AB]/90 text-white border border-[#3776AB] font-bold text-[10px] py-1.5 px-4 h-8 uppercase tracking-widest transition-all rounded shadow-md">
+                ← IDE Dashboard
+              </Button>
+            </Link>
+            <div className="text-[10px] text-slate-400 font-mono">
+              path: <span className="text-[#3776AB]">~/workspace/quizzes.json</span>
+            </div>
+          </div>
+
+          {/* IDE Section Header Panel */}
+          <div className="bg-white border border-slate-200 p-6 rounded relative overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+            <div className="absolute top-0 left-0 bottom-0 w-1 bg-[#3776AB]" />
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-[10px] font-bold text-[#3776AB] bg-[#3776AB]/10 px-2 py-0.5 border border-[#3776AB]/30 rounded">INDEX</span>
+              <span className="text-[10px] text-slate-400 font-mono">READ-ONLY STREAM</span>
+            </div>
+            <h1 className="text-2xl font-bold uppercase tracking-widest text-[#3776AB] flex items-center gap-3 font-jetbrains animate-pulse">
+              <Terminal className="w-6 h-6 text-[#3776AB]" />
+              Quiz Loader.py
+            </h1>
+            <p className="text-slate-550 mt-2 text-xs leading-relaxed max-w-2xl font-medium font-sans">
+              Load assessment pipelines and unit tests. Run the compiled check modules below to validate your code blocks.
+            </p>
+          </div>
+
+          {/* Quizzes Grid */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
+            {quizzes.map((quiz: any) => {
+              const { shortTitle, funcName } = getCleanPythonDetails(quiz.title);
+
+              return (
+                <motion.div key={quiz.id} variants={itemVariants}>
+                  <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="block h-full">
+                    <div className="bg-white border border-slate-200 p-4 rounded hover:border-[#3776AB] transition-all duration-300 flex flex-col justify-between h-full group cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(55,118,171,0.06)] hover:-translate-y-1">
+                      <div>
+                        {/* IDE Tab indicators */}
+                        <div className="flex justify-between items-start mb-3 border-b border-slate-100 pb-2 text-[10px] text-slate-400 font-mono">
+                          <span className="font-bold">M0{quiz.module?.moduleNo || "?"}</span>
+                          <span className="text-[#3776AB] font-bold group-hover:text-[#005B99] transition-colors">{shortTitle}</span>
+                        </div>
+
+                        {/* Title & Description */}
+                        <h4 className="font-bold text-xs text-slate-800 mb-2 leading-relaxed font-jetbrains group-hover:text-[#3776AB] transition-colors">
+                          def {funcName}():
+                        </h4>
+                        <p className="text-[10px] text-slate-555 font-sans leading-relaxed line-clamp-3 mb-4 pl-4 border-l border-slate-200 font-medium">
+                          &quot;&quot;&quot;<br />
+                          Execute a {quiz.timeLimit || 15} minute check with {quiz.questions?.length || 0} unit questions.<br />
+                          &quot;&quot;&quot;
+                        </p>
+                      </div>
+
+                      {/* Detail nodes */}
+                      <div className="pt-3 border-t border-slate-100 flex justify-between items-center text-[9px] text-slate-400 font-mono">
+                        <span className="flex items-center gap-1 font-bold"><Code className="w-3.5 h-3.5 text-[#3776AB]" /> {quiz.questions?.length || 0} checks</span>
+                        <span className="text-[#3776AB] group-hover:translate-x-1 transition-transform flex items-center gap-0.5 font-bold">
+                          RUN_TESTS() &gt;
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {quizzes.length === 0 && (
+            <div className="p-8 text-center border border-dashed border-slate-200 bg-white text-slate-400 rounded">
+              EMPTY INTERPRETER WORKSPACE.
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className={`min-h-screen relative ${t.bg} ${t.pattern} pb-16 pt-8 brutalist-transition transition-colors duration-300 overflow-hidden`}>
@@ -247,11 +380,10 @@ export default function QuizzesPage() {
             const quizStatus = isCompleted ? (hasPassed ? "passed" : "failed") : "pending";
 
             const quizCard = (
-              <Card className={`flex flex-col h-full transition-all duration-300 overflow-hidden ${
-                isPremiumTheme
+              <Card className={`flex flex-col h-full transition-all duration-300 overflow-hidden ${isPremiumTheme
                   ? `${t.cardBg} ${t.borderClass} ${t.shadowClass} ${quizStatus === 'passed' ? 'opacity-85' : ''}`
                   : `flex flex-col h-full hover:shadow-lg transition-shadow border-zinc-200 ${quizStatus === 'passed' ? 'bg-zinc-50 opacity-80' : ''}`
-              }`}>
+                }`}>
                 <CardHeader className={isPremiumTheme ? "p-5 md:p-6 pb-2" : ""}>
                   <div className="flex justify-between items-start mb-2">
                     <Badge variant="outline" className={isPremiumTheme ? "bg-slate-100 text-slate-700 border-slate-200 rounded font-mono text-[9px]" : "text-zinc-600 bg-white"}>
@@ -317,11 +449,10 @@ export default function QuizzesPage() {
                   {quizStatus === 'passed' && (
                     <div className="w-full flex flex-col space-y-2">
                       <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="w-full">
-                        <Button variant="outline" className={`w-full font-semibold ${
-                          isPremiumTheme 
-                            ? "border-emerald-250 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100/50 rounded-lg shadow-xs font-mono text-xs uppercase" 
+                        <Button variant="outline" className={`w-full font-semibold ${isPremiumTheme
+                            ? "border-emerald-250 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100/50 rounded-lg shadow-xs font-mono text-xs uppercase"
                             : "text-green-700 border-green-200 bg-green-50 hover:bg-green-100"
-                        }`}>Retake Quiz</Button>
+                          }`}>Retake Quiz</Button>
                       </Link>
                     </div>
                   )}

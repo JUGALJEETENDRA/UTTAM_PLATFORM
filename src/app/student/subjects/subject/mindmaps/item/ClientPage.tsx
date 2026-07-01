@@ -88,13 +88,13 @@ export default function MindMapViewerClientPage() {
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col bg-zinc-950 overflow-hidden touch-none overscroll-none">
-      
+
       {/* Top Control Bar */}
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/80 to-transparent">
         <div className="flex items-center space-x-4">
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className="text-white hover:bg-white/20 rounded-full h-10 w-10"
             onClick={() => router.back()}
           >
@@ -110,8 +110,8 @@ export default function MindMapViewerClientPage() {
         </div>
 
         <div className="flex items-center space-x-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={handleDownload}
             className="bg-purple-600 hover:bg-purple-500 text-white border-none font-semibold text-xs px-3.5 py-2 rounded-lg shadow-lg flex items-center gap-1.5 transition-all"
@@ -140,8 +140,8 @@ export default function MindMapViewerClientPage() {
                   <div className="bg-amber-900/30 text-amber-500 text-xs text-center py-1 px-4 border-b border-amber-900/50">
                     Previewing via Google Drive Viewer (Image direct load failed or file is PDF)
                   </div>
-                  <iframe 
-                    src={`https://drive.google.com/file/d/${driveId}/preview`} 
+                  <iframe
+                    src={`https://drive.google.com/file/d/${driveId}/preview`}
                     className="w-full flex-1 border-0"
                     allow="autoplay"
                   />
@@ -162,18 +162,18 @@ export default function MindMapViewerClientPage() {
                 {({ zoomIn, zoomOut, resetTransform }) => (
                   <>
                     <div className="absolute bottom-8 right-8 z-20 flex flex-col space-y-2 bg-zinc-900/80 backdrop-blur-md p-2 rounded-xl border border-zinc-700/50 shadow-2xl">
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         className="text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-lg h-10 w-10"
                         onClick={() => zoomIn()}
                         title="Zoom In"
                       >
                         <ZoomIn className="h-5 w-5" />
                       </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         className="text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-lg h-10 w-10"
                         onClick={() => zoomOut()}
                         title="Zoom Out"
@@ -181,9 +181,9 @@ export default function MindMapViewerClientPage() {
                         <ZoomOut className="h-5 w-5" />
                       </Button>
                       <div className="w-full h-px bg-zinc-700/50 my-1"></div>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         className="text-purple-400 hover:text-purple-300 hover:bg-zinc-800 rounded-lg h-10 w-10"
                         onClick={() => resetTransform()}
                         title="Reset View"
@@ -191,20 +191,20 @@ export default function MindMapViewerClientPage() {
                         <Maximize className="h-5 w-5" />
                       </Button>
                     </div>
-                    
-                    <TransformComponent 
-                      wrapperStyle={{ width: "100%", height: "100%" }} 
+
+                    <TransformComponent
+                      wrapperStyle={{ width: "100%", height: "100%" }}
                       contentStyle={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img 
+                      <img
                         src={(() => {
                           if (driveId && !imageError) {
                             // Try the download URL format which often bypasses the HTML warning for images
                             return `https://drive.google.com/uc?export=download&id=${driveId}`;
                           }
                           return url.startsWith('/') || url.startsWith('http') ? url : `/${url}`;
-                        })()} 
+                        })()}
                         alt={mindMap.title}
                         className="max-w-none shadow-2xl rounded-sm object-contain"
                         style={{ maxHeight: '90vh' }}
@@ -214,7 +214,7 @@ export default function MindMapViewerClientPage() {
                             setImageError(true);
                           } else {
                             const target = e.target as HTMLImageElement;
-                            target.onerror = null; 
+                            target.onerror = null;
                             target.src = "https://placehold.co/800x600/18181b/e4e4e7?text=Image+Not+Found\nCheck+the+URL";
                           }
                         }}
@@ -231,7 +231,7 @@ export default function MindMapViewerClientPage() {
           </div>
         )}
       </div>
-      
+
     </div>
   );
 }

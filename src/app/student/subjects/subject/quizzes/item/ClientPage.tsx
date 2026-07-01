@@ -66,9 +66,9 @@ export default function QuizDetailPage() {
   // Shuffle questions randomly
   const rawQuestions = quiz.questions || [];
   const shuffledQuestions = [...rawQuestions].sort(() => Math.random() - 0.5);
-  
+
   // Slice to totalQuestionsToAsk if defined
-  const displayQuestions = quiz.totalQuestionsToAsk 
+  const displayQuestions = quiz.totalQuestionsToAsk
     ? shuffledQuestions.slice(0, quiz.totalQuestionsToAsk)
     : shuffledQuestions;
 
@@ -82,10 +82,10 @@ export default function QuizDetailPage() {
     xpReward: quiz.xpReward || 50,
     questions: displayQuestions.map((q: any, index: number) => {
       // Map optionA, optionB, etc from GAS payload if the 'options' array is missing
-      const optionsArray = q.options && q.options.length > 0 
-        ? q.options 
+      const optionsArray = q.options && q.options.length > 0
+        ? q.options
         : [q.optionA, q.optionB, q.optionC, q.optionD].filter(Boolean);
-        
+
       return {
         id: q.id || `q_${index}`,
         questionText: q.questionText,

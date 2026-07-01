@@ -753,21 +753,6 @@ export default function StudentDashboard() {
           backgroundSize: "24px 24px"
         }} />
 
-        {/* MARKET TICKER */}
-        <div className="w-full bg-white text-slate-500 text-[11px] font-mono py-2.5 border-b border-slate-200 overflow-hidden relative z-50 flex shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-          <div className="bg-slate-50 border-r border-slate-200 text-[#1E3A8A] px-4 font-bold uppercase tracking-wider absolute left-0 top-0 bottom-0 flex items-center z-50 backdrop-blur-md">
-            [ MARKET TICKER ]
-          </div>
-          <div className="flex whitespace-nowrap space-x-16 pl-64" style={{ transform: `translateX(${tickerX}px)` }}>
-            <span className="flex items-center gap-2">S&P 500: <span className="text-[#0F766E] font-bold">+0.62%</span></span>
-            <span className="flex items-center gap-2">NASDAQ: <span className="text-[#0F766E] font-bold">+1.85%</span></span>
-            <span className="flex items-center gap-2">DIGITAL_TRANSFORMATION_INDEX: <span className="text-[#2563EB] font-bold">▲ 142.8 PTS</span></span>
-            <span className="flex items-center gap-2">AUTOMATION_ADOPTION: <span className="text-slate-800 font-bold">78.4%</span></span>
-            <span className="flex items-center gap-2">AI_PRODUCTIVITY_GAIN: <span className="text-[#0F766E] font-bold">▲ 24.2%</span></span>
-            <span className="flex items-center gap-2">CLOUD_MIGRATION_RATE: <span className="text-slate-800 font-bold">92.6%</span></span>
-          </div>
-        </div>
-
         <div className="container mx-auto px-4 mt-8 relative z-10">
 
           {/* HEADER SECTION - CSS Stock Market Theme */}

@@ -60,7 +60,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
     e?.preventDefault();
     e?.stopPropagation();
     setFoundFlaws([]);
-    
+
     // Trigger visual reset and increment retry count
     setIsResetting(true);
     setRetryCount(prev => prev + 1);
@@ -207,12 +207,12 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                           url.searchParams.set('reset', 'true');
                           url.searchParams.set('retry', retryCount.toString());
                           url.searchParams.set('t', Date.now().toString());
-                          
+
                           // Force hash to 1 for games like Flexbox Froggy or CSS Diner
                           if (url.hash && url.hash.includes('level')) {
                             url.hash = 'level1';
                           } else {
-                            url.hash = '1'; 
+                            url.hash = '1';
                           }
                           return url.toString();
                         } catch (e) {
@@ -224,7 +224,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                           } else {
                             urlStr += '#1';
                           }
-                          
+
                           if (urlStr.includes('?')) {
                             if (urlStr.includes('level=')) {
                               urlStr = urlStr.replace(/level=\d+/, 'level=1');
@@ -267,8 +267,8 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                   <div
                     onClick={() => handleFlawClick("flaw3")}
                     className={`p-3 rounded-lg border-2 mb-6 cursor-pointer transition-all ${foundFlaws.includes("flaw3")
-                        ? "border-green-500 bg-green-50/50"
-                        : "border-zinc-200 hover:border-primary/50"
+                      ? "border-green-500 bg-green-50/50"
+                      : "border-zinc-200 hover:border-primary/50"
                       }`}
                   >
                     <div className="flex justify-between text-xs font-semibold text-zinc-400 mb-2">
@@ -284,8 +284,8 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                   <div
                     onClick={() => handleFlawClick("flaw5")}
                     className={`p-3 rounded-lg border-2 mb-4 cursor-pointer transition-all ${foundFlaws.includes("flaw5")
-                        ? "border-green-500 bg-green-50/50"
-                        : "border-zinc-200 hover:border-primary/50"
+                      ? "border-green-500 bg-green-50/50"
+                      : "border-zinc-200 hover:border-primary/50"
                       }`}
                   >
                     <div className="flex justify-between items-center text-xs font-semibold text-zinc-500 mb-1">
@@ -297,8 +297,8 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                       <div
                         onClick={(e) => { e.stopPropagation(); handleFlawClick("flaw1"); }}
                         className={`p-2 rounded border-2 transition-all ${foundFlaws.includes("flaw1")
-                            ? "border-green-500 bg-green-50/50"
-                            : "border-transparent hover:border-primary/50"
+                          ? "border-green-500 bg-green-50/50"
+                          : "border-transparent hover:border-primary/50"
                           }`}
                       >
                         <div className="flex justify-between text-[10px] text-zinc-400 mb-0.5">
@@ -325,8 +325,8 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                   <div
                     onClick={() => handleFlawClick("flaw2")}
                     className={`p-3 rounded-lg border-2 mb-6 cursor-pointer transition-all ${foundFlaws.includes("flaw2")
-                        ? "border-green-500 bg-green-50/50"
-                        : "border-zinc-200 hover:border-primary/50"
+                      ? "border-green-500 bg-green-50/50"
+                      : "border-zinc-200 hover:border-primary/50"
                       }`}
                   >
                     <div className="flex justify-between items-center text-xs font-semibold text-zinc-500 mb-1">
@@ -343,8 +343,8 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                   <div
                     onClick={() => handleFlawClick("flaw4")}
                     className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex justify-center ${foundFlaws.includes("flaw4")
-                        ? "border-green-500 bg-green-50/50"
-                        : "border-zinc-200 hover:border-primary/50"
+                      ? "border-green-500 bg-green-50/50"
+                      : "border-zinc-200 hover:border-primary/50"
                       }`}
                   >
                     <div className="text-center w-full">
@@ -376,8 +376,8 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
                       <div
                         key={flaw.id}
                         className={`p-3 rounded-lg border transition-all text-sm ${found
-                            ? "bg-green-950/40 border-green-700/50 text-green-300"
-                            : "bg-zinc-800/60 border-zinc-700/60 text-zinc-400"
+                          ? "bg-green-950/40 border-green-700/50 text-green-300"
+                          : "bg-zinc-800/60 border-zinc-700/60 text-zinc-400"
                           }`}
                       >
                         <div className="flex items-center space-x-2 font-bold mb-1">

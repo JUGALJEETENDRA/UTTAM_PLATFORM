@@ -7,7 +7,7 @@ import { fetchGAS } from "@/lib/apiClient";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, ArrowLeft, ExternalLink, Image as ImageIcon, Layers, Book, ChevronRight } from "lucide-react";
+import { Brain, ArrowLeft, ExternalLink, Image as ImageIcon, Layers, Book, ChevronRight, Terminal, Code } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface MindMap {
@@ -120,19 +120,19 @@ export default function StudentMindMapsList() {
       <rect x="0" y="0" width="200" height="120" fill="#F8FAFC" />
       <circle cx="100" cy="60" r="14" stroke="#7C3AED" strokeWidth="1.5" fill="#7C3AED" fillOpacity="0.05" />
       <text x="88" y="63" fill="#7C3AED" fontSize="8" fontWeight="bold" fontFamily="monospace">ROOT</text>
-      
+
       <path d="M 100 46 L 100 24 M 100 74 L 100 96 M 86 60 L 50 60 M 114 60 L 150 60" stroke="#94A3B8" strokeWidth="1.2" strokeDasharray="3 3" />
-      
+
       <circle cx="100" cy="20" r="8" stroke="#3B82F6" strokeWidth="1.2" fill="#3B82F6" fillOpacity="0.05" />
       <circle cx="100" cy="100" r="8" stroke="#10B981" strokeWidth="1.2" fill="#10B981" fillOpacity="0.05" />
       <circle cx="42" cy="60" r="8" stroke="#F59E0B" strokeWidth="1.2" fill="#F59E0B" fillOpacity="0.05" />
       <circle cx="158" cy="60" r="8" stroke="#EC4899" strokeWidth="1.2" fill="#EC4899" fillOpacity="0.05" />
-      
+
       <text x="96" y="23" fill="#3B82F6" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M1</text>
       <text x="96" y="103" fill="#10B981" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M2</text>
       <text x="38" y="63" fill="#F59E0B" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M3</text>
       <text x="154" y="63" fill="#EC4899" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M4</text>
-      
+
       <path d="M 10 10 L 190 10 M 10 110 L 190 110" stroke="#E2E8F0" strokeWidth="0.5" />
       <circle cx="10" cy="10" r="1.5" fill="#EF4444" opacity="0.4" />
       <circle cx="190" cy="10" r="1.5" fill="#EF4444" opacity="0.4" />
@@ -141,11 +141,133 @@ export default function StudentMindMapsList() {
     </svg>
   );
 
-  if (loading) {
+  if (isPythonProgramming) {
+    const getCleanPythonDetails = (title: string) => {
+      const cleanTitle = String(title || "").replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
+      const words = cleanTitle.split(" ");
+      const shortWords = words.slice(0, 2);
+      const shortTitle = shortWords.join(" ") + ".py";
+      const funcName = "study" + shortWords.map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
+      return { shortTitle, funcName };
+    };
+
     return (
-      <div className="min-h-screen bg-[#F1F5F9] flex flex-col justify-center items-center font-mono text-zinc-800 space-y-4">
-        <div className="w-12 h-12 border-4 border-t-[#3b82f6] border-zinc-200 rounded-full animate-spin" />
-        <p className="text-xs uppercase font-bold tracking-wider animate-pulse text-zinc-500">Retrieving mindmaps topology...</p>
+      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden font-mono antialiased selection:bg-[#3776AB]/10 selection:text-[#3776AB] font-jetbrains">
+        {/* Dynamic code syntax fragments in background */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-[0.05] text-[9px] font-mono leading-relaxed space-y-4 p-8 text-slate-400">
+          <div>import os, sys, json<br />from typing import List, Dict, Optional</div>
+          <div className="pl-6">class PyDevStudyWorkspace(object):<br />&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, node: str) -&gt; None:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.active_node = node</div>
+          <div>def resolve_xp_stream(stream: Dict[str, float]) -&gt; float:<br />&nbsp;&nbsp;&nbsp;&nbsp;return sum(stream.values()) * 0.98</div>
+        </div>
+
+        {/* Global style imports */}
+        <style jsx global>{`
+          @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+          .font-jetbrains {
+            font-family: 'JetBrains Mono', monospace;
+          }
+        `}</style>
+
+        <div className="container mx-auto px-4 py-8 relative z-10 max-w-5xl space-y-6">
+          {/* Header IDE Info bar */}
+          <div className="bg-white border border-slate-200 rounded px-4 py-2.5 flex flex-col md:flex-row justify-between items-center text-xs gap-3 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1.5 flex-shrink-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#eab308]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#22c55e]" />
+              </div>
+              <span className="text-slate-200">|</span>
+              <span className="font-bold text-[#3776AB]">PYTHON STUDIO</span>
+              <span className="text-slate-400">/</span>
+              <span className="text-slate-650 font-bold uppercase tracking-wider text-xs">Mindmaps Config</span>
+            </div>
+            <div className="flex items-center gap-4 text-[10px] text-slate-500 font-mono">
+              <span>Environment: <span className="text-[#3776AB] font-bold">py3.9-study</span></span>
+              <span>Status: <span className="text-emerald-600 font-bold">ONLINE</span></span>
+            </div>
+          </div>
+
+          {/* Dashboard Back Nav Bar */}
+          <div className="flex justify-between items-center bg-white border border-slate-200 p-3 rounded shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+            <Link href={`/student/subjects/subject?subjectId=${subjectId}`}>
+              <Button className="bg-[#3776AB] hover:bg-[#3776AB]/90 text-white border border-[#3776AB] font-bold text-[10px] py-1.5 px-4 h-8 uppercase tracking-widest transition-all rounded shadow-md">
+                ← IDE Dashboard
+              </Button>
+            </Link>
+            <div className="text-[10px] text-slate-400 font-mono">
+              path: <span className="text-[#3776AB]">~/workspace/mindmaps.json</span>
+            </div>
+          </div>
+
+          {/* IDE Section Header Panel */}
+          <div className="bg-white border border-slate-200 p-6 rounded relative overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+            <div className="absolute top-0 left-0 bottom-0 w-1 bg-[#3776AB]" />
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-[10px] font-bold text-[#3776AB] bg-[#3776AB]/10 px-2 py-0.5 border border-[#3776AB]/30 rounded">INDEX</span>
+              <span className="text-[10px] text-slate-400 font-mono">READ-ONLY STREAM</span>
+            </div>
+            <h1 className="text-2xl font-bold uppercase tracking-widest text-[#3776AB] flex items-center gap-3 font-jetbrains animate-pulse">
+              <Terminal className="w-6 h-6 text-[#3776AB]" />
+              Mindmap Loader.py
+            </h1>
+            <p className="text-slate-550 mt-2 text-xs leading-relaxed max-w-2xl font-medium font-sans">
+              Explore the graphical syntax trees, concept graphs, and execution flows. Select a mindmap node below to display its interactive canvas structure.
+            </p>
+          </div>
+
+          {/* Mindmaps Grid */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
+            {mindmaps.map((map: any) => {
+              const { shortTitle, funcName } = getCleanPythonDetails(map.title);
+
+              return (
+                <motion.div key={map.id} variants={itemVariants}>
+                  <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="block h-full">
+                    <div className="bg-white border border-slate-200 p-4 rounded hover:border-[#3776AB] transition-all duration-300 flex flex-col justify-between h-full group cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(55,118,171,0.06)] hover:-translate-y-1">
+                      <div>
+                        {/* IDE Tab indicators */}
+                        <div className="flex justify-between items-start mb-3 border-b border-slate-100 pb-2 text-[10px] text-slate-400 font-mono">
+                          <span className="font-bold">M0{map.module?.moduleNo || "?"}</span>
+                          <span className="text-[#3776AB] font-bold group-hover:text-[#005B99] transition-colors">{shortTitle}</span>
+                        </div>
+
+                        {/* Title & Description */}
+                        <h4 className="font-bold text-xs text-slate-800 mb-2 leading-relaxed font-jetbrains group-hover:text-[#3776AB] transition-colors">
+                          def {funcName}():
+                        </h4>
+                        <p className="text-[10px] text-slate-555 font-sans leading-relaxed line-clamp-3 mb-4 pl-4 border-l border-slate-200 font-medium">
+                          &quot;&quot;&quot;<br />
+                          Display interactive structure logic diagrams and conceptual flowcharts.<br />
+                          &quot;&quot;&quot;
+                        </p>
+                      </div>
+
+                      {/* Detail nodes */}
+                      <div className="pt-3 border-t border-slate-100 flex justify-between items-center text-[9px] text-slate-400 font-mono">
+                        <span className="flex items-center gap-1 font-bold"><Code className="w-3.5 h-3.5 text-[#3776AB]" /> Interactive Tree</span>
+                        <span className="text-[#3776AB] group-hover:translate-x-1 transition-transform flex items-center gap-0.5 font-bold">
+                          VIEW_MAP() &gt;
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {mindmaps.length === 0 && (
+            <div className="p-8 text-center border border-dashed border-slate-200 bg-white text-slate-400 rounded">
+              EMPTY INTERPRETER WORKSPACE.
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -243,11 +365,10 @@ export default function StudentMindMapsList() {
               const module = modules.find(m => m.id === map.moduleId);
 
               const cardContent = (
-                <Card className={`overflow-hidden transition-all duration-300 flex flex-col h-full ${
-                  isPremiumTheme
+                <Card className={`overflow-hidden transition-all duration-300 flex flex-col h-full ${isPremiumTheme
                     ? "bg-white border border-slate-200/80 shadow-xs hover:border-slate-350"
                     : "hover:shadow-lg hover:border-purple-300 group"
-                }`}>
+                  }`}>
                   <div className="h-48 w-full bg-slate-50 border-b border-slate-200/80 overflow-hidden relative">
                     {map.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -259,18 +380,17 @@ export default function StudentMindMapsList() {
                         </div>
                       )
                     )}
-                    
+
                     {module && (
                       <div className={`absolute top-3 left-3 px-2.5 py-1 rounded shadow-xs ${isPremiumTheme ? "bg-white/95 border border-slate-200" : "bg-white/90 backdrop-blur-sm"}`}>
                         <span className={`text-[10px] font-bold uppercase tracking-wider ${isPremiumTheme ? "text-slate-700 font-mono" : "text-purple-700"}`}>Module {module.moduleNo}</span>
                       </div>
                     )}
-                    
-                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4 ${
-                      isPremiumTheme 
-                        ? "bg-[#0A0E1A]/40 backdrop-blur-xs" 
+
+                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4 ${isPremiumTheme
+                        ? "bg-[#0A0E1A]/40 backdrop-blur-xs"
                         : "bg-gradient-to-t from-purple-900/60 to-transparent"
-                    }`}>
+                      }`}>
                       <Button className={`w-full ${isPremiumTheme ? "bg-white text-slate-900 border border-slate-200 font-mono text-xs uppercase hover:bg-slate-50 shadow-sm" : "bg-white text-purple-700 hover:bg-zinc-100"}`}>
                         Open Viewer <ExternalLink className="w-4 h-4 ml-2" />
                       </Button>

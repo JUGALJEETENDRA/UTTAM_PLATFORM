@@ -9,7 +9,7 @@ export default function FlashcardDeckPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
   const id = searchParams.get('id') || '';
-    const [deck, setDeck] = useState<any>(null);
+  const [deck, setDeck] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const loadDeck = async () => {
@@ -52,8 +52,8 @@ export default function FlashcardDeckPage() {
       </div>
       {/* Main Content */}
       <div className="flex-1 container mx-auto px-4 py-12 max-w-5xl flex items-center justify-center">
-        <FlashcardViewer 
-          cards={deck.cards || []} 
+        <FlashcardViewer
+          cards={deck.cards || []}
           deckId={deck.id}
           moduleId={deck.moduleId}
           subtopicId={deck.subtopicId}
