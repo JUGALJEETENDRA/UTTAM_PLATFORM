@@ -110,7 +110,9 @@ export default function StudentMindMapsList() {
     }
   };
 
-  const isUiProgramming = subjectId === 'id_mn573l5e5' || subjectName.toLowerCase().includes("ui programming");
+  const subjectNameLower = (subjectName || "").toLowerCase();
+  const isUiProgramming = subjectId === 'id_mn573l5e5' || subjectNameLower.includes("ui programming");
+  const isPythonProgramming = subjectNameLower.includes("python");
   const themeKey = isUiProgramming ? "ui programming" : "";
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
   const isPremiumTheme = isUiProgramming;
