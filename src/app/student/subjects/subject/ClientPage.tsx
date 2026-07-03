@@ -773,7 +773,7 @@ export default function StudentDashboard() {
   }
 
   let { subject, modules = [], quizzesWithAttempts = [], flashcardDecks = [], mindmaps = [], infographics = [], subjectResources = [] } = data;
-  
+
   // Filter out invisible subtopics
   modules = modules.map((mod: any) => ({
     ...mod,
@@ -1438,177 +1438,6 @@ export default function StudentDashboard() {
             </div>
           </div>
 
-          {/* MAIN IDE WORKSPACE GRID */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-
-            {/* LEFT SIDEBAR: File Explorer & Learning Navigation */}
-            <div className="lg:col-span-1 bg-slate-50 border border-slate-200 rounded flex flex-col h-[650px] overflow-hidden shadow-sm">
-              {/* Sidebar Tabs */}
-              <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex justify-between items-center text-xs font-bold text-slate-655">
-                <span className="tracking-widest uppercase">File Explorer</span>
-                <Settings className="w-3.5 h-3.5 hover:text-[#3776AB] cursor-pointer hover:scale-110 active:scale-90 transition-all duration-200" />
-              </div>
-
-              {/* Project Title */}
-              <div className="px-4 py-2 text-[10px] uppercase font-bold text-slate-400 tracking-wider border-b border-slate-200 flex items-center justify-between">
-                <span>📁 PROJECT: STUDENT_WORKSPACE</span>
-                <span className="text-[#3776AB]">v3.9</span>
-              </div>
-
-              {/* Folders List */}
-              <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-dev-scroll">
-                {PYTHON_WORKSPACE_TOPICS.map((topic) => {
-                  const isExpanded = expandedFolders[topic.id] || false;
-                  const topicFiles = topic.files;
-                  return (
-                    <div key={topic.id} className="space-y-1">
-                      {/* Folder Title Row */}
-                      <button
-                        onClick={() => setExpandedFolders(prev => ({ ...prev, [topic.id]: !isExpanded }))}
-                        className="w-full flex items-center gap-2 px-2 py-1.5 rounded hover:bg-slate-200/60 hover:translate-x-1 hover:shadow-sm text-left font-mono text-xs text-slate-800 transition-all duration-200 group active:scale-[0.98]"
-                      >
-                        {isExpanded ? (
-                          <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                        ) : (
-                          <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                        )}
-                        {isExpanded ? (
-                          <FolderOpen className="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform flex-shrink-0" />
-                        ) : (
-                          <Folder className="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform flex-shrink-0" />
-                        )}
-                        <span className="truncate font-semibold group-hover:text-[#3776AB] transition-colors">{topic.title}</span>
-                      </button>
-
-                      {/* Folder Files List */}
-                      {isExpanded && (
-                        <div className="pl-6 space-y-1 border-l border-slate-200 ml-4 my-1">
-                          {topicFiles.map((file) => {
-                            const isSelected = activeFile.name === file.name;
-                            return (
-                              <button
-                                key={file.name}
-                                onClick={() => {
-                                  const currentCode = fileCodes[file.name] ?? file.code;
-                                  setActiveFile({ name: file.name, folder: topic.title, code: currentCode });
-                                  setEditorActiveTab(file.name);
-                                }}
-                                className={`w-full flex items-center gap-2 px-2 py-1 rounded text-left font-mono text-xs transition-all duration-200 group active:scale-[0.97] ${isSelected
-                                  ? "bg-blue-50/80 text-blue-700 border-l-2 border-blue-600 pl-1.5 font-bold shadow-sm"
-                                  : "text-slate-650 hover:text-slate-900 hover:bg-slate-200/40 hover:translate-x-1 hover:shadow-xs"
-                                  }`}
-                              >
-                                {getFileIcon(file.name)}
-                                <span className="truncate">{file.name}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* CENTER WORKSPACE: Editor & Terminal */}
-            <div className="lg:col-span-3 flex flex-col gap-6 h-[650px]">
-
-              {/* CODE EDITOR PANEL */}
-              <div className="bg-white border border-slate-200 rounded flex-1 flex flex-col overflow-hidden relative group/editor shadow-sm">
-                {/* Editor Tabs Header */}
-                <div className="bg-slate-100 border-b border-slate-200 flex justify-between items-center pr-4">
-                  <div className="flex overflow-x-auto">
-                    {/* Active tab file */}
-                    <div className="bg-white border-r border-slate-200 border-t-2 border-t-[#3776AB] px-4 py-2.5 flex items-center gap-2 text-xs font-mono text-slate-800 font-bold select-none group">
-                      {getFileIcon(activeFile.name)}
-                      <span>{activeFile.name}</span>
-                    </div>
-                    {/* Fake extra tabs for realism */}
-                    <div className="px-4 py-2.5 flex items-center gap-2 text-xs font-mono text-slate-500 hover:text-slate-700 border-r border-slate-200 cursor-pointer select-none group hover:bg-slate-200/40 transition-colors">
-                      <FileJson className="w-3.5 h-3.5 text-amber-600 transition-transform duration-200 group-hover:scale-110" />
-                      <span>workspace_config.json</span>
-                    </div>
-                  </div>
-
-                  {/* Action buttons */}
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <button
-                      onClick={() => runCodeInTerminal(activeFile.name)}
-                      disabled={isTerminalRunning}
-                      className={`flex items-center gap-1.5 font-mono text-[10px] font-bold px-3.5 py-1.5 rounded uppercase tracking-widest transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-md ${isTerminalRunning
-                        ? "bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300"
-                        : "bg-emerald-600 text-white hover:bg-emerald-700 border border-emerald-700 shadow-sm"
-                        }`}
-                    >
-                      <Play className="w-3 h-3 fill-current" /> {isTerminalRunning ? "Running..." : "Run Code"}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Editor Code Area */}
-                <div className="flex-1 flex bg-white border-b border-slate-200 overflow-hidden font-jetbrains">
-                  {/* Line Numbers */}
-                  <div className="text-slate-400 select-none text-right pr-3 border-r border-slate-200 py-4 font-mono w-10 bg-slate-50/50">
-                    {Array.from({ length: Math.max(12, activeFile.code.split("\n").length) }).map((_, i) => (
-                      <div key={i} className="h-6 leading-6 text-xs">{i + 1}</div>
-                    ))}
-                  </div>
-                  {/* Editable Code Editor */}
-                  <div className="flex-1 relative h-full">
-                    <div className="absolute right-4 top-2 text-[10px] text-slate-400 font-mono tracking-widest select-none uppercase z-10">
-                      // {activeFile.folder}
-                    </div>
-                    <textarea
-                      value={activeFile.code}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setActiveFile(prev => ({ ...prev, code: val }));
-                        setFileCodes(prev => ({ ...prev, [activeFile.name]: val }));
-                      }}
-                      spellCheck={false}
-                      className="w-full h-full p-4 font-mono text-sm leading-6 text-slate-800 bg-transparent border-none outline-none resize-none focus:ring-0 focus:border-none font-jetbrains select-text"
-                      style={{ lineHeight: "24px" }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* TERMINAL WIDGET (Light themed bash simulator) */}
-              <div className="bg-slate-50 border border-slate-200 rounded overflow-hidden flex flex-col font-mono text-xs h-48 shadow-sm">
-                <div className="bg-slate-100 border-b border-slate-200 px-4 py-2 flex justify-between items-center select-none">
-                  <span className="text-slate-700 font-bold flex items-center gap-2">
-                    <Terminal className="w-3.5 h-3.5 text-[#3776AB]" /> bash (python-sim)
-                  </span>
-                  <span className="text-[10px] text-slate-400">UTF-8</span>
-                </div>
-                <div className="bg-white p-4 space-y-1.5 overflow-y-auto text-slate-800 font-ibm flex-1 custom-dev-scroll">
-                  <div className="text-slate-500 font-medium">$ python {activeFile.name}</div>
-                  {terminalLogs.map((log, idx) => {
-                    let logColor = "text-slate-600";
-                    if (log.includes("Successful") || log.includes("Passed") || log.includes("✓")) {
-                      logColor = "text-emerald-600 font-bold";
-                    } else if (log.includes("Error") || log.includes("Failed") || log.includes("✗")) {
-                      logColor = "text-rose-600 font-bold";
-                    } else if (log.startsWith("[")) {
-                      logColor = "text-blue-605 font-medium";
-                    }
-                    return (
-                      <div key={idx} className={logColor}>
-                        {log}
-                      </div>
-                    );
-                  })}
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <span className="text-[#3776AB] font-bold">$</span>
-                    <span className="w-1.5 h-3.5 bg-slate-400 animate-pulse" />
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
           {/* PYTHON LEARNING MODULES */}
           <div className="bg-white border border-slate-200 rounded p-6 shadow-sm relative z-10">
             <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
@@ -1901,6 +1730,178 @@ export default function StudentDashboard() {
                 </p>
               )}
             </div>
+          </div>
+
+          {/* MAIN IDE WORKSPACE AREA (MOVED TO BOTTOM OF PAGE) */}
+          <div className="flex flex-col gap-6 mt-6 relative z-10">
+
+            {/* CODE EDITOR PANEL (FULL WIDTH AT TOP) */}
+            <div className="bg-white border border-slate-200 rounded flex flex-col h-[500px] overflow-hidden relative group/editor shadow-sm">
+              {/* Editor Tabs Header */}
+              <div className="bg-slate-100 border-b border-slate-200 flex justify-between items-center pr-4">
+                <div className="flex overflow-x-auto">
+                  {/* Active tab file */}
+                  <div className="bg-white border-r border-slate-200 border-t-2 border-t-[#3776AB] px-4 py-2.5 flex items-center gap-2 text-xs font-mono text-slate-800 font-bold select-none group">
+                    {getFileIcon(activeFile.name)}
+                    <span>{activeFile.name}</span>
+                  </div>
+                  {/* Fake extra tabs for realism */}
+                  <div className="px-4 py-2.5 flex items-center gap-2 text-xs font-mono text-slate-500 hover:text-slate-700 border-r border-slate-200 cursor-pointer select-none group hover:bg-slate-200/40 transition-colors">
+                    <FileJson className="w-3.5 h-3.5 text-amber-600 transition-transform duration-200 group-hover:scale-110" />
+                    <span>workspace_config.json</span>
+                  </div>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button
+                    onClick={() => runCodeInTerminal(activeFile.name)}
+                    disabled={isTerminalRunning}
+                    className={`flex items-center gap-1.5 font-mono text-[10px] font-bold px-3.5 py-1.5 rounded uppercase tracking-widest transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-md ${isTerminalRunning
+                      ? "bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300"
+                      : "bg-emerald-600 text-white hover:bg-emerald-700 border border-emerald-700 shadow-sm"
+                      }`}
+                  >
+                    <Play className="w-3.5 h-3.5 fill-current" /> {isTerminalRunning ? "Running..." : "Run Code"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Editor Code Area */}
+              <div className="flex-1 flex bg-white border-b border-slate-200 overflow-hidden font-jetbrains">
+                {/* Line Numbers */}
+                <div className="text-slate-400 select-none text-right pr-3 border-r border-slate-200 py-4 font-mono w-10 bg-slate-50/50">
+                  {Array.from({ length: Math.max(12, activeFile.code.split("\n").length) }).map((_, i) => (
+                    <div key={i} className="h-6 leading-6 text-xs">{i + 1}</div>
+                  ))}
+                </div>
+                {/* Editable Code Editor */}
+                <div className="flex-1 relative h-full">
+                  <div className="absolute right-4 top-2 text-[10px] text-slate-400 font-mono tracking-widest select-none uppercase z-10">
+                    // {activeFile.folder}
+                  </div>
+                  <textarea
+                    value={activeFile.code}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setActiveFile(prev => ({ ...prev, code: val }));
+                      setFileCodes(prev => ({ ...prev, [activeFile.name]: val }));
+                    }}
+                    spellCheck={false}
+                    className="w-full h-full p-4 font-mono text-sm leading-6 text-slate-800 bg-transparent border-none outline-none resize-none focus:ring-0 focus:border-none font-jetbrains select-text"
+                    style={{ lineHeight: "24px" }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* BOTTOM UTILITY DRAWERS: File Explorer & Terminal side-by-side */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+              {/* File Explorer (Bottom Left) */}
+              <div className="lg:col-span-1 bg-slate-50 border border-slate-200 rounded flex flex-col h-[320px] overflow-hidden shadow-sm">
+                {/* Sidebar Tabs */}
+                <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex justify-between items-center text-xs font-bold text-slate-655">
+                  <span className="tracking-widest uppercase">File Explorer</span>
+                  <Settings className="w-3.5 h-3.5 hover:text-[#3776AB] cursor-pointer hover:scale-110 active:scale-90 transition-all duration-200" />
+                </div>
+
+                {/* Project Title */}
+                <div className="px-4 py-2 text-[10px] uppercase font-bold text-slate-400 tracking-wider border-b border-slate-200 flex items-center justify-between">
+                  <span>📁 PROJECT: STUDENT_WORKSPACE</span>
+                  <span className="text-[#3776AB]">v3.9</span>
+                </div>
+
+                {/* Folders List */}
+                <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-dev-scroll">
+                  {PYTHON_WORKSPACE_TOPICS.map((topic) => {
+                    const isExpanded = expandedFolders[topic.id] || false;
+                    const topicFiles = topic.files;
+                    return (
+                      <div key={topic.id} className="space-y-1">
+                        {/* Folder Title Row */}
+                        <button
+                          onClick={() => setExpandedFolders(prev => ({ ...prev, [topic.id]: !isExpanded }))}
+                          className="w-full flex items-center gap-2 px-2 py-1.5 rounded hover:bg-slate-200/60 hover:translate-x-1 hover:shadow-sm text-left font-mono text-xs text-slate-800 transition-all duration-200 group active:scale-[0.98]"
+                        >
+                          {isExpanded ? (
+                            <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors" />
+                          ) : (
+                            <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors" />
+                          )}
+                          {isExpanded ? (
+                            <FolderOpen className="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform flex-shrink-0" />
+                          ) : (
+                            <Folder className="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform flex-shrink-0" />
+                          )}
+                          <span className="truncate font-semibold group-hover:text-[#3776AB] transition-colors">{topic.title}</span>
+                        </button>
+
+                        {/* Folder Files List */}
+                        {isExpanded && (
+                          <div className="pl-6 space-y-1 border-l border-slate-200 ml-4 my-1">
+                            {topicFiles.map((file) => {
+                              const isSelected = activeFile.name === file.name;
+                              return (
+                                <button
+                                  key={file.name}
+                                  onClick={() => {
+                                    const currentCode = fileCodes[file.name] ?? file.code;
+                                    setActiveFile({ name: file.name, folder: topic.title, code: currentCode });
+                                    setEditorActiveTab(file.name);
+                                  }}
+                                  className={`w-full flex items-center gap-2 px-2 py-1 rounded text-left font-mono text-xs transition-all duration-200 group active:scale-[0.97] ${isSelected
+                                    ? "bg-blue-50/80 text-blue-700 border-l-2 border-blue-600 pl-1.5 font-bold shadow-sm"
+                                    : "text-slate-655 hover:text-slate-900 hover:bg-slate-200/40 hover:translate-x-1 hover:shadow-xs"
+                                    }`}
+                                >
+                                  {getFileIcon(file.name)}
+                                  <span className="truncate">{file.name}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Terminal / Compiler Widget (Bottom Right) */}
+              <div className="lg:col-span-3 bg-slate-50 border border-slate-200 rounded overflow-hidden flex flex-col font-mono text-xs h-[320px] shadow-sm">
+                <div className="bg-slate-100 border-b border-slate-200 px-4 py-2 flex justify-between items-center select-none">
+                  <span className="text-slate-700 font-bold flex items-center gap-2">
+                    <Terminal className="w-3.5 h-3.5 text-[#3776AB]" /> bash (python-sim)
+                  </span>
+                  <span className="text-[10px] text-slate-400">UTF-8</span>
+                </div>
+                <div className="bg-white p-4 space-y-1.5 overflow-y-auto text-slate-800 font-ibm flex-1 custom-dev-scroll">
+                  <div className="text-slate-500 font-medium">$ python {activeFile.name}</div>
+                  {terminalLogs.map((log, idx) => {
+                    let logColor = "text-slate-600";
+                    if (log.includes("Successful") || log.includes("Passed") || log.includes("✓")) {
+                      logColor = "text-emerald-600 font-bold";
+                    } else if (log.includes("Error") || log.includes("Failed") || log.includes("✗")) {
+                      logColor = "text-rose-600 font-bold";
+                    } else if (log.startsWith("[")) {
+                      logColor = "text-blue-605 font-medium";
+                    }
+                    return (
+                      <div key={idx} className={logColor}>
+                        {log}
+                      </div>
+                    );
+                  })}
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="text-[#3776AB] font-bold">$</span>
+                    <span className="w-1.5 h-3.5 bg-slate-400 animate-pulse" />
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
           </div>
 
         </div>
