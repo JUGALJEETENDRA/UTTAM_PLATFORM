@@ -36,8 +36,8 @@ function setupDatabase() {
     "Quizzes": ["id", "subjectId", "moduleId", "subtopicId", "title", "timeLimit", "totalMarks", "documentUrl", "totalQuestionsToAsk", "questions"],
     "FlashcardDecks": ["id", "subjectId", "moduleId", "subtopicId", "title", "cards"],
     "Simulations": ["id", "subjectId", "moduleId", "subtopicId", "title", "description", "difficulty", "estimatedTime", "learningOutcome", "frontendUrl"],
-    "MindMaps": ["id", "subjectId", "moduleId", "title", "imageUrl", "downloadUrl", "createdAt"],
-    "Infographics": ["id", "subjectId", "moduleId", "title", "imageUrl", "downloadUrl", "createdAt"],
+    "MindMaps": ["id", "subjectId", "moduleId", "subtopicId", "title", "imageUrl", "downloadUrl", "createdAt"],
+    "Infographics": ["id", "subjectId", "moduleId", "subtopicId", "title", "imageUrl", "downloadUrl", "createdAt"],
     "Resources": ["id", "subjectId", "title", "type", "link", "detail"]
   };
 
@@ -467,12 +467,13 @@ function handleGetMindMaps(payload) {
 }
 
 function handleSaveMindMap(payload) {
-  const { id, subjectId, moduleId, title, imageUrl, downloadUrl } = payload;
+  const { id, subjectId, moduleId, subtopicId, title, imageUrl, downloadUrl } = payload;
   const newId = id || generateId();
   const data = {
     id: newId,
     subjectId,
     moduleId: moduleId || "",
+    subtopicId: subtopicId || "",
     title,
     imageUrl: imageUrl || "",
     downloadUrl: downloadUrl || "",
@@ -503,12 +504,13 @@ function handleGetInfographics(payload) {
 }
 
 function handleSaveInfographic(payload) {
-  const { id, subjectId, moduleId, title, imageUrl, downloadUrl } = payload;
+  const { id, subjectId, moduleId, subtopicId, title, imageUrl, downloadUrl } = payload;
   const newId = id || generateId();
   const data = {
     id: newId,
     subjectId,
     moduleId: moduleId || "",
+    subtopicId: subtopicId || "",
     title,
     imageUrl: imageUrl || "",
     downloadUrl: downloadUrl || "",
@@ -692,7 +694,7 @@ function handleSaveModule(payload) {
         subtopicNo: index + 1,
         title: st.title,
         learningOutcome: st.learningOutcome || "",
-        type: st.selectedResourceType || "none",
+        type: st.selectedResourceType || st.type || "none",
         content: st.description || "",
         mediaUrl: st.videoUrl || st.notesUrl || st.audioUrl || st.otherUrl || "",
         simulationData: JSON.stringify({

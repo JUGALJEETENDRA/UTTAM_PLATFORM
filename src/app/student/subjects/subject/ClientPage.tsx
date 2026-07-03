@@ -69,11 +69,39 @@ const DEFAULT_THEME = {
   shadowClass: "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-2",
   btnPrimary: "bg-[#2dd4bf] text-black hover:bg-[#2dd4bf]/90 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
   btnGhost: "text-black font-black hover:bg-zinc-200 border-2 border-black rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5 transition-all text-xs h-9 px-3 flex items-center bg-white",
-  titleHover: "group-hover:text-primary",
+  titleHover: "group-hover:text-[#2dd4bf]",
   textHeading: "text-black font-black uppercase",
   textMuted: "text-zinc-700 font-medium",
   badge: "bg-zinc-200 text-black border-2 border-black rounded-none",
-  pattern: ""
+  pattern: "",
+  iconColor: "text-[#2dd4bf]"
+};
+
+const brutalistThemeColors = [
+  { bg: "bg-[#2dd4bf]", text: "text-[#2dd4bf]", hover: "group-hover:text-[#2dd4bf]" },
+  { bg: "bg-[#f43f5e]", text: "text-[#f43f5e]", hover: "group-hover:text-[#f43f5e]" },
+  { bg: "bg-[#fbbf24]", text: "text-[#fbbf24]", hover: "group-hover:text-[#fbbf24]" },
+  { bg: "bg-[#a855f7]", text: "text-[#a855f7]", hover: "group-hover:text-[#a855f7]" },
+  { bg: "bg-[#3b82f6]", text: "text-[#3b82f6]", hover: "group-hover:text-[#3b82f6]" },
+  { bg: "bg-[#4ade80]", text: "text-[#4ade80]", hover: "group-hover:text-[#4ade80]" },
+  { bg: "bg-[#ec4899]", text: "text-[#ec4899]", hover: "group-hover:text-[#ec4899]" },
+];
+
+const getDynamicTheme = (subjectId: string | null) => {
+  if (!subjectId) return DEFAULT_THEME;
+  let hash = 0;
+  for (let i = 0; i < subjectId.length; i++) {
+    hash = subjectId.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const colorIndex = Math.abs(hash) % brutalistThemeColors.length;
+  const theme = brutalistThemeColors[colorIndex];
+  
+  return {
+    ...DEFAULT_THEME,
+    btnPrimary: `${theme.bg} text-black hover:opacity-90 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`,
+    iconColor: theme.text,
+    titleHover: theme.hover,
+  };
 };
 
 const PYTHON_WORKSPACE_TOPICS = [
@@ -702,7 +730,7 @@ export default function StudentDashboard() {
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput === data?.subject?.password) {
+    if (String(passwordInput).trim() === String(data?.subject?.password || "").trim()) {
       localStorage.setItem(`subject_unlocked_${data.subject.id}`, "true");
       setIsLocked(false);
       setPasswordError("");
@@ -2299,7 +2327,7 @@ export default function StudentDashboard() {
   };
 
   const themeKey = isUiProgramming ? "ui programming" : (subjectNameLower.includes("python") ? "python programming" : "");
-  const t = THEME_MAP[themeKey] || DEFAULT_THEME;
+  const t = THEME_MAP[themeKey] || getDynamicTheme(subject?.id || subjectId);
   const isPremiumTheme = isUiProgramming;
 
   return (
@@ -2457,7 +2485,7 @@ export default function StudentDashboard() {
               <div className="flex justify-between items-center mb-5">
                 <div>
                   <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Layers className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Layers className="w-6 h-6 mr-2" />} Learning Modules
+                    {isPremiumTheme ? <Layers className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Layers className={`w-6 h-6 mr-2 ${t.iconColor || ''}`} />} Learning Modules
                   </h2>
                   <p className={`text-sm ${t.textMuted} mt-1`}>Explore all the topics for this subject</p>
                 </div>
@@ -2585,7 +2613,7 @@ export default function StudentDashboard() {
               <div className="flex justify-between items-center mb-5">
                 <div>
                   <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Component className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Target className="w-6 h-6 mr-2" />} Quizzes & Assessments
+                    {isPremiumTheme ? <Component className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Target className={`w-6 h-6 mr-2 ${t.iconColor || ''}`} />} Quizzes & Assessments
                   </h2>
                   <p className={`text-sm ${t.textMuted} mt-1`}>Test your knowledge</p>
                 </div>
@@ -2707,7 +2735,7 @@ export default function StudentDashboard() {
               <div className="flex justify-between items-center mb-5">
                 <div>
                   <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Palette className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Zap className="w-6 h-6 mr-2" />} Flashcard Decks
+                    {isPremiumTheme ? <Palette className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Zap className={`w-6 h-6 mr-2 ${t.iconColor || ''}`} />} Flashcard Decks
                   </h2>
                   <p className={`text-sm ${t.textMuted} mt-1`}>Quick revision decks</p>
                 </div>
@@ -2817,7 +2845,7 @@ export default function StudentDashboard() {
               <div className="flex justify-between items-center mb-5">
                 <div>
                   <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Grid className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Brain className="w-6 h-6 mr-2" />} Interactive Mind Maps
+                    {isPremiumTheme ? <Grid className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Brain className={`w-6 h-6 mr-2 ${t.iconColor || ''}`} />} Mind Maps
                   </h2>
                   <p className={`text-sm ${t.textMuted} mt-1`}>Explore visual topic structures</p>
                 </div>
@@ -3080,15 +3108,15 @@ export default function StudentDashboard() {
                           </span>
                         ) : (
                           <span className="flex items-center gap-2">
-                            <FileText className="w-4 h-4" />
+                            <FileText className={`w-4 h-4 ${t.iconColor || ''}`} />
                             Reference Materials
                           </span>
                         )}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="pt-4 space-y-4">
+                    <CardContent className="pt-4 pb-4 px-4 space-y-4 w-full">
                       {subjectResources.map((resource: any, index: number) => (
-                        <div key={index} className="brutalist-resource-item transition-all duration-200 hover:translate-x-1.5">
+                        <div key={index} className="w-full transition-all duration-200 hover:-translate-y-1">
                           <SubjectResourceCard
                             title={resource.title}
                             type={resource.type}

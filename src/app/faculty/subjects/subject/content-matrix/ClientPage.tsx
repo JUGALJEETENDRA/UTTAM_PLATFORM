@@ -110,10 +110,18 @@ export default function ContentMatrixClientPage() {
       item.subtopicId === st.id || item.subtopicId === st.subtopicNo
     );
 
-    // Mindmaps and Infographics map by title and moduleId
-    const isMappedByTitle = (items: any[]) => items.some(item => 
-      item.title === st.title && item.moduleId === mod.id
-    );
+    // Mindmaps and Infographics map by subtopicId OR (title and moduleId)
+    const normalize = (str: string) => (str || "").replace(/[^a-z0-9]/gi, '').toLowerCase();
+    const isMappedByTitle = (items: any[]) => items.some(item => {
+      if (item.subtopicId && (item.subtopicId === st.id || item.subtopicId === st.subtopicNo)) return true;
+      if (item.moduleId !== mod.id) return false;
+      const itemTitle = normalize(item.title);
+      const stTitle = normalize(st.title);
+      const modTitle = normalize(mod.title);
+      if (!itemTitle) return false;
+      return stTitle.includes(itemTitle) || itemTitle.includes(stTitle) || 
+             modTitle.includes(itemTitle) || itemTitle.includes(modTitle);
+    });
 
     return {
       video: hasVideo,
@@ -198,11 +206,11 @@ export default function ContentMatrixClientPage() {
 
         if (st.id === editingResource.subtopicId) {
           if (editingResource.resourceType === 'video') st.videoUrl = newUrl;
-          if (editingResource.resourceType === 'audio') parsedData.audioUrl = newUrl;
-          if (editingResource.resourceType === 'notes') parsedData.notesUrl = newUrl;
-          if (editingResource.resourceType === 'other') unpackedOther.otherUrl = newUrl;
-          if (editingResource.resourceType === 'didYouKnow') unpackedOther.didYouKnowUrl = newUrl;
-          if (editingResource.resourceType === 'reference') unpackedOther.referenceUrl = newUrl;
+          if (editingResource.resourceType === 'audio') { parsedData.audioUrl = newUrl; st.audioUrl = newUrl; }
+          if (editingResource.resourceType === 'notes') { parsedData.notesUrl = newUrl; st.notesUrl = newUrl; }
+          if (editingResource.resourceType === 'other') { unpackedOther.otherUrl = newUrl; st.otherUrl = newUrl; }
+          if (editingResource.resourceType === 'didYouKnow') { unpackedOther.didYouKnowUrl = newUrl; st.didYouKnowUrl = newUrl; }
+          if (editingResource.resourceType === 'reference') { unpackedOther.referenceUrl = newUrl; st.referenceUrl = newUrl; }
         }
 
         const newSimulationData = JSON.stringify({
@@ -274,8 +282,7 @@ export default function ContentMatrixClientPage() {
       setModules(prevModules => prevModules.map(m => m.id === targetModule.id ? { ...m, subtopics: updatedSubtopics } : m));
       setEditingResource(null);
     } catch (err) {
-      console.error(err);
-      alert("Failed to save link.");
+      alert("Failed to save link. Error: " + (err.message || err));
     } finally {
       setIsSaving(false);
     }

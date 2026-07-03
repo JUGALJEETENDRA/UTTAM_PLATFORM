@@ -465,6 +465,18 @@ export default function ModuleDetailPage() {
               } else if (typeof subtopic.simulationData === 'object' && subtopic.simulationData !== null) {
                 subtopic = { ...subtopic, ...subtopic.simulationData };
               }
+
+              if (typeof subtopic.videoLanguages === 'string') {
+                try { subtopic.videoLanguages = JSON.parse(subtopic.videoLanguages); } catch(e) { subtopic.videoLanguages = []; }
+              } else if (!Array.isArray(subtopic.videoLanguages)) {
+                subtopic.videoLanguages = [];
+              }
+
+              if (typeof subtopic.audioLanguages === 'string') {
+                try { subtopic.audioLanguages = JSON.parse(subtopic.audioLanguages); } catch(e) { subtopic.audioLanguages = []; }
+              } else if (!Array.isArray(subtopic.audioLanguages)) {
+                subtopic.audioLanguages = [];
+              }
               
               if (typeof subtopic.otherUrl === 'string' && subtopic.otherUrl.trim().startsWith("{")) {
                 try {
@@ -519,7 +531,7 @@ export default function ModuleDetailPage() {
                                   onChange={(e) => handleLanguageChange(subtopic.id, 'video', e.target.value)}
                                 >
                                   {defaultVideoUrl && <option value={defaultVideoUrl}>English (Default)</option>}
-                                  {subtopic.videoLanguages.map((lang: any, i: number) => (
+                                  {subtopic.videoLanguages?.map((lang: any, i: number) => (
                                     <option key={i} value={lang.url}>{lang.language}</option>
                                   ))}
                                 </select>
