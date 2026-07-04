@@ -120,11 +120,11 @@ export default function SubjectSelectionPage() {
     <div className="min-h-screen bg-[#f4f4f0] text-black px-4 py-16 flex flex-col justify-center items-center relative">
       {brutalistStyles}
       
-      <div className="text-center mb-16 space-y-4">
-        <h1 className="text-4xl md:text-5xl font-black tracking-tight uppercase bg-[#eab308] border-4 border-black px-6 py-4 inline-block brutalist-shadow-deep animate-header-box font-sans">
+      <div className="text-center mb-12 md:mb-16 space-y-3 md:space-y-4 px-2">
+        <h1 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight uppercase bg-[#eab308] border-2 md:border-4 border-black px-4 py-3 md:px-6 md:py-4 inline-block brutalist-shadow-deep animate-header-box font-sans leading-tight">
           Choose your subject to learn
         </h1>
-        <p className="text-zinc-700 text-lg max-w-md mx-auto font-bold pt-4">
+        <p className="text-zinc-700 text-sm sm:text-base md:text-lg max-w-md mx-auto font-bold pt-2 md:pt-4 px-4">
           Pick an active study unit to pull open modules, retro practice arenas, and grading modules.
         </p>
       </div>

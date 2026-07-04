@@ -55,10 +55,10 @@ export default function FacultyDashboardPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-3 md:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-zinc-900">Faculty Dashboard</h1>
-          <p className="text-zinc-500 mt-1">Manage subjects, content, and monitor student progress.</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-zinc-900">Faculty Dashboard</h1>
+          <p className="text-sm md:text-base text-zinc-500 mt-1">Manage subjects, content, and monitor student progress.</p>
         </div>
       </div>
  

@@ -324,6 +324,7 @@ export default function ModuleDetailPage() {
   const [allModules, setAllModules] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLanguages, setSelectedLanguages] = useState<{[id: string]: {video: string, audio: string}}>({});
+  const [activeNote, setActiveNote] = useState<{url: string, title: string, id: string} | null>(null);
 
   const handleLanguageChange = (subtopicId: string, type: 'video' | 'audio', url: string) => {
     setSelectedLanguages(prev => ({
@@ -446,6 +447,33 @@ export default function ModuleDetailPage() {
   // RENDER VARIANT A: DIGITAL BUSINESS & TRANSFORMATION (PREMIUM LIGHT THEME)
   // ==========================================
   if (isDigitalBusiness) {
+    if (activeNote) {
+      return (
+        <div className="fixed inset-0 z-[100] bg-[#F8FAFC] text-slate-800 flex flex-col antialiased font-sans">
+          <div className="bg-white px-4 md:px-6 h-14 border-b border-slate-200 shadow-sm flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-4">
+              <Button variant="outline" size="sm" onClick={() => setActiveNote(null)} className="h-8 shadow-sm text-xs font-bold text-slate-700 hover:text-slate-900 border-slate-200 hover:bg-slate-50 flex items-center gap-1.5">
+                <ChevronLeft className="w-3.5 h-3.5" /> Back to Subtopics
+              </Button>
+              <div className="hidden sm:flex items-center gap-2 text-xs font-medium text-slate-500">
+                <Layers className="w-3.5 h-3.5 text-[#1E3A8A]" />
+                <span className="truncate max-w-[200px]">{moduleData.title}</span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+                <span className="truncate max-w-[250px] text-slate-800 font-bold">{activeNote.title}</span>
+              </div>
+            </div>
+            <a href={activeNote.url} target="_blank" rel="noopener noreferrer">
+              <Button variant="ghost" size="sm" className="h-8 text-[11px] font-bold text-[#1E3A8A] hover:bg-slate-50 border border-slate-200">
+                <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Open in Drive
+              </Button>
+            </a>
+          </div>
+          <div className="flex-1 w-full bg-slate-50 relative overflow-hidden">
+            <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0" allow="autoplay; fullscreen" />
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden antialiased selection:bg-[#1E3A8A]/10 selection:text-[#1E3A8A] font-sans">
         {/* Strategy-board dot pattern grid overlay */}
@@ -456,7 +484,7 @@ export default function ModuleDetailPage() {
 
         {sideNavIcons}
 
-        <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl space-y-6">
+        <div className="container mx-auto px-4 py-8 relative z-10 max-w-5xl space-y-6">
           
           {/* Subtle Breadcrumb Navigation - Removed */}
 
@@ -570,7 +598,7 @@ export default function ModuleDetailPage() {
                         {(defaultVideoUrl || (subtopic.videoLanguages && subtopic.videoLanguages.length > 0)) && (
                           <div className="w-full mb-5">
                             {subtopic.videoLanguages && subtopic.videoLanguages.length > 0 && (
-                              <div className="flex justify-end mb-2 max-w-3xl mx-auto">
+                              <div className="flex justify-end mb-2">
                                 <select 
                                   className="bg-white border border-slate-200 rounded-lg text-xs px-2.5 py-1.5 text-slate-750 font-medium focus:outline-none focus:border-[#1E3A8A] shadow-sm"
                                   value={selectedLanguages[subtopic.id]?.video || defaultVideoUrl}
@@ -583,7 +611,7 @@ export default function ModuleDetailPage() {
                                 </select>
                               </div>
                             )}
-                            <div className="w-full max-w-3xl mx-auto">
+                            <div className="w-full">
                               <InlineVideoPlayer 
                                 url={selectedLanguages[subtopic.id]?.video || defaultVideoUrl} 
                                 title={subtopic.title} 
@@ -595,7 +623,7 @@ export default function ModuleDetailPage() {
 
                         {/* Audio Content */}
                         {(defaultAudioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
-                          <div className="w-full mb-5 max-w-3xl mx-auto">
+                          <div className="w-full mb-5">
                             {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
                               <div className="flex justify-end mb-2">
                                 <select 
@@ -620,11 +648,13 @@ export default function ModuleDetailPage() {
                         <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-3 border-t border-slate-100 pt-4 sm:pt-5 mt-auto">
                           {subtopic.notesUrl && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
-                              <a href={subtopic.notesUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-red-50/30 border-slate-200 hover:border-red-300 text-slate-700 hover:text-red-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
-                                  <FileText className="w-3.5 h-3.5 text-red-500 shrink-0" /> Read Notes
-                                </Button>
-                              </a>
+                              <Button 
+                                onClick={() => setActiveNote({ url: subtopic.notesUrl, title: subtopic.title, id: subtopic.id })}
+                                variant="outline" 
+                                className="w-full sm:w-auto bg-white hover:bg-red-50/30 border-slate-200 hover:border-red-300 text-slate-700 hover:text-red-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5"
+                              >
+                                <FileText className="w-3.5 h-3.5 text-red-500 shrink-0" /> Read Notes
+                              </Button>
                             </ResourceLinkTracker>
                           )}
                           {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
@@ -710,6 +740,39 @@ export default function ModuleDetailPage() {
   // RENDER VARIANT C: PYTHON DEVELOPMENT STUDIO (PREMIUM PROFESSIONAL IDE THEME)
   // ==========================================
   if (isPythonProgramming) {
+    if (activeNote) {
+      return (
+        <div className="fixed inset-0 z-[100] bg-[#F8FAFC] text-slate-800 flex flex-col font-mono antialiased selection:bg-[#3776AB]/10 selection:text-[#3776AB] font-jetbrains">
+          <style jsx global>{`
+            @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;750&display=swap');
+            .font-jetbrains { font-family: 'JetBrains Mono', monospace; }
+          `}</style>
+          <div className="bg-white border-b border-slate-200 px-4 md:px-6 h-12 flex items-center justify-between text-xs shadow-sm shrink-0">
+            <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" onClick={() => setActiveNote(null)} className="h-7 text-[10px] text-slate-600 font-mono px-2 rounded hover:bg-slate-50 border-slate-200 shadow-xs flex items-center gap-1">
+                <ChevronLeft className="w-3.5 h-3.5" /> exit()
+              </Button>
+              <span className="text-slate-200">|</span>
+              <span className="font-bold text-[#2b5b84] hidden sm:inline">PYTHON DEVELOPMENT STUDIO</span>
+              <span className="text-slate-400 hidden sm:inline">/</span>
+              <span className="text-[#3776AB] font-bold tracking-wider truncate max-w-[300px]">{activeNote.title}</span>
+            </div>
+            <div className="flex items-center gap-4 text-[10px] text-slate-500">
+              <a href={activeNote.url} target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="sm" className="h-7 text-[10px] text-[#3776AB] border-[#3776AB]/30 hover:bg-[#3776AB]/10 px-2 rounded flex items-center gap-1">
+                  <ExternalLink className="w-3.5 h-3.5 mr-1" /> open_external()
+                </Button>
+              </a>
+            </div>
+          </div>
+          <div className="flex-1 w-full bg-[#1e1e1e] relative p-1">
+            <div className="w-full h-full bg-white rounded-sm overflow-hidden">
+              <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0" allow="autoplay; fullscreen" />
+            </div>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden font-mono antialiased selection:bg-[#3776AB]/10 selection:text-[#3776AB] font-jetbrains">
         
@@ -728,7 +791,7 @@ export default function ModuleDetailPage() {
 
         {sideNavIcons}
 
-        <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl space-y-6">
+        <div className="container mx-auto px-4 py-8 relative z-10 max-w-5xl space-y-6">
           
           {/* Header IDE Info bar */}
           <div className="bg-white border border-slate-200 rounded px-4 py-2.5 flex flex-col md:flex-row justify-between items-center text-xs gap-3 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
@@ -868,7 +931,7 @@ export default function ModuleDetailPage() {
                     {(defaultVideoUrl || (subtopic.videoLanguages && subtopic.videoLanguages.length > 0)) && (
                       <div className="w-full mb-5 pl-4 border-l border-slate-200">
                         {subtopic.videoLanguages && subtopic.videoLanguages.length > 0 && (
-                          <div className="flex justify-end mb-2 max-w-3xl mx-auto">
+                          <div className="flex justify-end mb-2">
                             <select 
                               className="bg-white border border-slate-200 rounded font-mono text-[10px] px-2.5 py-1.5 text-slate-700 focus:outline-none focus:border-[#3776AB] shadow-xs"
                               value={selectedLanguages[subtopic.id]?.video || defaultVideoUrl}
@@ -881,7 +944,7 @@ export default function ModuleDetailPage() {
                             </select>
                           </div>
                         )}
-                        <div className="w-full max-w-2xl">
+                        <div className="w-full">
                           <InlineVideoPlayer url={selectedLanguages[subtopic.id]?.video || defaultVideoUrl} title={subtopic.title} />
                         </div>
                       </div>
@@ -889,7 +952,7 @@ export default function ModuleDetailPage() {
 
                     {/* Audio Box */}
                     {(defaultAudioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
-                      <div className="w-full mb-5 max-w-2xl">
+                      <div className="w-full mb-5">
                         {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
                           <div className="flex justify-end mb-2">
                             <select 
@@ -914,11 +977,13 @@ export default function ModuleDetailPage() {
                     <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4 mt-auto">
                       {subtopic.notesUrl && (
                         <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
-                          <a href={subtopic.notesUrl} target="_blank" rel="noopener noreferrer">
-                            <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1">
-                              <FileText className="w-3.5 h-3.5 text-red-500" /> read_notes()
-                            </Button>
-                          </a>
+                          <Button 
+                            onClick={() => setActiveNote({ url: subtopic.notesUrl, title: subtopic.title, id: subtopic.id })}
+                            variant="outline" 
+                            className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1"
+                          >
+                            <FileText className="w-3.5 h-3.5 text-red-500" /> read_notes()
+                          </Button>
                         </ResourceLinkTracker>
                       )}
                       {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
@@ -1005,6 +1070,34 @@ export default function ModuleDetailPage() {
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
   const isPremiumTheme = isUiProgramming;
 
+  if (activeNote) {
+    return (
+      <div className={`fixed inset-0 z-[100] ${t.bg} ${t.pattern} flex flex-col brutalist-transition transition-colors duration-300`}>
+        <style jsx global>{`
+          .brutalist-transition { transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        `}</style>
+        <div className={`${isPremiumTheme ? 'bg-white border-b border-slate-200 shadow-sm' : t.cardBg + ' border-b-4 border-black'} px-4 md:px-6 h-14 flex items-center justify-between shrink-0`}>
+          <div className="flex items-center gap-4">
+            <Button onClick={() => setActiveNote(null)} className={isPremiumTheme ? "h-8 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs shadow-sm flex items-center gap-1 font-sans" : t.btnPrimary + " h-8 text-xs py-0 font-bold"}>
+              <ChevronLeft className="w-3.5 h-3.5 mr-1" /> BACK
+            </Button>
+            <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-black uppercase tracking-tight">
+              <span className="truncate max-w-[400px]">{activeNote.title}</span>
+            </div>
+          </div>
+          <a href={activeNote.url} target="_blank" rel="noopener noreferrer">
+            <Button className={isPremiumTheme ? "h-8 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-[11px] font-bold font-sans" : t.btnGhost + " h-8 text-xs border-2 border-black bg-white"}>
+              <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> OPEN
+            </Button>
+          </a>
+        </div>
+        <div className={`flex-1 w-full bg-white relative overflow-hidden`}>
+          <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0" allow="autoplay; fullscreen" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`min-h-screen relative ${t.bg} ${t.pattern} pb-16 pt-8 brutalist-transition transition-colors duration-300 overflow-hidden`}>
       
@@ -1038,7 +1131,7 @@ export default function ModuleDetailPage() {
 
       {/* Layered Design-System inspired Background - Disabled for Clean EdTech Minimal */}
 
-      <div className="container mx-auto px-4 max-w-4xl space-y-6 relative z-10">
+      <div className="container mx-auto px-4 max-w-5xl space-y-6 relative z-10">
         
         {/* Subtle Breadcrumb Navigation - Removed */}
 
@@ -1193,7 +1286,7 @@ export default function ModuleDetailPage() {
                   {(defaultVideoUrl || (subtopic.videoLanguages && subtopic.videoLanguages.length > 0)) && (
                     <div className="w-full mb-5">
                       {subtopic.videoLanguages && subtopic.videoLanguages.length > 0 && (
-                        <div className="flex justify-end mb-2 max-w-3xl mx-auto">
+                        <div className="flex justify-end mb-2">
                           <select 
                             className={`focus:outline-none text-xs font-bold px-3 py-1.5 ${
                               isPremiumTheme 
@@ -1210,7 +1303,7 @@ export default function ModuleDetailPage() {
                           </select>
                         </div>
                       )}
-                      <div className="w-full max-w-3xl mx-auto">
+                      <div className="w-full">
                         <InlineVideoPlayer url={selectedLanguages[subtopic.id]?.video || defaultVideoUrl} title={subtopic.title} />
                       </div>
                     </div>
@@ -1218,7 +1311,7 @@ export default function ModuleDetailPage() {
 
                   {/* Audio Content */}
                   {(defaultAudioUrl || (subtopic.audioLanguages && subtopic.audioLanguages.length > 0)) && (
-                    <div className="w-full mb-5 max-w-3xl mx-auto">
+                    <div className="w-full mb-5">
                       {subtopic.audioLanguages && subtopic.audioLanguages.length > 0 && (
                         <div className="flex justify-end mb-2">
                           <select 
@@ -1249,17 +1342,19 @@ export default function ModuleDetailPage() {
                   }`}>
                     {subtopic.notesUrl && (
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
-                        <a href={subtopic.notesUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
-                            <Button variant="outline" className={
+                        <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
+                          <Button 
+                            onClick={() => setActiveNote({ url: subtopic.notesUrl, title: subtopic.title, id: subtopic.id })}
+                            variant="outline" 
+                            className={
                               (isPremiumTheme 
                                 ? t.btnGhost 
                                 : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
-                            }>
-                              <FileText className="w-3.5 h-3.5 text-red-500 shrink-0" /> Read Notes
-                            </Button>
-                          </motion.div>
-                        </a>
+                            }
+                          >
+                            <FileText className="w-3.5 h-3.5 text-red-500 shrink-0" /> Read Notes
+                          </Button>
+                        </motion.div>
                       </ResourceLinkTracker>
                     )}
                     {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
