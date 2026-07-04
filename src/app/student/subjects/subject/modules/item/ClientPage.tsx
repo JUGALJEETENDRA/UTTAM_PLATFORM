@@ -321,6 +321,7 @@ export default function ModuleDetailPage() {
   const id = searchParams.get('id') || '';
   const subjectId = searchParams.get('subjectId') || '';
   const [moduleData, setModuleData] = useState<any>(null);
+  const [allModules, setAllModules] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLanguages, setSelectedLanguages] = useState<{[id: string]: {video: string, audio: string}}>({});
 
@@ -338,7 +339,13 @@ export default function ModuleDetailPage() {
     if (id) {
       const loadModule = async () => {
         try {
-          const result = await fetchGAS("getModule", { moduleId: id, userId: "anonymous" });
+          const [result, modulesResult] = await Promise.all([
+            fetchGAS("getModule", { moduleId: id, userId: "anonymous" }),
+            fetchGAS("getModules", { subjectId, userId: "anonymous" })
+          ]);
+          if (Array.isArray(modulesResult)) {
+            setAllModules(modulesResult);
+          }
           if (result && result.subtopics) {
             result.subtopics = result.subtopics.filter((st: any) => {
               let isVisible = true;
@@ -355,8 +362,9 @@ export default function ModuleDetailPage() {
             });
           }
           setModuleData(result);
-        } catch (err) {
-          console.error("Failed to load module", err);
+        } catch (err: any) {
+          console.warn("Module could not be loaded:", err.message);
+          setModuleData({ error: err.message || "Module not found" });
         } finally {
           setLoading(false);
         }
@@ -383,6 +391,10 @@ export default function ModuleDetailPage() {
   const isDigitalBusiness = subjectId === 'id_pryay1ykw';
   const isPythonProgramming = subjectId === 'id_hdzqxse2n';
 
+  const currentIndex = allModules.findIndex(m => m.id === id);
+  const prevModule = currentIndex > 0 ? allModules[currentIndex - 1] : null;
+  const nextModule = currentIndex >= 0 && currentIndex < allModules.length - 1 ? allModules[currentIndex + 1] : null;
+
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -398,6 +410,25 @@ export default function ModuleDetailPage() {
     show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 120, damping: 14 } }
   };
 
+  const sideNavIcons = (
+    <>
+      {prevModule && (
+        <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${prevModule.id}`}>
+          <Button className="fixed left-2 sm:left-6 xl:left-12 top-1/2 -translate-y-1/2 z-50 rounded-full w-10 h-10 sm:w-12 sm:h-12 p-0 flex items-center justify-center bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 hover:scale-110 group" title="Previous Module">
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-1 transition-transform" />
+          </Button>
+        </Link>
+      )}
+      {nextModule && (
+        <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${nextModule.id}`}>
+          <Button className="fixed right-2 sm:right-6 xl:right-12 top-1/2 -translate-y-1/2 z-50 rounded-full w-10 h-10 sm:w-12 sm:h-12 p-0 flex items-center justify-center bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 hover:scale-110 group" title="Next Module">
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
+          </Button>
+        </Link>
+      )}
+    </>
+  );
+
   // ==========================================
   // RENDER VARIANT A: DIGITAL BUSINESS & TRANSFORMATION (PREMIUM LIGHT THEME)
   // ==========================================
@@ -409,6 +440,8 @@ export default function ModuleDetailPage() {
           backgroundImage: `radial-gradient(#e2e8f0 1.2px, transparent 1.2px)`,
           backgroundSize: "24px 24px"
         }} />
+
+        {sideNavIcons}
 
         <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl space-y-6">
           
@@ -679,6 +712,8 @@ export default function ModuleDetailPage() {
             font-family: 'JetBrains Mono', monospace;
           }
         `}</style>
+
+        {sideNavIcons}
 
         <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl space-y-6">
           
@@ -981,6 +1016,8 @@ export default function ModuleDetailPage() {
       <div className="container mx-auto px-4 max-w-4xl space-y-6 relative z-10">
         
         {/* Subtle Breadcrumb Navigation - Removed */}
+
+        {sideNavIcons}
 
         {/* Back button */}
         <div className="mb-4 flex justify-between items-center">

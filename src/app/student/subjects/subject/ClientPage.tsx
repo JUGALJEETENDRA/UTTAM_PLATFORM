@@ -859,9 +859,9 @@ export default function StudentDashboard() {
 
   // Identify theme variants safely using lowercase checks
   const subjectNameLower = String(subject?.name || "").toLowerCase();
-  const isDigitalBusiness = subjectNameLower.includes("digital business");
-  const isUiProgramming = subjectNameLower.includes("ui programming");
-  const isPythonProgramming = subjectNameLower.includes("python");
+  const isDigitalBusiness = subjectId === 'id_pryay1ykw' || subjectNameLower.includes("digital business");
+  const isUiProgramming = subjectId === 'id_mn573l5e5' || subjectNameLower.includes("ui programming");
+  const isPythonProgramming = subjectId === 'id_hdzqxse2n' || subjectNameLower.includes("python");
 
   const pythonModules = isPythonProgramming
     ? ((modules && modules.length > 0) ? modules : PYTHON_FALLBACK_MODULES)
