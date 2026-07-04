@@ -43,7 +43,10 @@ jobs:
       - name: Build with Next.js
         env:
           NEXT_PUBLIC_GAS_URL: ${{ secrets.NEXT_PUBLIC_GAS_URL }}
-          NEXT_PUBLIC_FACULTY_PASSWORD: ${{ secrets.NEXT_PUBLIC_FACULTY_PASSWORD }}
+          # SECURITY: Only the SHA-256 hash of the faculty password is stored as a secret.
+          # To update: generate hash with `node -e "require('crypto').createHash('sha256').update('NEW_PASS').digest('hex')"`
+          # then set NEXT_PUBLIC_FACULTY_PASSWORD_HASH in GitHub repo → Settings → Secrets.
+          NEXT_PUBLIC_FACULTY_PASSWORD_HASH: ${{ secrets.NEXT_PUBLIC_FACULTY_PASSWORD_HASH }}
           NEXT_PUBLIC_BUILD_TIME: ${{ github.run_id }}
         run: npm run build
 

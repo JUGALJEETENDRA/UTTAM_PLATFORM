@@ -627,6 +627,7 @@ export default function StudentDashboard() {
   const [isLocked, setIsLocked] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [isValidatingPassword, setIsValidatingPassword] = useState(false);
 
   // Python Development Studio State
   const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({ "basics": true });
@@ -720,7 +721,8 @@ export default function StudentDashboard() {
   }, [subjectId]);
 
   useEffect(() => {
-    if (data && data.subject?.password) {
+    // Use the boolean flag — the actual password is never sent to the browser.
+    if (data && data.subject?.hasPassword) {
       const unlocked = localStorage.getItem(`subject_unlocked_${data.subject.id}`);
       if (unlocked !== "true") {
         setIsLocked(true);
@@ -728,14 +730,29 @@ export default function StudentDashboard() {
     }
   }, [data]);
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (String(passwordInput).trim() === String(data?.subject?.password || "").trim()) {
-      localStorage.setItem(`subject_unlocked_${data.subject.id}`, "true");
-      setIsLocked(false);
-      setPasswordError("");
-    } else {
-      setPasswordError("Incorrect password");
+    if (isValidatingPassword) return;
+    setIsValidatingPassword(true);
+    setPasswordError("");
+    try {
+      // Send the typed password to GAS for server-side validation.
+      // GAS compares it and returns {success: true/false} — the stored password never reaches the browser.
+      const result = await fetchGAS("validateSubjectPassword", {
+        subjectId: subjectId,
+        password: passwordInput.trim(),
+      });
+      if (result?.success) {
+        localStorage.setItem(`subject_unlocked_${data.subject.id}`, "true");
+        setIsLocked(false);
+        setPasswordError("");
+      } else {
+        setPasswordError("Incorrect password");
+      }
+    } catch (err) {
+      setPasswordError("Unable to validate password. Please try again.");
+    } finally {
+      setIsValidatingPassword(false);
     }
   };
 
@@ -786,12 +803,27 @@ export default function StudentDashboard() {
                   placeholder="Enter password..."
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 transition-all"
+                  disabled={isValidatingPassword}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 {passwordError && <p className="text-sm text-red-500 mt-2">{passwordError}</p>}
               </div>
-              <Button type="submit" className="w-full py-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-md">
-                Unlock Subject
+              <Button
+                type="submit"
+                disabled={isValidatingPassword}
+                className="w-full py-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-md disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isValidatingPassword ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                    </svg>
+                    Verifying...
+                  </span>
+                ) : (
+                  "Unlock Subject"
+                )}
               </Button>
             </form>
           </CardContent>

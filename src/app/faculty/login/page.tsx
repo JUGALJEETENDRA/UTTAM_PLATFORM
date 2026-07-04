@@ -15,12 +15,12 @@ export default function FacultyLoginPage() {
   const router = useRouter();
   const { login } = useSession();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const success = login(password);
+    const success = await login(password);
     if (success) {
       router.push("/faculty/dashboard");
     } else {

@@ -229,6 +229,9 @@ function handleRequest(e, isPost) {
       case "getStudentDashboard":
         result = handleGetStudentDashboard(payload);
         break;
+      case "validateSubjectPassword":
+        result = handleValidateSubjectPassword(payload);
+        break;
 
       // --- Faculty Endpoints ---
       case "getFacultyDashboard":
@@ -404,8 +407,14 @@ function handleGetStudentDashboard(payload) {
   const infographics = getSheetData("Infographics").filter(m => m.subjectId === payload.subjectId) || [];
   const subjectResources = getSheetData("Resources").filter(r => r.subjectId === payload.subjectId) || [];
 
+  // SECURITY: Strip the password from the subject object before sending to the browser.
+  // Password validation is handled server-side via the validateSubjectPassword action.
+  const { password: _removedPassword, ...safeSubject } = subject;
+  // Let the client know a password gate exists without revealing the actual password.
+  safeSubject.hasPassword = !!(_removedPassword && String(_removedPassword).trim().length > 0);
+
   return {
-    subject,
+    subject: safeSubject,
     modules: subjectModules,
     quizzesWithAttempts: allQuizzes,
     flashcardDecks: flashcardDecks,
@@ -432,6 +441,31 @@ function handleGetFacultyDashboard(payload) {
     subjects: subjectsWithCounts,
     totalSubjects: allSubjects.length
   };
+}
+
+/**
+ * Validates a student's submitted password against the stored subject password.
+ * Only returns {success: true/false, hasPassword: boolean} — never the raw password.
+ * payload: { subjectId: string, password: string }
+ */
+function handleValidateSubjectPassword(payload) {
+  const { subjectId, password } = payload;
+  if (!subjectId) return { success: false, error: "Missing subjectId" };
+
+  const subject = getSheetData("Subjects").find(s => s.id === subjectId);
+  if (!subject) return { success: false, error: "Subject not found" };
+
+  const storedPassword = (subject.password || "").toString().trim();
+
+  // Subject has no password — always grant access
+  if (!storedPassword) return { success: true, hasPassword: false };
+
+  // Compare submitted password to stored password
+  const submitted = (password || "").toString().trim();
+  if (submitted === storedPassword) {
+    return { success: true, hasPassword: true };
+  }
+  return { success: false, hasPassword: true };
 }
 
 function generateId() {
