@@ -358,6 +358,19 @@ export default function ModuleDetailPage() {
               } else if (typeof st.simulationData === 'object' && st.simulationData !== null) {
                 if (st.simulationData.isVisible === false) isVisible = false;
               }
+
+              if (typeof st.videoLanguages === 'string') {
+                try { st.videoLanguages = JSON.parse(st.videoLanguages); } catch(e) { st.videoLanguages = []; }
+              } else if (!Array.isArray(st.videoLanguages)) {
+                st.videoLanguages = [];
+              }
+              
+              if (typeof st.audioLanguages === 'string') {
+                try { st.audioLanguages = JSON.parse(st.audioLanguages); } catch(e) { st.audioLanguages = []; }
+              } else if (!Array.isArray(st.audioLanguages)) {
+                st.audioLanguages = [];
+              }
+
               return isVisible;
             });
           }
@@ -788,6 +801,18 @@ export default function ModuleDetailPage() {
               } else if (typeof subtopic.simulationData === 'object' && subtopic.simulationData !== null) {
                 subtopic = { ...subtopic, ...subtopic.simulationData };
               }
+
+              if (typeof subtopic.videoLanguages === 'string') {
+                try { subtopic.videoLanguages = JSON.parse(subtopic.videoLanguages); } catch(e) { subtopic.videoLanguages = []; }
+              } else if (!Array.isArray(subtopic.videoLanguages)) {
+                subtopic.videoLanguages = [];
+              }
+
+              if (typeof subtopic.audioLanguages === 'string') {
+                try { subtopic.audioLanguages = JSON.parse(subtopic.audioLanguages); } catch(e) { subtopic.audioLanguages = []; }
+              } else if (!Array.isArray(subtopic.audioLanguages)) {
+                subtopic.audioLanguages = [];
+              }
               
               if (typeof subtopic.otherUrl === 'string' && subtopic.otherUrl.trim().startsWith("{")) {
                 try {
@@ -1102,6 +1127,18 @@ export default function ModuleDetailPage() {
               } catch(e) {}
             } else if (typeof subtopic.simulationData === 'object' && subtopic.simulationData !== null) {
               subtopic = { ...subtopic, ...subtopic.simulationData };
+            }
+
+            if (typeof subtopic.videoLanguages === 'string') {
+              try { subtopic.videoLanguages = JSON.parse(subtopic.videoLanguages); } catch(e) { subtopic.videoLanguages = []; }
+            } else if (!Array.isArray(subtopic.videoLanguages)) {
+              subtopic.videoLanguages = [];
+            }
+
+            if (typeof subtopic.audioLanguages === 'string') {
+              try { subtopic.audioLanguages = JSON.parse(subtopic.audioLanguages); } catch(e) { subtopic.audioLanguages = []; }
+            } else if (!Array.isArray(subtopic.audioLanguages)) {
+              subtopic.audioLanguages = [];
             }
             
             if (typeof subtopic.otherUrl === 'string' && subtopic.otherUrl.trim().startsWith("{")) {
