@@ -97,8 +97,22 @@ export default function ContentMatrixClientPage() {
       parsedData = st.simulationData;
     }
 
-    const hasVideo = !!(st.videoUrl || (st.type === 'video' ? st.mediaUrl : "") || (st.videoLanguages && st.videoLanguages.length > 0));
-    const hasAudio = !!(parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || (st.audioLanguages && st.audioLanguages.length > 0));
+    const checkLanguages = (langs: any) => {
+      if (!langs) return false;
+      if (Array.isArray(langs)) return langs.length > 0;
+      if (typeof langs === 'string') {
+        try {
+          const parsed = JSON.parse(langs);
+          return Array.isArray(parsed) && parsed.length > 0;
+        } catch(e) {
+          return langs.trim() !== '[]' && langs.trim().length > 0;
+        }
+      }
+      return false;
+    };
+
+    const hasVideo = !!(st.videoUrl || (st.type === 'video' ? st.mediaUrl : "") || checkLanguages(st.videoLanguages));
+    const hasAudio = !!(parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || checkLanguages(st.audioLanguages));
     const hasNotes = !!(parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : ""));
     const hasOther = !!(unpackedOther.otherUrl || parsedData.otherUrl || (st.type === 'other' ? st.mediaUrl : ""));
     const hasDidYouKnow = !!(unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || st.didYouKnowUrl);
@@ -110,17 +124,19 @@ export default function ContentMatrixClientPage() {
       item.subtopicId === st.id || item.subtopicId === st.subtopicNo
     );
 
-    // Mindmaps and Infographics map by subtopicId OR (title and moduleId)
+    // Mindmaps and Infographics map by subtopicId OR matching subtopic title (not module title)
     const normalize = (str: string) => (str || "").replace(/[^a-z0-9]/gi, '').toLowerCase();
     const isMappedByTitle = (items: any[]) => items.some(item => {
+      // Prefer explicit subtopicId match
       if (item.subtopicId && (item.subtopicId === st.id || item.subtopicId === st.subtopicNo)) return true;
+      // Only fall back to title matching within the same module
       if (item.moduleId !== mod.id) return false;
       const itemTitle = normalize(item.title);
       const stTitle = normalize(st.title);
-      const modTitle = normalize(mod.title);
-      if (!itemTitle) return false;
-      return stTitle.includes(itemTitle) || itemTitle.includes(stTitle) || 
-             modTitle.includes(itemTitle) || itemTitle.includes(modTitle);
+      if (!itemTitle || !stTitle) return false;
+      // Match only against the subtopic title — NOT the module title,
+      // to avoid every subtopic in a module matching a single mind map.
+      return stTitle.includes(itemTitle) || itemTitle.includes(stTitle);
     });
 
     return {
@@ -184,42 +200,46 @@ export default function ContentMatrixClientPage() {
       if (!targetModule) throw new Error("Module not found locally");
       
       const updatedSubtopics = targetModule.subtopics.map((st: any) => {
+        // --- IMPORTANT: Work on a deep clone so we never mutate React state directly ---
+        const cloned = { ...st };
+
         let parsedData: any = {};
-        if (typeof st.simulationData === 'string' && st.simulationData) {
-          try { parsedData = JSON.parse(st.simulationData); } catch(e) {}
-        } else if (typeof st.simulationData === 'object' && st.simulationData !== null) {
-          parsedData = st.simulationData;
+        if (typeof cloned.simulationData === 'string' && cloned.simulationData) {
+          try { parsedData = JSON.parse(cloned.simulationData); } catch(e) {}
+        } else if (typeof cloned.simulationData === 'object' && cloned.simulationData !== null) {
+          parsedData = { ...cloned.simulationData };
         }
 
         let unpackedOther = { 
-          otherUrl: st.otherUrl || "", 
-          otherDownloadUrl: st.otherDownloadUrl || "", 
-          didYouKnowUrl: st.didYouKnowUrl || "", 
-          didYouKnowDownloadUrl: st.didYouKnowDownloadUrl || "", 
-          referenceUrl: st.referenceUrl || "", 
-          referenceDownloadUrl: st.referenceDownloadUrl || "",
-          videoDownloadUrl: st.videoDownloadUrl || ""
+          otherUrl: cloned.otherUrl || "", 
+          otherDownloadUrl: cloned.otherDownloadUrl || "", 
+          didYouKnowUrl: cloned.didYouKnowUrl || "", 
+          didYouKnowDownloadUrl: cloned.didYouKnowDownloadUrl || "", 
+          referenceUrl: cloned.referenceUrl || "", 
+          referenceDownloadUrl: cloned.referenceDownloadUrl || "",
+          videoDownloadUrl: cloned.videoDownloadUrl || ""
         };
-        if (typeof st.otherUrl === 'string' && st.otherUrl.startsWith("{")) {
-          try { unpackedOther = { ...unpackedOther, ...JSON.parse(st.otherUrl) }; } catch(e) {}
+        if (typeof cloned.otherUrl === 'string' && cloned.otherUrl.startsWith("{")) {
+          try { unpackedOther = { ...unpackedOther, ...JSON.parse(cloned.otherUrl) }; } catch(e) {}
         }
 
-        if (st.id === editingResource.subtopicId) {
-          if (editingResource.resourceType === 'video') st.videoUrl = newUrl;
-          if (editingResource.resourceType === 'audio') { parsedData.audioUrl = newUrl; st.audioUrl = newUrl; }
-          if (editingResource.resourceType === 'notes') { parsedData.notesUrl = newUrl; st.notesUrl = newUrl; }
-          if (editingResource.resourceType === 'other') { unpackedOther.otherUrl = newUrl; st.otherUrl = newUrl; }
-          if (editingResource.resourceType === 'didYouKnow') { unpackedOther.didYouKnowUrl = newUrl; st.didYouKnowUrl = newUrl; }
-          if (editingResource.resourceType === 'reference') { unpackedOther.referenceUrl = newUrl; st.referenceUrl = newUrl; }
+        // Only apply the URL change to the targeted subtopic
+        if (cloned.id === editingResource.subtopicId) {
+          if (editingResource.resourceType === 'video') cloned.videoUrl = newUrl;
+          if (editingResource.resourceType === 'audio') { parsedData.audioUrl = newUrl; cloned.audioUrl = newUrl; }
+          if (editingResource.resourceType === 'notes') { parsedData.notesUrl = newUrl; cloned.notesUrl = newUrl; }
+          if (editingResource.resourceType === 'other') { unpackedOther.otherUrl = newUrl; cloned.otherUrl = newUrl; }
+          if (editingResource.resourceType === 'didYouKnow') { unpackedOther.didYouKnowUrl = newUrl; cloned.didYouKnowUrl = newUrl; }
+          if (editingResource.resourceType === 'reference') { unpackedOther.referenceUrl = newUrl; cloned.referenceUrl = newUrl; }
         }
 
         const newSimulationData = JSON.stringify({
-          audioUrl: parsedData.audioUrl || st.audioUrl || "",
-          audioLanguages: parsedData.audioLanguages || st.audioLanguages || [],
-          notesUrl: parsedData.notesUrl || st.notesUrl || "",
-          notesDownloadUrl: parsedData.notesDownloadUrl || st.notesDownloadUrl || "",
-          videoUrl: st.videoUrl || "",
-          videoDownloadUrl: unpackedOther.videoDownloadUrl || st.videoDownloadUrl || "",
+          audioUrl: parsedData.audioUrl || cloned.audioUrl || "",
+          audioLanguages: parsedData.audioLanguages || cloned.audioLanguages || [],
+          notesUrl: parsedData.notesUrl || cloned.notesUrl || "",
+          notesDownloadUrl: parsedData.notesDownloadUrl || cloned.notesDownloadUrl || "",
+          videoUrl: cloned.videoUrl || "",
+          videoDownloadUrl: unpackedOther.videoDownloadUrl || cloned.videoDownloadUrl || "",
           otherUrl: unpackedOther.otherUrl || "",
           otherDownloadUrl: unpackedOther.otherDownloadUrl || "",
           didYouKnowUrl: unpackedOther.didYouKnowUrl || "",
@@ -231,38 +251,38 @@ export default function ContentMatrixClientPage() {
         const hasAnyOtherField = Object.values(unpackedOther).some(val => val !== "");
         const newOtherUrl = hasAnyOtherField ? JSON.stringify(unpackedOther) : "";
 
-        let vidLangs = st.videoLanguages || [];
+        let vidLangs = cloned.videoLanguages || [];
         if (typeof vidLangs === 'string') {
           try { vidLangs = JSON.parse(vidLangs); } catch(e){ vidLangs = []; }
         }
-        let audLangs = st.audioLanguages || [];
+        let audLangs = cloned.audioLanguages || [];
         if (typeof audLangs === 'string') {
           try { audLangs = JSON.parse(audLangs); } catch(e){ audLangs = []; }
         }
 
         return {
-          id: st.id,
-          subtopicNo: st.subtopicNo || "",
-          title: st.title || "",
-          description: st.description || "",
-          learningOutcome: st.learningOutcome || "",
-          videoUrl: st.videoUrl || "",
+          id: cloned.id,
+          subtopicNo: cloned.subtopicNo || "",
+          title: cloned.title || "",
+          description: cloned.description || "",
+          learningOutcome: cloned.learningOutcome || "",
+          videoUrl: cloned.videoUrl || "",
           videoLanguages: JSON.stringify(vidLangs),
-          notesUrl: st.notesUrl || "",
-          notesDownloadUrl: st.notesDownloadUrl || "",
+          notesUrl: cloned.notesUrl || "",
+          notesDownloadUrl: cloned.notesDownloadUrl || "",
           otherUrl: newOtherUrl,
-          otherDownloadUrl: st.otherDownloadUrl || "",
-          audioUrl: st.audioUrl || "",
+          otherDownloadUrl: cloned.otherDownloadUrl || "",
+          audioUrl: cloned.audioUrl || "",
           audioLanguages: JSON.stringify(audLangs),
-          audioDownloadUrl: st.audioDownloadUrl || "",
-          didYouKnowUrl: st.didYouKnowUrl || "",
-          didYouKnowDownloadUrl: st.didYouKnowDownloadUrl || "",
-          referenceUrl: st.referenceUrl || "",
-          referenceDownloadUrl: st.referenceDownloadUrl || "",
+          audioDownloadUrl: cloned.audioDownloadUrl || "",
+          didYouKnowUrl: cloned.didYouKnowUrl || "",
+          didYouKnowDownloadUrl: cloned.didYouKnowDownloadUrl || "",
+          referenceUrl: cloned.referenceUrl || "",
+          referenceDownloadUrl: cloned.referenceDownloadUrl || "",
           simulationData: newSimulationData,
-          type: st.type || "",
-          mediaUrl: st.mediaUrl || "",
-          isVisible: st.isVisible !== false
+          type: cloned.type || "",
+          mediaUrl: cloned.mediaUrl || "",
+          isVisible: cloned.isVisible !== false
         };
       });
 
@@ -281,7 +301,7 @@ export default function ContentMatrixClientPage() {
       
       setModules(prevModules => prevModules.map(m => m.id === targetModule.id ? { ...m, subtopics: updatedSubtopics } : m));
       setEditingResource(null);
-    } catch (err) {
+    } catch (err: any) {
       alert("Failed to save link. Error: " + (err.message || err));
     } finally {
       setIsSaving(false);
