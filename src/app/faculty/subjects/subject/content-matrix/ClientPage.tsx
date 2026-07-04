@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Loader2, Grid, CheckCircle2, XCircle, ChevronRight, Video, Headphones, FileText, FileQuestion, BookOpen, Link as LinkIcon, Gamepad2, Layers, Brain, Search, Map, Eye } from "lucide-react";
+import { Loader2, Grid, CheckCircle2, XCircle, ChevronRight, Video, Headphones, FileText, FileQuestion, BookOpen, Link as LinkIcon, Gamepad2, Layers, Brain, Search, Map, Eye, PlusCircle } from "lucide-react";
 import { fetchGAS } from "@/lib/apiClient";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -42,6 +42,7 @@ export default function ContentMatrixClientPage() {
     currentUrl: string;
   } | null>(null);
   const [newUrl, setNewUrl] = useState("");
+  const [multipleNotes, setMultipleNotes] = useState<{title: string, url: string}[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   
   const [editingVisibility, setEditingVisibility] = useState<{
@@ -112,8 +113,8 @@ export default function ContentMatrixClientPage() {
     };
 
     const hasVideo = !!(st.videoUrl || (st.type === 'video' ? st.mediaUrl : "") || checkLanguages(st.videoLanguages));
-    const hasAudio = !!(parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || checkLanguages(st.audioLanguages));
-    const hasNotes = !!(parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : ""));
+    const hasAudio = !!(parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || checkLanguages(st.audioLanguages) || (unpackedOther as any).audioUrl);
+    const hasNotes = !!((unpackedOther as any).notesUrl || parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : ""));
     const hasOther = !!(unpackedOther.otherUrl || parsedData.otherUrl || (st.type === 'other' ? st.mediaUrl : ""));
     const hasDidYouKnow = !!(unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || st.didYouKnowUrl);
     const hasReference = !!(unpackedOther.referenceUrl || parsedData.referenceUrl || st.referenceUrl);
@@ -172,8 +173,8 @@ export default function ContentMatrixClientPage() {
     
     switch (resourceId) {
       case 'video': return st.videoUrl || (st.type === 'video' ? st.mediaUrl : "") || "";
-      case 'audio': return parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || "";
-      case 'notes': return parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : "") || "";
+      case 'audio': return (unpackedOther as any).audioUrl || parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || "";
+      case 'notes': return (unpackedOther as any).notesUrl || parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : "") || "";
       case 'other': return unpackedOther.otherUrl || parsedData.otherUrl || (st.type === 'other' ? st.mediaUrl : "") || "";
       case 'didYouKnow': return unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || st.didYouKnowUrl || "";
       case 'reference': return unpackedOther.referenceUrl || parsedData.referenceUrl || st.referenceUrl || "";
@@ -190,6 +191,21 @@ export default function ContentMatrixClientPage() {
       currentUrl
     });
     setNewUrl(currentUrl);
+    
+    if (resourceId === 'notes') {
+      try {
+        const parsed = JSON.parse(currentUrl);
+        if (Array.isArray(parsed)) {
+          setMultipleNotes(parsed);
+        } else {
+          setMultipleNotes(currentUrl ? [{ title: "Notes", url: currentUrl }] : []);
+        }
+      } catch (e) {
+        setMultipleNotes(currentUrl ? [{ title: "Notes", url: currentUrl }] : []);
+      }
+    } else {
+      setMultipleNotes([]);
+    }
   };
 
   const handleSaveLink = async () => {
@@ -217,7 +233,12 @@ export default function ContentMatrixClientPage() {
           didYouKnowDownloadUrl: cloned.didYouKnowDownloadUrl || "", 
           referenceUrl: cloned.referenceUrl || "", 
           referenceDownloadUrl: cloned.referenceDownloadUrl || "",
-          videoDownloadUrl: cloned.videoDownloadUrl || ""
+          videoDownloadUrl: cloned.videoDownloadUrl || "",
+          notesUrl: cloned.notesUrl || "",
+          notesDownloadUrl: cloned.notesDownloadUrl || "",
+          audioUrl: cloned.audioUrl || "",
+          audioLanguages: cloned.audioLanguages || [],
+          audioDownloadUrl: cloned.audioDownloadUrl || ""
         };
         if (typeof cloned.otherUrl === 'string' && cloned.otherUrl.startsWith("{")) {
           try { unpackedOther = { ...unpackedOther, ...JSON.parse(cloned.otherUrl) }; } catch(e) {}
@@ -225,12 +246,14 @@ export default function ContentMatrixClientPage() {
 
         // Only apply the URL change to the targeted subtopic
         if (cloned.id === editingResource.subtopicId) {
-          if (editingResource.resourceType === 'video') cloned.videoUrl = newUrl;
-          if (editingResource.resourceType === 'audio') { parsedData.audioUrl = newUrl; cloned.audioUrl = newUrl; }
-          if (editingResource.resourceType === 'notes') { parsedData.notesUrl = newUrl; cloned.notesUrl = newUrl; }
-          if (editingResource.resourceType === 'other') { unpackedOther.otherUrl = newUrl; cloned.otherUrl = newUrl; }
-          if (editingResource.resourceType === 'didYouKnow') { unpackedOther.didYouKnowUrl = newUrl; cloned.didYouKnowUrl = newUrl; }
-          if (editingResource.resourceType === 'reference') { unpackedOther.referenceUrl = newUrl; cloned.referenceUrl = newUrl; }
+          const finalUrlToSave = editingResource.resourceType === 'notes' ? (multipleNotes.length > 0 ? JSON.stringify(multipleNotes) : "") : newUrl;
+          
+          if (editingResource.resourceType === 'video') cloned.videoUrl = finalUrlToSave;
+          if (editingResource.resourceType === 'audio') { parsedData.audioUrl = finalUrlToSave; cloned.audioUrl = finalUrlToSave; unpackedOther.audioUrl = finalUrlToSave; }
+          if (editingResource.resourceType === 'notes') { parsedData.notesUrl = finalUrlToSave; cloned.notesUrl = finalUrlToSave; unpackedOther.notesUrl = finalUrlToSave; }
+          if (editingResource.resourceType === 'other') { unpackedOther.otherUrl = finalUrlToSave; cloned.otherUrl = finalUrlToSave; }
+          if (editingResource.resourceType === 'didYouKnow') { unpackedOther.didYouKnowUrl = finalUrlToSave; cloned.didYouKnowUrl = finalUrlToSave; }
+          if (editingResource.resourceType === 'reference') { unpackedOther.referenceUrl = finalUrlToSave; cloned.referenceUrl = finalUrlToSave; }
         }
 
         const newSimulationData = JSON.stringify({
@@ -248,7 +271,10 @@ export default function ContentMatrixClientPage() {
           referenceDownloadUrl: unpackedOther.referenceDownloadUrl || ""
         });
 
-        const hasAnyOtherField = Object.values(unpackedOther).some(val => val !== "");
+        const hasAnyOtherField = Object.values(unpackedOther).some(val => {
+          if (Array.isArray(val)) return val.length > 0;
+          return val !== "";
+        });
         const newOtherUrl = hasAnyOtherField ? JSON.stringify(unpackedOther) : "";
 
         let vidLangs = cloned.videoLanguages || [];
@@ -530,16 +556,75 @@ export default function ContentMatrixClientPage() {
               </button>
             </div>
             <div className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-zinc-700 mb-1">Resource URL</label>
-                <input
-                  type="text"
-                  value={newUrl}
-                  onChange={(e) => setNewUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
-                />
-              </div>
+              {editingResource.resourceType === 'notes' ? (
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="block text-sm font-semibold text-zinc-700">Notes Documents</label>
+                    <button
+                      type="button"
+                      onClick={() => setMultipleNotes([...multipleNotes, { title: `Note ${multipleNotes.length + 1}`, url: "" }])}
+                      className="text-xs text-primary font-medium hover:underline flex items-center"
+                    >
+                      <PlusCircle className="w-3 h-3 mr-1" /> Add Note
+                    </button>
+                  </div>
+                  <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                    {multipleNotes.length === 0 && (
+                      <p className="text-xs text-zinc-500 italic">No notes added. Click 'Add Note' to begin.</p>
+                    )}
+                    {multipleNotes.map((note, idx) => (
+                      <div key={idx} className="flex flex-col gap-2 p-3 bg-zinc-50 border border-zinc-200 rounded-lg relative">
+                        <button
+                          type="button"
+                          onClick={() => setMultipleNotes(multipleNotes.filter((_, i) => i !== idx))}
+                          className="absolute top-2 right-2 text-zinc-400 hover:text-red-500"
+                        >
+                          <XCircle className="w-4 h-4" />
+                        </button>
+                        <div>
+                          <label className="block text-xs font-medium text-zinc-600 mb-1">Title</label>
+                          <input
+                            type="text"
+                            value={note.title}
+                            onChange={(e) => {
+                              const updated = [...multipleNotes];
+                              updated[idx].title = e.target.value;
+                              setMultipleNotes(updated);
+                            }}
+                            placeholder="e.g. Lecture Slides"
+                            className="w-full px-2 py-1.5 border border-zinc-300 rounded focus:outline-none focus:border-primary text-xs"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-zinc-600 mb-1">URL (PDF, PPT, DOC Drive link)</label>
+                          <input
+                            type="text"
+                            value={note.url}
+                            onChange={(e) => {
+                              const updated = [...multipleNotes];
+                              updated[idx].url = e.target.value;
+                              setMultipleNotes(updated);
+                            }}
+                            placeholder="https://drive.google.com/..."
+                            className="w-full px-2 py-1.5 border border-zinc-300 rounded focus:outline-none focus:border-primary text-xs"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-sm font-semibold text-zinc-700 mb-1">Resource URL</label>
+                  <input
+                    type="text"
+                    value={newUrl}
+                    onChange={(e) => setNewUrl(e.target.value)}
+                    placeholder="https://..."
+                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
+                  />
+                </div>
+              )}
               <div className="flex justify-end space-x-3 pt-2">
                 <button
                   onClick={() => setEditingResource(null)}

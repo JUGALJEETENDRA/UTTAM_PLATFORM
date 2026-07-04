@@ -218,7 +218,19 @@ export default function ManageModulesPage() {
           parsedData = st.simulationData;
         }
 
-        let unpackedOther = { otherUrl: st.otherUrl, otherDownloadUrl: st.otherDownloadUrl, didYouKnowUrl: "", didYouKnowDownloadUrl: "", referenceUrl: "", referenceDownloadUrl: "" };
+        let unpackedOther: any = { 
+          otherUrl: st.otherUrl, 
+          otherDownloadUrl: st.otherDownloadUrl, 
+          didYouKnowUrl: "", 
+          didYouKnowDownloadUrl: "", 
+          referenceUrl: "", 
+          referenceDownloadUrl: "",
+          notesUrl: "",
+          notesDownloadUrl: "",
+          audioUrl: "",
+          audioLanguages: [],
+          audioDownloadUrl: ""
+        };
         if (typeof st.otherUrl === 'string' && st.otherUrl.startsWith("{")) {
           try {
             const parsedOther = JSON.parse(st.otherUrl);
@@ -234,13 +246,13 @@ export default function ManageModulesPage() {
           learningOutcome: st.learningOutcome || "",
           videoUrl: st.videoUrl || (st.type === 'videoUrl' ? st.mediaUrl : "") || "",
           videoLanguages: st.videoLanguages || [],
-          notesUrl: parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : "") || "",
-          notesDownloadUrl: parsedData.notesDownloadUrl || st.notesDownloadUrl || "",
+          notesUrl: unpackedOther.notesUrl || parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : "") || "",
+          notesDownloadUrl: unpackedOther.notesDownloadUrl || parsedData.notesDownloadUrl || st.notesDownloadUrl || "",
           otherUrl: unpackedOther.otherUrl || parsedData.otherUrl || (st.type === 'other' ? st.mediaUrl : "") || "",
           otherDownloadUrl: unpackedOther.otherDownloadUrl || parsedData.otherDownloadUrl || st.otherDownloadUrl || "",
-          audioUrl: parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || "",
-          audioLanguages: parsedData.audioLanguages || st.audioLanguages || [],
-          audioDownloadUrl: parsedData.audioDownloadUrl || st.audioDownloadUrl || "",
+          audioUrl: unpackedOther.audioUrl || parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || "",
+          audioLanguages: unpackedOther.audioLanguages || parsedData.audioLanguages || st.audioLanguages || [],
+          audioDownloadUrl: unpackedOther.audioDownloadUrl || parsedData.audioDownloadUrl || st.audioDownloadUrl || "",
           didYouKnowUrl: unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || st.didYouKnowUrl || "",
           didYouKnowDownloadUrl: unpackedOther.didYouKnowDownloadUrl || parsedData.didYouKnowDownloadUrl || st.didYouKnowDownloadUrl || "",
           referenceUrl: unpackedOther.referenceUrl || parsedData.referenceUrl || st.referenceUrl || "",
@@ -338,8 +350,16 @@ export default function ManageModulesPage() {
         referenceUrl: referenceUrl || "",
         referenceDownloadUrl: referenceDownloadUrl || "",
         videoDownloadUrl: st.videoDownloadUrl || "",
+        notesUrl: notesUrl || "",
+        notesDownloadUrl: notesDownloadUrl || "",
+        audioUrl: audioUrl || "",
+        audioLanguages: audioLanguages || [],
+        audioDownloadUrl: audioDownloadUrl || "",
       };
-      const hasAnyOtherField = Object.values(otherFields).some(val => val !== "");
+      const hasAnyOtherField = Object.values(otherFields).some(val => {
+        if (Array.isArray(val)) return val.length > 0;
+        return val !== "";
+      });
       const packedOtherUrl = hasAnyOtherField ? JSON.stringify(otherFields) : "";
 
       return {
@@ -765,7 +785,7 @@ export default function ManageModulesPage() {
                               </div>
                             </div>
                           )}
-                          {["notes", "didYouKnow", "reference", "other"].includes(st.selectedResourceType || "") && (
+                          {["didYouKnow", "reference", "other"].includes(st.selectedResourceType || "") && (
                             <div className="mb-4 p-3 bg-blue-50/50 rounded-lg border border-blue-100 space-y-3">
                               <div>
                                 <label className="block text-[10px] font-bold text-blue-900 mb-1">Paste External Resource Link</label>
@@ -781,9 +801,79 @@ export default function ManageModulesPage() {
                               </div>
                             </div>
                           )}
+                          {st.selectedResourceType === "notes" && (
+                            <div className="mb-4 p-3 bg-blue-50/50 rounded-lg border border-blue-100 space-y-3">
+                              <div className="flex justify-between items-center mb-2">
+                                <label className="block text-sm font-semibold text-zinc-700">Notes Documents</label>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    let current = [];
+                                    try { current = JSON.parse(st.notesUrl || "[]"); if(!Array.isArray(current)) current = [{title: "Notes", url: st.notesUrl}]; } catch(e) { current = st.notesUrl ? [{title: "Notes", url: st.notesUrl}] : []; }
+                                    current.push({ title: `Note ${current.length + 1}`, url: "" });
+                                    handleSubtopicChange(index, "notesUrl", JSON.stringify(current));
+                                  }}
+                                  className="text-xs text-primary font-medium hover:underline flex items-center"
+                                >
+                                  <Plus className="w-3 h-3 mr-1" /> Add Note
+                                </button>
+                              </div>
+                              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                                {(() => {
+                                  let currentNotes = [];
+                                  try { currentNotes = JSON.parse(st.notesUrl || "[]"); if(!Array.isArray(currentNotes)) currentNotes = [{title: "Notes", url: st.notesUrl}]; } catch(e) { currentNotes = st.notesUrl ? [{title: "Notes", url: st.notesUrl}] : []; }
+                                  if (currentNotes.length === 0) {
+                                    return <p className="text-xs text-zinc-500 italic">No notes added. Click 'Add Note' to begin.</p>;
+                                  }
+                                  return currentNotes.map((note: any, nIdx: number) => (
+                                    <div key={nIdx} className="flex flex-col gap-2 p-3 bg-white border border-blue-200 rounded-lg relative">
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          const updated = currentNotes.filter((_: any, i: number) => i !== nIdx);
+                                          handleSubtopicChange(index, "notesUrl", updated.length > 0 ? JSON.stringify(updated) : "");
+                                        }}
+                                        className="absolute top-2 right-2 text-zinc-400 hover:text-red-500"
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </button>
+                                      <div>
+                                        <label className="block text-xs font-medium text-zinc-600 mb-1">Title</label>
+                                        <input
+                                          type="text"
+                                          value={note.title}
+                                          onChange={(e) => {
+                                            const updated = [...currentNotes];
+                                            updated[nIdx].title = e.target.value;
+                                            handleSubtopicChange(index, "notesUrl", JSON.stringify(updated));
+                                          }}
+                                          placeholder="e.g. Lecture Slides"
+                                          className="w-full px-2 py-1.5 border border-zinc-300 rounded focus:outline-none focus:border-primary text-xs"
+                                        />
+                                      </div>
+                                      <div>
+                                        <label className="block text-xs font-medium text-zinc-600 mb-1">URL (PDF, PPT, DOC Drive link)</label>
+                                        <input
+                                          type="text"
+                                          value={note.url}
+                                          onChange={(e) => {
+                                            const updated = [...currentNotes];
+                                            updated[nIdx].url = e.target.value;
+                                            handleSubtopicChange(index, "notesUrl", JSON.stringify(updated));
+                                          }}
+                                          placeholder="https://drive.google.com/..."
+                                          className="w-full px-2 py-1.5 border border-zinc-300 rounded focus:outline-none focus:border-primary text-xs"
+                                        />
+                                      </div>
+                                    </div>
+                                  ));
+                                })()}
+                              </div>
+                            </div>
+                          )}
                           <div className="mt-4 space-y-2">
                             {st.videoUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎥 YouTube Video Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "videoUrl", "")}>Remove</Button></div>}
-                            {st.notesUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📄 Notes File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "notesUrl", ""); handleSubtopicChange(index, "notesDownloadUrl", "")}}>Remove</Button></div>}
+                            {(st.notesUrl && st.notesUrl !== "[]") && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📄 Notes File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "notesUrl", ""); handleSubtopicChange(index, "notesDownloadUrl", "")}}>Remove</Button></div>}
                             {st.didYouKnowUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>💡 Did You Know Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "didYouKnowUrl", ""); handleSubtopicChange(index, "didYouKnowDownloadUrl", "")}}>Remove</Button></div>}
                             {st.referenceUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📚 Reference File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "referenceUrl", ""); handleSubtopicChange(index, "referenceDownloadUrl", "")}}>Remove</Button></div>}
                             {st.audioUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎵 Audio File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "audioUrl", ""); handleSubtopicChange(index, "audioDownloadUrl", "")}}>Remove</Button></div>}

@@ -121,20 +121,41 @@ function getEmbedUrl(url: string | null | undefined): string | null {
   return embedUrl;
 }
 
+function getParsedNotes(notesUrl: string | null | undefined) {
+  if (!notesUrl) return [];
+  // Auto-correct common typos
+  let cleanUrl = notesUrl.replace(/drive\.https:\/\//g, "https://");
+  if (cleanUrl.startsWith("drive.google.com")) cleanUrl = "https://" + cleanUrl;
+  
+  try {
+    const parsed = JSON.parse(cleanUrl);
+    if (Array.isArray(parsed)) return parsed.map(p => ({ ...p, url: p.url.replace(/drive\.https:\/\//g, "https://") }));
+    return [{ title: "Notes", url: cleanUrl }];
+  } catch(e) {
+    return [{ title: "Notes", url: cleanUrl }];
+  }
+}
+
 function getExternalEmbedUrl(url: string | null | undefined): string | null {
   if (!url) return null;
-  if (url.includes("drive.google.com")) {
-    if (url.includes("/file/d/")) {
-      return url.replace(/\/view.*$/, "/preview").replace(/\/edit.*$/, "/preview");
+  
+  let cleanUrl = url.replace(/drive\.https:\/\//g, "https://");
+  if (cleanUrl.startsWith("drive.google.com")) {
+    cleanUrl = "https://" + cleanUrl;
+  }
+  
+  if (cleanUrl.includes("drive.google.com")) {
+    if (cleanUrl.includes("/file/d/")) {
+      return cleanUrl.replace(/\/view.*$/, "/preview").replace(/\/edit.*$/, "/preview");
     }
-    if (url.includes("id=")) {
-      const match = url.match(/id=([^&]+)/);
+    if (cleanUrl.includes("id=")) {
+      const match = cleanUrl.match(/id=([^&]+)/);
       if (match && match[1]) {
         return `https://drive.google.com/file/d/${match[1]}/preview`;
       }
     }
   }
-  return url;
+  return cleanUrl;
 }
 
 function getGoogleDriveFileId(url: string | null | undefined): string | null {
@@ -581,6 +602,8 @@ export default function ModuleDetailPage() {
               const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
               if (defaultVideoUrl === defaultAudioUrl && defaultVideoUrl) defaultVideoUrl = "";
 
+              const finalNotesUrl = subtopic.notesUrl || (subtopic.type === 'notes' ? subtopic.mediaUrl : "") || subtopic.imageUrl || "";
+
               return (
                 <motion.div key={subtopic.id} variants={itemVariants}>
                   <Card className="border-slate-200 shadow-sm hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:border-[#1E3A8A] hover:bg-slate-50/30 transition-all duration-300 overflow-hidden bg-white rounded-lg group">
@@ -646,17 +669,17 @@ export default function ModuleDetailPage() {
 
                         {/* Buttons grid - Mobile Compact Grid */}
                         <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-3 border-t border-slate-100 pt-4 sm:pt-5 mt-auto">
-                          {subtopic.notesUrl && (
-                            <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
+                          {getParsedNotes(finalNotesUrl).map((note: any, idx: number) => (
+                            <ResourceLinkTracker key={idx} subtopicId={subtopic.id} moduleId={id} resourceType="notes">
                               <Button 
-                                onClick={() => setActiveNote({ url: subtopic.notesUrl, title: subtopic.title, id: subtopic.id })}
+                                onClick={() => setActiveNote({ url: note.url, title: note.title, id: subtopic.id })}
                                 variant="outline" 
                                 className="w-full sm:w-auto bg-white hover:bg-red-50/30 border-slate-200 hover:border-red-300 text-slate-700 hover:text-red-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5"
                               >
-                                <FileText className="w-3.5 h-3.5 text-red-500 shrink-0" /> Read Notes
+                                <FileText className="w-3.5 h-3.5 text-red-500 shrink-0" /> {note.title || "Read Notes"}
                               </Button>
                             </ResourceLinkTracker>
-                          )}
+                          ))}
                           {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
                               <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`} className="w-full sm:w-auto">
@@ -906,6 +929,8 @@ export default function ModuleDetailPage() {
               const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
               if (defaultVideoUrl === defaultAudioUrl && defaultVideoUrl) defaultVideoUrl = "";
 
+              const finalNotesUrl = subtopic.notesUrl || (subtopic.type === 'notes' ? subtopic.mediaUrl : "") || subtopic.imageUrl || "";
+
               return (
                 <motion.div key={subtopic.id} variants={itemVariants}>
                   <div className="bg-white border border-slate-200 p-6 rounded hover:border-[#3776AB] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(55,118,171,0.06)] font-mono text-xs">
@@ -975,17 +1000,17 @@ export default function ModuleDetailPage() {
 
                     {/* Buttons */}
                     <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4 mt-auto">
-                      {subtopic.notesUrl && (
-                        <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
+                      {getParsedNotes(finalNotesUrl).map((note: any, idx: number) => (
+                        <ResourceLinkTracker key={idx} subtopicId={subtopic.id} moduleId={id} resourceType="notes">
                           <Button 
-                            onClick={() => setActiveNote({ url: subtopic.notesUrl, title: subtopic.title, id: subtopic.id })}
+                            onClick={() => setActiveNote({ url: note.url, title: note.title, id: subtopic.id })}
                             variant="outline" 
                             className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1"
                           >
-                            <FileText className="w-3.5 h-3.5 text-red-500" /> read_notes()
+                            <FileText className="w-3.5 h-3.5 text-red-500" /> {note.title ? note.title.toLowerCase().replace(/ /g, '_') + '()' : 'read_notes()'}
                           </Button>
                         </ResourceLinkTracker>
-                      )}
+                      ))}
                       {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
                         <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
                           <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`}>
@@ -1263,6 +1288,8 @@ export default function ModuleDetailPage() {
             const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
             if (defaultVideoUrl === defaultAudioUrl && defaultVideoUrl) defaultVideoUrl = "";
 
+            const finalNotesUrl = subtopic.notesUrl || (subtopic.type === 'notes' ? subtopic.mediaUrl : "") || subtopic.imageUrl || "";
+
             const cardContentNode = (
               <div className="flex flex-col md:flex-row w-full">
                 <div className={`w-full md:w-16 flex items-center justify-center py-4 md:py-0 flex-shrink-0 select-none ${
@@ -1340,11 +1367,11 @@ export default function ModuleDetailPage() {
                   <div className={`grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-3 mt-auto pt-4 sm:pt-5 ${
                     isPremiumTheme ? 'border-t border-slate-100' : 'border-t-2 border-black'
                   }`}>
-                    {subtopic.notesUrl && (
-                      <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
+                    {getParsedNotes(finalNotesUrl).map((note: any, idx: number) => (
+                      <ResourceLinkTracker key={idx} subtopicId={subtopic.id} moduleId={id} resourceType="notes">
                         <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
                           <Button 
-                            onClick={() => setActiveNote({ url: subtopic.notesUrl, title: subtopic.title, id: subtopic.id })}
+                            onClick={() => setActiveNote({ url: note.url, title: note.title, id: subtopic.id })}
                             variant="outline" 
                             className={
                               (isPremiumTheme 
@@ -1352,11 +1379,11 @@ export default function ModuleDetailPage() {
                                 : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
                             }
                           >
-                            <FileText className="w-3.5 h-3.5 text-red-500 shrink-0" /> Read Notes
+                            <FileText className="w-3.5 h-3.5 text-red-500 shrink-0" /> {note.title || "Read Notes"}
                           </Button>
                         </motion.div>
                       </ResourceLinkTracker>
-                    )}
+                    ))}
                     {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
                         <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`} className="w-full sm:w-auto">
