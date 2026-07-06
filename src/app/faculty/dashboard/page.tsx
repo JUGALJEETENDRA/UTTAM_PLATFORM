@@ -143,6 +143,16 @@ export default function FacultyDashboardPage() {
               <p className="text-xs text-zinc-500 mt-2 text-center mb-4">Run this once to create required Google Sheets.</p>
               
               <Button 
+                variant="outline" 
+                className="w-full text-zinc-700 border-zinc-300 bg-zinc-50 hover:bg-zinc-100"
+                onClick={() => router.push('/faculty/notebooklm-remover')}
+              >
+                <Sparkles className="w-4 h-4 mr-2 text-primary" />
+                NotebookLM Watermark Remover
+              </Button>
+              <p className="text-xs text-zinc-500 mt-2 text-center mb-4">Remove watermarks from PDF, PPTX and Video exports.</p>
+              
+              <Button 
                 variant="default" 
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 onClick={async () => {

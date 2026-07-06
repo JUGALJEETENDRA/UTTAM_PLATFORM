@@ -11,7 +11,7 @@ if (isGithubActions) {
 }
 
 const nextConfig: NextConfig = {
-  output: "export",
+  ...(process.env.NODE_ENV === 'production' ? { output: 'export' as const } : {}),
   env: {
     NEXT_PUBLIC_IS_DEPLOYED: isGithubActions ? 'true' : 'false',
     NEXT_PUBLIC_BASE_PATH: basePath,
@@ -28,6 +28,17 @@ const nextConfig: NextConfig = {
   webpack: (config) => {
     config.resolve.alias.canvas = false;
     return config;
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'Cross-Origin-Embedder-Policy', value: 'require-corp' },
+          { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+        ],
+      },
+    ];
   },
 };
 

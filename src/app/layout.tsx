@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
+import Script from "next/script";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { MainNavbar } from "@/components/layout/MainNavbar";
@@ -23,6 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/coi-serviceworker.js`} strategy="beforeInteractive" />
+      </head>
       <body
         className={`${outfit.variable} font-sans antialiased bg-zinc-50 flex flex-col min-h-screen`}
       >
