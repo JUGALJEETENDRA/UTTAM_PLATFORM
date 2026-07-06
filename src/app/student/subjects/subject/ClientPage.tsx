@@ -2517,7 +2517,7 @@ export default function StudentDashboard() {
               <div className="flex justify-between items-center mb-5">
                 <div>
                   <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Layers className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Layers className={`w-6 h-6 mr-2 ${t.iconColor || ''}`} />} Learning Modules
+                    {isPremiumTheme ? <Layers className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Layers className={`w-6 h-6 mr-2 ${t.textHeading || ''}`} />} Learning Modules
                   </h2>
                   <p className={`text-sm ${t.textMuted} mt-1`}>Explore all the topics for this subject</p>
                 </div>
@@ -2645,7 +2645,7 @@ export default function StudentDashboard() {
               <div className="flex justify-between items-center mb-5">
                 <div>
                   <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Component className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Target className={`w-6 h-6 mr-2 ${t.iconColor || ''}`} />} Quizzes & Assessments
+                    {isPremiumTheme ? <Component className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Target className={`w-6 h-6 mr-2 ${t.textHeading || ''}`} />} Quizzes & Assessments
                   </h2>
                   <p className={`text-sm ${t.textMuted} mt-1`}>Test your knowledge</p>
                 </div>
@@ -2767,7 +2767,7 @@ export default function StudentDashboard() {
               <div className="flex justify-between items-center mb-5">
                 <div>
                   <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Palette className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Zap className={`w-6 h-6 mr-2 ${t.iconColor || ''}`} />} Flashcard Decks
+                    {isPremiumTheme ? <Palette className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Zap className={`w-6 h-6 mr-2 ${t.textHeading || ''}`} />} Flashcard Decks
                   </h2>
                   <p className={`text-sm ${t.textMuted} mt-1`}>Quick revision decks</p>
                 </div>
@@ -2877,7 +2877,7 @@ export default function StudentDashboard() {
               <div className="flex justify-between items-center mb-5">
                 <div>
                   <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Grid className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Brain className={`w-6 h-6 mr-2 ${t.iconColor || ''}`} />} Mind Maps
+                    {isPremiumTheme ? <Grid className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Brain className={`w-6 h-6 mr-2 ${t.textHeading || ''}`} />} Mind Maps
                   </h2>
                   <p className={`text-sm ${t.textMuted} mt-1`}>Explore visual topic structures</p>
                 </div>
@@ -3140,7 +3140,7 @@ export default function StudentDashboard() {
                           </span>
                         ) : (
                           <span className="flex items-center gap-2">
-                            <FileText className={`w-4 h-4 ${t.iconColor || ''}`} />
+                            <FileText className={`w-4 h-4 ${t.textHeading || ''}`} />
                             Reference Materials
                           </span>
                         )}

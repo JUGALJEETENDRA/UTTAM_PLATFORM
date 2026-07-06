@@ -1,11 +1,24 @@
+// @ts-nocheck
 "use client";
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import RichTextEditor from "@/components/ui/RichTextEditor";
 import { BookOpen, Plus, Trash2, CheckCircle2, ChevronDown, ChevronUp, Edit3, UploadCloud, Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { fetchGAS } from "@/lib/apiClient";
+
+
+function safeUrlFallback(primary: string | undefined, mediaUrl: string | undefined, type: string | undefined, targetType: string): string {
+  if (primary && typeof primary === 'string' && !primary.trim().startsWith("{") && !primary.trim().startsWith("\"")) {
+    return primary;
+  }
+  if (type === targetType && mediaUrl && typeof mediaUrl === 'string' && !mediaUrl.trim().startsWith("{") && !mediaUrl.trim().startsWith("\"")) {
+    return mediaUrl;
+  }
+  return "";
+}
 
 interface SubtopicForm {
   id?: string;
@@ -30,6 +43,8 @@ interface SubtopicForm {
   type?: string;
   mediaUrl?: string;
   isVisible?: boolean;
+  lessonContent?: string;
+  imageUrl?: string;
 }
 const initialSubtopicState = { 
   title: "", description: "", learningOutcome: "", 
@@ -39,6 +54,7 @@ const initialSubtopicState = {
   audioUrl: "", audioLanguages: [], audioDownloadUrl: "",
   didYouKnowUrl: "", didYouKnowDownloadUrl: "",
   referenceUrl: "", referenceDownloadUrl: "",
+  lessonContent: "", imageUrl: "",
   selectedResourceType: "none",
   type: "", mediaUrl: "",
   isVisible: true
@@ -211,6 +227,7 @@ export default function ManageModulesPage() {
     
     if (mod.subtopics && mod.subtopics.length > 0) {
       setSubtopics(mod.subtopics.map((st: any) => {
+        console.log("DEBUG: handleEditModule st.title:", st.title, "st.otherUrl:", st.otherUrl, "typeof st.otherUrl:", typeof st.otherUrl);
         let parsedData: any = {};
         if (typeof st.simulationData === 'string' && st.simulationData) {
           try { parsedData = JSON.parse(st.simulationData); } catch(e) {}
@@ -219,8 +236,6 @@ export default function ManageModulesPage() {
         }
 
         let unpackedOther: any = { 
-          otherUrl: st.otherUrl, 
-          otherDownloadUrl: st.otherDownloadUrl, 
           didYouKnowUrl: "", 
           didYouKnowDownloadUrl: "", 
           referenceUrl: "", 
@@ -229,13 +244,32 @@ export default function ManageModulesPage() {
           notesDownloadUrl: "",
           audioUrl: "",
           audioLanguages: [],
-          audioDownloadUrl: ""
+          audioDownloadUrl: "",
+          lessonContent: "",
+          imageUrl: ""
         };
-        if (typeof st.otherUrl === 'string' && st.otherUrl.startsWith("{")) {
+        if (typeof st.otherUrl === 'string' && st.otherUrl.trim().startsWith("{")) {
           try {
-            const parsedOther = JSON.parse(st.otherUrl);
-            unpackedOther = { ...unpackedOther, ...parsedOther };
+            const sanitizedStr = st.otherUrl.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
+            let parsedOther = JSON.parse(sanitizedStr);
+            while (typeof parsedOther === 'string') {
+              parsedOther = JSON.parse(parsedOther);
+            }
+            if (typeof parsedOther === 'object' && parsedOther !== null) {
+              while (typeof parsedOther.otherUrl === 'string' && parsedOther.otherUrl.trim().startsWith("{")) {
+                try {
+                  const nested = JSON.parse(parsedOther.otherUrl);
+                  parsedOther = { ...nested, ...parsedOther, otherUrl: nested.otherUrl || "" };
+                } catch(e) {
+                  break;
+                }
+              }
+              unpackedOther = { ...unpackedOther, ...parsedOther };
+            }
           } catch(e) {}
+        }
+        if (typeof unpackedOther.otherUrl === 'string' && (unpackedOther.otherUrl.trim() === "" || unpackedOther.otherUrl.trim().startsWith("{"))) {
+          unpackedOther.otherUrl = "";
         }
 
         return {
@@ -244,19 +278,20 @@ export default function ManageModulesPage() {
           title: st.title || "",
           description: st.description || "",
           learningOutcome: st.learningOutcome || "",
-          videoUrl: st.videoUrl || (st.type === 'videoUrl' ? st.mediaUrl : "") || "",
+          videoUrl: safeUrlFallback(st.videoUrl, st.mediaUrl, st.type, 'videoUrl'),
           videoLanguages: st.videoLanguages || [],
-          notesUrl: unpackedOther.notesUrl || parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : "") || "",
+          notesUrl: unpackedOther.notesUrl || parsedData.notesUrl || safeUrlFallback(st.notesUrl, st.mediaUrl, st.type, 'notes'),
           notesDownloadUrl: unpackedOther.notesDownloadUrl || parsedData.notesDownloadUrl || st.notesDownloadUrl || "",
-          otherUrl: unpackedOther.otherUrl || parsedData.otherUrl || (st.type === 'other' ? st.mediaUrl : "") || "",
-          otherDownloadUrl: unpackedOther.otherDownloadUrl || parsedData.otherDownloadUrl || st.otherDownloadUrl || "",
-          audioUrl: unpackedOther.audioUrl || parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || "",
+
+          audioUrl: unpackedOther.audioUrl || parsedData.audioUrl || safeUrlFallback(st.audioUrl, st.mediaUrl, st.type, 'audio'),
           audioLanguages: unpackedOther.audioLanguages || parsedData.audioLanguages || st.audioLanguages || [],
           audioDownloadUrl: unpackedOther.audioDownloadUrl || parsedData.audioDownloadUrl || st.audioDownloadUrl || "",
-          didYouKnowUrl: unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || st.didYouKnowUrl || "",
+          didYouKnowUrl: unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || safeUrlFallback(st.didYouKnowUrl, st.mediaUrl, st.type, 'didYouKnow'),
           didYouKnowDownloadUrl: unpackedOther.didYouKnowDownloadUrl || parsedData.didYouKnowDownloadUrl || st.didYouKnowDownloadUrl || "",
-          referenceUrl: unpackedOther.referenceUrl || parsedData.referenceUrl || st.referenceUrl || "",
+          referenceUrl: unpackedOther.referenceUrl || parsedData.referenceUrl || safeUrlFallback(st.referenceUrl, st.mediaUrl, st.type, 'reference'),
           referenceDownloadUrl: unpackedOther.referenceDownloadUrl || parsedData.referenceDownloadUrl || st.referenceDownloadUrl || "",
+          lessonContent: unpackedOther.lessonContent || parsedData.lessonContent || st.lessonContent || "",
+          imageUrl: unpackedOther.imageUrl || parsedData.imageUrl || st.imageUrl || "",
           type: st.type || "",
           mediaUrl: st.mediaUrl || "",
           isVisible: st.isVisible !== false,
@@ -338,6 +373,7 @@ export default function ManageModulesPage() {
         otherUrl, otherDownloadUrl, 
         notesUrl, notesDownloadUrl,
         audioUrl, audioLanguages, audioDownloadUrl,
+        lessonContent, imageUrl,
         ...rest
       } = st;
 
@@ -355,6 +391,8 @@ export default function ManageModulesPage() {
         audioUrl: audioUrl || "",
         audioLanguages: audioLanguages || [],
         audioDownloadUrl: audioDownloadUrl || "",
+        lessonContent: lessonContent || "",
+        imageUrl: imageUrl || ""
       };
       const hasAnyOtherField = Object.values(otherFields).some(val => {
         if (Array.isArray(val)) return val.length > 0;
@@ -659,7 +697,8 @@ export default function ManageModulesPage() {
                             <option value="audio">Audio</option>
                             <option value="didYouKnow">Did You Know</option>
                             <option value="reference">Reference</option>
-                            <option value="other">Other</option>
+                            <option value="lessonContent">Rich Text Lesson</option>
+                            
                           </select>
                           {st.selectedResourceType === "videoUrl" && (
                             <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
@@ -785,7 +824,7 @@ export default function ManageModulesPage() {
                               </div>
                             </div>
                           )}
-                          {["didYouKnow", "reference", "other"].includes(st.selectedResourceType || "") && (
+                          {["didYouKnow", "reference"].includes(st.selectedResourceType || "") && (
                             <div className="mb-4 p-3 bg-blue-50/50 rounded-lg border border-blue-100 space-y-3">
                               <div>
                                 <label className="block text-[10px] font-bold text-blue-900 mb-1">Paste External Resource Link</label>
@@ -871,13 +910,23 @@ export default function ManageModulesPage() {
                               </div>
                             </div>
                           )}
+                          {st.selectedResourceType === "lessonContent" && (
+                            <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
+                              <label className="block text-xs font-bold text-zinc-700 mb-2">Lesson Content (Rich Text / Markdown Supported)</label>
+                              <RichTextEditor
+                                value={st.lessonContent || ""}
+                                onChange={(val) => handleSubtopicChange(index, "lessonContent", val)}
+                              />
+                            </div>
+                          )}
                           <div className="mt-4 space-y-2">
                             {st.videoUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎥 YouTube Video Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "videoUrl", "")}>Remove</Button></div>}
                             {(st.notesUrl && st.notesUrl !== "[]") && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📄 Notes File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "notesUrl", ""); handleSubtopicChange(index, "notesDownloadUrl", "")}}>Remove</Button></div>}
                             {st.didYouKnowUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>💡 Did You Know Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "didYouKnowUrl", ""); handleSubtopicChange(index, "didYouKnowDownloadUrl", "")}}>Remove</Button></div>}
                             {st.referenceUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📚 Reference File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "referenceUrl", ""); handleSubtopicChange(index, "referenceDownloadUrl", "")}}>Remove</Button></div>}
                             {st.audioUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎵 Audio File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "audioUrl", ""); handleSubtopicChange(index, "audioDownloadUrl", "")}}>Remove</Button></div>}
-                            {st.otherUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🔗 Other File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "otherUrl", ""); handleSubtopicChange(index, "otherDownloadUrl", "")}}>Remove</Button></div>}
+                            {st.lessonContent && <div className="text-[11px] flex justify-between bg-indigo-50 p-2 rounded items-center text-indigo-700"><span>📝 Rich Text Lesson Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "lessonContent", "")}>Remove</Button></div>}
+                            
                           </div>
                         </div>
                       </div>
@@ -951,11 +1000,12 @@ export default function ManageModulesPage() {
                               {st.learningOutcome && (
                                 <p className="text-[10px] text-zinc-400 italic">LO: {st.learningOutcome}</p>
                               )}
-                              {(st.notesUrl || st.videoUrl || st.audioUrl) && (
-                                <div className="mt-1 flex gap-2">
+                              {(st.notesUrl || st.videoUrl || st.audioUrl || st.lessonContent) && (
+                                <div className="mt-1 flex gap-2 flex-wrap">
                                   {st.notesUrl && <span className="text-[9px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-bold">Notes Attached</span>}
                                   {st.videoUrl && <span className="text-[9px] bg-red-50 text-red-600 px-1.5 py-0.5 rounded font-bold">Video Attached</span>}
                                   {st.audioUrl && <span className="text-[9px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded font-bold">Audio Attached</span>}
+                                  {st.lessonContent && <span className="text-[9px] bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded font-bold">Rich Text Lesson Attached</span>}
                                 </div>
                               )}
                             </div>

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   ChevronLeft, PlayCircle, FileText, CheckCircle2, Gamepad2, Target, 
   Download, Book, BookOpen, BrainCircuit, CreditCard, Link as LinkIcon, 
-  HelpCircle, Layers, Headphones, Lightbulb, Clock, Terminal, Activity, Code, Settings, ChevronRight, MousePointer, ExternalLink, X, Maximize2, Volume2, Play, Pause
+  HelpCircle, Layers, Headphones, Lightbulb, Clock, Terminal, Activity, Code, Settings, ChevronRight, MousePointer, ExternalLink, X, Maximize2, Volume2, Play, Pause, Image as ImageIcon
 } from "lucide-react";
 import { module1Quizzes } from "@/data/module1QuizData";
 import { module2Quizzes } from "@/data/module2QuizData";
@@ -63,15 +63,21 @@ const DEFAULT_THEME = {
 function getEmbedUrl(url: string | null | undefined): string | null {
   if (!url) return null;
   
-  if (url.includes("drive.google.com")) {
-    if (url.includes("/file/d/")) {
-      return url.replace(/\/view.*$/, "/preview").replace(/\/edit.*$/, "/preview").replace(/\/sharing.*$/, "/preview");
+  if (url.includes("drive.google.com") || url.includes("docs.google.com")) {
+    const match = url.match(/(file|document|presentation|spreadsheets).*?\/d\/([^\/\?]+)/);
+    if (match && match[1] && match[2]) {
+      const type = match[1];
+      const id = match[2];
+      const domain = type === 'file' ? 'drive.google.com' : 'docs.google.com';
+      return `https://${domain}/${type}/d/${id}/preview`;
     }
-    if (url.includes("id=")) {
-      const match = url.match(/id=([^&]+)/);
-      if (match && match[1]) {
-        return `https://drive.google.com/file/d/${match[1]}/preview`;
-      }
+    const folderMatch = url.match(/\/folders\/([^\/\?]+)/);
+    if (folderMatch && folderMatch[1]) {
+      return `https://drive.google.com/embeddedfolderview?id=${folderMatch[1]}#list`;
+    }
+    const idMatch = url.match(/id=([^&]+)/);
+    if (idMatch && idMatch[1]) {
+      return `https://drive.google.com/file/d/${idMatch[1]}/preview`;
     }
   }
   
@@ -140,19 +146,25 @@ function getExternalEmbedUrl(url: string | null | undefined): string | null {
   if (!url) return null;
   
   let cleanUrl = url.replace(/drive\.https:\/\//g, "https://");
-  if (cleanUrl.startsWith("drive.google.com")) {
+  if (cleanUrl.startsWith("drive.google.com") || cleanUrl.startsWith("docs.google.com")) {
     cleanUrl = "https://" + cleanUrl;
   }
   
-  if (cleanUrl.includes("drive.google.com")) {
-    if (cleanUrl.includes("/file/d/")) {
-      return cleanUrl.replace(/\/view.*$/, "/preview").replace(/\/edit.*$/, "/preview");
+  if (cleanUrl.includes("drive.google.com") || cleanUrl.includes("docs.google.com")) {
+    const match = cleanUrl.match(/(file|document|presentation|spreadsheets).*?\/d\/([^\/\?]+)/);
+    if (match && match[1] && match[2]) {
+      const type = match[1];
+      const id = match[2];
+      const domain = type === 'file' ? 'drive.google.com' : 'docs.google.com';
+      return `https://${domain}/${type}/d/${id}/preview`;
     }
-    if (cleanUrl.includes("id=")) {
-      const match = cleanUrl.match(/id=([^&]+)/);
-      if (match && match[1]) {
-        return `https://drive.google.com/file/d/${match[1]}/preview`;
-      }
+    const folderMatch = cleanUrl.match(/\/folders\/([^\/\?]+)/);
+    if (folderMatch && folderMatch[1]) {
+      return `https://drive.google.com/embeddedfolderview?id=${folderMatch[1]}#list`;
+    }
+    const idMatch = cleanUrl.match(/id=([^&]+)/);
+    if (idMatch && idMatch[1]) {
+      return `https://drive.google.com/file/d/${idMatch[1]}/preview`;
     }
   }
   return cleanUrl;
@@ -172,7 +184,7 @@ function getGoogleDriveFileId(url: string | null | undefined): string | null {
 }
 
 const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: string; downloadUrl?: string }) => {
-  if (!url) return null;
+  if (!url || typeof url !== 'string') return null;
 
   const lowerUrl = url.toLowerCase();
   const isYouTube = lowerUrl.includes("youtube.com") || lowerUrl.includes("youtu.be");
@@ -223,6 +235,7 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
 };
 
 const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
+  if (!url || typeof url !== 'string') return null;
   const isCloudinary = url.includes("cloudinary.com");
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getExternalEmbedUrl(url);
@@ -345,7 +358,7 @@ export default function ModuleDetailPage() {
   const [allModules, setAllModules] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLanguages, setSelectedLanguages] = useState<{[id: string]: {video: string, audio: string}}>({});
-  const [activeNote, setActiveNote] = useState<{url: string, title: string, id: string} | null>(null);
+  const [activeNote, setActiveNote] = useState<{url: string, title: string, id: string, content?: string} | null>(null);
 
   const handleLanguageChange = (subtopicId: string, type: 'video' | 'audio', url: string) => {
     setSelectedLanguages(prev => ({
@@ -483,14 +496,18 @@ export default function ModuleDetailPage() {
                 <span className="truncate max-w-[250px] text-slate-800 font-bold">{activeNote.title}</span>
               </div>
             </div>
-            <a href={activeNote.url} target="_blank" rel="noopener noreferrer">
+            <a href={activeNote.url} target="_blank" rel="noopener noreferrer" className={activeNote.url ? "" : "hidden"}>
               <Button variant="ghost" size="sm" className="h-8 text-[11px] font-bold text-[#1E3A8A] hover:bg-slate-50 border border-slate-200">
                 <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Open in Drive
               </Button>
             </a>
           </div>
           <div className="flex-1 w-full bg-slate-50 relative overflow-hidden">
-            <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0" allow="autoplay; fullscreen" />
+            {activeNote.content ? (
+              <div className="w-full h-full overflow-auto p-4 sm:p-8 relative pt-6 bg-white prose max-w-none" dangerouslySetInnerHTML={{ __html: activeNote.content }} />
+            ) : (
+              <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0 pt-6" allow="autoplay; fullscreen" />
+            )}
           </div>
         </div>
       );
@@ -581,11 +598,21 @@ export default function ModuleDetailPage() {
                     parsedOther = JSON.parse(parsedOther);
                   }
                   if (typeof parsedOther === 'object' && parsedOther !== null) {
+                    while (typeof parsedOther.otherUrl === 'string' && parsedOther.otherUrl.trim().startsWith("{")) {
+                      try {
+                        const nested = JSON.parse(parsedOther.otherUrl);
+                        parsedOther = { ...nested, ...parsedOther, otherUrl: nested.otherUrl || "" };
+                      } catch(e) {
+                        break;
+                      }
+                    }
                     subtopic = { ...subtopic, ...parsedOther };
                   }
                   if (!subtopic.otherUrl || subtopic.otherUrl.trim() === "" || subtopic.otherUrl.trim().startsWith("{")) subtopic.otherUrl = "";
                   if (!subtopic.didYouKnowUrl || subtopic.didYouKnowUrl.trim() === "" || subtopic.didYouKnowUrl.trim().startsWith("{")) subtopic.didYouKnowUrl = "";
                   if (!subtopic.referenceUrl || subtopic.referenceUrl.trim() === "" || subtopic.referenceUrl.trim().startsWith("{")) subtopic.referenceUrl = "";
+                  if (!subtopic.lessonContent || subtopic.lessonContent.trim() === "" || subtopic.lessonContent.trim().startsWith("{")) subtopic.lessonContent = "";
+                  if (!subtopic.imageUrl || subtopic.imageUrl.trim() === "" || subtopic.imageUrl.trim().startsWith("{")) subtopic.imageUrl = "";
                 } catch(e) {
                   subtopic.otherUrl = "";
                   subtopic.didYouKnowUrl = "";
@@ -597,12 +624,27 @@ export default function ModuleDetailPage() {
               const subtopicSims = moduleData.simulations?.filter((s: any) => s.subtopicId === subtopic.subtopicNo || s.subtopicId === subtopic.id) || [];
               const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
               const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
+              const subtopicInfographics = moduleData.infographics?.filter((i: any) => i.title === subtopic.title) || [];
 
-              let defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
-              const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
+              let defaultVideoUrl = (subtopic.videoUrl && typeof subtopic.videoUrl === 'string' && !subtopic.videoUrl.trim().startsWith("{") && !subtopic.videoUrl.trim().startsWith("\""))
+                ? subtopic.videoUrl 
+                : (subtopic.type === 'videoUrl' && subtopic.mediaUrl && typeof subtopic.mediaUrl === 'string' && !subtopic.mediaUrl.trim().startsWith("{") && !subtopic.mediaUrl.trim().startsWith("\""))
+                  ? subtopic.mediaUrl 
+                  : (subtopic.videoLanguages?.[0]?.url || "");
+              
+              const defaultAudioUrl = (subtopic.audioUrl && typeof subtopic.audioUrl === 'string' && !subtopic.audioUrl.trim().startsWith("{") && !subtopic.audioUrl.trim().startsWith("\""))
+                ? subtopic.audioUrl
+                : (subtopic.type === 'audio' && subtopic.mediaUrl && typeof subtopic.mediaUrl === 'string' && !subtopic.mediaUrl.trim().startsWith("{") && !subtopic.mediaUrl.trim().startsWith("\""))
+                  ? subtopic.mediaUrl
+                  : (subtopic.audioLanguages?.[0]?.url || "");
+
               if (defaultVideoUrl === defaultAudioUrl && defaultVideoUrl) defaultVideoUrl = "";
-
-              const finalNotesUrl = subtopic.notesUrl || (subtopic.type === 'notes' ? subtopic.mediaUrl : "") || subtopic.imageUrl || "";
+              
+              const finalNotesUrl = (subtopic.notesUrl && typeof subtopic.notesUrl === 'string' && !subtopic.notesUrl.trim().startsWith("{") && !subtopic.notesUrl.trim().startsWith("\""))
+                ? subtopic.notesUrl 
+                : (subtopic.type === 'notes' && subtopic.mediaUrl && typeof subtopic.mediaUrl === 'string' && !subtopic.mediaUrl.trim().startsWith("{") && !subtopic.mediaUrl.trim().startsWith("\""))
+                  ? subtopic.mediaUrl 
+                  : subtopic.imageUrl || "";
 
               return (
                 <motion.div key={subtopic.id} variants={itemVariants}>
@@ -689,11 +731,35 @@ export default function ModuleDetailPage() {
                               </Link>
                             </ResourceLinkTracker>
                           )}
+                          
+                    
+
+                          {subtopic.lessonContent && (
+                            <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
+                              <Button 
+                                onClick={() => setActiveNote({ url: "", title: subtopic.title + " - Lesson", id: subtopic.id, content: subtopic.lessonContent || 'No lesson content found for this subtopic.' })}
+                                variant="outline" 
+                                className="w-full sm:w-auto bg-white hover:bg-blue-50/30 border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5"
+                              >
+                                <BookOpen className="w-3.5 h-3.5 text-blue-500 shrink-0" /> Read Lesson
+                              </Button>
+                            </ResourceLinkTracker>
+                          )}
+                          
                           {subtopicMindMaps.length > 0 && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="mindmap">
                               <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${subtopicMindMaps[0].id}`} className="w-full sm:w-auto">
                                 <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-purple-50/30 border-slate-200 hover:border-purple-300 text-slate-700 hover:text-purple-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
                                   <BrainCircuit className="w-3.5 h-3.5 text-purple-500 shrink-0" /> View Mind Map
+                                </Button>
+                              </Link>
+                            </ResourceLinkTracker>
+                          )}
+                          {subtopicInfographics.length > 0 && (
+                            <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
+                              <Link href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${subtopicInfographics[0].id}`} className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-pink-50/30 border-slate-200 hover:border-pink-300 text-slate-700 hover:text-pink-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                  <ImageIcon className="w-3.5 h-3.5 text-pink-500 shrink-0" /> Infographics
                                 </Button>
                               </Link>
                             </ResourceLinkTracker>
@@ -729,15 +795,7 @@ export default function ModuleDetailPage() {
                               </a>
                             </ResourceLinkTracker>
                           )}
-                          {subtopic.otherUrl && (
-                            <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="other">
-                              <a href={subtopic.otherUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-350 text-slate-700 hover:text-slate-900 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
-                                  <LinkIcon className="w-3.5 h-3.5 text-slate-500 shrink-0" /> External Link
-                                </Button>
-                              </a>
-                            </ResourceLinkTracker>
-                          )}
+                          
                           {subtopicFlashcards.length > 0 && (
                             <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}`} className="w-full sm:w-auto">
                               <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
@@ -789,8 +847,12 @@ export default function ModuleDetailPage() {
             </div>
           </div>
           <div className="flex-1 w-full bg-[#1e1e1e] relative p-1">
-            <div className="w-full h-full bg-white rounded-sm overflow-hidden">
-              <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0" allow="autoplay; fullscreen" />
+            <div className="w-full h-full bg-white rounded-sm overflow-hidden pt-6">
+              {activeNote.content ? (
+                <div className="w-full h-full overflow-auto p-4 sm:p-8 prose max-w-none" dangerouslySetInnerHTML={{ __html: activeNote.content }} />
+              ) : (
+                <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0 pt-6" allow="autoplay; fullscreen" />
+              )}
             </div>
           </div>
         </div>
@@ -924,6 +986,7 @@ export default function ModuleDetailPage() {
               const subtopicSims = moduleData.simulations?.filter((s: any) => s.subtopicId === subtopic.subtopicNo || s.subtopicId === subtopic.id) || [];
               const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
               const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
+              const subtopicInfographics = moduleData.infographics?.filter((i: any) => i.title === subtopic.title) || [];
 
               let defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
               const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
@@ -1020,11 +1083,33 @@ export default function ModuleDetailPage() {
                           </Link>
                         </ResourceLinkTracker>
                       )}
+                      
+                      {subtopic.lessonContent && (
+                        <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
+                          <Button 
+                            onClick={() => setActiveNote({ url: "", title: subtopic.title + " - Lesson", id: subtopic.id, content: subtopic.lessonContent || 'No lesson content found for this subtopic.' })}
+                            variant="outline" 
+                            className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1"
+                          >
+                            <BookOpen className="w-3.5 h-3.5 text-blue-500" /> read_lesson()
+                          </Button>
+                        </ResourceLinkTracker>
+                      )}
+                      
                       {subtopicMindMaps.length > 0 && (
                         <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="mindmap">
                           <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${subtopicMindMaps[0].id}`}>
                             <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1">
                               <BrainCircuit className="w-3.5 h-3.5 text-purple-500" /> view_mind_map()
+                            </Button>
+                          </Link>
+                        </ResourceLinkTracker>
+                      )}
+                      {subtopicInfographics.length > 0 && (
+                        <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
+                          <Link href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${subtopicInfographics[0].id}`}>
+                            <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1">
+                              <ImageIcon className="w-3.5 h-3.5 text-pink-500" /> view_infographic()
                             </Button>
                           </Link>
                         </ResourceLinkTracker>
@@ -1060,15 +1145,7 @@ export default function ModuleDetailPage() {
                           </a>
                         </ResourceLinkTracker>
                       )}
-                      {subtopic.otherUrl && (
-                        <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="other">
-                          <a href={subtopic.otherUrl} target="_blank" rel="noopener noreferrer">
-                            <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1">
-                              <LinkIcon className="w-3.5 h-3.5 text-slate-500" /> external_link()
-                            </Button>
-                          </a>
-                        </ResourceLinkTracker>
-                      )}
+                      
                       {subtopicFlashcards.length > 0 && (
                         <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}`}>
                           <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1">
@@ -1110,14 +1187,24 @@ export default function ModuleDetailPage() {
               <span className="truncate max-w-[400px]">{activeNote.title}</span>
             </div>
           </div>
-          <a href={activeNote.url} target="_blank" rel="noopener noreferrer">
+          <a href={activeNote.url} target="_blank" rel="noopener noreferrer" className={activeNote.url ? "" : "hidden"}>
             <Button className={isPremiumTheme ? "h-8 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-[11px] font-bold font-sans" : t.btnGhost + " h-8 text-xs border-2 border-black bg-white"}>
               <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> OPEN
             </Button>
           </a>
         </div>
         <div className={`flex-1 w-full bg-white relative overflow-hidden`}>
-          <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0" allow="autoplay; fullscreen" />
+          
+          {activeNote.content ? (
+            <div className="w-full h-full overflow-auto p-4 sm:p-8 bg-white prose max-w-none" dangerouslySetInnerHTML={{ __html: activeNote.content }} />
+          ) : activeNote.url ? (
+            <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0" allow="autoplay; fullscreen" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-slate-500 bg-slate-50">
+              No content available
+            </div>
+          )}
+
         </div>
       </div>
     );
@@ -1283,6 +1370,7 @@ export default function ModuleDetailPage() {
             const subtopicSims = moduleData.simulations?.filter((s: any) => s.subtopicId === subtopic.subtopicNo || s.subtopicId === subtopic.id) || [];
             const subtopicFlashcards = moduleData.flashcardDecks?.filter((f: any) => f.subtopicId === subtopic.subtopicNo || f.subtopicId === subtopic.id) || [];
             const subtopicMindMaps = moduleData.mindmaps?.filter((m: any) => m.title === subtopic.title) || [];
+              const subtopicInfographics = moduleData.infographics?.filter((i: any) => i.title === subtopic.title) || [];
 
             let defaultVideoUrl = subtopic.videoUrl || subtopic.mediaUrl || (subtopic.videoLanguages?.[0]?.url || "");
             const defaultAudioUrl = subtopic.audioUrl || (subtopic.audioLanguages?.[0]?.url || "");
@@ -1399,6 +1487,24 @@ export default function ModuleDetailPage() {
                         </Link>
                       </ResourceLinkTracker>
                     )}
+                    
+                    {subtopic.lessonContent && (
+                      <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
+                        <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
+                          <Button 
+                            onClick={() => setActiveNote({ url: "", title: subtopic.title + " - Lesson", id: subtopic.id, content: subtopic.lessonContent || 'No lesson content found for this subtopic.' })}
+                            variant="outline" 
+                            className={
+                              (isPremiumTheme 
+                                ? t.btnGhost 
+                                : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
+                            }
+                          >
+                            <BookOpen className="w-3.5 h-3.5 text-blue-500 shrink-0" /> Read Lesson
+                          </Button>
+                        </motion.div>
+                      </ResourceLinkTracker>
+                    )}
                     {subtopicMindMaps.length > 0 && (
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="mindmap">
                         <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${subtopicMindMaps[0].id}`} className="w-full sm:w-auto">
@@ -1409,6 +1515,21 @@ export default function ModuleDetailPage() {
                                 : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
                             }>
                               <BrainCircuit className="w-3.5 h-3.5 text-purple-500 shrink-0" /> View Mind Map
+                            </Button>
+                          </motion.div>
+                        </Link>
+                      </ResourceLinkTracker>
+                    )}
+                    {subtopicInfographics.length > 0 && (
+                      <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
+                        <Link href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${subtopicInfographics[0].id}`} className="w-full sm:w-auto">
+                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
+                            <Button variant="outline" className={
+                              (isPremiumTheme 
+                                ? t.btnGhost 
+                                : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
+                            }>
+                              <ImageIcon className="w-3.5 h-3.5 text-pink-500 shrink-0" /> Infographics
                             </Button>
                           </motion.div>
                         </Link>
@@ -1463,21 +1584,7 @@ export default function ModuleDetailPage() {
                         </a>
                       </ResourceLinkTracker>
                     )}
-                    {subtopic.otherUrl && (
-                      <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="other">
-                        <a href={subtopic.otherUrl} target="_blank" rel="noopener noreferrer">
-                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
-                            <Button variant="outline" className={
-                              isPremiumTheme 
-                                ? t.btnGhost 
-                                : t.btnPrimary + ' flex items-center gap-1.5'
-                            }>
-                              <LinkIcon className="w-4 h-4 text-slate-550" /> External Link
-                            </Button>
-                          </motion.div>
-                        </a>
-                      </ResourceLinkTracker>
-                    )}
+                    
                     {subtopicFlashcards.length > 0 && (
                       <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}`}>
                         <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>

@@ -6,6 +6,7 @@ import { Loader2, Grid, CheckCircle2, XCircle, ChevronRight, Video, Headphones, 
 import { fetchGAS } from "@/lib/apiClient";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import RichTextEditor from "@/components/ui/RichTextEditor";
 
 const RESOURCE_TYPES = [
   { id: "video", label: "Video", icon: Video, color: "text-red-500", href: "modules" },
@@ -18,7 +19,7 @@ const RESOURCE_TYPES = [
   { id: "infographic", label: "Infographic", icon: Map, color: "text-teal-500", href: "infographics" },
   { id: "reference", label: "Reference", icon: BookOpen, color: "text-emerald-500", href: "modules" },
   { id: "didYouKnow", label: "Did You Know", icon: FileQuestion, color: "text-amber-500", href: "modules" },
-  { id: "other", label: "Other Link", icon: LinkIcon, color: "text-slate-500", href: "modules" },
+  { id: "lessonContent", label: "Rich Text Lesson", icon: FileText, color: "text-indigo-500", href: "modules" },
 ];
 
 export default function ContentMatrixClientPage() {
@@ -83,11 +84,22 @@ export default function ContentMatrixClientPage() {
   };
 
   const getSubtopicResourceStatus = (mod: any, st: any) => {
-    let unpackedOther = { otherUrl: st.otherUrl, didYouKnowUrl: "", referenceUrl: "" };
-    if (typeof st.otherUrl === 'string' && st.otherUrl.startsWith("{")) {
+    let unpackedOther = { otherUrl: st.otherUrl, didYouKnowUrl: "", referenceUrl: "", lessonContent: "", imageUrl: "" };
+    if (typeof st.otherUrl === 'string' && st.otherUrl.trim().startsWith("{")) {
       try {
-        const parsedOther = JSON.parse(st.otherUrl);
-        unpackedOther = { ...unpackedOther, ...parsedOther };
+        let parsedOther = JSON.parse(st.otherUrl);
+        while (typeof parsedOther === 'string') {
+          parsedOther = JSON.parse(parsedOther);
+        }
+        if (typeof parsedOther === 'object' && parsedOther !== null) {
+          while (typeof parsedOther.otherUrl === 'string' && parsedOther.otherUrl.trim().startsWith("{")) {
+            try {
+              const nested = JSON.parse(parsedOther.otherUrl);
+              parsedOther = { ...nested, ...parsedOther, otherUrl: nested.otherUrl || "" };
+            } catch(e) { break; }
+          }
+          unpackedOther = { ...unpackedOther, ...parsedOther };
+        }
       } catch(e) {}
     }
     
@@ -115,7 +127,10 @@ export default function ContentMatrixClientPage() {
     const hasVideo = !!(st.videoUrl || (st.type === 'video' ? st.mediaUrl : "") || checkLanguages(st.videoLanguages));
     const hasAudio = !!(parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || checkLanguages(st.audioLanguages) || (unpackedOther as any).audioUrl);
     const hasNotes = !!((unpackedOther as any).notesUrl || parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : ""));
-    const hasOther = !!(unpackedOther.otherUrl || parsedData.otherUrl || (st.type === 'other' ? st.mediaUrl : ""));
+    
+    const hasLesson = !!(unpackedOther.lessonContent || parsedData.lessonContent);
+    const hasInfographic = !!(unpackedOther.imageUrl || parsedData.imageUrl || st.imageUrl);
+
     const hasDidYouKnow = !!(unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || st.didYouKnowUrl);
     const hasReference = !!(unpackedOther.referenceUrl || parsedData.referenceUrl || st.referenceUrl);
 
@@ -144,9 +159,9 @@ export default function ContentMatrixClientPage() {
       video: hasVideo,
       audio: hasAudio,
       notes: hasNotes,
-      other: hasOther,
       didYouKnow: hasDidYouKnow,
       reference: hasReference,
+      lessonContent: hasLesson,
       quiz: isMappedById(quizzes),
       simulation: isMappedById(simulations),
       flashcard: isMappedById(flashcards),
@@ -175,9 +190,9 @@ export default function ContentMatrixClientPage() {
       case 'video': return st.videoUrl || (st.type === 'video' ? st.mediaUrl : "") || "";
       case 'audio': return (unpackedOther as any).audioUrl || parsedData.audioUrl || st.audioUrl || (st.type === 'audio' ? st.mediaUrl : "") || "";
       case 'notes': return (unpackedOther as any).notesUrl || parsedData.notesUrl || st.notesUrl || (st.type === 'notes' ? st.mediaUrl : "") || "";
-      case 'other': return unpackedOther.otherUrl || parsedData.otherUrl || (st.type === 'other' ? st.mediaUrl : "") || "";
       case 'didYouKnow': return unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || st.didYouKnowUrl || "";
       case 'reference': return unpackedOther.referenceUrl || parsedData.referenceUrl || st.referenceUrl || "";
+      case 'lessonContent': return (unpackedOther as any).lessonContent || parsedData.lessonContent || "";
       default: return "";
     }
   };
@@ -238,7 +253,8 @@ export default function ContentMatrixClientPage() {
           notesDownloadUrl: cloned.notesDownloadUrl || "",
           audioUrl: cloned.audioUrl || "",
           audioLanguages: cloned.audioLanguages || [],
-          audioDownloadUrl: cloned.audioDownloadUrl || ""
+          audioDownloadUrl: cloned.audioDownloadUrl || "",
+          lessonContent: cloned.lessonContent || ""
         };
         if (typeof cloned.otherUrl === 'string' && cloned.otherUrl.startsWith("{")) {
           try { unpackedOther = { ...unpackedOther, ...JSON.parse(cloned.otherUrl) }; } catch(e) {}
@@ -251,9 +267,9 @@ export default function ContentMatrixClientPage() {
           if (editingResource.resourceType === 'video') cloned.videoUrl = finalUrlToSave;
           if (editingResource.resourceType === 'audio') { parsedData.audioUrl = finalUrlToSave; cloned.audioUrl = finalUrlToSave; unpackedOther.audioUrl = finalUrlToSave; }
           if (editingResource.resourceType === 'notes') { parsedData.notesUrl = finalUrlToSave; cloned.notesUrl = finalUrlToSave; unpackedOther.notesUrl = finalUrlToSave; }
-          if (editingResource.resourceType === 'other') { unpackedOther.otherUrl = finalUrlToSave; cloned.otherUrl = finalUrlToSave; }
           if (editingResource.resourceType === 'didYouKnow') { unpackedOther.didYouKnowUrl = finalUrlToSave; cloned.didYouKnowUrl = finalUrlToSave; }
           if (editingResource.resourceType === 'reference') { unpackedOther.referenceUrl = finalUrlToSave; cloned.referenceUrl = finalUrlToSave; }
+          if (editingResource.resourceType === 'lessonContent') { unpackedOther.lessonContent = finalUrlToSave; cloned.lessonContent = finalUrlToSave; }
         }
 
         const newSimulationData = JSON.stringify({
@@ -263,8 +279,6 @@ export default function ContentMatrixClientPage() {
           notesDownloadUrl: parsedData.notesDownloadUrl || cloned.notesDownloadUrl || "",
           videoUrl: cloned.videoUrl || "",
           videoDownloadUrl: unpackedOther.videoDownloadUrl || cloned.videoDownloadUrl || "",
-          otherUrl: unpackedOther.otherUrl || "",
-          otherDownloadUrl: unpackedOther.otherDownloadUrl || "",
           didYouKnowUrl: unpackedOther.didYouKnowUrl || "",
           didYouKnowDownloadUrl: unpackedOther.didYouKnowDownloadUrl || "",
           referenceUrl: unpackedOther.referenceUrl || "",
@@ -545,7 +559,7 @@ export default function ContentMatrixClientPage() {
       {/* Edit Link Modal */}
       {editingResource && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+          <div className={`bg-white rounded-xl shadow-xl w-full overflow-hidden ${editingResource?.resourceType === 'lessonContent' ? 'max-w-4xl' : 'max-w-md'}`}>
             <div className="p-4 border-b border-zinc-100 flex justify-between items-center bg-zinc-50">
               <h3 className="font-bold text-zinc-900 capitalize">Edit {editingResource.resourceType} Link</h3>
               <button 
@@ -611,6 +625,16 @@ export default function ContentMatrixClientPage() {
                         </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+              ) : editingResource.resourceType === 'lessonContent' ? (
+                <div>
+                  <label className="block text-sm font-semibold text-zinc-700 mb-1">Rich Text Lesson Content</label>
+                  <div className="max-h-[400px] overflow-y-auto border border-zinc-200 rounded-lg p-2 bg-white">
+                    <RichTextEditor
+                      value={newUrl}
+                      onChange={(val: string) => setNewUrl(val)}
+                    />
                   </div>
                 </div>
               ) : (

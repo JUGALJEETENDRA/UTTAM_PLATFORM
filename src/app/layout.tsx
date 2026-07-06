@@ -25,7 +25,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/coi-serviceworker.js`} strategy="beforeInteractive" />
+        <script dangerouslySetInnerHTML={{ __html: `
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              for(let registration of registrations) {
+                registration.unregister();
+              }
+            });
+          }
+        ` }} />
       </head>
       <body
         className={`${outfit.variable} font-sans antialiased bg-zinc-50 flex flex-col min-h-screen`}

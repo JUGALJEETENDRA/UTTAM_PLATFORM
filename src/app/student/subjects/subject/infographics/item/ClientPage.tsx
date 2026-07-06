@@ -9,6 +9,8 @@ import { ArrowLeft, ZoomIn, ZoomOut, Maximize, Brain, Download } from "lucide-re
 
 export default function InfographicViewerClientPage() {
   const searchParams = useSearchParams();
+  const directImageUrl = searchParams.get('imageUrl');
+  const directTitle = searchParams.get('title');
   const subjectId = searchParams.get('subjectId') || '';
   const mapId = searchParams.get('id') || '';
   const router = useRouter();

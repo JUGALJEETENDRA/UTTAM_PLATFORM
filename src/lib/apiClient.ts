@@ -74,6 +74,7 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
       throw new Error(data.error);
     }
 
+    console.log('GAS RESPONSE for', action, data ? (data.subtopics ? data.subtopics.map((s: any) => ({id: s.id, otherUrl: s.otherUrl})) : 'no subtopics') : 'no data');
     return data;
   } catch (error) {
     console.error(`Error fetching GAS for action ${action}:`, error);
