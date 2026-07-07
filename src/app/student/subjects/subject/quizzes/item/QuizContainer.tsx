@@ -36,19 +36,31 @@ export function QuizContainer({ quiz }: QuizContainerProps) {
   const [started, setStarted] = useState(false);
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
+  const moduleId = searchParams.get('moduleId') || '';
+  const subtopicId = searchParams.get('subtopicId') || '';
+
+  const backHref = (subjectId && moduleId)
+    ? `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${moduleId}${subtopicId ? `#subtopic-${subtopicId}` : ''}`
+    : (subjectId ? `/student/subjects/subject/quizzes?subjectId=${subjectId}` : "/student/dashboard");
 
   if (started) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-3xl">
-        <QuizActive quiz={quiz} onBack={() => setStarted(false)} />
+        <QuizActive 
+          quiz={quiz} 
+          onBack={() => setStarted(false)} 
+          subjectId={subjectId}
+          moduleId={moduleId}
+          subtopicId={subtopicId}
+        />
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <Link href={subjectId ? `/student/subjects/subject/quizzes?subjectId=${subjectId}` : "/student/dashboard"} className="flex items-center text-sm font-medium text-zinc-500 hover:text-primary mb-6 transition-colors">
-        <ChevronLeft className="w-4 h-4 mr-1" /> Back to Quizzes
+      <Link href={backHref} className="flex items-center text-sm font-medium text-zinc-500 hover:text-primary mb-6 transition-colors">
+        <ChevronLeft className="w-4 h-4 mr-1" /> {moduleId ? "Back to Subtopic" : "Back to Quizzes"}
       </Link>
 
       <Card className="border-zinc-200 shadow-lg">

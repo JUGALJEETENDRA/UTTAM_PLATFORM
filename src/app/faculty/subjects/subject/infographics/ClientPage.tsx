@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Plus, Trash2, Edit, Save, Brain, Image as ImageIcon } from "lucide-react";
 import toast from "react-hot-toast";
+import { DeleteConfirmDialog } from "@/components/faculty/DeleteConfirmDialog";
 
 interface Infographic {
   id?: string;
@@ -19,6 +20,10 @@ interface Infographic {
 export default function InfographicsClientPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingInfo, setDeletingInfo] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [infographics, setInfographics] = useState<Infographic[]>([]);
   const [modules, setModules] = useState<any[]>([]);
@@ -147,18 +152,28 @@ export default function InfographicsClientPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this infographic?")) return;
+  const handleDeleteClick = (info: Infographic) => {
+    setDeletingInfo({ id: info.id!, title: info.title || "Infographic" });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDeleteInfo = async () => {
+    if (!deletingInfo) return;
+    setIsDeleting(true);
     try {
-      const res = await fetchGAS("deleteInfographic", { infographicId: id });
+      const res = await fetchGAS("deleteInfographic", { infographicId: deletingInfo.id });
       if (res && res.success) {
         toast.success("Infographic deleted");
+        setDeleteDialogOpen(false);
+        setDeletingInfo(null);
         loadData();
       } else {
         toast.error("Failed to delete infographic");
       }
     } catch (err) {
       toast.error("An error occurred");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -315,7 +330,7 @@ export default function InfographicsClientPage() {
                     <Button variant="outline" size="sm" onClick={() => handleEdit(map)}>
                       <Edit className="w-4 h-4" />
                     </Button>
-                    <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDelete(map.id!)}>
+                    <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDeleteClick(map)}>
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -336,6 +351,14 @@ export default function InfographicsClientPage() {
           </Button>
         </div>
       )}
+      <DeleteConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDeleteInfo}
+        title={deletingInfo ? `Delete ${deletingInfo.title}?` : "Delete Infographic?"}
+        message="This action will permanently delete this item and cannot be undone."
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }

@@ -14,18 +14,11 @@ interface Flashcard {
 
 interface FlashcardViewerProps {
   cards: Flashcard[];
-  deckId: string;
-  moduleId: string;
-  subtopicId: string | null;
-  subjectId: string;
-  isInitiallyCompleted?: boolean;
 }
 
-export function FlashcardViewer({ cards, deckId, moduleId, subtopicId, subjectId, isInitiallyCompleted = false }: FlashcardViewerProps) {
+export function FlashcardViewer({ cards }: FlashcardViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [completed, setCompleted] = useState(isInitiallyCompleted);
-  const [completing, setCompleting] = useState(false);
 
   if (!cards || cards.length === 0) {
     return <div className="text-center py-10 text-zinc-500">No flashcards available in this deck.</div>;
@@ -44,35 +37,6 @@ export function FlashcardViewer({ cards, deckId, moduleId, subtopicId, subjectId
     setTimeout(() => {
       setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
     }, 150);
-  };
-
-  const handleFinish = async () => {
-    if (completed) return;
-    
-    setCompleting(true);
-    try {
-      const res = await fetch("/api/student/flashcards/complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          deckId,
-          moduleId,
-          subtopicId,
-          subjectId
-        })
-      });
-
-      if (res.ok) {
-        toast.success("Deck completed! +25 XP", { icon: "🎉" });
-        setCompleted(true);
-      } else {
-        toast.error("Failed to mark deck as completed.");
-      }
-    } catch (err) {
-      toast.error("An error occurred.");
-    } finally {
-      setCompleting(false);
-    }
   };
 
   const handleRestart = () => {
@@ -147,24 +111,13 @@ export function FlashcardViewer({ cards, deckId, moduleId, subtopicId, subjectId
         </Button>
 
         {currentIndex === cards.length - 1 ? (
-          completed ? (
-            <Button 
-              size="lg" 
-              onClick={handleRestart}
-              className="w-48 bg-amber-500 hover:bg-amber-600 text-white font-bold shadow-md"
-            >
-              <RotateCcw className="w-4 h-4 mr-2" /> Restart
-            </Button>
-          ) : (
-            <Button 
-              size="lg" 
-              onClick={handleFinish}
-              disabled={completing}
-              className="w-48 bg-emerald-500 hover:bg-emerald-600 text-white font-bold shadow-md"
-            >
-              <CheckCircle className="w-4 h-4 mr-2" /> Finish & Claim XP
-            </Button>
-          )
+          <Button 
+            size="lg" 
+            onClick={handleRestart}
+            className="w-48 bg-amber-500 hover:bg-amber-600 text-white font-bold shadow-md"
+          >
+            <RotateCcw className="w-4 h-4 mr-2" /> Restart study
+          </Button>
         ) : (
           <Button 
             size="lg" 

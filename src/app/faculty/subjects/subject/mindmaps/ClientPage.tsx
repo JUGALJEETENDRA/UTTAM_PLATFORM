@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Plus, Trash2, Edit, Save, Brain, Image as ImageIcon } from "lucide-react";
 import toast from "react-hot-toast";
+import { DeleteConfirmDialog } from "@/components/faculty/DeleteConfirmDialog";
 
 interface MindMap {
   id?: string;
@@ -19,6 +20,10 @@ interface MindMap {
 export default function MindMapsClientPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingMap, setDeletingMap] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [mindmaps, setMindmaps] = useState<MindMap[]>([]);
   const [modules, setModules] = useState<any[]>([]);
@@ -147,18 +152,28 @@ export default function MindMapsClientPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this mind map?")) return;
+  const handleDeleteClick = (map: MindMap) => {
+    setDeletingMap({ id: map.id!, title: map.title || "Mind Map" });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDeleteMap = async () => {
+    if (!deletingMap) return;
+    setIsDeleting(true);
     try {
-      const res = await fetchGAS("deleteMindMap", { mindMapId: id });
+      const res = await fetchGAS("deleteMindMap", { mindMapId: deletingMap.id });
       if (res && res.success) {
         toast.success("Mind map deleted");
+        setDeleteDialogOpen(false);
+        setDeletingMap(null);
         loadData();
       } else {
         toast.error("Failed to delete mind map");
       }
     } catch (err) {
       toast.error("An error occurred");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -315,7 +330,7 @@ export default function MindMapsClientPage() {
                     <Button variant="outline" size="sm" onClick={() => handleEdit(map)}>
                       <Edit className="w-4 h-4" />
                     </Button>
-                    <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDelete(map.id!)}>
+                    <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDeleteClick(map)}>
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -336,6 +351,14 @@ export default function MindMapsClientPage() {
           </Button>
         </div>
       )}
+      <DeleteConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDeleteMap}
+        title={deletingMap ? `Delete ${deletingMap.title}?` : "Delete Mind Map?"}
+        message="This action will permanently delete this item and cannot be undone."
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Target, Plus, Trash2, HelpCircle, FileUp, Sparkles, Pencil } from "luci
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { fetchGAS } from "@/lib/apiClient";
+import { DeleteConfirmDialog } from "@/components/faculty/DeleteConfirmDialog";
 
 interface QuestionForm {
   questionText: string;
@@ -27,6 +28,10 @@ export default function ManageQuizzesPage() {
   const [modules, setModules] = useState<any[]>([]);
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [editingQuizId, setEditingQuizId] = useState<string | null>(null);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingQuiz, setDeletingQuiz] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Form states
   const [selectedModuleId, setSelectedModuleId] = useState("");
@@ -310,19 +315,29 @@ export default function ManageQuizzesPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleDelete = async (quizId: string) => {
-    if (!confirm("Are you sure you want to delete this quiz? This action cannot be undone.")) return;
+  const handleDeleteClick = (quiz: any) => {
+    setDeletingQuiz({ id: quiz.id, title: quiz.title || "Quiz" });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDeleteQuiz = async () => {
+    if (!deletingQuiz) return;
+    setIsDeleting(true);
     try {
-      const data = await fetchGAS("deleteQuiz", { id: quizId });
+      const data = await fetchGAS("deleteQuiz", { id: deletingQuiz.id });
       if (data && data.success) {
         toast.success("Quiz deleted successfully");
+        setDeleteDialogOpen(false);
+        setDeletingQuiz(null);
         fetchQuizzes();
-        if (editingQuizId === quizId) handleCancelEdit();
+        if (editingQuizId === deletingQuiz.id) handleCancelEdit();
       } else {
         toast.error("Failed to delete quiz");
       }
     } catch (err: any) {
       toast.error(err.message || "An unexpected error occurred");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -753,7 +768,7 @@ export default function ManageQuizzesPage() {
                     <Button variant="outline" size="sm" onClick={() => handleEdit(q)} className="h-8 text-xs">
                       <Pencil className="w-3 h-3 mr-1" /> Edit
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => handleDelete(q.id)} className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
+                    <Button variant="outline" size="sm" onClick={() => handleDeleteClick(q)} className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
                       <Trash2 className="w-3 h-3 mr-1" /> Delete
                     </Button>
                   </div>
@@ -775,6 +790,15 @@ export default function ManageQuizzesPage() {
           </div>
         </div>
       </div>
+
+      <DeleteConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDeleteQuiz}
+        title={deletingQuiz ? `Delete ${deletingQuiz.title}?` : "Delete Quiz?"}
+        message="This action will permanently delete this item and cannot be undone."
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }

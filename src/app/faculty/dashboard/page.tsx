@@ -80,7 +80,7 @@ export default function FacultyDashboardPage() {
                   onClick={() => router.push(`/faculty/subjects/subject/modules?subjectId=${subject.id}`)}
                   className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer h-full border-zinc-200 relative min-h-[150px]"
                 >
-                  <DeleteSubjectButton subjectId={subject.id} />
+                  <DeleteSubjectButton subjectId={subject.id} subjectName={subject.name} />
                   <EditSubjectButton subject={subject} />
                   <CardHeader className="pb-2 pr-16">
                     <CardTitle className="text-xl text-primary">{subject.name}</CardTitle>

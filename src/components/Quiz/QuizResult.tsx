@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, XCircle, RotateCcw, ArrowRight, HelpCircle, Check, X } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Question } from "@/data/module1QuizData";
 
 interface QuizResultProps {
@@ -23,6 +24,11 @@ export function QuizResult({
   userAnswers,
   onRestart,
 }: QuizResultProps) {
+  const searchParams = useSearchParams();
+  const subjectId = searchParams.get('subjectId') || '';
+  const moduleId = searchParams.get('moduleId') || '';
+  const urlSubtopicId = searchParams.get('subtopicId') || '';
+
   const totalQuestions = questions.length;
   
   // Calculate score
@@ -141,11 +147,13 @@ export function QuizResult({
           </Button>
 
           <Link
-            href={`/student/modules/${subtopicId.startsWith("st2-") ? "m2" : "m1"}`}
+            href={(subjectId && moduleId)
+              ? `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${moduleId}${urlSubtopicId ? `#subtopic-${urlSubtopicId}` : ''}`
+              : `/student/modules/${subtopicId.startsWith("st2-") ? "m2" : "m1"}`}
             className="w-full sm:w-auto"
           >
             <Button className="w-full bg-primary hover:bg-primary/95 text-white font-bold px-6">
-              Back to Module <ArrowRight className="w-4 h-4 ml-2" />
+              {moduleId ? "Back to Subtopic" : "Back to Module"} <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
         </CardFooter>

@@ -7,6 +7,7 @@ import { Gamepad2, Plus, Info, Globe, Clock, CheckCircle, Edit, Trash, Pencil, T
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { fetchGAS } from "@/lib/apiClient";
+import { DeleteConfirmDialog } from "@/components/faculty/DeleteConfirmDialog";
 
 export default function ManageSimulationsPage() {
   const searchParams = useSearchParams();
@@ -14,6 +15,10 @@ export default function ManageSimulationsPage() {
 
   const [modules, setModules] = useState<any[]>([]);
   const [simulations, setSimulations] = useState<any[]>([]);
+  
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingSim, setDeletingSim] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   // Form states
   const [selectedModuleId, setSelectedModuleId] = useState("");
@@ -79,18 +84,28 @@ export default function ManageSimulationsPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this simulation?")) return;
+  const handleDeleteClick = (sim: any) => {
+    setDeletingSim({ id: sim.id, title: sim.title || "Simulation" });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDeleteSim = async () => {
+    if (!deletingSim) return;
+    setIsDeleting(true);
     try {
-      const data = await fetchGAS("deleteSimulation", { id });
+      const data = await fetchGAS("deleteSimulation", { id: deletingSim.id });
       if (data && data.success) {
         toast.success("Simulation deleted successfully");
+        setDeleteDialogOpen(false);
+        setDeletingSim(null);
         fetchSimulations();
       } else {
         toast.error(data?.error || "Failed to delete simulation");
       }
     } catch (error: any) {
       toast.error(error.message || "Failed to delete simulation");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -343,7 +358,7 @@ export default function ManageSimulationsPage() {
                     <Button variant="outline" size="sm" onClick={() => handleEdit(sim)} className="h-8 text-xs">
                       <Pencil className="w-3 h-3 mr-1" /> Edit
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => handleDelete(sim.id)} className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
+                    <Button variant="outline" size="sm" onClick={() => handleDeleteClick(sim)} className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
                       <Trash2 className="w-3 h-3 mr-1" /> Delete
                     </Button>
                   </div>
@@ -365,6 +380,15 @@ export default function ManageSimulationsPage() {
           </div>
         </div>
       </div>
+
+      <DeleteConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDeleteSim}
+        title={deletingSim ? `Delete ${deletingSim.title}?` : "Delete Simulation?"}
+        message="This action will permanently delete this item and cannot be undone."
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }

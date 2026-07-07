@@ -30,6 +30,12 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
   const [isResetting, setIsResetting] = useState(false);
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
+  const subtopicId = searchParams.get('subtopicId') || '';
+  const moduleId = searchParams.get('moduleId') || (subtopicId ? searchParams.get('id') : '') || '';
+
+  const backHref = (subjectId && moduleId)
+    ? `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${moduleId}${subtopicId ? `#subtopic-${subtopicId}` : ''}`
+    : (subjectId ? `/student/subjects/subject/simulations?subjectId=${subjectId}` : "/student/dashboard");
 
   // State for Sim 1 (Usability Audit Simulator)
   const [foundFlaws, setFoundFlaws] = useState<string[]>([]);
@@ -112,9 +118,9 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
             </div>
           </CardContent>
           <CardFooter className="bg-zinc-50 border-t border-zinc-100 p-6">
-            <Link href={subjectId ? `/student/subjects/subject/simulations?subjectId=${subjectId}` : "/student/dashboard"} className="w-full">
+            <Link href={backHref} className="w-full">
               <Button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold">
-                Back to simulations
+                {moduleId ? "Back to Subtopic" : "Back to simulations"}
               </Button>
             </Link>
           </CardFooter>
@@ -455,8 +461,8 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Link href={subjectId ? `/student/subjects/subject/simulations?subjectId=${subjectId}` : "/student/dashboard"} className="flex items-center text-sm font-medium text-zinc-500 hover:text-primary mb-6 transition-colors">
-        <ChevronLeft className="w-4 h-4 mr-1" /> Back to Simulations
+      <Link href={backHref} className="flex items-center text-sm font-medium text-zinc-500 hover:text-primary mb-6 transition-colors">
+        <ChevronLeft className="w-4 h-4 mr-1" /> {moduleId ? "Back to Subtopic" : "Back to Simulations"}
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -6,6 +6,7 @@ import { Layers, Plus, Trash2, HelpCircle, FileUp, Pencil } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { fetchGAS } from "@/lib/apiClient";
+import { DeleteConfirmDialog } from "@/components/faculty/DeleteConfirmDialog";
 interface FlashcardForm {
   question: string;
   answer: string;
@@ -16,6 +17,10 @@ export default function ManageFlashcardsPage() {
   const [modules, setModules] = useState<any[]>([]);
   const [decks, setDecks] = useState<any[]>([]);
   const [editingDeckId, setEditingDeckId] = useState<string | null>(null);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingDeck, setDeletingDeck] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   // Form states
   const [selectedModuleId, setSelectedModuleId] = useState("");
   const [selectedSubtopicId, setSelectedSubtopicId] = useState("");
@@ -198,19 +203,29 @@ export default function ManageFlashcardsPage() {
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  const handleDelete = async (deckId: string) => {
-    if (!confirm("Are you sure you want to delete this deck? This action cannot be undone.")) return;
+  const handleDeleteClick = (deck: any) => {
+    setDeletingDeck({ id: deck.id, title: deck.title || "Deck" });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDeleteDeck = async () => {
+    if (!deletingDeck) return;
+    setIsDeleting(true);
     try {
-      const data = await fetchGAS("deleteFlashcardDeck", { id: deckId });
+      const data = await fetchGAS("deleteFlashcardDeck", { id: deletingDeck.id });
       if (data && data.success) {
         toast.success("Deck deleted successfully");
+        setDeleteDialogOpen(false);
+        setDeletingDeck(null);
         fetchDecks();
-        if (editingDeckId === deckId) handleCancelEdit();
+        if (editingDeckId === deletingDeck.id) handleCancelEdit();
       } else {
         toast.error("Failed to delete deck");
       }
     } catch (err: any) {
       toast.error(err.message || "An unexpected error occurred");
+    } finally {
+      setIsDeleting(false);
     }
   };
   const handleCancelEdit = () => {
@@ -458,7 +473,7 @@ export default function ManageFlashcardsPage() {
                     <Button variant="outline" size="sm" onClick={() => handleEdit(deck)} className="h-8 text-xs">
                       <Pencil className="w-3 h-3 mr-1" /> Edit
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => handleDelete(deck.id)} className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
+                    <Button variant="outline" size="sm" onClick={() => handleDeleteClick(deck)} className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
                       <Trash2 className="w-3 h-3 mr-1" /> Delete
                     </Button>
                   </div>
@@ -480,6 +495,15 @@ export default function ManageFlashcardsPage() {
           </div>
         </div>
       </div>
+
+      <DeleteConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDeleteDeck}
+        title={deletingDeck ? `Delete ${deletingDeck.title}?` : "Delete Deck?"}
+        message="This action will permanently delete this item and cannot be undone."
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Trophy, AlertTriangle, ArrowRight, CheckCircle2, RotateCcw, XCircle } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 interface Question {
   id: string;
@@ -27,11 +27,17 @@ interface QuizActiveProps {
     questions: Question[];
   };
   onBack: () => void;
+  subjectId?: string;
+  moduleId?: string;
+  subtopicId?: string;
 }
 
-export function QuizActive({ quiz, onBack }: QuizActiveProps) {
+export function QuizActive({ quiz, onBack, subjectId: propSubjectId, moduleId: propModuleId, subtopicId: propSubtopicId }: QuizActiveProps) {
   const params = useParams();
-  const subjectId = params?.subjectId as string;
+  const searchParams = useSearchParams();
+  const subjectId = propSubjectId || searchParams.get('subjectId') || (params?.subjectId as string) || '';
+  const moduleId = propModuleId || searchParams.get('moduleId') || '';
+  const subtopicId = propSubtopicId || searchParams.get('subtopicId') || '';
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
   const isUnlimited = !quiz.timeLimit || Number(quiz.timeLimit) <= 0;
@@ -230,9 +236,16 @@ export function QuizActive({ quiz, onBack }: QuizActiveProps) {
           )}
         </CardContent>
         <CardFooter className="bg-zinc-50 border-t border-zinc-100 p-6 flex flex-col sm:flex-row gap-4">
-          <Link href={subjectId ? `/student/subjects/${subjectId}/quizzes` : "/student/dashboard"} className="w-full">
+          <Link 
+            href={
+              (subjectId && moduleId)
+                ? `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${moduleId}${subtopicId ? `#subtopic-${subtopicId}` : ''}`
+                : (subjectId ? `/student/subjects/subject/quizzes?subjectId=${subjectId}` : "/student/dashboard")
+            } 
+            className="w-full"
+          >
             <Button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold">
-              All Quizzes
+              {moduleId ? "Back to Module" : "All Quizzes"}
             </Button>
           </Link>
           {!passed && (

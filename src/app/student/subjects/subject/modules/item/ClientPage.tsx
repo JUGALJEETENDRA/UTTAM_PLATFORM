@@ -722,18 +722,6 @@ export default function ModuleDetailPage() {
                               </Button>
                             </ResourceLinkTracker>
                           ))}
-                          {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
-                            <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
-                              <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`} className="w-full sm:w-auto">
-                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-emerald-50/30 border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
-                                  <Target className="w-3.5 h-3.5 text-emerald-500 shrink-0" /> Attempt Quiz
-                                </Button>
-                              </Link>
-                            </ResourceLinkTracker>
-                          )}
-                          
-                    
-
                           {subtopic.lessonContent && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
                               <Button 
@@ -743,6 +731,26 @@ export default function ModuleDetailPage() {
                               >
                                 <BookOpen className="w-3.5 h-3.5 text-blue-500 shrink-0" /> Read Lesson
                               </Button>
+                            </ResourceLinkTracker>
+                          )}
+                          {subtopic.didYouKnowUrl && (
+                            <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
+                              <Button 
+                                onClick={() => setActiveNote({ url: subtopic.didYouKnowUrl, title: "Did You Know", id: subtopic.id })}
+                                variant="outline" 
+                                className="w-full sm:w-auto bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5"
+                              >
+                                <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Did You Know
+                              </Button>
+                            </ResourceLinkTracker>
+                          )}
+                          {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
+                            <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
+                              <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}&moduleId=${id}&subtopicId=${subtopic.id}`} className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-emerald-50/30 border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                  <Target className="w-3.5 h-3.5 text-emerald-500 shrink-0" /> Attempt Quiz
+                                </Button>
+                              </Link>
                             </ResourceLinkTracker>
                           )}
                           
@@ -768,22 +776,13 @@ export default function ModuleDetailPage() {
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="simulation">
                               <Link href={
                                 subtopicSims.length > 0 
-                                  ? `/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${subtopicSims[0].id}`
+                                  ? `/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${subtopicSims[0].id}&moduleId=${id}&subtopicId=${subtopic.id}`
                                   : `/student/subjects/subject/modules/item/simulations/subtopic?subjectId=${subjectId}&id=${id}&subtopicId=${subtopic.id}`
                               } className="w-full sm:w-auto">
                                 <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-blue-50/30 border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
                                   <Gamepad2 className="w-3.5 h-3.5 text-blue-500 shrink-0" /> View Simulation
                                 </Button>
                               </Link>
-                            </ResourceLinkTracker>
-                          )}
-                          {subtopic.didYouKnowUrl && (
-                            <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
-                              <a href={subtopic.didYouKnowUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-                                <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
-                                  <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Did You Know
-                                </Button>
-                              </a>
                             </ResourceLinkTracker>
                           )}
                           {subtopic.referenceUrl && (
@@ -797,7 +796,7 @@ export default function ModuleDetailPage() {
                           )}
                           
                           {subtopicFlashcards.length > 0 && (
-                            <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}`} className="w-full sm:w-auto">
+                            <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}&moduleId=${id}&subtopicId=${subtopic.id}`} className="w-full sm:w-auto">
                               <Button variant="outline" className="w-full sm:w-auto bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
                                 <Layers className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Flashcards
                               </Button>
@@ -1060,7 +1059,6 @@ export default function ModuleDetailPage() {
                         </ResourceLinkTracker>
                       </div>
                     )}
-
                     {/* Buttons */}
                     <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4 mt-auto">
                       {getParsedNotes(finalNotesUrl).map((note: any, idx: number) => (
@@ -1074,16 +1072,6 @@ export default function ModuleDetailPage() {
                           </Button>
                         </ResourceLinkTracker>
                       ))}
-                      {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
-                        <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
-                          <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`}>
-                            <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1">
-                              <Target className="w-3.5 h-3.5 text-emerald-500" /> attempt_quiz()
-                            </Button>
-                          </Link>
-                        </ResourceLinkTracker>
-                      )}
-                      
                       {subtopic.lessonContent && (
                         <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
                           <Button 
@@ -1093,6 +1081,26 @@ export default function ModuleDetailPage() {
                           >
                             <BookOpen className="w-3.5 h-3.5 text-blue-500" /> read_lesson()
                           </Button>
+                        </ResourceLinkTracker>
+                      )}
+                      {subtopic.didYouKnowUrl && (
+                        <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
+                          <Button 
+                            onClick={() => setActiveNote({ url: subtopic.didYouKnowUrl, title: "Did You Know", id: subtopic.id })}
+                            variant="outline" 
+                            className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1"
+                          >
+                            <Lightbulb className="w-3.5 h-3.5 text-amber-500" /> did_you_know()
+                          </Button>
+                        </ResourceLinkTracker>
+                      )}
+                      {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
+                        <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
+                          <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}&moduleId=${id}&subtopicId=${subtopic.id}`}>
+                            <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1">
+                              <Target className="w-3.5 h-3.5 text-emerald-500" /> attempt_quiz()
+                            </Button>
+                          </Link>
                         </ResourceLinkTracker>
                       )}
                       
@@ -1118,22 +1126,13 @@ export default function ModuleDetailPage() {
                         <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="simulation">
                           <Link href={
                             subtopicSims.length > 0 
-                              ? `/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${subtopicSims[0].id}`
+                              ? `/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${subtopicSims[0].id}&moduleId=${id}&subtopicId=${subtopic.id}`
                               : `/student/subjects/subject/modules/item/simulations/subtopic?subjectId=${subjectId}&id=${id}&subtopicId=${subtopic.id}`
                           }>
                             <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1">
                               <Gamepad2 className="w-3.5 h-3.5 text-blue-500" /> view_simulation()
                             </Button>
                           </Link>
-                        </ResourceLinkTracker>
-                      )}
-                      {subtopic.didYouKnowUrl && (
-                        <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
-                          <a href={subtopic.didYouKnowUrl} target="_blank" rel="noopener noreferrer">
-                            <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1">
-                              <Lightbulb className="w-3.5 h-3.5 text-amber-500" /> did_you_know()
-                            </Button>
-                          </a>
                         </ResourceLinkTracker>
                       )}
                       {subtopic.referenceUrl && (
@@ -1147,7 +1146,7 @@ export default function ModuleDetailPage() {
                       )}
                       
                       {subtopicFlashcards.length > 0 && (
-                        <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}`}>
+                        <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}&moduleId=${id}&subtopicId=${subtopic.id}`}>
                           <Button variant="outline" className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1">
                             <Layers className="w-3.5 h-3.5 text-amber-500" /> study_flashcards()
                           </Button>
@@ -1472,22 +1471,6 @@ export default function ModuleDetailPage() {
                         </motion.div>
                       </ResourceLinkTracker>
                     ))}
-                    {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
-                      <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
-                        <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}`} className="w-full sm:w-auto">
-                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
-                            <Button variant="outline" className={
-                              (isPremiumTheme 
-                                ? t.btnGhost 
-                                : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
-                            }>
-                              <Target className="w-3.5 h-3.5 text-emerald-500 shrink-0" /> Attempt Quiz
-                            </Button>
-                          </motion.div>
-                        </Link>
-                      </ResourceLinkTracker>
-                    )}
-                    
                     {subtopic.lessonContent && (
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="notes">
                         <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
@@ -1505,6 +1488,39 @@ export default function ModuleDetailPage() {
                         </motion.div>
                       </ResourceLinkTracker>
                     )}
+                    {subtopic.didYouKnowUrl && (
+                      <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
+                        <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
+                          <Button 
+                            onClick={() => setActiveNote({ url: subtopic.didYouKnowUrl, title: "Did You Know", id: subtopic.id })}
+                            variant="outline" 
+                            className={
+                              (isPremiumTheme 
+                                ? t.btnGhost 
+                                : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
+                            }
+                          >
+                            <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" /> Did You Know
+                          </Button>
+                        </motion.div>
+                      </ResourceLinkTracker>
+                    )}
+                    {(subtopic.id in module1Quizzes || subtopic.id in module2Quizzes || subtopicQuizzes.length > 0) && (
+                      <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="quiz">
+                        <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${subtopicQuizzes.length > 0 ? subtopicQuizzes[0].id : subtopic.id}&moduleId=${id}&subtopicId=${subtopic.id}`} className="w-full sm:w-auto">
+                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
+                            <Button variant="outline" className={
+                              (isPremiumTheme 
+                                ? t.btnGhost 
+                                : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
+                            }>
+                              <Target className="w-3.5 h-3.5 text-emerald-500 shrink-0" /> Attempt Quiz
+                            </Button>
+                          </motion.div>
+                        </Link>
+                      </ResourceLinkTracker>
+                    )}
+                    
                     {subtopicMindMaps.length > 0 && (
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="mindmap">
                         <Link href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${subtopicMindMaps[0].id}`} className="w-full sm:w-auto">
@@ -1539,7 +1555,7 @@ export default function ModuleDetailPage() {
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="simulation">
                         <Link href={
                           subtopicSims.length > 0 
-                            ? `/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${subtopicSims[0].id}`
+                            ? `/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${subtopicSims[0].id}&moduleId=${id}&subtopicId=${subtopic.id}`
                             : `/student/subjects/subject/modules/item/simulations/subtopic?subjectId=${subjectId}&id=${id}&subtopicId=${subtopic.id}`
                         } className="w-full sm:w-auto">
                           <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
@@ -1552,21 +1568,6 @@ export default function ModuleDetailPage() {
                             </Button>
                           </motion.div>
                         </Link>
-                      </ResourceLinkTracker>
-                    )}
-                    {subtopic.didYouKnowUrl && (
-                      <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
-                        <a href={subtopic.didYouKnowUrl} target="_blank" rel="noopener noreferrer">
-                          <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
-                            <Button variant="outline" className={
-                              isPremiumTheme 
-                                ? t.btnGhost 
-                                : t.btnPrimary + ' flex items-center gap-1.5'
-                            }>
-                              <Lightbulb className="w-4 h-4 text-amber-500" /> Did You Know
-                            </Button>
-                          </motion.div>
-                        </a>
                       </ResourceLinkTracker>
                     )}
                     {subtopic.referenceUrl && (
@@ -1586,7 +1587,7 @@ export default function ModuleDetailPage() {
                     )}
                     
                     {subtopicFlashcards.length > 0 && (
-                      <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}`}>
+                      <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${subtopicFlashcards[0].id}&moduleId=${id}&subtopicId=${subtopic.id}`}>
                         <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}}>
                           <Button variant="outline" className={
                             isPremiumTheme 

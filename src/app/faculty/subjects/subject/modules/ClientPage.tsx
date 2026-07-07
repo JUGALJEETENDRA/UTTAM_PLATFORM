@@ -8,6 +8,7 @@ import { BookOpen, Plus, Trash2, CheckCircle2, ChevronDown, ChevronUp, Edit3, Up
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { fetchGAS } from "@/lib/apiClient";
+import { DeleteConfirmDialog } from "@/components/faculty/DeleteConfirmDialog";
 
 
 function safeUrlFallback(primary: string | undefined, mediaUrl: string | undefined, type: string | undefined, targetType: string): string {
@@ -77,6 +78,10 @@ export default function ManageModulesPage() {
   const [convertingAudioKey, setConvertingAudioKey] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [isUploadingSyllabus, setIsUploadingSyllabus] = useState(false);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingModule, setDeletingModule] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const convertDriveAudioToCloudinary = async (rawUrl: string, onSuccess: (cloudinaryUrl: string) => void, keyIdentifier: string) => {
     if (!rawUrl || !rawUrl.trim()) return;
@@ -492,18 +497,23 @@ export default function ManageModulesPage() {
     }
   };
 
-  const handleDeleteModule = async (e: React.MouseEvent, moduleId: string) => {
+  const handleDeleteModuleClick = (e: React.MouseEvent, mod: any) => {
     e.stopPropagation();
-    if (!confirm("Are you sure you want to delete this module and all of its subtopics, quizzes, flashcards, simulations, and mind maps? This action cannot be undone.")) {
-      return;
-    }
-    
+    setDeletingModule({ id: mod.id, title: mod.title });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDeleteModule = async () => {
+    if (!deletingModule) return;
+    setIsDeleting(true);
     try {
-      const res = await fetchGAS("deleteModule", { moduleId });
+      const res = await fetchGAS("deleteModule", { moduleId: deletingModule.id });
       if (res && res.success) {
         toast.success("Module deleted successfully!");
+        setDeleteDialogOpen(false);
+        setDeletingModule(null);
         fetchModules();
-        if (editingModuleId === moduleId) {
+        if (editingModuleId === deletingModule.id) {
           handleCancelEdit();
         }
       } else {
@@ -511,6 +521,8 @@ export default function ManageModulesPage() {
       }
     } catch (err: any) {
       toast.error(err.message || "An error occurred while deleting the module");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -979,7 +991,7 @@ export default function ManageModulesPage() {
                       variant="ghost"
                       size="sm"
                       className="h-8 w-8 p-0 text-zinc-500 hover:text-red-600 z-10"
-                      onClick={(e) => handleDeleteModule(e, mod.id)}
+                      onClick={(e) => handleDeleteModuleClick(e, mod)}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -1022,6 +1034,15 @@ export default function ManageModulesPage() {
           </div>
         </div>
       </div>
+
+      <DeleteConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDeleteModule}
+        title={deletingModule ? `Delete ${deletingModule.title}?` : "Delete Module?"}
+        message="This action will permanently delete this module and all of its subtopics, quizzes, flashcards, simulations, and mind maps. This action cannot be undone."
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }

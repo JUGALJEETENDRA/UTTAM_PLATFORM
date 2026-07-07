@@ -7,6 +7,7 @@ import { FolderOpen, Plus, Trash2 } from "lucide-react";
 import { SubjectResourceCard } from "@/components/cards/SubjectResourceCard";
 import toast from "react-hot-toast";
 import { fetchGAS } from "@/lib/apiClient";
+import { DeleteConfirmDialog } from "@/components/faculty/DeleteConfirmDialog";
 interface Resource {
   id: string;
   title: string;
@@ -20,6 +21,10 @@ export default function ManageResourcesPage() {
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingResource, setDeletingResource] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   // Form State
   const [title, setTitle] = useState("");
@@ -68,18 +73,28 @@ export default function ManageResourcesPage() {
       setIsSubmitting(false);
     }
   };
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this resource?")) return;
+  const handleDeleteClick = (res: Resource) => {
+    setDeletingResource({ id: res.id, title: res.title || "Resource" });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDeleteResource = async () => {
+    if (!deletingResource) return;
+    setIsDeleting(true);
     try {
-      const data = await fetchGAS("deleteResource", { id });
+      const data = await fetchGAS("deleteResource", { id: deletingResource.id });
       if (data && data.success) {
         toast.success("Resource deleted successfully");
+        setDeleteDialogOpen(false);
+        setDeletingResource(null);
         fetchResources();
       } else {
         toast.error(data?.error || "Failed to delete resource");
       }
     } catch (error: any) {
       toast.error(error.message || "Failed to delete resource");
+    } finally {
+      setIsDeleting(false);
     }
   };
   return (
@@ -156,7 +171,7 @@ export default function ManageResourcesPage() {
                     link={resource.link}
                   />
                   <button 
-                    onClick={() => handleDelete(resource.id)}
+                    onClick={() => handleDeleteClick(resource)}
                     className="absolute top-2 right-2 p-1.5 bg-red-50 text-red-600 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100"
                     title="Delete Resource"
                   >
@@ -168,6 +183,15 @@ export default function ManageResourcesPage() {
           )}
         </div>
       </div>
+
+      <DeleteConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDeleteResource}
+        title={deletingResource ? `Delete ${deletingResource.title}?` : "Delete Resource?"}
+        message="This action will permanently delete this item and cannot be undone."
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }
