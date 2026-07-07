@@ -1082,7 +1082,7 @@ export default function StudentDashboard() {
                             </span>
                           </div>
                           <h3 className="text-[13.5px] font-bold font-sans text-slate-800 tracking-tight leading-snug group-hover:text-[#1E3A8A] transition-colors pr-2">
-                            {mod.title}
+                            {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
                           </h3>
                           <p className="text-[11px] text-slate-500 font-sans mt-2 line-clamp-3 leading-relaxed">
                             {mod.description || "Analyze digital business transformation models, legacy IT architectures, and core strategic optimization parameters."}
@@ -2551,7 +2551,7 @@ export default function StudentDashboard() {
                             label={`Module.Card M0${mod.moduleNo}`}
                             className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group relative`}
                           >
-                            <CardHeader className={isPremiumTheme ? "p-5 md:p-6 pb-2 relative z-10" : "pb-3 relative z-10"}>
+                            <CardHeader className={isPremiumTheme ? "p-5 md:p-6 pb-2 relative z-10" : "pt-5 px-5 pb-2.5 relative z-10"}>
                               {/* Badge */}
                               <div className="flex justify-between items-center mb-3">
                                 <motion.span
@@ -2560,7 +2560,7 @@ export default function StudentDashboard() {
                                     hover: { y: -1, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.03)" }
                                   }}
                                   transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                                  className={`text-[10px] px-2.5 py-1 transition-all duration-150 font-sans ${isPremiumTheme
+                                  className={`inline-block text-[10px] px-2.5 py-1 transition-all duration-150 font-sans ${isPremiumTheme
                                     ? "bg-indigo-50 text-indigo-850 border border-indigo-200/50 rounded-lg font-semibold"
                                     : t.badge
                                     }`}
@@ -2603,11 +2603,11 @@ export default function StudentDashboard() {
                                 ? 'font-bold font-sans tracking-tight text-slate-800'
                                 : 'font-black leading-tight'
                                 }`}>
-                                {mod.title}
+                                {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
                               </CardTitle>
                             </CardHeader>
 
-                            <CardContent className={isPremiumTheme ? "p-5 md:p-6 pt-0 relative z-10 flex-1 flex flex-col justify-end" : "flex-1 flex flex-col justify-between"}>
+                            <CardContent className={isPremiumTheme ? "p-5 md:p-6 pt-0 relative z-10 flex-1 flex flex-col justify-end" : "px-5 pb-5 pt-0 flex-1 flex flex-col justify-between"}>
                               <div className={`pt-3 flex justify-between items-center text-xs font-semibold transition-all duration-150 ${isPremiumTheme
                                 ? 'border-t border-slate-100 text-slate-500 font-sans'
                                 : 'border-t-2 border-black text-zinc-500'

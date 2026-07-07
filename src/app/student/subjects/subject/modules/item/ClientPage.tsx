@@ -545,7 +545,7 @@ export default function ModuleDetailPage() {
             </div>
             <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3 font-sans">
               <Layers className="w-7 h-7 text-[#1E3A8A]" />
-              {moduleData.title}
+              {moduleData.title ? moduleData.title.replace(/^[●•]\s*/, "") : ""}
             </h1>
             <p className="text-slate-500 mt-2 text-sm leading-relaxed max-w-2xl font-sans font-medium">
               {moduleData.description}

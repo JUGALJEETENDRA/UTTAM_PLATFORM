@@ -850,7 +850,7 @@ export default function ModulesPage() {
                   >
                     <DesignStudioCard isPremium={isPremiumTheme} className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group relative`}>
 
-                      <CardHeader className={isPremiumTheme ? "p-5 md:p-6 pb-2 relative z-10" : "pb-3 relative z-10"}>
+                      <CardHeader className={isPremiumTheme ? "p-5 md:p-6 pb-2 relative z-10" : "pt-5 px-5 pb-2.5 relative z-10"}>
                         <div className="flex justify-between items-center mb-3">
                           <motion.span
                             variants={{
@@ -858,7 +858,7 @@ export default function ModulesPage() {
                               hover: { y: -1, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.03)" }
                             }}
                             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                            className={`text-[10px] px-2.5 py-1 transition-all duration-150 font-sans ${isPremiumTheme
+                            className={`inline-block text-[10px] px-2.5 py-1 transition-all duration-150 font-sans ${isPremiumTheme
                               ? "bg-indigo-50 text-indigo-850 border border-indigo-200/50 rounded-lg font-semibold group-hover:bg-indigo-100 group-hover:text-indigo-950"
                               : t.badge
                               }`}
@@ -897,10 +897,10 @@ export default function ModulesPage() {
                           ? 'font-bold font-sans tracking-tight text-slate-800'
                           : t.titleHover + ' font-black leading-tight'
                           }`}>
-                          {mod.title}
+                          {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className={isPremiumTheme ? "p-5 md:p-6 pt-0 relative z-10 flex-1 flex flex-col justify-end" : "flex-1 flex flex-col justify-between"}>
+                      <CardContent className={isPremiumTheme ? "p-5 md:p-6 pt-0 relative z-10 flex-1 flex flex-col justify-end" : "px-5 pb-5 pt-0 flex-1 flex flex-col justify-between"}>
                         {!isPremiumTheme && (
                           <p className={`text-xs leading-relaxed line-clamp-3 mb-4 text-zinc-700 font-bold`}>
                             {mod.co || "Inspect component spacing, flex grids, nested outline boxes, and micro-interactions guidelines."}
