@@ -12,6 +12,7 @@ interface TeamMember {
   icon: React.ReactNode;
   githubUrl?: string;
   linkedinUrl?: string;
+  imageUrl?: string;
 }
 
 const team: TeamMember[] = [
@@ -20,40 +21,41 @@ const team: TeamMember[] = [
     role: "Team Mentor",
     avatarBg: "from-blue-500 to-cyan-500",
     icon: <Terminal className="w-5 h-5 text-white" />,
-    githubUrl: "https://github.com",
-    linkedinUrl: "https://linkedin.com"
+    linkedinUrl: "https://www.linkedin.com/in/jugal-jeetendra-manek/"
   },
   {
     name: "Jainam Davda",
     role: "Team Member",
     avatarBg: "from-indigo-500 to-purple-500",
     icon: <Layout className="w-5 h-5 text-white" />,
-    githubUrl: "https://github.com",
-    linkedinUrl: "https://linkedin.com"
+    githubUrl: "https://github.com/JainamD",
+    linkedinUrl: "https://www.linkedin.com/in/jainam-davda-a9589a328/",
+    imageUrl: "https://github.com/JainamD.png"
   },
   {
     name: "Chinmay Chavan",
     role: "Team Member",
     avatarBg: "from-emerald-500 to-teal-500",
     icon: <Cpu className="w-5 h-5 text-white" />,
-    githubUrl: "https://github.com",
-    linkedinUrl: "https://linkedin.com"
+    githubUrl: "https://github.com/Chinmay741",
+    linkedinUrl: "https://www.linkedin.com/in/chinmay-chavan-55b6a6334/",
+    imageUrl: "https://github.com/Chinmay741.png"
   },
   {
     name: "Sourish Ashtikar",
     role: "Team Member",
     avatarBg: "from-rose-500 to-orange-500",
     icon: <Shield className="w-5 h-5 text-white" />,
-    githubUrl: "https://github.com",
-    linkedinUrl: "https://linkedin.com"
+    githubUrl: "https://github.com/SourishAshtikar",
+    linkedinUrl: "https://www.linkedin.com/in/sourishashtikar/",
+    imageUrl: "https://github.com/SourishAshtikar.png"
   },
   {
     name: "Rohan Patil",
     role: "Team Member",
     avatarBg: "from-amber-500 to-yellow-500",
     icon: <Compass className="w-5 h-5 text-white" />,
-    githubUrl: "https://github.com",
-    linkedinUrl: "https://linkedin.com"
+    linkedinUrl: "https://www.linkedin.com/in/rohan-patil-84b919372/"
   }
 ];
 
@@ -73,6 +75,25 @@ const cardVariants = {
     transition: { type: "spring" as const, stiffness: 260, damping: 20 }
   }
 };
+
+interface ImageWithFallbackProps {
+  src: string;
+  alt: string;
+  fallback: React.ReactNode;
+}
+
+function ImageWithFallback({ src, alt, fallback }: ImageWithFallbackProps) {
+  const [error, setError] = React.useState(false);
+  if (error) return <>{fallback}</>;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      onError={() => setError(true)}
+      className="w-12 h-12 rounded-xl object-cover shadow-sm shrink-0 border border-slate-200"
+    />
+  );
+}
 
 export default function TeamPage() {
   return (
@@ -119,7 +140,7 @@ export default function TeamPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.4 }}
-            className="text-sm md:text-base text-slate-550 font-medium"
+            className="text-sm md:text-base text-slate-555 font-medium"
           >
             The team behind the Gamified HCI EdTech Platform.
           </motion.p>
@@ -145,9 +166,15 @@ export default function TeamPage() {
               <div className="space-y-4">
                 {/* Header with avatar / icon */}
                 <div className="flex items-center space-x-3.5">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${member.avatarBg} flex items-center justify-center shadow-sm shrink-0`}>
-                    {member.icon}
-                  </div>
+                  <ImageWithFallback
+                    src={member.imageUrl || ""}
+                    alt={member.name}
+                    fallback={
+                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${member.avatarBg} flex items-center justify-center shadow-sm shrink-0`}>
+                        {member.icon}
+                      </div>
+                    }
+                  />
                   <div>
                     <h3 className="font-bold text-slate-900 text-base leading-tight">
                       {member.name}
@@ -164,33 +191,37 @@ export default function TeamPage() {
 
               {/* Social Icons Link Footer */}
               <div className="mt-6 pt-4 border-t border-slate-100 flex items-center space-x-4 text-slate-500 text-xs">
-                <a
-                  href={member.githubUrl || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-slate-900 transition-colors flex items-center gap-1.5 p-1 rounded hover:bg-slate-100"
-                  title="GitHub Profile"
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                    <path d="M9 18c-4.51 2-5-2-7-2" />
-                  </svg>
-                  <span className="text-xs font-mono font-bold">GitHub</span>
-                </a>
-                <a
-                  href={member.linkedinUrl || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-blue-600 transition-colors flex items-center gap-1.5 p-1 rounded hover:bg-slate-100"
-                  title="LinkedIn Profile"
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                    <rect width="4" height="12" x="2" y="9" />
-                    <circle cx="4" cy="4" r="2" />
-                  </svg>
-                  <span className="text-xs font-mono font-bold">LinkedIn</span>
-                </a>
+                {member.githubUrl && (
+                  <a
+                    href={member.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-slate-900 transition-colors flex items-center gap-1.5 p-1 rounded hover:bg-slate-100"
+                    title="GitHub Profile"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                      <path d="M9 18c-4.51 2-5-2-7-2" />
+                    </svg>
+                    <span className="text-xs font-mono font-bold">GitHub</span>
+                  </a>
+                )}
+                {member.linkedinUrl && (
+                  <a
+                    href={member.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-blue-600 transition-colors flex items-center gap-1.5 p-1 rounded hover:bg-slate-100"
+                    title="LinkedIn Profile"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                      <rect width="4" height="12" x="2" y="9" />
+                      <circle cx="4" cy="4" r="2" />
+                    </svg>
+                    <span className="text-xs font-mono font-bold">LinkedIn</span>
+                  </a>
+                )}
               </div>
             </motion.div>
           ))}
