@@ -21,7 +21,8 @@ const team: TeamMember[] = [
     role: "Team Mentor",
     avatarBg: "from-blue-500 to-cyan-500",
     icon: <Terminal className="w-5 h-5 text-white" />,
-    linkedinUrl: "https://www.linkedin.com/in/jugal-jeetendra-manek/"
+    linkedinUrl: "https://www.linkedin.com/in/jugal-jeetendra-manek/",
+    imageUrl: "https://unavatar.io/linkedin/jugal-jeetendra-manek"
   },
   {
     name: "Jainam Davda",
@@ -30,7 +31,7 @@ const team: TeamMember[] = [
     icon: <Layout className="w-5 h-5 text-white" />,
     githubUrl: "https://github.com/JainamD",
     linkedinUrl: "https://www.linkedin.com/in/jainam-davda-a9589a328/",
-    imageUrl: "https://github.com/JainamD.png"
+    imageUrl: "https://unavatar.io/linkedin/jainam-davda-a9589a328"
   },
   {
     name: "Chinmay Chavan",
@@ -39,7 +40,7 @@ const team: TeamMember[] = [
     icon: <Cpu className="w-5 h-5 text-white" />,
     githubUrl: "https://github.com/Chinmay741",
     linkedinUrl: "https://www.linkedin.com/in/chinmay-chavan-55b6a6334/",
-    imageUrl: "https://github.com/Chinmay741.png"
+    imageUrl: "https://unavatar.io/linkedin/chinmay-chavan-55b6a6334"
   },
   {
     name: "Sourish Ashtikar",
@@ -48,14 +49,15 @@ const team: TeamMember[] = [
     icon: <Shield className="w-5 h-5 text-white" />,
     githubUrl: "https://github.com/SourishAshtikar",
     linkedinUrl: "https://www.linkedin.com/in/sourishashtikar/",
-    imageUrl: "https://github.com/SourishAshtikar.png"
+    imageUrl: "https://unavatar.io/linkedin/sourishashtikar"
   },
   {
     name: "Rohan Patil",
     role: "Team Member",
     avatarBg: "from-amber-500 to-yellow-500",
     icon: <Compass className="w-5 h-5 text-white" />,
-    linkedinUrl: "https://www.linkedin.com/in/rohan-patil-84b919372/"
+    linkedinUrl: "https://www.linkedin.com/in/rohan-patil-84b919372/",
+    imageUrl: "https://unavatar.io/linkedin/rohan-patil-84b919372"
   }
 ];
 
