@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🎓 Interactive Learning Management Platform
+# 🎓 Interactive Educational Content Platform
 
-### A modern client-side educational platform built with Next.js for interactive learning.
+### A modern educational platform for creating, managing, and delivering interactive learning content.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
@@ -14,13 +14,13 @@
 
 ---
 
-## 📖 Overview
+# 📖 Overview
 
-Interactive Learning Management Platform is a modern educational web application designed to enhance the digital learning experience for both students and faculty.
+The **Interactive Educational Content Platform** is a modern web application that enables faculty members to create, manage, and publish interactive educational content through a centralized dashboard.
 
-The platform combines traditional learning resources with interactive educational tools including quizzes, flashcards, simulations, mind maps, analytics, and structured learning modules.
+The platform combines structured learning modules with interactive educational tools such as quizzes, flashcards, simulations, mind maps, infographics, rich notes, and multimedia resources, providing students with an engaging and organized learning experience.
 
-Built entirely using modern React technologies, it focuses on performance, scalability, and an intuitive user experience.
+The application follows a lightweight static-content architecture, allowing content to be managed efficiently while delivering a fast and responsive student experience through GitHub Pages.
 
 ---
 
@@ -29,65 +29,91 @@ Built entirely using modern React technologies, it focuses on performance, scala
 ## 👨‍🎓 Student Portal
 
 - 📚 Subject Dashboard
-- 📖 Learning Modules
+- 📖 Structured Learning Modules
+- 📝 Rich Learning Notes
+- 💡 Did You Know Sections
+- 🎥 Video Learning
+- 🎧 Audio Learning
 - 📝 Interactive Quizzes
 - 🧠 Flashcards
-- 🗺️ Mind Maps
+- 🗺 Mind Maps
+- 🖼 Infographics
 - 🎮 Educational Simulations
-- 📊 Learning Progress Tracking
-- 🔗 Resource Access
+- 📄 Learning Resources
 
 ---
 
 ## 👨‍🏫 Faculty Portal
 
-- Create Subjects
-- Upload Learning Resources
-- Manage Modules
-- Upload Flashcards
-- Upload Mind Maps
-- Manage Simulations
-- Publish Quizzes
-- Quick Content Updates
+- Subject Management
+- Module Management
+- Rich Text Content Editor
+- Quiz Management
+- Flashcard Management
+- Simulation Management
+- Mind Map Management
+- Infographic Management
+- Resource Management
+- Multimedia Management
+- Content Matrix
+- One-click Publish to Student Dashboard
 
 ---
 
-## 🚀 Interactive Learning Tools
+# 🚀 Interactive Learning Tools
 
 - Interactive Quiz Engine
-- Flashcard Viewer
-- Simulation Player
+- Flashcard Learning
+- Educational Simulations
 - Mind Map Viewer
+- Rich Notes
+- Did You Know Content
+- Infographic Viewer
+- Multimedia Learning
 - PDF Learning Resources
 
 ---
 
-# 🏗 Project Architecture
+# 🏗 System Architecture
 
-```
-Student
-│
-├── Subjects
-│   ├── Modules
-│   ├── Flashcards
-│   ├── Mind Maps
-│   ├── Quizzes
-│   └── Simulations
-│
-└── Progress Tracking
-
-Faculty
-│
-├── Dashboard
-├── Subject Management
-├── Analytics
-├── Content Management
-└── Resource Upload
+```text
+Faculty Dashboard
+        │
+        ▼
+Google Apps Script
+        │
+        ▼
+Google Sheets
+        │
+        ▼
+Publish to Student Dashboard
+        │
+        ▼
+Generate static data.json
+        │
+        ▼
+GitHub Pages
+        │
+        ▼
+Students
 ```
 
 ---
 
-# 🛠 Tech Stack
+# ⚡ Key Highlights
+
+- Lightweight client-side architecture
+- Fast static content delivery
+- Centralized faculty content management
+- Interactive educational resources
+- Responsive user interface
+- Zero-cost deployment using GitHub Pages
+- Google Sheets powered content management
+- Easy content publishing workflow
+
+---
+
+# 🛠 Technology Stack
 
 | Category | Technology |
 |----------|------------|
@@ -98,9 +124,11 @@ Faculty
 | UI Components | shadcn/ui |
 | Animation | Framer Motion |
 | Icons | Lucide React |
-| Document Processing | pdf-parse, Mammoth, Docx |
-| ZIP Handling | JSZip |
-| Backend Integration | Google Apps Script |
+| Backend | Google Apps Script |
+| Content Storage | Google Sheets |
+| Media Storage | Google Drive |
+| Deployment | GitHub Pages |
+| Automation | GitHub Actions |
 
 ---
 
@@ -122,79 +150,132 @@ src/
 │   └── ui/
 │
 ├── data/
-│
 ├── lib/
-│
-└── types/
+├── hooks/
+├── types/
+└── utils/
 
 public/
 scripts/
+documentation/
 ```
 
 ---
 
 # 🎯 Core Modules
 
-### 📚 Learning Modules
+## 📚 Learning Modules
 
-Structured course content divided into individual topics and subtopics.
-
----
-
-### 📝 Quizzes
-
-- Multiple-choice questions
-- Instant feedback
-- Score calculation
-- Progress evaluation
+Structured educational content divided into modules, topics, and subtopics.
 
 ---
 
-### 🧠 Flashcards
+## 📝 Rich Notes
 
-Interactive flashcards for quick revision and memory reinforcement.
-
----
-
-### 🗺 Mind Maps
-
-Visual representation of concepts for better understanding and retention.
+Comprehensive learning notes with formatted educational content.
 
 ---
 
-### 🎮 Simulations
+## 💡 Did You Know
 
-Interactive educational simulations that provide hands-on learning experiences.
+Interesting facts and additional learning insights integrated within modules.
 
 ---
 
-### 📊 Analytics
+## 🎥 Multimedia Learning
 
-Faculty dashboard providing learning insights and student engagement statistics.
+Embedded video and audio resources supporting interactive learning.
+
+---
+
+## 📝 Interactive Quizzes
+
+- Multiple Choice Questions
+- Instant Feedback
+- Interactive Learning Experience
+
+---
+
+## 🧠 Flashcards
+
+Interactive flashcards for revision and concept reinforcement.
+
+---
+
+## 🗺 Mind Maps
+
+Visual concept organization for improved understanding.
+
+---
+
+## 🖼 Infographics
+
+Graphical educational summaries for quick revision.
+
+---
+
+## 🎮 Educational Simulations
+
+Interactive simulations providing hands-on learning experiences.
+
+---
+
+## 📄 Learning Resources
+
+Access to PDFs, documents, presentations, and additional learning material.
 
 ---
 
 # ⚡ Installation
 
-For installation Please check documentation/installation_guide.md
+For installation instructions, please refer to:
 
+`documentation/installation_guide.md`
+
+---
 
 # 📸 Screenshots
 
-Home Page :
+### Home Page
+
 ![Home Page screenshot](screenshots/home.png)
 
-Student Dashboard :
+---
+
+### Student Dashboard
+
 ![Student Dashboard screenshot](screenshots/subject_dashboard.png)
 
-Faculty Dashboard : 
+---
+
+### Faculty Dashboard
+
 ![Faculty Dashboard screenshot](screenshots/faculty_dashboard.png)
-Quiz Interface :
+
+---
+
+### Quiz Interface
+
 ![Quiz Interface screenshot](screenshots/quiz.png)
-Flashcards :
+
+---
+
+### Flashcards
+
 ![Flashcards screenshot](screenshots/flashcard.png)
-Simulation :
+
+---
+
+### Simulation
+
 ![Simulation screenshot](screenshots/simulation.png)
 
+---
 
-</div>
+# 🎯 Design Philosophy
+
+This platform is designed as a lightweight educational content delivery system that enables faculty members to efficiently organize and publish interactive learning resources while providing students with a fast, responsive, and engaging learning experience.
+
+The focus is on simplicity, maintainability, centralized content management, and interactive educational delivery using a modern web technology stack.
+
+---
