@@ -84,7 +84,9 @@ interface ImageWithFallbackProps {
 
 function ImageWithFallback({ src, alt, fallback }: ImageWithFallbackProps) {
   const [error, setError] = React.useState(false);
-  if (error) return <>{fallback}</>;
+  
+  if (!src || error) return <>{fallback}</>;
+  
   return (
     <img
       src={src}
