@@ -22,16 +22,16 @@ const team: TeamMember[] = [
     avatarBg: "from-blue-500 to-cyan-500",
     icon: <Terminal className="w-5 h-5 text-white" />,
     linkedinUrl: "https://www.linkedin.com/in/jugal-jeetendra-manek/",
-    imageUrl: "https://unavatar.io/linkedin/jugal-jeetendra-manek"
+    imageUrl: "/team/jugal-jeetendra-manek.jpg"
   },
   {
     name: "Jainam Davda",
     role: "Team Member",
     avatarBg: "from-indigo-500 to-purple-500",
     icon: <Layout className="w-5 h-5 text-white" />,
-    githubUrl: "https://github.com/JainamD",
+    githubUrl: "https://github.com/jainamdavda1-pixel",
     linkedinUrl: "https://www.linkedin.com/in/jainam-davda-a9589a328/",
-    imageUrl: "https://unavatar.io/linkedin/jainam-davda-a9589a328"
+    imageUrl: "/team/jainam-davda-a9589a328.jpg"
   },
   {
     name: "Chinmay Chavan",
@@ -40,7 +40,7 @@ const team: TeamMember[] = [
     icon: <Cpu className="w-5 h-5 text-white" />,
     githubUrl: "https://github.com/Chinmay741",
     linkedinUrl: "https://www.linkedin.com/in/chinmay-chavan-55b6a6334/",
-    imageUrl: "https://unavatar.io/linkedin/chinmay-chavan-55b6a6334"
+    imageUrl: "/team/chinmay-chavan-55b6a6334.jpg"
   },
   {
     name: "Sourish Ashtikar",
@@ -49,15 +49,16 @@ const team: TeamMember[] = [
     icon: <Shield className="w-5 h-5 text-white" />,
     githubUrl: "https://github.com/SourishAshtikar",
     linkedinUrl: "https://www.linkedin.com/in/sourishashtikar/",
-    imageUrl: "https://unavatar.io/linkedin/sourishashtikar"
+    imageUrl: "/team/sourishashtikar.jpg"
   },
   {
     name: "Rohan Patil",
     role: "Team Member",
     avatarBg: "from-amber-500 to-yellow-500",
     icon: <Compass className="w-5 h-5 text-white" />,
+    githubUrl: "https://github.com/rohanpatil2905",
     linkedinUrl: "https://www.linkedin.com/in/rohan-patil-84b919372/",
-    imageUrl: "https://unavatar.io/linkedin/rohan-patil-84b919372"
+    imageUrl: "/team/rohan-patil-84b919372.jpg"
   }
 ];
 
@@ -86,9 +87,9 @@ interface ImageWithFallbackProps {
 
 function ImageWithFallback({ src, alt, fallback }: ImageWithFallbackProps) {
   const [error, setError] = React.useState(false);
-  
+
   if (!src || error) return <>{fallback}</>;
-  
+
   return (
     <img
       src={src}
