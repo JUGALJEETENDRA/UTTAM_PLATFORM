@@ -90,9 +90,12 @@ function ImageWithFallback({ src, alt, fallback }: ImageWithFallbackProps) {
 
   if (!src || error) return <>{fallback}</>;
 
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  const imageSrc = src.startsWith('http') || src.startsWith('data:') ? src : `${basePath}${src}`;
+
   return (
     <img
-      src={src}
+      src={imageSrc}
       alt={alt}
       onError={() => setError(true)}
       className="w-12 h-12 rounded-xl object-cover shadow-sm shrink-0 border border-slate-200"
