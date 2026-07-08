@@ -35,6 +35,19 @@ const THEME_MAP: Record<string, {
     textMuted: "text-slate-500 font-medium font-sans",
     badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
     pattern: ""
+  },
+  "digital business": {
+    bg: "bg-slate-50 text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-gradient-to-r from-blue-700 via-indigo-700 to-indigo-800 hover:from-blue-800 hover:to-indigo-900 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-600 hover:text-slate-900 font-sans text-xs hover:bg-slate-100 border border-slate-200/85 rounded-xl px-4 py-2 transition-all inline-flex items-center bg-white shadow-xs",
+    titleHover: "group-hover:text-blue-700",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
+    pattern: ""
   }
 };
 
@@ -95,11 +108,12 @@ export default function FlashcardsListPage() {
     loadDecks();
   }, [subjectId]);
 
-  const isUiProgramming = subjectId === 'id_mn573l5e5' || subjectName.toLowerCase().includes("ui programming");
-  const isPythonProgramming = subjectId === 'id_hdzqxse2n' || subjectName.toLowerCase().includes("python");
-  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : "";
+  const isDigitalBusiness = subjectId === 'id_pryay1ykw' || String(subjectName || "").toLowerCase().includes("digital business");
+  const isUiProgramming = subjectId === 'id_mn573l5e5' || String(subjectName || "").toLowerCase().includes("ui programming");
+  const isPythonProgramming = subjectId === 'id_hdzqxse2n' || String(subjectName || "").toLowerCase().includes("python");
+  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : isDigitalBusiness ? "digital business" : "";
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
-  const isPremiumTheme = isUiProgramming || isPythonProgramming;
+  const isPremiumTheme = isUiProgramming || isPythonProgramming || isDigitalBusiness;
 
   const renderFlashcardPreview = (moduleNo: number, title: string) => {
     return (
@@ -291,6 +305,12 @@ export default function FlashcardsListPage() {
 
   return (
     <div className={`min-h-screen relative ${t.bg} ${t.pattern} pb-16 pt-8 brutalist-transition transition-colors duration-300 overflow-hidden`}>
+      {isDigitalBusiness && (
+        <div className="absolute inset-0 pointer-events-none z-0" style={{
+          backgroundImage: `radial-gradient(#e2e8f0 1.2px, transparent 1.2px)`,
+          backgroundSize: "24px 24px"
+        }} />
+      )}
       {/* Structural Embedded CSS Overrides */}
       <style jsx global>{`
         .brutalist-transition {

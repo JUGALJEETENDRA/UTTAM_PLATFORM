@@ -76,7 +76,7 @@ export function FlashcardDeck({ flashcards }: FlashcardDeckProps) {
           <Card className="absolute w-full h-full backface-hidden border-2 border-zinc-200 shadow-md hover:border-primary/40 hover:shadow-lg transition-all rounded-2xl flex flex-col justify-between p-8 bg-white [backface-visibility:hidden]">
             <div className="flex justify-between items-center text-xs font-semibold text-zinc-400">
               <span className="flex items-center">
-                <Lightbulb className="w-4 h-4 mr-1 text-primary" /> HCI Concept Card
+                <Lightbulb className="w-4 h-4 mr-1 text-primary" /> Concept Card
               </span>
               <span>Card {currentIndex + 1} of {flashcards.length}</span>
             </div>

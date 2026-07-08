@@ -13,7 +13,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "HCI EdTech Platform",
+  title: "EdTech Platform",
   description: "Gamified Learning for User Interface Design",
 };
 

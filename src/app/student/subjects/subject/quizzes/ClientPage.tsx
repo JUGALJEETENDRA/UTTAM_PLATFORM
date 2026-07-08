@@ -35,6 +35,19 @@ const THEME_MAP: Record<string, {
     textMuted: "text-slate-500 font-medium font-sans",
     badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
     pattern: ""
+  },
+  "digital business": {
+    bg: "bg-slate-50 text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-gradient-to-r from-blue-700 via-indigo-700 to-indigo-800 hover:from-blue-800 hover:to-indigo-900 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-600 hover:text-slate-900 font-sans text-xs hover:bg-slate-100 border border-slate-200/85 rounded-xl px-4 py-2 transition-all inline-flex items-center bg-white shadow-xs",
+    titleHover: "group-hover:text-blue-700",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
+    pattern: ""
   }
 };
 
@@ -63,6 +76,24 @@ const DesignStudioCard = ({ children, className = "", style = {}, isPremium, lab
       {children}
     </div>
   );
+};
+
+const getQuizDisplayTitle = (quiz: any) => {
+  const titleStr = String(quiz.title || "").trim();
+  const isNumeric = /^\d+(\.\d+)?$/.test(titleStr);
+  
+  if (isNumeric) {
+    const module = quiz.module;
+    if (module) {
+      const parts = titleStr.split(".");
+      const subNo = parts.length === 2 ? parseInt(parts[1], 10) : (quiz.subtopicId || 1);
+      const subtopic = (module.subtopics || []).find((st: any) => st.subtopicNo === subNo || st.order === subNo);
+      if (subtopic && subtopic.title) {
+        return `Quiz ${titleStr}: ${subtopic.title}`;
+      }
+    }
+  }
+  return quiz.title;
 };
 
 export default function QuizzesPage() {
@@ -95,11 +126,12 @@ export default function QuizzesPage() {
     loadQuizzes();
   }, [subjectId]);
 
+  const isDigitalBusiness = subjectId === 'id_pryay1ykw' || String(subjectName || "").toLowerCase().includes("digital business");
   const isUiProgramming = subjectId === 'id_mn573l5e5' || String(subjectName || "").toLowerCase().includes("ui programming");
   const isPythonProgramming = subjectId === 'id_hdzqxse2n' || String(subjectName || "").toLowerCase().includes("python");
-  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : "";
+  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : isDigitalBusiness ? "digital business" : "";
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
-  const isPremiumTheme = isUiProgramming || isPythonProgramming;
+  const isPremiumTheme = isUiProgramming || isPythonProgramming || isDigitalBusiness;
 
   const renderQuizPreview = (quizIndex: number, title?: string) => {
     const normalizedTitle = String(title || "").toLowerCase();
@@ -269,6 +301,7 @@ export default function QuizzesPage() {
                         </h4>
                         <p className="text-[10px] text-slate-555 font-sans leading-relaxed line-clamp-3 mb-4 pl-4 border-l border-slate-200 font-medium">
                           &quot;&quot;&quot;<br />
+                          Topic: {getQuizDisplayTitle(quiz)}<br />
                           Execute a {quiz.timeLimit || 15} minute check with {quiz.questions?.length || 0} unit questions.<br />
                           &quot;&quot;&quot;
                         </p>
@@ -301,6 +334,12 @@ export default function QuizzesPage() {
 
   return (
     <div className={`min-h-screen relative ${t.bg} ${t.pattern} pb-16 pt-8 brutalist-transition transition-colors duration-300 overflow-hidden`}>
+      {isDigitalBusiness && (
+        <div className="absolute inset-0 pointer-events-none z-0" style={{
+          backgroundImage: `radial-gradient(#e2e8f0 1.2px, transparent 1.2px)`,
+          backgroundSize: "24px 24px"
+        }} />
+      )}
       {/* Structural Embedded CSS Overrides */}
       <style jsx global>{`
         .brutalist-transition {
@@ -384,48 +423,36 @@ export default function QuizzesPage() {
                   ? `${t.cardBg} ${t.borderClass} ${t.shadowClass} ${quizStatus === 'passed' ? 'opacity-85' : ''}`
                   : `flex flex-col h-full hover:shadow-lg transition-shadow border-zinc-200 ${quizStatus === 'passed' ? 'bg-zinc-50 opacity-80' : ''}`
                 }`}>
-                <CardHeader className={isPremiumTheme ? "p-5 md:p-6 pb-2" : ""}>
-                  <div className="flex justify-between items-start mb-2">
+                <CardHeader className={isPremiumTheme ? (isUiProgramming ? "p-4 pb-1 md:p-4 md:pb-1" : "p-5 md:p-6 pb-2") : ""}>
+                  <div className="flex justify-between items-start mb-1.5">
                     <Badge variant="outline" className={isPremiumTheme ? "bg-slate-100 text-slate-700 border-slate-200 rounded font-mono text-[9px]" : "text-zinc-600 bg-white"}>
                       Module {quiz.module?.moduleNo || "?"}
                     </Badge>
-                    {quizStatus === 'pending' && <Badge className="bg-red-100 text-red-750 hover:bg-red-100">Pending</Badge>}
-                    {quizStatus === 'failed' && <Badge className="bg-amber-100 text-amber-750 hover:bg-amber-100">Failed</Badge>}
-                    {quizStatus === 'passed' && <Badge className="bg-green-100 text-green-755 hover:bg-green-100">Completed</Badge>}
+                    {quizStatus === 'failed' && <Badge className="bg-amber-100 text-amber-750 hover:bg-amber-100 text-[9px] py-0.5 px-2">Failed</Badge>}
+                    {quizStatus === 'passed' && <Badge className="bg-green-100 text-green-755 hover:bg-green-100 text-[9px] py-0.5 px-2">Completed</Badge>}
                   </div>
 
-                  {/* Visual SVG illustration preview for the Quiz */}
-                  {isPremiumTheme && (
-                    <div className="w-full h-24 bg-slate-50/50 border border-slate-200/60 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden pointer-events-none">
-                      <div className="w-full h-full">
-                        {renderQuizPreview(quizIdx, quiz.title)}
-                      </div>
-                      <div className="absolute inset-0 opacity-[0.015]" style={{
-                        backgroundImage: `linear-gradient(to right, #3B82F6 1px, transparent 1px), linear-gradient(to bottom, #3B82F6 1px, transparent 1px)`,
-                        backgroundSize: '8px 8px'
-                      }} />
-                    </div>
-                  )}
-
-                  <CardTitle className={isPremiumTheme ? "text-base font-bold font-sans tracking-tight text-slate-800 line-clamp-1" : "text-xl"}>
-                    {quiz.title}
+                  <CardTitle className={isPremiumTheme ? (isUiProgramming ? "text-sm font-bold font-sans tracking-tight text-slate-800 line-clamp-1" : "text-base font-bold font-sans tracking-tight text-slate-800 line-clamp-1") : "text-xl"}>
+                    {getQuizDisplayTitle(quiz)}
                   </CardTitle>
                 </CardHeader>
 
-                <CardContent className={`flex-grow ${isPremiumTheme ? "p-5 md:p-6 pt-0" : ""}`}>
-                  <div className={`space-y-2 ${isPremiumTheme ? "text-xs font-mono text-slate-500" : "text-sm text-zinc-650"}`}>
+                <CardContent className={`flex-grow ${isPremiumTheme ? (isUiProgramming ? "p-4 pt-1 pb-1 md:p-4 md:pt-1 md:pb-1" : "p-5 md:p-6 pt-0") : ""}`}>
+                  <div className={`space-y-1.5 ${isPremiumTheme ? "text-xs font-mono text-slate-500" : "text-sm text-zinc-650"}`}>
                     {quizStatus === 'pending' ? (
                       <>
-                        <div className="flex items-center space-x-2">
-                          <Clock className="w-4 h-4 text-slate-400" /> <span>Time Limit: {!quiz.timeLimit || Number(quiz.timeLimit) <= 0 ? "∞ Unlimited" : `${quiz.timeLimit} mins`}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Target className="w-4 h-4 text-slate-400" /> <span>{quiz.totalQuestionsToAsk || (quiz.questions && quiz.questions.length) || 0} Questions</span>
+                        {!isUiProgramming && (
+                          <div className="flex items-center">
+                            <span>Time Limit: {!quiz.timeLimit || Number(quiz.timeLimit) <= 0 ? "∞ Unlimited" : `${quiz.timeLimit} mins`}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center">
+                          <span>{quiz.totalQuestionsToAsk || (quiz.questions && quiz.questions.length) || 0} Questions</span>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className={`flex items-center space-x-2 font-bold ${isPremiumTheme ? "text-sm text-slate-800" : "text-lg text-zinc-800"}`}>
+                        <div className={`flex items-center space-x-2 font-bold ${isPremiumTheme ? "text-xs text-slate-800" : "text-lg text-zinc-800"}`}>
                           <span>Score: {attempt.score}/{attempt.totalMarks} ({Math.round(percentage)}%)</span>
                         </div>
                       </>
@@ -433,16 +460,16 @@ export default function QuizzesPage() {
                   </div>
                 </CardContent>
 
-                <CardFooter className={`pt-4 mt-auto ${isPremiumTheme ? "p-5 md:p-6 border-t border-slate-100" : "border-t border-zinc-100"}`}>
+                <CardFooter className={`pt-2 mt-auto ${isPremiumTheme ? (isUiProgramming ? "p-4 pt-2 md:p-4 md:pt-2 border-t border-slate-100" : "p-5 md:p-6 border-t border-slate-100") : "border-t border-zinc-100"}`}>
                   {quizStatus === 'pending' && (
                     <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="w-full">
-                      <Button className={`w-full ${isPremiumTheme ? t.btnPrimary : "bg-primary hover:bg-primary/90 text-white"}`}>Start Quiz</Button>
+                      <Button className={`w-full ${isUiProgramming ? "h-8 py-1 text-xs rounded-lg bg-[#4f46e5] hover:bg-[#4338ca] text-white font-semibold shadow-xs font-sans transition-all" : (isPremiumTheme ? t.btnPrimary : "bg-primary hover:bg-primary/90 text-white")}`}>Start Quiz</Button>
                     </Link>
                   )}
                   {quizStatus === 'failed' && (
                     <div className="w-full flex flex-col space-y-2">
                       <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="w-full">
-                        <Button variant="outline" className={`w-full font-semibold ${isPremiumTheme ? "border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg shadow-xs font-mono text-xs uppercase" : "border-zinc-300 text-zinc-700 hover:bg-zinc-100"}`}>Retry Quiz</Button>
+                        <Button variant="outline" className={`w-full font-semibold ${isPremiumTheme ? (isUiProgramming ? "h-8 py-1 text-xs rounded-lg border-slate-350 text-slate-700 hover:bg-slate-50 shadow-xs font-sans" : "border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg shadow-xs font-mono text-xs uppercase") : "border-zinc-300 text-zinc-700 hover:bg-zinc-100"}`}>Retry Quiz</Button>
                       </Link>
                     </div>
                   )}
@@ -450,7 +477,7 @@ export default function QuizzesPage() {
                     <div className="w-full flex flex-col space-y-2">
                       <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="w-full">
                         <Button variant="outline" className={`w-full font-semibold ${isPremiumTheme
-                            ? "border-emerald-250 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100/50 rounded-lg shadow-xs font-mono text-xs uppercase"
+                            ? (isUiProgramming ? "h-8 py-1 text-xs rounded-lg border-emerald-250 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100/50 shadow-xs font-sans" : "border-emerald-250 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100/50 rounded-lg shadow-xs font-mono text-xs uppercase")
                             : "text-green-700 border-green-200 bg-green-50 hover:bg-green-100"
                           }`}>Retake Quiz</Button>
                       </Link>

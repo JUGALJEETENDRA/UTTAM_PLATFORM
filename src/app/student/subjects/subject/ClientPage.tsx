@@ -611,6 +611,24 @@ const CASE_STUDIES = [
   }
 ];
 
+const getQuizDisplayTitle = (quiz: any, modules: any[] = []) => {
+  const titleStr = String(quiz.title || "").trim();
+  const isNumeric = /^\d+(\.\d+)?$/.test(titleStr);
+  
+  if (isNumeric) {
+    const module = quiz.module || (Array.isArray(modules) && modules.find((m: any) => m.id === quiz.moduleId || m.moduleNo === parseInt(titleStr.split(".")[0], 10)));
+    if (module) {
+      const parts = titleStr.split(".");
+      const subNo = parts.length === 2 ? parseInt(parts[1], 10) : (quiz.subtopicId || 1);
+      const subtopic = (module.subtopics || []).find((st: any) => st.subtopicNo === subNo || st.order === subNo);
+      if (subtopic && subtopic.title) {
+        return `Quiz ${titleStr}: ${subtopic.title}`;
+      }
+    }
+  }
+  return quiz.title;
+};
+
 export default function StudentDashboard() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId');
@@ -1089,10 +1107,7 @@ export default function StudentDashboard() {
                           </p>
                         </div>
 
-                        <div className="mt-5 pt-3.5 border-t border-slate-100 flex justify-between items-center font-mono text-[9.5px] text-slate-400">
-                          <span className="flex items-center gap-1 font-semibold uppercase text-slate-500">
-                            {mod.hours || 3} Hours
-                          </span>
+                        <div className="mt-5 pt-3.5 border-t border-slate-100 flex justify-end items-center font-mono text-[9.5px] text-slate-400">
                           <span className="text-[#1E3A8A] font-semibold flex items-center gap-1 group-hover:text-indigo-750 transition-colors duration-300">
                             {mod.subtopics?.length || 0} Units
                             <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -1108,26 +1123,21 @@ export default function StudentDashboard() {
               <div className="bg-white border border-slate-200 p-6 shadow-sm rounded-lg">
                 <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-150">
                   <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2 font-sans">
-                    <Target className="w-4 h-4 text-[#0F766E]" /> Quizzes
+                    Quizzes
                   </h2>
                   <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
-                    <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-650 hover:border-indigo-300/80 transition-colors cursor-pointer border border-slate-200 px-2.5 py-1 rounded bg-white shadow-xs view-all-btn inline-block">View All Quizzes →</span>
+                    <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-655 hover:border-indigo-300/80 transition-colors cursor-pointer border border-slate-200 px-2.5 py-1 rounded bg-white shadow-xs view-all-btn inline-block">View All Quizzes →</span>
                   </Link>
                 </div>
                 <div className="space-y-3">
-                  {quizzesWithAttempts.map((quiz: any) => (
+                  {quizzesWithAttempts.slice(0, 6).map((quiz: any) => (
                     <div key={quiz.id} className="bg-white border border-slate-200 p-4 flex justify-between items-center rounded-lg hover:border-[#1E3A8A] hover:bg-slate-50/30 hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300 shadow-xs group">
                       <div>
-                        <div className="font-sans font-bold text-xs text-slate-800 tracking-tight group-hover:text-[#1E3A8A] transition-colors duration-300">{quiz.title}</div>
-                        <div className="text-slate-500 mt-1.5 text-[9.5px] font-mono flex items-center gap-3">
-                          <span>DURATION: {quiz.timeLimit || 30} MINS</span>
-                          <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-                          <span>WEIGHT: {quiz.totalMarks || 100} PTS</span>
-                        </div>
+                        <div className="font-sans font-bold text-xs text-slate-800 tracking-tight group-hover:text-[#1E3A8A] transition-colors duration-300">{getQuizDisplayTitle(quiz, modules)}</div>
                       </div>
                       <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`}>
                         <Button className="bg-gradient-to-r from-blue-700 via-indigo-700 to-indigo-800 hover:from-blue-800 hover:to-indigo-900 text-white font-mono rounded-md font-semibold tracking-wider uppercase px-4 text-[10px] h-8 border-none shadow-md group-hover:scale-105 transition-all duration-300 flex items-center gap-1">
-                          Start Quiz <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-300" />
+                          Start Quiz
                         </Button>
                       </Link>
                     </div>
@@ -1514,7 +1524,6 @@ export default function StudentDashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               {pythonModules.map((mod: any, idx: number) => {
-                const hourLabel = mod.hours ? `${mod.hours} Hours` : "4 Hours";
                 const subtopicsCount = mod.subtopics?.length || 0;
                 return (
                   <Link key={mod.id} href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
@@ -1523,9 +1532,6 @@ export default function StudentDashboard() {
                         <div className="flex justify-between items-start mb-2">
                           <span className="text-[10px] text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded font-mono font-bold tracking-widest uppercase">
                             MODULE 0{mod.moduleNo || (idx + 1)}
-                          </span>
-                          <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
-                            <Clock className="w-3 h-3" /> {hourLabel}
                           </span>
                         </div>
                         <h4 className="font-mono text-xs font-bold text-slate-800 mb-2 line-clamp-2 group-hover:text-[#3776AB] transition-colors">
@@ -1550,14 +1556,14 @@ export default function StudentDashboard() {
             </div>
           </div>
 
-          {/* TWO COLUMN GRID FOR DEBUG CHALLENGES AND SYNTAX REFERENCES */}
+          {/* TWO COLUMN GRID FOR DEBUG QUIZ CHALLENGES AND PYTHON FLASHCARD DECKS */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
 
-            {/* DEBUG CHALLENGES (QUIZZES) */}
+            {/* DEBUG QUIZ CHALLENGES (QUIZZES) */}
             <div className="lg:col-span-2 bg-white border border-slate-200 rounded p-6 shadow-sm">
               <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-[#2b5b84] flex items-center gap-2">
-                  <Bug className="w-4 h-4 text-[#2b5b84]" /> Debug Challenges (Active Issues)
+                  <Bug className="w-4 h-4 text-[#2b5b84]" /> Debug Quiz Challenges (Active Issues)
                 </h3>
                 <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
                   <Button variant="ghost" className="text-slate-700 hover:text-[#3776AB] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
@@ -1567,7 +1573,7 @@ export default function StudentDashboard() {
                 </Link>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {quizzesWithAttempts.map((quiz: any, idx: number) => {
+                {quizzesWithAttempts.slice(0, 6).map((quiz: any, idx: number) => {
                   const difficulty = idx % 2 === 0 ? "Medium" : "Hard";
                   const xp = quiz.totalMarks * 5 || 250;
                   const isHard = difficulty === "Hard";
@@ -1580,19 +1586,14 @@ export default function StudentDashboard() {
 
                   return (
                     <div key={quiz.id} className="bg-slate-50 border border-slate-200 rounded p-4 hover:border-blue-500 hover:bg-white hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 group">
-                      <div className="flex justify-between items-start mb-2">
+                      <div className="flex justify-start items-start mb-2">
                         <span className={`text-[10px] ${themeColor} border px-2 py-0.5 rounded font-mono font-bold tracking-widest uppercase`}>🐞 BUG FIX</span>
-                        <span className="text-[10px] text-slate-450 font-mono">CODE: {quiz.id.slice(0, 6)}</span>
                       </div>
-                      <h4 className="font-mono text-xs font-bold text-slate-800 mb-3 line-clamp-1 group-hover:text-blue-650 transition-colors">{quiz.title}</h4>
-                      <div className="flex items-center justify-between text-[11px] text-slate-500 font-mono pt-2 border-t border-slate-200">
-                        <span>Difficulty: <span className={isHard ? "text-rose-600 font-bold" : "text-amber-600 font-bold"}>{difficulty}</span></span>
-                        <span>XP Reward: <span className="text-blue-650 font-semibold">+{xp} XP</span></span>
-                      </div>
+                      <h4 className="font-mono text-xs font-bold text-slate-800 mb-3 line-clamp-1 group-hover:text-blue-650 transition-colors">{getQuizDisplayTitle(quiz, modules)}</h4>
                       <div className="mt-4 flex justify-end">
                         <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`}>
                           <Button className={`${btnColorClass} text-white border rounded font-mono text-[10px] py-1.5 px-4 h-8 uppercase tracking-wider hover:scale-105 active:scale-95 hover:shadow-md transition-all duration-200`}>
-                            Debug Challenge →
+                            Debug Quiz Challenge →
                           </Button>
                         </Link>
                       </div>
@@ -1607,11 +1608,11 @@ export default function StudentDashboard() {
               </div>
             </div>
 
-            {/* SYNTAX REFERENCE CARDS (FLASHCARDS) */}
+            {/* PYTHON FLASHCARD DECKS (FLASHCARDS) */}
             <div className="bg-white border border-slate-200 rounded p-6 shadow-sm">
               <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-[#2b5b84] flex items-center gap-2">
-                  <Code className="w-4 h-4 text-[#2b5b84]" /> Syntax Reference Library
+                  <Code className="w-4 h-4 text-[#2b5b84]" /> Python Flashcard Decks
                 </h3>
                 <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
                   <Button variant="ghost" className="text-slate-700 hover:text-[#3776AB] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
@@ -1663,7 +1664,7 @@ export default function StudentDashboard() {
               <div>
                 <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
                   <h3 className="text-sm font-bold uppercase tracking-widest text-[#2b5b84] flex items-center gap-2">
-                    <Brain className="w-4 h-4 text-[#2b5b84]" /> Architecture & System Topologies
+                    <Brain className="w-4 h-4 text-[#2b5b84]" /> Python Mind Maps
                   </h3>
                   <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
                     <Button variant="ghost" className="text-slate-700 hover:text-[#3776AB] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
@@ -1683,7 +1684,7 @@ export default function StudentDashboard() {
                     </svg>
                   </div>
 
-                  <div className="relative z-10 flex flex-col md:flex-row justify-between items-center w-full gap-6 px-4">
+                  <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
                     {mindmaps.slice(0, 4).map((map: any, idx: number) => {
                       const nodeColors = [
                         { bg: "bg-blue-50 text-blue-700 border-blue-200", hover: "group-hover:bg-blue-600 group-hover:border-blue-600" },
@@ -1694,13 +1695,15 @@ export default function StudentDashboard() {
                       const colors = nodeColors[idx % nodeColors.length];
 
                       return (
-                        <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="w-full md:w-auto">
-                          <div className="bg-slate-50 border border-slate-200 hover:border-blue-500 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm min-w-[130px] transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md">
-                            <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
-                              M0{idx + 1}
+                        <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="w-full h-full flex">
+                          <div className="bg-slate-50 border border-slate-200 hover:border-blue-500 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm w-full h-full transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md flex flex-col justify-between items-center gap-2">
+                            <div className="w-full flex flex-col items-center">
+                              <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
+                                M0{idx + 1}
+                              </div>
+                              <h4 className="font-mono text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-2 group-hover:text-blue-650 transition-colors px-1 leading-normal">{map.title}</h4>
                             </div>
-                            <h4 className="font-mono text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-1 group-hover:text-blue-650 transition-colors">{map.title}</h4>
-                            <p className="text-[9px] text-slate-400 font-mono mt-1">Architecture Node</p>
+                            <p className="text-[9px] text-slate-400 font-mono mt-auto">Architecture Node</p>
                           </div>
                         </Link>
                       );
@@ -1740,7 +1743,7 @@ export default function StudentDashboard() {
                     </svg>
                   </div>
 
-                  <div className="relative z-10 flex flex-col md:flex-row justify-between items-center w-full gap-6 px-4">
+                  <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
                     {infographics.slice(0, 4).map((info: any, idx: number) => {
                       const nodeColors = [
                         { bg: "bg-pink-50 text-pink-700 border-pink-200", hover: "group-hover:bg-pink-600 group-hover:border-pink-600" },
@@ -1751,13 +1754,15 @@ export default function StudentDashboard() {
                       const colors = nodeColors[idx % nodeColors.length];
 
                       return (
-                        <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="w-full md:w-auto">
-                          <div className="bg-slate-50 border border-slate-200 hover:border-pink-500 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm min-w-[130px] transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md">
-                            <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
-                              I0{idx + 1}
+                        <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="w-full h-full flex">
+                          <div className="bg-slate-50 border border-slate-200 hover:border-pink-500 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm w-full h-full transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md flex flex-col justify-between items-center gap-2">
+                            <div className="w-full flex flex-col items-center">
+                              <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
+                                I0{idx + 1}
+                              </div>
+                              <h4 className="font-mono text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-2 group-hover:text-pink-650 transition-colors px-1 leading-normal">{info.title}</h4>
                             </div>
-                            <h4 className="font-mono text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-1 group-hover:text-pink-650 transition-colors">{info.title}</h4>
-                            <p className="text-[9px] text-slate-400 font-mono mt-1">Infographic Node</p>
+                            <p className="text-[9px] text-slate-400 font-mono mt-auto">Infographic Node</p>
                           </div>
                         </Link>
                       );
@@ -2613,7 +2618,6 @@ export default function StudentDashboard() {
                                 : 'border-t-2 border-black text-zinc-500'
                                 }`}>
                                 <div className="flex gap-3">
-                                  <span className="flex items-center"><Clock className="w-3.5 h-3.5 mr-1" /> {mod.hours || 3} Hours</span>
                                   <span className="flex items-center"><Book className="w-3.5 h-3.5 mr-1" /> {mod.subtopics?.length || 0} Units</span>
                                 </div>
                                 {isPremiumTheme && (
@@ -2695,12 +2699,9 @@ export default function StudentDashboard() {
                                     </span>
                                   </div>
                                   <h3 className="text-base font-semibold font-sans text-slate-850 mb-2">
-                                    {quiz.title}
+                                    {getQuizDisplayTitle(quiz, modules)}
                                   </h3>
-                                  <div className="flex items-center gap-4 text-xs font-semibold font-mono text-slate-450">
-                                    <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {quiz.timeLimit || 30} mins</span>
-                                    <span className="flex items-center gap-1"><Target className="w-4 h-4" /> {quiz.totalMarks || 100} Marks</span>
-                                  </div>
+
                                 </div>
                               </div>
                             ) : (
@@ -2726,12 +2727,9 @@ export default function StudentDashboard() {
                                     </span>
                                   </div>
                                   <h3 className={`text-base transition-colors mb-2 font-black leading-tight`}>
-                                    {quiz.title}
+                                    {getQuizDisplayTitle(quiz, modules)}
                                   </h3>
-                                  <div className="flex items-center gap-4 text-xs font-semibold font-mono text-zinc-500 transition-colors">
-                                    <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {quiz.timeLimit || 30} mins</span>
-                                    <span className="flex items-center gap-1"><Target className="w-4 h-4" /> {quiz.totalMarks || 100} Marks</span>
-                                  </div>
+
                                 </div>
                               </>
                             )}

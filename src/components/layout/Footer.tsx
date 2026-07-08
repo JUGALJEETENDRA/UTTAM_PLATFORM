@@ -15,7 +15,7 @@ export function Footer() {
               <span className="text-lg font-bold text-white">Gamified Learning Platform</span>
             </div>
             <p className="text-zinc-400 text-xs leading-relaxed">
-              A comprehensive gamified environment dedicated to mastering User Interface Design and Human-Computer Interaction principles.
+              An interactive EdTech platform that brings together simulations, quizzes, flashcards, mind maps, and infographics helping educators create engaging learning experiences while enabling students to learn through interactive and visual content
             </p>
           </div>
 
@@ -63,7 +63,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-zinc-800 pt-4 mt-4 flex flex-col md:flex-row justify-between items-center text-[11px] text-zinc-550">
-          <p>© {new Date().getFullYear()} HCI EdTech Platform. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} EdTech Platform. All rights reserved.</p>
           <div className="flex flex-col md:flex-row md:items-center gap-2 mt-1 md:mt-0 text-right md:text-left">
             <p>Designed for Educational Purposes</p>
             <span className="hidden md:inline">•</span>

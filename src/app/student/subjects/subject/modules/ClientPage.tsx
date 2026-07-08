@@ -239,7 +239,7 @@ export default function ModulesPage() {
                       {/* Details & Standard Action footer */}
                       <div className="pt-3 border-t border-slate-100 flex justify-between items-center text-[9.5px] font-mono text-slate-500">
                         <span className="flex items-center gap-1 font-semibold uppercase">
-                          {hourLabel} | {subtopicsCount} Units
+                          {subtopicsCount} Units
                         </span>
                         <span className="text-[#1E3A8A] font-semibold flex items-center gap-1 group-hover:text-indigo-750 transition-colors duration-300">
                           Start Learning <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -910,7 +910,6 @@ export default function ModulesPage() {
                         <div className={`pt-3 flex justify-between items-center text-xs font-semibold transition-all duration-150 ${isPremiumTheme ? 'border-t border-slate-100 text-slate-500 font-sans' : 'border-t-2 border-black text-zinc-500'
                           }`}>
                           <div className="flex gap-3">
-                            <span className="flex items-center"><Clock className="w-3.5 h-3.5 mr-1" /> {mod.hours || 3} Hours</span>
                             <span className="flex items-center"><Book className="w-3.5 h-3.5 mr-1" /> {mod.subtopics?.length || 0} Units</span>
                           </div>
                           {isPremiumTheme && (
