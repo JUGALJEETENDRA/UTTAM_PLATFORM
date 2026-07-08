@@ -345,6 +345,10 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
           />
         </div>
       )}
+      <div className="text-[10px] text-amber-700 bg-amber-50/50 border border-amber-200/50 px-2.5 py-1.5 rounded-lg flex items-start gap-1.5 font-medium leading-normal mt-0.5">
+        <span className="font-bold shrink-0 text-amber-800">Note:</span>
+        <span>For Mac users with Chrome: if the audio files do not play, use the web app on Safari.</span>
+      </div>
     </div>
   );
 };
@@ -566,9 +570,6 @@ export default function ModuleDetailPage() {
             </p>
             <div className="mt-4 flex flex-wrap gap-2 text-xs font-mono font-bold">
               <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-md text-[#1E3A8A]">CO: {moduleData.co}</span>
-              <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-md text-[#0F766E] flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5" /> {moduleData.hours} Hours
-              </span>
             </div>
           </div>
 
@@ -940,8 +941,6 @@ export default function ModuleDetailPage() {
             </p>
             <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-mono">
               <span className="text-slate-500">co = &quot;{moduleData.co}&quot;</span>
-              <span className="text-slate-300">|</span>
-              <span className="text-[#3776AB]">hours = {moduleData.hours}</span>
             </div>
           </div>
 
@@ -1317,13 +1316,6 @@ export default function ModuleDetailPage() {
                     ? 'bg-slate-100 text-slate-700 border border-slate-200 rounded font-semibold' 
                     : 'bg-zinc-100 border-2 border-black'
                 }`}>{moduleData.co}</span>
-                <span className={`px-2.5 py-1 border flex items-center gap-1 ${
-                  isPremiumTheme 
-                    ? 'bg-slate-100 text-slate-700 border border-slate-200 rounded font-semibold' 
-                    : 'bg-zinc-100 border-2 border-black'
-                }`}>
-                  <Clock className="w-3.5 h-3.5" /> {moduleData.hours} Hours
-                </span>
               </div>
             </div>
           </CardHeader>

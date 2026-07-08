@@ -31,10 +31,6 @@ export function ModuleCard({ module, href }: { module: ModuleWithSubtopics; href
       <CardContent className="flex-1 flex flex-col justify-between">
         <div className="flex items-center space-x-4 text-sm text-zinc-500 mb-4">
           <div className="flex items-center space-x-1">
-            <Clock className="w-4 h-4" />
-            <span>{module.hours} Hours</span>
-          </div>
-          <div className="flex items-center space-x-1">
             <BookOpen className="w-4 h-4" />
             <span>{module.subtopics.length} Subtopics</span>
           </div>

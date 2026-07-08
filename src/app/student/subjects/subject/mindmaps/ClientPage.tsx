@@ -45,6 +45,19 @@ const THEME_MAP: Record<string, {
     textMuted: "text-slate-500 font-medium font-sans",
     badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
     pattern: ""
+  },
+  "digital business": {
+    bg: "bg-slate-50 text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-gradient-to-r from-blue-700 via-indigo-700 to-indigo-800 hover:from-blue-800 hover:to-indigo-900 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-600 hover:text-slate-900 font-sans text-xs hover:bg-slate-100 border border-slate-200/85 rounded-xl px-4 py-2 transition-all inline-flex items-center bg-white shadow-xs",
+    titleHover: "group-hover:text-blue-700",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
+    pattern: ""
   }
 };
 
@@ -112,11 +125,12 @@ export default function StudentMindMapsList() {
   };
 
   const subjectNameLower = (subjectName || "").toLowerCase();
+  const isDigitalBusiness = subjectId === 'id_pryay1ykw' || subjectNameLower.includes("digital business");
   const isUiProgramming = subjectId === 'id_mn573l5e5' || subjectNameLower.includes("ui programming");
-  const isPythonProgramming = subjectNameLower.includes("python");
-  const themeKey = isUiProgramming ? "ui programming" : "";
+  const isPythonProgramming = subjectId === 'id_hdzqxse2n' || subjectNameLower.includes("python");
+  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : isDigitalBusiness ? "digital business" : "";
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
-  const isPremiumTheme = isUiProgramming;
+  const isPremiumTheme = isUiProgramming || isPythonProgramming || isDigitalBusiness;
 
   const renderMindMapPlaceholder = () => (
     <svg className="w-full h-full text-slate-350 bg-slate-50 border-b border-slate-200" viewBox="0 0 200 120" fill="none" stroke="currentColor" strokeWidth="1">
@@ -143,6 +157,21 @@ export default function StudentMindMapsList() {
       <circle cx="190" cy="110" r="1.5" fill="#EF4444" opacity="0.4" />
     </svg>
   );
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 120, damping: 14 } }
+  };
 
   if (isPythonProgramming) {
     const getCleanPythonDetails = (title: string) => {
@@ -275,23 +304,16 @@ export default function StudentMindMapsList() {
     );
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08
-      }
-    }
-  };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 120, damping: 14 } }
-  };
 
   return (
     <div className={`min-h-screen relative ${t.bg} ${t.pattern} pb-16 pt-8 brutalist-transition transition-colors duration-300 overflow-hidden`}>
+      {isDigitalBusiness && (
+        <div className="absolute inset-0 pointer-events-none z-0" style={{
+          backgroundImage: `radial-gradient(#e2e8f0 1.2px, transparent 1.2px)`,
+          backgroundSize: "24px 24px"
+        }} />
+      )}
       {/* Structural Embedded CSS Overrides */}
       <style jsx global>{`
         .brutalist-transition {
