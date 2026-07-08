@@ -19,7 +19,7 @@ const RESOURCE_TYPES = [
   { id: "infographic", label: "Infographic", icon: Map, color: "text-teal-500", href: "infographics" },
   { id: "reference", label: "Reference", icon: BookOpen, color: "text-emerald-500", href: "modules" },
   { id: "didYouKnow", label: "Did You Know", icon: FileQuestion, color: "text-amber-500", href: "modules" },
-  { id: "lessonContent", label: "Rich Text Lesson", icon: FileText, color: "text-indigo-500", href: "modules" },
+  { id: "lessonContent", label: "Text Lesson", icon: FileText, color: "text-indigo-500", href: "modules" },
 ];
 
 export default function ContentMatrixClientPage() {
@@ -629,7 +629,7 @@ export default function ContentMatrixClientPage() {
                 </div>
               ) : editingResource.resourceType === 'lessonContent' ? (
                 <div>
-                  <label className="block text-sm font-semibold text-zinc-700 mb-1">Rich Text Lesson Content</label>
+                  <label className="block text-sm font-semibold text-zinc-700 mb-1">Text Lesson Content (Markdown Supported)</label>
                   <div className="max-h-[400px] overflow-y-auto border border-zinc-200 rounded-lg p-2 bg-white">
                     <RichTextEditor
                       value={newUrl}

@@ -15,6 +15,8 @@ The curriculum is structured hierarchically: **Subjects -> Modules -> Subtopics*
 - **Create a Subject:** Click on "Add Subject". Provide a title and description.
 - **Add Modules:** Within a subject, you can add multiple modules (chapters).
 - **Subtopics:** Inside modules, you can create specific lessons, flashcards, or quizzes.
+  - **Text Lessons:** You can directly type or paste text content when creating lessons. Note: Markdown format is supported and will be automatically formatted for students.
+  - **Embedded Media:** The "Did You Know" sections now support embedding external media (like videos) to enhance the learning experience.
  - **Tip:**You can use the [NotebookLM](https://notebooklm.google.com/) to generate the content and to remove any notebooklm watermark use this website, 
 [NotebookLM Watermark Remover](https://notebooklmremover.com/en).
 ## 2. Creating Content Types

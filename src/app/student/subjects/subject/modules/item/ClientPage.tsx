@@ -1,4 +1,16 @@
 "use client";
+import { marked } from 'marked';
+import { markedHighlight } from 'marked-highlight';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css';
+
+marked.use(markedHighlight({
+  langPrefix: 'hljs language-',
+  highlight(code, lang) {
+    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+    return hljs.highlight(code, { language }).value;
+  }
+}));
 
 import Link from "next/link";
 import { ResourceLinkTracker } from "@/components/student/ResourceLinkTracker";
@@ -504,7 +516,9 @@ export default function ModuleDetailPage() {
           </div>
           <div className="flex-1 w-full bg-slate-50 relative overflow-hidden">
             {activeNote.content ? (
-              <div className="w-full h-full overflow-auto p-4 sm:p-8 relative pt-6 bg-white prose max-w-none" dangerouslySetInnerHTML={{ __html: activeNote.content }} />
+              <div className="w-full h-full overflow-auto p-4 sm:p-8 relative pt-6 bg-white">
+                <div className="prose max-w-3xl mx-auto prose-slate" dangerouslySetInnerHTML={{ __html: marked.parse(activeNote.content || '') as string }} />
+              </div>
             ) : (
               <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0 pt-6" allow="autoplay; fullscreen" />
             )}
@@ -848,7 +862,9 @@ export default function ModuleDetailPage() {
           <div className="flex-1 w-full bg-[#1e1e1e] relative p-1">
             <div className="w-full h-full bg-white rounded-sm overflow-hidden pt-6">
               {activeNote.content ? (
-                <div className="w-full h-full overflow-auto p-4 sm:p-8 prose max-w-none" dangerouslySetInnerHTML={{ __html: activeNote.content }} />
+                <div className="w-full h-full overflow-auto p-4 sm:p-8">
+                  <div className="prose max-w-3xl mx-auto prose-slate" dangerouslySetInnerHTML={{ __html: marked.parse(activeNote.content || '') as string }} />
+                </div>
               ) : (
                 <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0 pt-6" allow="autoplay; fullscreen" />
               )}
@@ -1195,7 +1211,9 @@ export default function ModuleDetailPage() {
         <div className={`flex-1 w-full bg-white relative overflow-hidden`}>
           
           {activeNote.content ? (
-            <div className="w-full h-full overflow-auto p-4 sm:p-8 bg-white prose max-w-none" dangerouslySetInnerHTML={{ __html: activeNote.content }} />
+            <div className="w-full h-full overflow-auto p-4 sm:p-8 bg-white">
+              <div className="prose max-w-3xl mx-auto prose-slate" dangerouslySetInnerHTML={{ __html: marked.parse(activeNote.content || '') as string }} />
+            </div>
           ) : activeNote.url ? (
             <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0" allow="autoplay; fullscreen" />
           ) : (

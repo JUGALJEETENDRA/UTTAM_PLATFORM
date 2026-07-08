@@ -1,10 +1,11 @@
-import React from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { Markdown } from "tiptap-markdown";
-import Placeholder from "@tiptap/extension-placeholder";
-import { Button } from "@/components/ui/button";
-import { Bold, Italic, Strikethrough, List, ListOrdered, Heading1, Heading2, Quote } from "lucide-react";
+"use client";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
+import "easymde/dist/easymde.min.css";
+
+const SimpleMdeReact = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
 
 interface RichTextEditorProps {
   value: string;
@@ -12,128 +13,60 @@ interface RichTextEditorProps {
 }
 
 export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [1, 2, 3],
-        },
-      }),
-      Markdown,
-      Placeholder.configure({
-        placeholder: "Write your lesson content here... (Use markdown shortcuts like # or * for lists)",
-      }),
-    ],
-    content: value,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-    editorProps: {
-      attributes: {
-        className: "prose prose-sm sm:prose-base max-w-none focus:outline-none min-h-[300px] px-4 py-3 bg-white border border-zinc-200 rounded-b-md shadow-inner",
-      },
-    },
-    immediatelyRender: false,
-  });
-
-  if (!editor) {
-    return null;
-  }
-
-  const toggleClass = (isActive: boolean) => isActive ? "bg-zinc-200" : "bg-transparent";
+  const options = useMemo(() => {
+    return {
+      autofocus: false,
+      spellChecker: false,
+      status: false,
+      placeholder: "Write your lesson content here using Markdown...",
+      toolbar: [
+        "bold",
+        "italic",
+        "strikethrough",
+        "heading",
+        "|",
+        "quote",
+        "unordered-list",
+        "ordered-list",
+        "|",
+        "link",
+        "image",
+        "table",
+        "|",
+        "preview",
+        "side-by-side",
+        "fullscreen",
+        "|",
+        "guide",
+      ],
+    } as any;
+  }, []);
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex flex-wrap items-center gap-1 bg-zinc-50 border border-zinc-200 border-b-0 p-2 rounded-t-md">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className={`h-8 w-8 p-0 ${toggleClass(editor.isActive("bold"))}`}
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          aria-label="Toggle bold"
-        >
-          <Bold className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className={`h-8 w-8 p-0 ${toggleClass(editor.isActive("italic"))}`}
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          aria-label="Toggle italic"
-        >
-          <Italic className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className={`h-8 w-8 p-0 ${toggleClass(editor.isActive("strike"))}`}
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          aria-label="Toggle strikethrough"
-        >
-          <Strikethrough className="h-4 w-4" />
-        </Button>
-        
-        <div className="w-px h-6 bg-zinc-200 mx-1"></div>
-        
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className={`h-8 w-8 p-0 ${toggleClass(editor.isActive("heading", { level: 1 }))}`}
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          aria-label="Toggle heading 1"
-        >
-          <Heading1 className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className={`h-8 w-8 p-0 ${toggleClass(editor.isActive("heading", { level: 2 }))}`}
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          aria-label="Toggle heading 2"
-        >
-          <Heading2 className="h-4 w-4" />
-        </Button>
-        
-        <div className="w-px h-6 bg-zinc-200 mx-1"></div>
-        
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className={`h-8 w-8 p-0 ${toggleClass(editor.isActive("bulletList"))}`}
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          aria-label="Toggle bullet list"
-        >
-          <List className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className={`h-8 w-8 p-0 ${toggleClass(editor.isActive("orderedList"))}`}
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          aria-label="Toggle ordered list"
-        >
-          <ListOrdered className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className={`h-8 w-8 p-0 ${toggleClass(editor.isActive("blockquote"))}`}
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          aria-label="Toggle blockquote"
-        >
-          <Quote className="h-4 w-4" />
-        </Button>
-      </div>
-      
-      <EditorContent editor={editor} />
+    <div className="w-full relative editor-container">
+      <SimpleMdeReact
+        value={value}
+        onChange={onChange}
+        options={options}
+      />
+      <style jsx global>{`
+        .editor-container .editor-toolbar {
+          border-color: #e4e4e7;
+          border-radius: 0.375rem 0.375rem 0 0;
+          background-color: #f8fafc;
+        }
+        .editor-container .CodeMirror {
+          border-color: #e4e4e7;
+          border-radius: 0 0 0.375rem 0.375rem;
+          min-height: 300px;
+          font-family: inherit;
+        }
+        .editor-container .editor-toolbar a.active, 
+        .editor-container .editor-toolbar a:hover {
+          background-color: #e2e8f0;
+          border-color: #cbd5e1;
+        }
+      `}</style>
     </div>
   );
 }

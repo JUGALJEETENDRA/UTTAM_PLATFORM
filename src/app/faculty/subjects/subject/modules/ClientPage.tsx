@@ -709,7 +709,7 @@ export default function ManageModulesPage() {
                             <option value="audio">Audio</option>
                             <option value="didYouKnow">Did You Know</option>
                             <option value="reference">Reference</option>
-                            <option value="lessonContent">Rich Text Lesson</option>
+                            <option value="lessonContent">Text Lesson</option>
                             
                           </select>
                           {st.selectedResourceType === "videoUrl" && (
@@ -924,7 +924,7 @@ export default function ManageModulesPage() {
                           )}
                           {st.selectedResourceType === "lessonContent" && (
                             <div className="mb-4 bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
-                              <label className="block text-xs font-bold text-zinc-700 mb-2">Lesson Content (Rich Text / Markdown Supported)</label>
+                              <label className="block text-xs font-bold text-zinc-700 mb-2">Lesson Content (Markdown Supported)</label>
                               <RichTextEditor
                                 value={st.lessonContent || ""}
                                 onChange={(val) => handleSubtopicChange(index, "lessonContent", val)}
@@ -937,7 +937,7 @@ export default function ManageModulesPage() {
                             {st.didYouKnowUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>💡 Did You Know Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "didYouKnowUrl", ""); handleSubtopicChange(index, "didYouKnowDownloadUrl", "")}}>Remove</Button></div>}
                             {st.referenceUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📚 Reference File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "referenceUrl", ""); handleSubtopicChange(index, "referenceDownloadUrl", "")}}>Remove</Button></div>}
                             {st.audioUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎵 Audio File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "audioUrl", ""); handleSubtopicChange(index, "audioDownloadUrl", "")}}>Remove</Button></div>}
-                            {st.lessonContent && <div className="text-[11px] flex justify-between bg-indigo-50 p-2 rounded items-center text-indigo-700"><span>📝 Rich Text Lesson Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "lessonContent", "")}>Remove</Button></div>}
+                            {st.lessonContent && <div className="text-[11px] flex justify-between bg-indigo-50 p-2 rounded items-center text-indigo-700"><span>📝 Text Lesson Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "lessonContent", "")}>Remove</Button></div>}
                             
                           </div>
                         </div>
@@ -1017,7 +1017,7 @@ export default function ManageModulesPage() {
                                   {st.notesUrl && <span className="text-[9px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-bold">Notes Attached</span>}
                                   {st.videoUrl && <span className="text-[9px] bg-red-50 text-red-600 px-1.5 py-0.5 rounded font-bold">Video Attached</span>}
                                   {st.audioUrl && <span className="text-[9px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded font-bold">Audio Attached</span>}
-                                  {st.lessonContent && <span className="text-[9px] bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded font-bold">Rich Text Lesson Attached</span>}
+                                  {st.lessonContent && <span className="text-[9px] bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded font-bold">Text Lesson Attached</span>}
                                 </div>
                               )}
                             </div>

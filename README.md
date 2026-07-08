@@ -40,6 +40,7 @@ The application follows a lightweight static-content architecture, allowing cont
 - 🖼 Infographics
 - 🎮 Educational Simulations
 - 📄 Learning Resources
+- 👥 Meet the Team Directory
 
 ---
 
@@ -47,7 +48,7 @@ The application follows a lightweight static-content architecture, allowing cont
 
 - Subject Management
 - Module Management
-- Rich Text Content Editor
+- Text Content Editor
 - Quiz Management
 - Flashcard Management
 - Simulation Management
@@ -67,7 +68,7 @@ The application follows a lightweight static-content architecture, allowing cont
 - Educational Simulations
 - Mind Map Viewer
 - Rich Notes
-- Did You Know Content
+- Did You Know Content (with Embedded Media)
 - Infographic Viewer
 - Multimedia Learning
 - PDF Learning Resources
