@@ -590,18 +590,6 @@ export default function ModuleDetailPage() {
                 subtopic = { ...subtopic, ...subtopic.simulationData };
               }
 
-              if (typeof subtopic.videoLanguages === 'string') {
-                try { subtopic.videoLanguages = JSON.parse(subtopic.videoLanguages); } catch(e) { subtopic.videoLanguages = []; }
-              } else if (!Array.isArray(subtopic.videoLanguages)) {
-                subtopic.videoLanguages = [];
-              }
-
-              if (typeof subtopic.audioLanguages === 'string') {
-                try { subtopic.audioLanguages = JSON.parse(subtopic.audioLanguages); } catch(e) { subtopic.audioLanguages = []; }
-              } else if (!Array.isArray(subtopic.audioLanguages)) {
-                subtopic.audioLanguages = [];
-              }
-              
               if (typeof subtopic.otherUrl === 'string' && subtopic.otherUrl.trim().startsWith("{")) {
                 try {
                   const sanitizedStr = subtopic.otherUrl.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
@@ -630,6 +618,18 @@ export default function ModuleDetailPage() {
                   subtopic.didYouKnowUrl = "";
                   subtopic.referenceUrl = "";
                 }
+              }
+
+              if (typeof subtopic.videoLanguages === 'string') {
+                try { subtopic.videoLanguages = JSON.parse(subtopic.videoLanguages); } catch(e) { subtopic.videoLanguages = []; }
+              } else if (!Array.isArray(subtopic.videoLanguages)) {
+                subtopic.videoLanguages = [];
+              }
+
+              if (typeof subtopic.audioLanguages === 'string') {
+                try { subtopic.audioLanguages = JSON.parse(subtopic.audioLanguages); } catch(e) { subtopic.audioLanguages = []; }
+              } else if (!Array.isArray(subtopic.audioLanguages)) {
+                subtopic.audioLanguages = [];
               }
 
               const subtopicQuizzes = moduleData.quizzes?.filter((q: any) => q.subtopicId === subtopic.subtopicNo || q.subtopicId === subtopic.id) || [];
@@ -961,18 +961,6 @@ export default function ModuleDetailPage() {
                 subtopic = { ...subtopic, ...subtopic.simulationData };
               }
 
-              if (typeof subtopic.videoLanguages === 'string') {
-                try { subtopic.videoLanguages = JSON.parse(subtopic.videoLanguages); } catch(e) { subtopic.videoLanguages = []; }
-              } else if (!Array.isArray(subtopic.videoLanguages)) {
-                subtopic.videoLanguages = [];
-              }
-
-              if (typeof subtopic.audioLanguages === 'string') {
-                try { subtopic.audioLanguages = JSON.parse(subtopic.audioLanguages); } catch(e) { subtopic.audioLanguages = []; }
-              } else if (!Array.isArray(subtopic.audioLanguages)) {
-                subtopic.audioLanguages = [];
-              }
-              
               if (typeof subtopic.otherUrl === 'string' && subtopic.otherUrl.trim().startsWith("{")) {
                 try {
                   const sanitizedStr = subtopic.otherUrl.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
@@ -991,6 +979,18 @@ export default function ModuleDetailPage() {
                   subtopic.didYouKnowUrl = "";
                   subtopic.referenceUrl = "";
                 }
+              }
+
+              if (typeof subtopic.videoLanguages === 'string') {
+                try { subtopic.videoLanguages = JSON.parse(subtopic.videoLanguages); } catch(e) { subtopic.videoLanguages = []; }
+              } else if (!Array.isArray(subtopic.videoLanguages)) {
+                subtopic.videoLanguages = [];
+              }
+
+              if (typeof subtopic.audioLanguages === 'string') {
+                try { subtopic.audioLanguages = JSON.parse(subtopic.audioLanguages); } catch(e) { subtopic.audioLanguages = []; }
+              } else if (!Array.isArray(subtopic.audioLanguages)) {
+                subtopic.audioLanguages = [];
               }
 
               const subtopicQuizzes = moduleData.quizzes?.filter((q: any) => q.subtopicId === subtopic.subtopicNo || q.subtopicId === subtopic.id) || [];
@@ -1340,18 +1340,6 @@ export default function ModuleDetailPage() {
               subtopic = { ...subtopic, ...subtopic.simulationData };
             }
 
-            if (typeof subtopic.videoLanguages === 'string') {
-              try { subtopic.videoLanguages = JSON.parse(subtopic.videoLanguages); } catch(e) { subtopic.videoLanguages = []; }
-            } else if (!Array.isArray(subtopic.videoLanguages)) {
-              subtopic.videoLanguages = [];
-            }
-
-            if (typeof subtopic.audioLanguages === 'string') {
-              try { subtopic.audioLanguages = JSON.parse(subtopic.audioLanguages); } catch(e) { subtopic.audioLanguages = []; }
-            } else if (!Array.isArray(subtopic.audioLanguages)) {
-              subtopic.audioLanguages = [];
-            }
-            
             if (typeof subtopic.otherUrl === 'string' && subtopic.otherUrl.trim().startsWith("{")) {
               try {
                 const sanitizedStr = subtopic.otherUrl.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
@@ -1370,6 +1358,18 @@ export default function ModuleDetailPage() {
                 subtopic.didYouKnowUrl = "";
                 subtopic.referenceUrl = "";
               }
+            }
+
+            if (typeof subtopic.videoLanguages === 'string') {
+              try { subtopic.videoLanguages = JSON.parse(subtopic.videoLanguages); } catch(e) { subtopic.videoLanguages = []; }
+            } else if (!Array.isArray(subtopic.videoLanguages)) {
+              subtopic.videoLanguages = [];
+            }
+
+            if (typeof subtopic.audioLanguages === 'string') {
+              try { subtopic.audioLanguages = JSON.parse(subtopic.audioLanguages); } catch(e) { subtopic.audioLanguages = []; }
+            } else if (!Array.isArray(subtopic.audioLanguages)) {
+              subtopic.audioLanguages = [];
             }
 
             const subtopicQuizzes = moduleData.quizzes?.filter((q: any) => q.subtopicId === subtopic.subtopicNo || q.subtopicId === subtopic.id) || [];
