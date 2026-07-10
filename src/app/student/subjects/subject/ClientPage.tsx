@@ -622,7 +622,10 @@ const getQuizDisplayTitle = (quiz: any, modules: any[] = []) => {
       const subNo = parts.length === 2 ? parseInt(parts[1], 10) : (quiz.subtopicId || 1);
       const subtopic = (module.subtopics || []).find((st: any) => st.subtopicNo === subNo || st.order === subNo);
       if (subtopic && subtopic.title) {
-        return `Quiz ${titleStr}: ${subtopic.title}`;
+        let cleanSubTitle = subtopic.title.trim();
+        const prefixRegex = new RegExp(`^(Quiz\\s+)?${titleStr.replace(".", "\\.")}[:\\s-]*|^(Quiz\\s+)?\\d+\\.\\d+[:\\s-]*`, 'i');
+        cleanSubTitle = cleanSubTitle.replace(prefixRegex, "").trim();
+        return `Quiz ${titleStr}: ${cleanSubTitle}`;
       }
     }
   }
