@@ -75,64 +75,12 @@ export default function ManageModulesPage() {
   const [subtopics, setSubtopics] = useState<SubtopicForm[]>([{...initialSubtopicState}]);
   const [loading, setLoading] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
-  const [convertingAudioKey, setConvertingAudioKey] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [isUploadingSyllabus, setIsUploadingSyllabus] = useState(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingModule, setDeletingModule] = useState<{ id: string; title: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const convertDriveAudioToCloudinary = async (rawUrl: string, onSuccess: (cloudinaryUrl: string) => void, keyIdentifier: string) => {
-    if (!rawUrl || !rawUrl.trim()) return;
-    
-    let driveFileId: string | null = null;
-    if (rawUrl.includes("drive.google.com") || rawUrl.includes("docs.google.com")) {
-      if (rawUrl.includes("/file/d/")) {
-        const match = rawUrl.match(/\/file\/d\/([^\/]+)/);
-        if (match && match[1]) driveFileId = match[1];
-      } else if (rawUrl.includes("id=")) {
-        const match = rawUrl.match(/id=([^&]+)/);
-        if (match && match[1]) driveFileId = match[1];
-      }
-    }
-
-    if (!driveFileId) {
-      toast.error("Please enter a valid Google Drive share link.");
-      return;
-    }
-
-    setConvertingAudioKey(keyIdentifier);
-    const toastId = toast.loading("Converting Google Drive Audio link to Cloudinary CDN Stream...");
-
-    const directDriveUrl = `https://lh3.googleusercontent.com/d/${driveFileId}`;
-    try {
-      const formData = new FormData();
-      formData.append("file", directDriveUrl);
-      formData.append("upload_preset", "faculty_uploads");
-      formData.append("resource_type", "video");
-
-      const res = await fetch("https://api.cloudinary.com/v1_1/dboelpizj/video/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      if (res.ok && data.secure_url) {
-        toast.success("Successfully converted to Cloudinary Audio Stream!", { id: toastId });
-        onSuccess(data.secure_url);
-      } else {
-        const fetchUrl = `https://res.cloudinary.com/dboelpizj/video/upload/fetch/${encodeURIComponent(directDriveUrl)}`;
-        toast.success("Connected to Cloudinary Stream CDN!", { id: toastId });
-        onSuccess(fetchUrl);
-      }
-    } catch (err: any) {
-      const fetchUrl = `https://res.cloudinary.com/dboelpizj/video/upload/fetch/${encodeURIComponent(directDriveUrl)}`;
-      toast.success("Connected to Cloudinary Stream CDN!", { id: toastId });
-      onSuccess(fetchUrl);
-    } finally {
-      setConvertingAudioKey(null);
-    }
-  };
   useEffect(() => {
     fetchModules();
   }, []);
@@ -768,27 +716,7 @@ export default function ManageModulesPage() {
                                   onChange={(e) => handleSubtopicChange(index, "audioUrl", e.target.value)}
                                   className="w-full sm:flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:border-primary"
                                 />
-                                {(st.audioUrl.includes("drive.google.com") || st.audioUrl.includes("docs.google.com")) && (
-                                  <Button
-                                    type="button"
-                                    onClick={() => convertDriveAudioToCloudinary(st.audioUrl, (url) => handleSubtopicChange(index, "audioUrl", url), `main-${index}`)}
-                                    disabled={convertingAudioKey === `main-${index}`}
-                                    className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold h-9 px-3 shrink-0 flex items-center justify-center gap-1.5 shadow-xs"
-                                  >
-                                    {convertingAudioKey === `main-${index}` ? (
-                                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                    ) : (
-                                      <UploadCloud className="w-3.5 h-3.5" />
-                                    )}
-                                    <span>Convert Drive to Cloudinary</span>
-                                  </Button>
-                                )}
                               </div>
-                              {st.audioUrl.includes("cloudinary.com") && (
-                                <p className="text-[11px] text-purple-700 font-bold mb-3 flex items-center gap-1">
-                                  <CheckCircle2 className="w-3.5 h-3.5 text-purple-600" /> Powered by Cloudinary Audio Stream CDN
-                                </p>
-                              )}
 
                               <div className="pt-3 border-t border-zinc-200">
                                 <div className="flex justify-between items-center mb-3">
@@ -814,19 +742,6 @@ export default function ManageModulesPage() {
                                       className="w-full sm:flex-1 px-2 py-1.5 bg-white border border-zinc-300 rounded text-xs focus:border-primary"
                                     />
                                     <div className="flex items-center gap-1 w-full sm:w-auto justify-end">
-                                      {(lang.url.includes("drive.google.com") || lang.url.includes("docs.google.com")) && (
-                                        <Button
-                                          type="button"
-                                          size="sm"
-                                          onClick={() => convertDriveAudioToCloudinary(lang.url, (url) => handleLanguageChange(index, "audioLanguages", lIndex, "url", url), `lang-${index}-${lIndex}`)}
-                                          disabled={convertingAudioKey === `lang-${index}-${lIndex}`}
-                                          className="bg-purple-600 hover:bg-purple-700 text-white text-[11px] font-bold h-7 px-2 flex items-center gap-1"
-                                          title="Convert to Cloudinary Stream"
-                                        >
-                                          {convertingAudioKey === `lang-${index}-${lIndex}` ? <Loader2 className="w-3 h-3 animate-spin" /> : <UploadCloud className="w-3 h-3" />}
-                                          <span>Cloudinary</span>
-                                        </Button>
-                                      )}
                                       <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveLanguage(index, "audioLanguages", lIndex)} className="text-red-500 p-1 h-auto">
                                         <Trash2 className="w-4 h-4" />
                                       </Button>

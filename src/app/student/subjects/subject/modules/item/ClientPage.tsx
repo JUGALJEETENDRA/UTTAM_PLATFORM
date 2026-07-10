@@ -248,7 +248,6 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
 
 const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   if (!url || typeof url !== 'string') return null;
-  const isCloudinary = url.includes("cloudinary.com");
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getExternalEmbedUrl(url);
   const viewUrl = driveFileId 
@@ -266,8 +265,8 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
 
   if (!url) return null;
 
-  // Use the exact url for Cloudinary, or direct for drive files
-  const activeAudioSrc = isCloudinary ? url : googleDriveDirectUrl;
+  // Use the direct for drive files or the standard URL
+  const activeAudioSrc = googleDriveDirectUrl;
 
   return (
     <div className="w-full bg-white text-slate-800 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
@@ -277,10 +276,8 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
           <span className="text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[200px] sm:max-w-xs">
             {title || "Audio Lesson"}
           </span>
-          <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase ${
-            isCloudinary ? "bg-purple-50 text-purple-700 border border-purple-200" : "bg-blue-50 text-blue-700 border border-blue-200"
-          }`}>
-            {isCloudinary ? "Cloudinary CDN" : "Drive Audio"}
+          <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase bg-blue-50 text-blue-700 border border-blue-200">
+            Drive Audio
           </span>
         </div>
 
@@ -295,7 +292,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
             </button>
           )}
           <a
-            href={isCloudinary ? url : viewUrl}
+            href={viewUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-slate-500 hover:text-slate-800 p-1 rounded bg-slate-100 border border-slate-200 transition-colors flex items-center gap-1 text-[10px] font-medium"
