@@ -103,11 +103,11 @@ export default function InfographicViewerClientPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-white font-bold text-lg flex items-center">
-              <Brain className="w-5 h-5 mr-2 text-purple-400" />
+            <h1 className="text-white font-bold text-sm sm:text-lg flex items-center truncate max-w-[140px] xs:max-w-[200px] sm:max-w-xs md:max-w-md">
+              <Brain className="w-5 h-5 mr-2 text-purple-400 shrink-0" />
               {infographic.title}
             </h1>
-            <p className="text-white/60 text-xs mt-0.5">Interactive Viewer</p>
+            <p className="text-white/60 text-[10px] sm:text-xs mt-0.5 hidden xs:block">Interactive Viewer</p>
           </div>
         </div>
 
@@ -118,7 +118,7 @@ export default function InfographicViewerClientPage() {
             onClick={handleDownload}
             className="bg-purple-600 hover:bg-purple-500 text-white border-none font-semibold text-xs px-3.5 py-2 rounded-lg shadow-lg flex items-center gap-1.5 transition-all"
           >
-            <Download className="w-4 h-4" /> Download Copy
+            <Download className="w-4 h-4 shrink-0" /> <span className="hidden xs:inline">Download Copy</span>
           </Button>
         </div>
       </div>

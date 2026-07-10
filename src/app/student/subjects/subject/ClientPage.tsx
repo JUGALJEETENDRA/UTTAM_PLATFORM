@@ -632,6 +632,24 @@ const getQuizDisplayTitle = (quiz: any, modules: any[] = []) => {
   return quiz.title;
 };
 
+const getFlashcardDisplayTitle = (deck: any, modules: any[] = []) => {
+  const titleStr = String(deck.title || "").trim();
+  const isNumeric = /^\d+(\.\d+)?$/.test(titleStr);
+  
+  if (isNumeric) {
+    const module = deck.module || (Array.isArray(modules) && modules.find((m: any) => m.id === deck.moduleId || m.moduleNo === parseInt(titleStr.split(".")[0], 10)));
+    if (module) {
+      const parts = titleStr.split(".");
+      const subNo = parts.length === 2 ? parseInt(parts[1], 10) : (deck.subtopicId || 1);
+      const subtopic = (module.subtopics || []).find((st: any) => st.subtopicNo === subNo || st.order === subNo);
+      if (subtopic && subtopic.title) {
+        return subtopic.title;
+      }
+    }
+  }
+  return deck.title;
+};
+
 export default function StudentDashboard() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId');
@@ -1166,7 +1184,7 @@ export default function StudentDashboard() {
                     {flashcardDecks.slice(0, 3).map((deck: any) => (
                       <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
                         <div className="bg-white border border-slate-200 p-3 hover:border-[#1E3A8A] hover:bg-slate-50/30 hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300 flex justify-between items-center rounded-lg group shadow-xs">
-                          <span className="font-semibold text-xs text-slate-700 font-sans tracking-tight line-clamp-1 group-hover:text-[#1E3A8A] transition-colors duration-300">{deck.title}</span>
+                          <span className="font-semibold text-xs text-slate-700 font-sans tracking-tight line-clamp-1 group-hover:text-[#1E3A8A] transition-colors duration-300">{getFlashcardDisplayTitle(deck, modules)}</span>
                           <span className="text-slate-550 text-[9px] font-mono border border-slate-200 px-1.5 py-0.5 rounded bg-slate-50 font-bold whitespace-nowrap group-hover:bg-[#1E3A8A] group-hover:text-white group-hover:border-[#1E3A8A] transition-all duration-300">{deck.cards?.length || 0} CARDS</span>
                         </div>
                       </Link>
@@ -1642,7 +1660,7 @@ export default function StudentDashboard() {
                       <div className="bg-slate-50 border border-slate-200 p-3.5 rounded hover:border-amber-500 hover:bg-white hover:shadow-md hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 flex justify-between items-center cursor-pointer group">
                         <div className="flex items-center gap-2 overflow-hidden">
                           <span className={`font-mono text-[10px] font-bold px-2 py-0.5 border rounded flex-shrink-0 ${badgeClass} transition-colors`}>{kw}</span>
-                          <span className="font-mono text-xs text-slate-800 font-semibold group-hover:text-amber-700 transition-colors truncate">{deck.title}</span>
+                          <span className="font-mono text-xs text-slate-800 font-semibold group-hover:text-amber-700 transition-colors truncate">{getFlashcardDisplayTitle(deck, modules)}</span>
                         </div>
                         <span className="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 border border-blue-100 rounded font-mono font-bold whitespace-nowrap">{deck.cards?.length || 0} CARDS</span>
                       </div>
@@ -2732,13 +2750,12 @@ export default function StudentDashboard() {
                                   <h3 className={`text-base transition-colors mb-2 font-black leading-tight`}>
                                     {getQuizDisplayTitle(quiz, modules)}
                                   </h3>
-
                                 </div>
                               </>
                             )}
 
-                            <div className={`p-5 flex flex-col justify-center items-center transition-all duration-300 relative z-20 ${isPremiumTheme
-                              ? 'min-w-[150px] border-l border-slate-200 group-hover:border-transparent'
+                            <div className={`p-5 flex flex-col justify-center items-center transition-all duration-300 relative z-20 w-full sm:w-auto ${isPremiumTheme
+                              ? 'sm:min-w-[150px] border-t sm:border-t-0 sm:border-l border-slate-200 group-hover:border-transparent'
                               : 'border-t sm:border-t-0 sm:border-l-4 border-black ' + (themeKey === 'python programming' ? 'bg-zinc-900' : 'bg-zinc-100')
                               }`}
                             >
@@ -2832,7 +2849,7 @@ export default function StudentDashboard() {
                                     variants={{ hover: { x: 3, y: -2 } }}
                                     className="w-full h-full flex items-center justify-center"
                                   >
-                                    {renderFlashcardPreview(deck.module?.moduleNo || 0, deck.title)}
+                                    {renderFlashcardPreview(deck.module?.moduleNo || 0, getFlashcardDisplayTitle(deck, modules))}
                                   </motion.div>
                                   <div className="absolute inset-0 opacity-[0.015] pointer-events-none" style={{
                                     backgroundImage: `linear-gradient(to right, #3B82F6 1px, transparent 1px), linear-gradient(to bottom, #3B82F6 1px, transparent 1px)`,
@@ -2846,7 +2863,7 @@ export default function StudentDashboard() {
                                   : t.titleHover + ' font-black leading-tight'
                                   }`}
                               >
-                                {deck.title}
+                                {getFlashcardDisplayTitle(deck, modules)}
                               </CardTitle>
                             </CardHeader>
                             <CardContent className="p-5 md:p-6 pt-0">

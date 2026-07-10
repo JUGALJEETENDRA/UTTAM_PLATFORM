@@ -78,19 +78,39 @@ const DesignStudioCard = ({ children, className = "", style = {}, isPremium, lab
   );
 };
 
+const getFlashcardDisplayTitle = (deck: any, modules: any[] = []) => {
+  const titleStr = String(deck.title || "").trim();
+  const isNumeric = /^\d+(\.\d+)?$/.test(titleStr);
+  
+  if (isNumeric) {
+    const module = deck.module || (Array.isArray(modules) && modules.find((m: any) => m.id === deck.moduleId || m.moduleNo === parseInt(titleStr.split(".")[0], 10)));
+    if (module) {
+      const parts = titleStr.split(".");
+      const subNo = parts.length === 2 ? parseInt(parts[1], 10) : (deck.subtopicId || 1);
+      const subtopic = (module.subtopics || []).find((st: any) => st.subtopicNo === subNo || st.order === subNo);
+      if (subtopic && subtopic.title) {
+        return subtopic.title;
+      }
+    }
+  }
+  return deck.title;
+};
+
 export default function FlashcardsListPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
   const [flashcardDecks, setFlashcardDecks] = useState<any[]>([]);
+  const [modules, setModules] = useState<any[]>([]);
   const [subjectName, setSubjectName] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadDecks = async () => {
       try {
-        const [result, subjects] = await Promise.all([
+        const [result, subjects, mods] = await Promise.all([
           fetchGAS("getFlashcardDecks", { subjectId }),
-          fetchGAS("getSubjects")
+          fetchGAS("getSubjects"),
+          fetchGAS("getModules", { subjectId })
         ]);
         if (Array.isArray(result)) {
           setFlashcardDecks(result);
@@ -98,6 +118,9 @@ export default function FlashcardsListPage() {
         if (Array.isArray(subjects)) {
           const currentSub = subjects.find((s: any) => s.id === subjectId);
           if (currentSub) setSubjectName(currentSub.name || "");
+        }
+        if (Array.isArray(mods)) {
+          setModules(mods);
         }
       } catch (err) {
         console.error("Failed to load flashcard decks", err);
@@ -254,7 +277,7 @@ export default function FlashcardsListPage() {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
           >
             {flashcardDecks.map((deck: any) => {
-              const { shortTitle, funcName } = getCleanPythonDetails(deck.title);
+              const { shortTitle, funcName } = getCleanPythonDetails(getFlashcardDisplayTitle(deck, modules));
 
               return (
                 <motion.div key={deck.id} variants={itemVariants}>
@@ -399,7 +422,7 @@ export default function FlashcardsListPage() {
                   {isPremiumTheme && (
                     <div className="w-full h-24 bg-slate-50/50 border border-slate-200/60 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden pointer-events-none">
                       <div className="w-full h-full">
-                        {renderFlashcardPreview(deck.module?.moduleNo || 1, deck.title)}
+                        {renderFlashcardPreview(deck.module?.moduleNo || 1, getFlashcardDisplayTitle(deck, modules))}
                       </div>
                       <div className="absolute inset-0 opacity-[0.015]" style={{
                         backgroundImage: `linear-gradient(to right, #3B82F6 1px, transparent 1px), linear-gradient(to bottom, #3B82F6 1px, transparent 1px)`,
@@ -409,7 +432,7 @@ export default function FlashcardsListPage() {
                   )}
 
                   <CardTitle className={isPremiumTheme ? "text-base font-bold font-sans tracking-tight text-slate-800 line-clamp-1 leading-snug" : "text-lg font-bold text-zinc-800 leading-snug group-hover:text-primary transition-colors"}>
-                    {deck.title}
+                    {getFlashcardDisplayTitle(deck, modules)}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className={`flex-grow flex flex-col justify-between ${isPremiumTheme ? "p-5 md:p-6" : "pt-4"}`}>

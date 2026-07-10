@@ -305,7 +305,7 @@ export default function QuizzesPage() {
                         <p className="text-[10px] text-slate-555 font-sans leading-relaxed line-clamp-3 mb-4 pl-4 border-l border-slate-200 font-medium">
                           &quot;&quot;&quot;<br />
                           Topic: {getQuizDisplayTitle(quiz)}<br />
-                          Execute a {quiz.timeLimit || 15} minute check with {quiz.questions?.length || 0} unit questions.<br />
+                          Execute a check with {quiz.questions?.length || 0} unit questions.<br />
                           &quot;&quot;&quot;
                         </p>
                       </div>
@@ -444,11 +444,6 @@ export default function QuizzesPage() {
                   <div className={`space-y-1.5 ${isPremiumTheme ? "text-xs font-mono text-slate-500" : "text-sm text-zinc-650"}`}>
                     {quizStatus === 'pending' ? (
                       <>
-                        {!isUiProgramming && (
-                          <div className="flex items-center">
-                            <span>Time Limit: {!quiz.timeLimit || Number(quiz.timeLimit) <= 0 ? "∞ Unlimited" : `${quiz.timeLimit} mins`}</span>
-                          </div>
-                        )}
                         <div className="flex items-center">
                           <span>{quiz.totalQuestionsToAsk || (quiz.questions && quiz.questions.length) || 0} Questions</span>
                         </div>

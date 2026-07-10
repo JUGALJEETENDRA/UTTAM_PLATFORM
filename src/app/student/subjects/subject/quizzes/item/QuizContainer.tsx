@@ -73,16 +73,12 @@ export function QuizContainer({ quiz }: QuizContainerProps) {
             <div className="flex items-center">
               <Target className="w-4 h-4 mr-2 text-primary" /> {quiz.questions.length} Questions
             </div>
-            <div className="flex items-center">
-              <Clock className="w-4 h-4 mr-2 text-primary" /> {quiz.timeLimit} Minutes Time Limit
-            </div>
           </div>
         </CardHeader>
         <CardContent className="p-6">
           <h3 className="font-bold text-lg mb-4">Instructions</h3>
           <ul className="space-y-3 text-zinc-600 mb-6 list-disc list-inside">
             <li>Ensure you have a stable internet connection before starting.</li>
-            <li>Once started, the timer cannot be paused.</li>
             <li>You must score at least 70% to pass the quiz.</li>
             <li>Avoid refreshing the page during the quiz.</li>
           </ul>

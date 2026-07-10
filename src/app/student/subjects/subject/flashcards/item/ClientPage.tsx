@@ -6,6 +6,25 @@ import { useEffect, useState } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 import { useSearchParams } from "next/navigation";
 
+const getFlashcardDisplayTitle = (deck: any, modules: any[] = []) => {
+  if (!deck) return "";
+  const titleStr = String(deck.title || "").trim();
+  const isNumeric = /^\d+(\.\d+)?$/.test(titleStr);
+  
+  if (isNumeric) {
+    const module = deck.module || (Array.isArray(modules) && modules.find((m: any) => m.id === deck.moduleId || m.moduleNo === parseInt(titleStr.split(".")[0], 10)));
+    if (module) {
+      const parts = titleStr.split(".");
+      const subNo = parts.length === 2 ? parseInt(parts[1], 10) : (deck.subtopicId || 1);
+      const subtopic = (module.subtopics || []).find((st: any) => st.subtopicNo === subNo || st.order === subNo);
+      if (subtopic && subtopic.title) {
+        return subtopic.title;
+      }
+    }
+  }
+  return deck.title;
+};
+
 export default function FlashcardDeckPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
@@ -14,14 +33,21 @@ export default function FlashcardDeckPage() {
   const subtopicId = searchParams.get('subtopicId') || '';
 
   const [deck, setDeck] = useState<any>(null);
+  const [modules, setModules] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadDeck = async () => {
       try {
-        const result = await fetchGAS("getFlashcardDeck", { deckId: id });
+        const [result, mods] = await Promise.all([
+          fetchGAS("getFlashcardDeck", { deckId: id }),
+          fetchGAS("getModules", { subjectId })
+        ]);
         if (result && !result.error) {
           setDeck(result);
+        }
+        if (Array.isArray(mods)) {
+          setModules(mods);
         }
       } catch (err) {
         console.error("Failed to load flashcard deck", err);
@@ -30,7 +56,7 @@ export default function FlashcardDeckPage() {
       }
     };
     if (id) loadDeck();
-  }, [id]);
+  }, [id, subjectId]);
 
   if (loading) return <div className="p-8 text-center">Loading flashcard deck...</div>;
   if (!deck) return <div className="p-8 text-center text-red-500">Deck not found.</div>;
@@ -53,7 +79,7 @@ export default function FlashcardDeckPage() {
                 <Layers className="w-5 h-5" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-zinc-900">{deck.title}</h1>
+                <h1 className="text-xl font-bold text-zinc-900">{getFlashcardDisplayTitle(deck, modules)}</h1>
                 <p className="text-xs text-zinc-500 font-medium">Module {deck.module?.moduleNo || "?"} • {deck.cards?.length || 0} Cards</p>
               </div>
             </div>

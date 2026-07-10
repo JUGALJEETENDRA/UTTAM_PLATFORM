@@ -40,8 +40,8 @@ export function QuizActive({ quiz, onBack, subjectId: propSubjectId, moduleId: p
   const subtopicId = propSubtopicId || searchParams.get('subtopicId') || '';
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
-  const isUnlimited = !quiz.timeLimit || Number(quiz.timeLimit) <= 0;
-  const [timeLeft, setTimeLeft] = useState(isUnlimited ? 0 : quiz.timeLimit * 60);
+  const isUnlimited = true;
+  const [timeLeft, setTimeLeft] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
@@ -265,12 +265,6 @@ export function QuizActive({ quiz, onBack, subjectId: propSubjectId, moduleId: p
           <span className="text-sm font-semibold text-zinc-500">
             Question {currentQuestionIndex + 1} of {totalQuestions}
           </span>
-          {!isUnlimited && (
-            <div className="flex items-center text-primary font-bold text-lg bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-              <Clock className="w-5 h-5 mr-1.5 animate-pulse" />
-              {formatTime(timeLeft)}
-            </div>
-          )}
         </div>
         <Progress value={progressPercent} className="h-2 bg-zinc-200" />
       </CardHeader>
