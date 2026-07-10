@@ -12,7 +12,7 @@ export function Footer() {
               <div className="w-8 h-8 bg-red-600 text-white rounded-lg flex items-center justify-center">
                 <GraduationCap className="w-4 h-4" />
               </div>
-              <span className="text-lg font-bold text-white">Gamified Learning Platform</span>
+              <span className="text-lg font-bold text-white">Educational Content Platform</span>
             </div>
             <p className="text-zinc-400 text-xs leading-relaxed">
               An interactive EdTech platform that brings together simulations, quizzes, flashcards, mind maps, and infographics helping educators create engaging learning experiences while enabling students to learn through interactive and visual content
@@ -62,11 +62,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-zinc-800 pt-4 mt-4 flex flex-col md:flex-row justify-between items-center text-[11px] text-zinc-550">
-          <p>© {new Date().getFullYear()} EdTech Platform. All rights reserved.</p>
+        <div className="border-t border-zinc-800 pt-4 mt-4 flex flex-col md:flex-row justify-end items-center text-[11px] text-zinc-550">
           <div className="flex flex-col md:flex-row md:items-center gap-2 mt-1 md:mt-0 text-right md:text-left">
-            <p>Designed for Educational Purposes</p>
-            <span className="hidden md:inline">•</span>
             <p suppressHydrationWarning>
               Last updated: {new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} IST
             </p>

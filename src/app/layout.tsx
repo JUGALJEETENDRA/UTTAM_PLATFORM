@@ -13,8 +13,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "EdTech Platform",
-  description: "Gamified Learning for User Interface Design",
+  title: "Educational Content Platform",
+  description: "Educational Content Platform",
 };
 
 export default function RootLayout({

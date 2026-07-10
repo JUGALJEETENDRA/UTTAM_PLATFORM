@@ -144,29 +144,38 @@ export default function ManageModulesPage() {
   };
   const handleSubtopicChange = (index: number, field: keyof SubtopicForm, value: string) => {
     const updated = [...subtopics];
-    updated[index][field] = value as any;
+    updated[index] = { ...updated[index], [field]: value };
     setSubtopics(updated);
   };
 
   const handleLanguageChange = (index: number, type: "videoLanguages" | "audioLanguages", langIndex: number, field: "language" | "url", value: string) => {
     const updated = [...subtopics];
-    if (!updated[index][type]) updated[index][type] = [];
-    updated[index][type][langIndex][field] = value;
+    const subtopicCopy = { ...updated[index] };
+    const langs = [...(subtopicCopy[type] || [])];
+    if (!langs[langIndex]) langs[langIndex] = { language: "", url: "" };
+    langs[langIndex] = { ...langs[langIndex], [field]: value };
+    subtopicCopy[type] = langs;
+    updated[index] = subtopicCopy;
     setSubtopics(updated);
   };
 
   const handleAddLanguage = (index: number, type: "videoLanguages" | "audioLanguages") => {
     const updated = [...subtopics];
-    if (!updated[index][type]) updated[index][type] = [];
-    updated[index][type].push({ language: "", url: "" });
+    const subtopicCopy = { ...updated[index] };
+    const langs = [...(subtopicCopy[type] || [])];
+    langs.push({ language: "", url: "" });
+    subtopicCopy[type] = langs;
+    updated[index] = subtopicCopy;
     setSubtopics(updated);
   };
 
   const handleRemoveLanguage = (index: number, type: "videoLanguages" | "audioLanguages", langIndex: number) => {
     const updated = [...subtopics];
-    if (updated[index][type]) {
-      updated[index][type] = updated[index][type].filter((_, i) => i !== langIndex);
+    const subtopicCopy = { ...updated[index] };
+    if (subtopicCopy[type]) {
+      subtopicCopy[type] = subtopicCopy[type].filter((_, i) => i !== langIndex);
     }
+    updated[index] = subtopicCopy;
     setSubtopics(updated);
   };
   const handleEditModule = (e: React.MouseEvent, mod: any) => {
@@ -225,6 +234,16 @@ export default function ManageModulesPage() {
           unpackedOther.otherUrl = "";
         }
 
+        let vidLangs = st.videoLanguages || [];
+        if (typeof vidLangs === 'string') {
+          try { vidLangs = JSON.parse(vidLangs); } catch(e){ vidLangs = []; }
+        }
+
+        let audLangs = unpackedOther.audioLanguages || parsedData.audioLanguages || st.audioLanguages || [];
+        if (typeof audLangs === 'string') {
+          try { audLangs = JSON.parse(audLangs); } catch(e){ audLangs = []; }
+        }
+
         return {
           ...initialSubtopicState,
           id: st.id,
@@ -232,12 +251,12 @@ export default function ManageModulesPage() {
           description: st.description || "",
           learningOutcome: st.learningOutcome || "",
           videoUrl: safeUrlFallback(st.videoUrl, st.mediaUrl, st.type, 'videoUrl'),
-          videoLanguages: st.videoLanguages || [],
+          videoLanguages: vidLangs,
           notesUrl: unpackedOther.notesUrl || parsedData.notesUrl || safeUrlFallback(st.notesUrl, st.mediaUrl, st.type, 'notes'),
           notesDownloadUrl: unpackedOther.notesDownloadUrl || parsedData.notesDownloadUrl || st.notesDownloadUrl || "",
 
           audioUrl: unpackedOther.audioUrl || parsedData.audioUrl || safeUrlFallback(st.audioUrl, st.mediaUrl, st.type, 'audio'),
-          audioLanguages: unpackedOther.audioLanguages || parsedData.audioLanguages || st.audioLanguages || [],
+          audioLanguages: audLangs,
           audioDownloadUrl: unpackedOther.audioDownloadUrl || parsedData.audioDownloadUrl || st.audioDownloadUrl || "",
           didYouKnowUrl: unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || safeUrlFallback(st.didYouKnowUrl, st.mediaUrl, st.type, 'didYouKnow'),
           didYouKnowDownloadUrl: unpackedOther.didYouKnowDownloadUrl || parsedData.didYouKnowDownloadUrl || st.didYouKnowDownloadUrl || "",
@@ -355,11 +374,12 @@ export default function ManageModulesPage() {
 
       return {
         ...rest,
+        videoLanguages: JSON.stringify(rest.videoLanguages || []),
         otherUrl: packedOtherUrl,
         notesUrl: notesUrl || "",
         notesDownloadUrl: notesDownloadUrl || "",
         audioUrl: audioUrl || "",
-        audioLanguages: audioLanguages || [],
+        audioLanguages: JSON.stringify(audioLanguages || []),
         audioDownloadUrl: audioDownloadUrl || "",
         simulationData: "" // Backend will recreate this
       };
