@@ -12,7 +12,7 @@ export function Footer() {
               <div className="w-8 h-8 bg-red-600 text-white rounded-lg flex items-center justify-center">
                 <GraduationCap className="w-4 h-4" />
               </div>
-              <span className="text-lg font-bold text-white">Educational Content Platform</span>
+              <span className="text-lg font-bold text-white">UTTAM</span>
             </div>
             <p className="text-zinc-400 text-xs leading-relaxed">
               An interactive EdTech platform that brings together simulations, quizzes, flashcards, mind maps, and infographics helping educators create engaging learning experiences while enabling students to learn through interactive and visual content

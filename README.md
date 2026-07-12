@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎓 Interactive Educational Content Platform
+# 🎓 UTTAM
 
 ### A modern educational platform for creating, managing, and delivering interactive learning content.
 
@@ -16,7 +16,7 @@
 
 # 📖 Overview
 
-The **Interactive Educational Content Platform** is a modern web application that enables faculty members to create, manage, and publish interactive educational content through a centralized dashboard.
+The **UTTAM** is a modern web application that enables faculty members to create, manage, and publish interactive educational content through a centralized dashboard.
 
 The platform combines structured learning modules with interactive educational tools such as quizzes, flashcards, simulations, mind maps, infographics, rich notes, and multimedia resources, providing students with an engaging and organized learning experience.
 
@@ -259,17 +259,45 @@ For installation instructions, please refer to:
 
 ![Quiz Interface screenshot](screenshots/quiz.png)
 
+![Quiz Attempt screenshot](screenshots/quiz_internal.png)
+
 ---
 
 ### Flashcards
 
 ![Flashcards screenshot](screenshots/flashcard.png)
 
+![Flashcard View screenshot](screenshots/flashcard_internal.png)
+
 ---
 
 ### Simulation
 
 ![Simulation screenshot](screenshots/simulation.png)
+
+---
+
+### Mind Maps
+
+![Mind Maps screenshot](screenshots/mindmaps.png)
+
+---
+
+### Infographics
+
+![Infographics screenshot](screenshots/infographics.png)
+
+---
+
+### Faculty Quiz Creation
+
+![Faculty Quiz Creation screenshot](screenshots/quiz_creation.png)
+
+---
+
+### Faculty Flashcard Creation
+
+![Faculty Flashcard Creation screenshot](screenshots/faculty_flashcard.png)
 
 ---
 

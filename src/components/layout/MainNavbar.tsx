@@ -17,7 +17,7 @@ export function MainNavbar() {
             <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-xs sm:text-base font-extrabold text-zinc-900 leading-none tracking-tight truncate max-w-[140px] xs:max-w-[200px] sm:max-w-none">Educational Content Platform</span>
+            <span className="text-xs sm:text-base font-extrabold text-zinc-900 leading-none tracking-tight truncate max-w-[140px] xs:max-w-[200px] sm:max-w-none">UTTAM</span>
             <span className="text-[9px] sm:text-[10px] font-semibold text-primary mt-0.5 hidden xs:inline truncate">Somaiya EdTech Portal</span>
           </div>
         </Link>
