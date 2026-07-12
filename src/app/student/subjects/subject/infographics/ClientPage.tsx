@@ -95,6 +95,7 @@ export default function StudentInfographicsList() {
   const [modules, setModules] = useState<any[]>([]);
   const [subjectName, setSubjectName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [imageErrors, setImageErrors] = useState<{[id: string]: boolean}>({});
 
   useEffect(() => {
     if (subjectId) {
@@ -244,7 +245,7 @@ export default function StudentInfographicsList() {
                 </div>
               )}
               <CardTitle className={`text-2xl md:text-3xl ${isPremiumTheme ? 'text-slate-900 font-semibold tracking-tight' : t.textHeading} flex items-center gap-3`}>
-                <Brain className={`w-7 h-7 ${isPremiumTheme ? "text-slate-500" : "text-purple-600"}`} /> Interactive Infographics
+                <Brain className={`w-7 h-7 ${isPremiumTheme ? "text-slate-500" : "text-purple-600"}`} /> Infographics
               </CardTitle>
               <CardDescription className={`${isPremiumTheme ? 'text-slate-550 font-medium font-sans' : t.textMuted} mt-2 text-sm leading-relaxed`}>
                 Navigate structural relationships and components layout hierarchy visually.
@@ -271,13 +272,28 @@ export default function StudentInfographicsList() {
                     : "hover:shadow-lg hover:border-purple-300 group"
                 }`}>
                   <div className="h-48 w-full bg-slate-50 border-b border-slate-200/80 overflow-hidden relative">
-                    {map.imageUrl ? (
+                    {map.imageUrl && !imageErrors[map.id] ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={map.imageUrl} alt={map.title} className="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" />
+                      <img 
+                        src={(() => {
+                          let url = map.imageUrl || "";
+                          if (url.includes('drive.google.com')) {
+                            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                            if (match && match[1]) {
+                              return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800-h400`;
+                            }
+                          }
+                          return url.startsWith('/') || url.startsWith('http') ? url : `/${url}`;
+                        })()} 
+                        alt={map.title} 
+                        className="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" 
+                        onError={() => setImageErrors(prev => ({ ...prev, [map.id]: true }))}
+                      />
                     ) : (
                       isPremiumTheme ? renderInfographicPlaceholder() : (
-                        <div className="w-full h-full flex items-center justify-center text-zinc-300">
-                          <ImageIcon className="w-12 h-12" />
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-purple-50">
+                          <ImageIcon className="w-12 h-12 text-purple-200 mb-2" />
+                          <span className="text-xs font-semibold text-purple-300 uppercase tracking-wider">Infographic</span>
                         </div>
                       )
                     )}
@@ -341,7 +357,7 @@ export default function StudentInfographicsList() {
             }`}>
             <Brain className="w-12 h-12 text-slate-300 mx-auto mb-3" />
             <h3 className="text-lg font-bold">No Infographics Available</h3>
-            <p className="text-sm text-slate-500 font-normal mt-1">Your faculty hasn't uploaded any interactive infographics yet.</p>
+            <p className="text-sm text-slate-500 font-normal mt-1">Your faculty hasn't uploaded any infographics yet.</p>
           </div>
         )}
       </div>

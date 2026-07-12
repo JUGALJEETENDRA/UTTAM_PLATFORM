@@ -139,9 +139,7 @@ export default function InfographicViewerClientPage() {
             if (isDriveLink && imageError && driveId) {
               return (
                 <div className="w-full h-full bg-zinc-900 flex flex-col">
-                  <div className="bg-amber-900/30 text-amber-500 text-xs text-center py-1 px-4 border-b border-amber-900/50">
-                    Previewing via Google Drive Viewer (Image direct load failed or file is PDF)
-                  </div>
+
                   <iframe 
                     src={`https://drive.google.com/file/d/${driveId}/preview`} 
                     className="w-full flex-1 border-0"

@@ -189,7 +189,7 @@ export default function MindMapsClientPage() {
             <Brain className="w-6 h-6 mr-2 text-purple-600" /> 
             Mind Maps
           </h1>
-          <p className="text-zinc-500 text-sm mt-1">Upload and link interactive mind map images</p>
+          <p className="text-zinc-500 text-sm mt-1">Upload and link mind map images</p>
         </div>
         {!showForm && (
           <Button onClick={handleCreateNew} className="bg-purple-600 hover:bg-purple-700 text-white">
