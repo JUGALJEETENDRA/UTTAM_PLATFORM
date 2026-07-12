@@ -3149,15 +3149,15 @@ export default function StudentDashboard() {
                   >
                     <CardHeader className={`pb-4 relative overflow-hidden transition-colors duration-300 ${isPremiumTheme ? 'border-b border-slate-100' : 'border-b-4 border-black'}`}>
                       <CardTitle
-                        className={`text-base flex items-center transition-colors duration-300 ${isPremiumTheme ? 'font-bold font-sans tracking-tight text-slate-800' : t.textHeading}`}
+                        className={`text-base flex items-center justify-center w-full transition-colors duration-300 ${isPremiumTheme ? 'font-bold font-sans tracking-tight text-slate-800' : t.textHeading}`}
                       >
                         {isPremiumTheme ? (
-                          <span className="flex items-center gap-2">
+                          <span className="flex items-center justify-center gap-2">
                             <Columns className="w-4 h-4 text-slate-500" />
                             Reference Materials
                           </span>
                         ) : (
-                          <span className="flex items-center gap-2">
+                          <span className="flex items-center justify-center gap-2">
                             <FileText className={`w-4 h-4 ${t.textHeading || ''}`} />
                             Reference Materials
                           </span>

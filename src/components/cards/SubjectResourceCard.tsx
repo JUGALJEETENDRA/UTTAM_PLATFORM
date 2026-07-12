@@ -24,7 +24,7 @@ export function SubjectResourceCard({ title, type, link }: SubjectResourceCardPr
           </div>
           
           <div className="space-y-2">
-            <h3 className="font-bold text-lg text-zinc-900 font-serif tracking-tight leading-snug">
+            <h3 className="font-bold text-lg text-zinc-900 font-sans tracking-tight leading-snug">
               {title}
             </h3>
             

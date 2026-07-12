@@ -23,7 +23,7 @@ interface SimulationContainerProps {
 
 export function SimulationContainer({ simulation, category }: SimulationContainerProps) {
   const [started, setStarted] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
@@ -89,10 +89,7 @@ export function SimulationContainer({ simulation, category }: SimulationContaine
 
   const handleLaunchSandbox = () => {
     setStarted(true);
-    setIsFullscreen(true);
-    document.documentElement.requestFullscreen().catch(() => {
-      // Browser full screen fallback
-    });
+    setIsFullscreen(false);
   };
 
   if (completed) {

@@ -276,30 +276,6 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
           <span className="text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[200px] sm:max-w-xs">
             {title || "Audio Lesson"}
           </span>
-          <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase bg-blue-50 text-blue-700 border border-blue-200">
-            Drive Audio
-          </span>
-        </div>
-
-        <div className="flex items-center space-x-2 shrink-0">
-          {driveFileId && (
-            <button
-              type="button"
-              onClick={() => setUseDriveFallback(!useDriveFallback)}
-              className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2 py-1 rounded border border-slate-200 transition-colors"
-            >
-              {useDriveFallback ? "Use Direct Stream" : "Switch Player Mode"}
-            </button>
-          )}
-          <a
-            href={viewUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-slate-500 hover:text-slate-800 p-1 rounded bg-slate-100 border border-slate-200 transition-colors flex items-center gap-1 text-[10px] font-medium"
-            title="Open direct media link"
-          >
-            <ExternalLink className="w-3.5 h-3.5" /> Direct Link
-          </a>
         </div>
       </div>
 
