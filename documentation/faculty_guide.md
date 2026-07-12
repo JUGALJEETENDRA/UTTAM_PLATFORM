@@ -17,8 +17,8 @@ The curriculum is structured hierarchically: **Subjects -> Modules -> Subtopics*
 - **Subtopics:** Inside modules, you can create specific lessons, flashcards, or quizzes.
   - **Text Lessons:** You can directly type or paste text content when creating lessons. Note: Markdown format is supported and will be automatically formatted for students.
   - **Embedded Media:** The "Did You Know" sections now support embedding external media (like videos) to enhance the learning experience.
- - **Tip:**You can use the [NotebookLM](https://notebooklm.google.com/) to generate the content and to remove any notebooklm watermark use this website, 
-[NotebookLM Watermark Remover](https://notebooklmremover.com/en).
+  - **Visible to Students Option:** You can toggle visibility for individual subtopics. This allows you to draft content and only make it visible to students when you are ready.
+  - **Tip:** You can use [NotebookLM](https://notebooklm.google.com/) to generate the content, and to remove any notebooklm watermark use this website: [NotebookLM Watermark Remover](https://notebooklmremover.com/en).
 ## 2. Creating Content Types
 
 ### Flashcards
@@ -37,17 +37,24 @@ Assess student knowledge with timed quizzes.
 1. Select **Add Quiz**.
 2. Define the quiz parameters (Time limit, passing score).
 3. Add multiple-choice questions.
-   - **Tip:** You can generate a CSV of questions using the [NotebookLM Quiz Exporter](https://chromewebstore.google.com/detail/notebooklm-quiz-exporter/pndhmfhdeoiekihofmklndionkfabbdm) extension. Ensure that the "hints" button is unclicked before downloading the CSV. If your generated content has a watermark, you can remove it using 
+   - **Tip:** You can generate a CSV of questions using the [NotebookLM Quiz Exporter](https://chromewebstore.google.com/detail/notebooklm-quiz-exporter/pndhmfhdeoiekihofmklndionkfabbdm) extension. Ensure that the "hints" button is unclicked before downloading the CSV. If your generated content has a watermark, you can remove it using [NotebookLM Watermark Remover](https://notebooklmremover.com/en). 
 
 ![Quiz Creation](../screenshots/quiz_creation.png)
 
-## 3. Data Storage (Google Sheets)
+## 3. Content Matrix
+
+The **Content Matrix** gives you a bird's-eye view of all the resources mapped to your course. It allows you to:
+- Easily track the progression of topics, quizzes, flashcards, and resources mapped to each module.
+- Audit your curriculum to ensure all required learning materials and references are present.
+- View visibility statuses for different subtopics at a glance.
+
+## 4. Data Storage (Google Sheets)
 
 Because the system uses Google Sheets as a backend, all your data is safely stored in a spreadsheet you can access anytime.
 *Any changes made to the sheet directly will not reflect in the front end or even not show up at all, all the changes must be made form the faculty dashboard only.*
 *Warning: Do not change the column headers or the sheet names, as this will break the connection.*
 
-## 4. Deploying Updates
+## 5. Deploying Updates
 
 Once you have finished adding or modifying content:
 1. The platform will automatically sync changes to the database.

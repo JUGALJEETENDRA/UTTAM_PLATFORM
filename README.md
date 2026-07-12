@@ -57,6 +57,8 @@ The application follows a lightweight static-content architecture, allowing cont
 - Resource Management
 - Multimedia Management
 - Content Matrix
+- Content Visibility Toggles
+- NotebookLM Watermark Remover Integration
 - One-click Publish to Student Dashboard
 
 ---
