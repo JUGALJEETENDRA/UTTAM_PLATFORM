@@ -23,13 +23,19 @@ function FacultySubjectLayoutInner({ children }: { children: React.ReactNode }) 
   }, [status, isAuthenticated]);
 
   useEffect(() => {
-    // Fetch subject name just for the header context
-    fetchGAS("getModules", { subjectId })
-      .then(data => {
-        // We only really need to know we fetched successfully, 
-        // the API doesn't return subject name directly if it's returning modules.
-        // In a real app we'd fetch the subject details explicitly.
-        setSubjectName("Subject Management");
+    if (!subjectId) return;
+    fetchGAS("getSubjects")
+      .then(subjects => {
+        if (Array.isArray(subjects)) {
+          const sub = subjects.find((s: any) => s.id === subjectId);
+          if (sub) {
+            setSubjectName(sub.name);
+          } else {
+            setSubjectName("Subject Management");
+          }
+        } else {
+          setSubjectName("Subject Management");
+        }
       })
       .catch(() => setSubjectName("Subject Management"));
   }, [subjectId]);

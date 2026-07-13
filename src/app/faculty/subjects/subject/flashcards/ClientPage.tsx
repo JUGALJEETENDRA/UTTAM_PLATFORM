@@ -32,9 +32,11 @@ export default function ManageFlashcardsPage() {
   ]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    fetchModules();
-    fetchDecks();
-  }, []);
+    if (subjectId) {
+      fetchModules();
+      fetchDecks();
+    }
+  }, [subjectId]);
   const fetchModules = async () => {
     try {
       const data = await fetchGAS("getModules", { subjectId });

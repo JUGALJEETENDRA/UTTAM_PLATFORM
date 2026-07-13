@@ -35,9 +35,11 @@ export default function ManageSimulationsPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchModules();
-    fetchSimulations();
-  }, []);
+    if (subjectId) {
+      fetchModules();
+      fetchSimulations();
+    }
+  }, [subjectId]);
 
   const fetchModules = async () => {
     try {

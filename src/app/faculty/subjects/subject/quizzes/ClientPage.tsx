@@ -60,9 +60,11 @@ export default function ManageQuizzesPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchModules();
-    fetchQuizzes();
-  }, []);
+    if (subjectId) {
+      fetchModules();
+      fetchQuizzes();
+    }
+  }, [subjectId]);
 
   const fetchModules = async () => {
     try {

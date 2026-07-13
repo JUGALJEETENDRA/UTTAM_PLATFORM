@@ -82,8 +82,10 @@ export default function ManageModulesPage() {
   const [deletingModule, setDeletingModule] = useState<{ id: string; title: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   useEffect(() => {
-    fetchModules();
-  }, []);
+    if (subjectId) {
+      fetchModules();
+    }
+  }, [subjectId]);
   const fetchModules = async () => {
     try {
       const data = await fetchGAS("getModules", { subjectId });

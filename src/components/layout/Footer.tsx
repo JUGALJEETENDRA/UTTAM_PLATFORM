@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Globe, Mail, Phone, MapPin, GraduationCap, ArrowRight } from "lucide-react";
+import { GraduationCap, ArrowRight } from "lucide-react";
 
 export function Footer() {
   return (
@@ -39,27 +39,8 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h3 className="text-white font-bold text-sm mb-3 flex items-center">
-              <span className="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></span>
-              Contact Us
-            </h3>
-            <ul className="space-y-2 text-xs">
-              <li className="flex items-start space-x-3">
-                <MapPin className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-                <span>Department of Information Technology,<br />Engineering College Campus.</span>
-              </li>
-              <li className="flex items-center space-x-3">
-                <Phone className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
-                <span>+91 22 6728 3000</span>
-              </li>
-              <li className="flex items-center space-x-3">
-                <Mail className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
-                <span>info.engg@somaiya.edu</span>
-              </li>
-            </ul>
-          </div>
+          {/* Placeholder for future Contact Us section */}
+          <div className="hidden md:block"></div>
         </div>
 
         <div className="border-t border-zinc-800 pt-4 mt-4 flex flex-col md:flex-row justify-end items-center text-[11px] text-zinc-550">
