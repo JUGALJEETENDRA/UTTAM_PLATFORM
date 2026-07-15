@@ -838,7 +838,9 @@ export default function StudentDashboard() {
     );
   }
 
-  if (isLocked) {
+  const isActuallyLocked = isLocked || (data && data.encrypted && !data.subject);
+
+  if (isActuallyLocked) {
     if (isValidatingPassword) {
       return (
         <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
