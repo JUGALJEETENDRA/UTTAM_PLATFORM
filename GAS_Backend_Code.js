@@ -5,8 +5,8 @@ const SPREADSHEET_ID = "ADD_YOUR_OWN_SHEET_HERE"; // Replace with your Spreadshe
 
 // --- GITHUB PAGES DEPLOYMENT CONFIGURATION ---
 // Change these to your own GitHub username and repository name where this platform will be hosted.
-const GITHUB_OWNER = "SourishAshtikar"; // e.g. "YourGitHubUsername"
-const GITHUB_REPO = "PS-3-Pages-Client-Only"; // e.g. "Your-Repo-Name"
+const GITHUB_OWNER = "JUGALJEETENDRA"; // e.g. "YourGitHubUsername"
+const GITHUB_REPO = "UTTAM_PLATFORM"; // e.g. "Your-Repo-Name"
 let __ssCache = null;
 function getSpreadsheet() {
   if (!__ssCache) {
@@ -30,7 +30,8 @@ function setupDatabase() {
   const ss = getSpreadsheet();
 
   const schemas = {
-    "Subjects": ["id", "name", "description", "password", "resources", "createdAt"],
+    "Subjects": ["id", "name", "description", "resources", "isPublic", "createdAt"],
+    "AuthorizedStudents": ["id", "subjectId", "email", "rollNo", "name", "createdAt"],
     "Modules": ["id", "subjectId", "moduleNo", "title", "hours", "co", "description", "createdAt"],
     "Subtopics": ["id", "moduleId", "subtopicNo", "title", "learningOutcome", "type", "content", "mediaUrl", "simulationData", "order", "createdAt"],
     "Quizzes": ["id", "subjectId", "moduleId", "subtopicId", "title", "timeLimit", "totalMarks", "documentUrl", "totalQuestionsToAsk", "questions"],
@@ -226,14 +227,39 @@ function handleRequest(e, isPost) {
       case "getSubjects":
         result = getSheetData("Subjects");
         break;
+      case "getEncryptionKeys":
+        result = getSheetData("Subjects").reduce((acc, subj) => {
+          acc[subj.id] = getSubjectDataKey(subj.id);
+          return acc;
+        }, {});
+        break;
       case "getStudentDashboard":
         result = handleGetStudentDashboard(payload);
         break;
-      case "validateSubjectPassword":
-        result = handleValidateSubjectPassword(payload);
+      case "verifyStudentAccess":
+        result = handleVerifyStudentAccess(payload);
         break;
 
       // --- Faculty Endpoints ---
+      case "getAuthorizedStudents":
+        result = handleGetAuthorizedStudents(payload);
+        break;
+      case "addAuthorizedStudent":
+        result = handleAddAuthorizedStudent(payload);
+        break;
+      case "addAuthorizedStudentsBulk":
+        result = handleAddAuthorizedStudentsBulk(payload);
+        break;
+      case "removeAuthorizedStudent":
+        result = handleRemoveAuthorizedStudent(payload);
+        break;
+      case "updateAuthorizedStudent":
+        result = handleUpdateAuthorizedStudent(payload);
+        break;
+      case "toggleSubjectPrivacy":
+        result = handleToggleSubjectPrivacy(payload);
+        break;
+
       case "getFacultyDashboard":
         result = handleGetFacultyDashboard(payload);
         break;
@@ -242,8 +268,8 @@ function handleRequest(e, isPost) {
           id: generateId(),
           name: payload.name,
           description: payload.description,
-          password: payload.password || "",
           resources: JSON.stringify([]),
+          isPublic: "false",
           createdAt: new Date().toISOString()
         });
         break;
@@ -251,11 +277,12 @@ function handleRequest(e, isPost) {
         result = { success: deleteRow("Subjects", "id", payload.subjectId) };
         break;
       case "updateSubject":
-        result = { success: updateRow("Subjects", "id", payload.subjectId, {
-          name: payload.name,
-          description: payload.description,
-          password: payload.password || ""
-        }) !== null };
+        result = {
+          success: updateRow("Subjects", "id", payload.subjectId, {
+            name: payload.name,
+            description: payload.description
+          }) !== null
+        };
         break;
       case "setupDatabase":
         setupDatabase();
@@ -407,14 +434,8 @@ function handleGetStudentDashboard(payload) {
   const infographics = getSheetData("Infographics").filter(m => m.subjectId === payload.subjectId) || [];
   const subjectResources = getSheetData("Resources").filter(r => r.subjectId === payload.subjectId) || [];
 
-  // SECURITY: Strip the password from the subject object before sending to the browser.
-  // Password validation is handled server-side via the validateSubjectPassword action.
-  const { password: _removedPassword, ...safeSubject } = subject;
-  // Let the client know a password gate exists without revealing the actual password.
-  safeSubject.hasPassword = !!(_removedPassword && String(_removedPassword).trim().length > 0);
-
   return {
-    subject: safeSubject,
+    subject: subject,
     modules: subjectModules,
     quizzesWithAttempts: allQuizzes,
     flashcardDecks: flashcardDecks,
@@ -443,29 +464,121 @@ function handleGetFacultyDashboard(payload) {
   };
 }
 
-/**
- * Validates a student's submitted password against the stored subject password.
- * Only returns {success: true/false, hasPassword: boolean} — never the raw password.
- * payload: { subjectId: string, password: string }
- */
-function handleValidateSubjectPassword(payload) {
-  const { subjectId, password } = payload;
-  if (!subjectId) return { success: false, error: "Missing subjectId" };
-
+function handleGetAuthorizedStudents(payload) {
+  const { subjectId } = payload;
+  const students = getSheetData("AuthorizedStudents").filter(s => s.subjectId === subjectId);
   const subject = getSheetData("Subjects").find(s => s.id === subjectId);
-  if (!subject) return { success: false, error: "Subject not found" };
+  const isPublic = subject ? subject.isPublic === "true" || subject.isPublic === true : false;
+  return { students, isPublic };
+}
 
-  const storedPassword = (subject.password || "").toString().trim();
+function handleAddAuthorizedStudent(payload) {
+  const { subjectId, email, rollNo, name } = payload;
+  if (!subjectId || !email) return { success: false, error: "Missing required fields" };
 
-  // Subject has no password — always grant access
-  if (!storedPassword) return { success: true, hasPassword: false };
+  const existing = getSheetData("AuthorizedStudents").find(s => s.subjectId === subjectId && s.email.toLowerCase() === email.toLowerCase());
+  if (existing) return { success: true, message: "Student already authorized" };
 
-  // Compare submitted password to stored password
-  const submitted = (password || "").toString().trim();
-  if (submitted === storedPassword) {
-    return { success: true, hasPassword: true };
+  const id = generateId();
+  writeRow("AuthorizedStudents", {
+    id, subjectId, email: email.toLowerCase(), rollNo: rollNo || "", name: name || "", createdAt: new Date().toISOString()
+  });
+  return { success: true, id };
+}
+
+function handleAddAuthorizedStudentsBulk(payload) {
+  const { subjectId, students } = payload; // students should be [{email, rollNo, name}, ...]
+  if (!subjectId || !students || !Array.isArray(students)) return { success: false, error: "Invalid payload" };
+
+  let addedCount = 0;
+  const existingEmails = new Set(getSheetData("AuthorizedStudents").filter(s => s.subjectId === subjectId).map(s => s.email.toLowerCase()));
+
+  students.forEach(st => {
+    if (st.email && !existingEmails.has(st.email.toLowerCase())) {
+      writeRow("AuthorizedStudents", {
+        id: generateId(),
+        subjectId,
+        email: st.email.toLowerCase(),
+        rollNo: st.rollNo || "",
+        name: st.name || "",
+        createdAt: new Date().toISOString()
+      });
+      existingEmails.add(st.email.toLowerCase());
+      addedCount++;
+    }
+  });
+  return { success: true, addedCount };
+}
+
+function handleRemoveAuthorizedStudent(payload) {
+  const { id } = payload;
+  return { success: deleteRow("AuthorizedStudents", "id", id) };
+}
+
+function handleUpdateAuthorizedStudent(payload) {
+  const { id, email, name, rollNo } = payload;
+  if (!id || !email) return { success: false, error: "Missing required fields" };
+  const updated = updateRow("AuthorizedStudents", "id", id, {
+    email: email.toLowerCase(),
+    name: name || "",
+    rollNo: rollNo || ""
+  });
+  return { success: updated !== null };
+}
+
+function handleToggleSubjectPrivacy(payload) {
+  const { subjectId, isPublic } = payload;
+  if (!subjectId) return { success: false, error: "Missing subjectId" };
+  const updated = updateRow("Subjects", "id", subjectId, {
+    isPublic: isPublic ? "true" : "false"
+  });
+  return { success: updated !== null };
+}
+
+function handleVerifyStudentAccess(payload) {
+  const { subjectId, credential } = payload;
+  if (!subjectId || !credential) return { authorized: false, error: "Missing required fields" };
+
+  try {
+    const parts = credential.split('.');
+    if (parts.length !== 3) throw new Error("Invalid credential format");
+
+    // Parse JWT payload (base64url encoded)
+    let payloadStr = parts[1];
+    // Pad to length multiple of 4
+    while (payloadStr.length % 4 !== 0) payloadStr += '=';
+    payloadStr = payloadStr.replace(/-/g, '+').replace(/_/g, '/');
+
+    const payloadJson = Utilities.base64Decode(payloadStr);
+    const decoded = JSON.parse(Utilities.newBlob(payloadJson).getDataAsString());
+
+    const email = decoded.email;
+    if (!email) return { authorized: false, error: "No email in credential" };
+
+    const isAuthorized = getSheetData("AuthorizedStudents").some(s => s.subjectId === subjectId && s.email.toLowerCase() === email.toLowerCase());
+    if (isAuthorized) {
+      return { authorized: true, email: email, dataKey: getSubjectDataKey(subjectId) };
+    } else {
+      return { authorized: false, email: email };
+    }
+  } catch (err) {
+    return { authorized: false, error: "Invalid credential: " + err.toString() };
   }
-  return { success: false, hasPassword: true };
+}
+
+function getSubjectDataKey(subjectId) {
+  var props = PropertiesService.getScriptProperties();
+  var masterKey = props.getProperty("MASTER_DATA_KEY");
+  if (!masterKey) {
+    masterKey = Utilities.getUuid();
+    props.setProperty("MASTER_DATA_KEY", masterKey);
+  }
+  var raw = masterKey + subjectId;
+  var signature = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, raw);
+  return signature.map(function(byte) {
+      var v = (byte < 0) ? 256 + byte : byte;
+      return ("0" + v.toString(16)).slice(-2);
+  }).join("");
 }
 
 function generateId() {

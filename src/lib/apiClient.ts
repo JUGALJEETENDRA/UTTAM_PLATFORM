@@ -1,3 +1,5 @@
+import { decryptObject } from "./crypto";
+
 export const GAS_WEB_APP_URL = process.env.NEXT_PUBLIC_GAS_URL || "";
 
 declare global {
@@ -23,18 +25,42 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
       try {
         const dataJson = await window._dataJsonPromise;
         
+        // Helper to decrypt data centrally
+        const processEncrypted = (dataObj: any) => {
+          if (dataObj && dataObj.encrypted && typeof window !== 'undefined') {
+             const params = new URLSearchParams(window.location.search);
+             const subjectId = params.get('subjectId') || payload.subjectId;
+             if (subjectId) {
+                const key = localStorage.getItem(`subject_key_${subjectId}`);
+                const expirationStr = localStorage.getItem(`subject_unlocked_expiry_${subjectId}`);
+                
+                if (key && expirationStr && Date.now() < parseInt(expirationStr, 10)) {
+                   const decrypted = decryptObject(dataObj, key);
+                   if (decrypted) return decrypted;
+                }
+                
+                const isDashboard = window.location.pathname.endsWith('/subject');
+                if (!isDashboard) {
+                  window.location.href = `/student/subjects/subject?subjectId=${subjectId}`;
+                  return Array.isArray(dataObj) ? [] : {};
+                }
+             }
+          }
+          return dataObj;
+        };
+
         if (action === 'getSubjects') return dataJson.getSubjects || [];
-        if (action === 'getStudentDashboard') return dataJson.getStudentDashboard[payload.subjectId] || null;
-        if (action === 'getModules') return dataJson.getModules[payload.subjectId] || [];
-        if (action === 'getModule') return dataJson.getModule[payload.moduleId] || null;
-        if (action === 'getQuizzes') return dataJson.getQuizzes[payload.subjectId] || [];
-        if (action === 'getQuiz') return dataJson.getQuiz[payload.quizId] || null;
-        if (action === 'getSimulations') return dataJson.getSimulations[payload.subjectId] || [];
-        if (action === 'getSimulation') return dataJson.getSimulation[payload.simulationId] || null;
-        if (action === 'getFlashcardDecks') return dataJson.getFlashcardDecks[payload.subjectId] || [];
-        if (action === 'getFlashcardDeck') return dataJson.getFlashcardDeck[payload.deckId] || null;
-        if (action === 'getMindMaps') return dataJson.getMindMaps[payload.subjectId] || [];
-        if (action === 'getInfographics') return dataJson.getInfographics[payload.subjectId] || [];
+        if (action === 'getStudentDashboard') return processEncrypted(dataJson.getStudentDashboard[payload.subjectId]) || null;
+        if (action === 'getModules') return processEncrypted(dataJson.getModules[payload.subjectId]) || [];
+        if (action === 'getModule') return processEncrypted(dataJson.getModule[payload.moduleId]) || null;
+        if (action === 'getQuizzes') return processEncrypted(dataJson.getQuizzes[payload.subjectId]) || [];
+        if (action === 'getQuiz') return processEncrypted(dataJson.getQuiz[payload.quizId]) || null;
+        if (action === 'getSimulations') return processEncrypted(dataJson.getSimulations[payload.subjectId]) || [];
+        if (action === 'getSimulation') return processEncrypted(dataJson.getSimulation[payload.simulationId]) || null;
+        if (action === 'getFlashcardDecks') return processEncrypted(dataJson.getFlashcardDecks[payload.subjectId]) || [];
+        if (action === 'getFlashcardDeck') return processEncrypted(dataJson.getFlashcardDeck[payload.deckId]) || null;
+        if (action === 'getMindMaps') return processEncrypted(dataJson.getMindMaps[payload.subjectId]) || [];
+        if (action === 'getInfographics') return processEncrypted(dataJson.getInfographics[payload.subjectId]) || [];
         
         // If not a read action or not handled, it will fall through to GAS (though likely fail if offline/static)
       } catch (err) {

@@ -10,7 +10,6 @@ export function EditSubjectButton({ subject }: { subject: any }) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(subject.name || "");
   const [description, setDescription] = useState(subject.description || "");
-  const [password, setPassword] = useState(subject.password || "");
   const [loading, setLoading] = useState(false);
 
   const handleEdit = async (e: React.MouseEvent) => {
@@ -25,7 +24,7 @@ export function EditSubjectButton({ subject }: { subject: any }) {
 
     setLoading(true);
     try {
-      const res = await fetchGAS("updateSubject", { subjectId: subject.id, name, description, password });
+      const res = await fetchGAS("updateSubject", { subjectId: subject.id, name, description });
       if (res && res.success) {
         toast.success("Subject updated successfully");
         window.location.reload();
@@ -82,18 +81,6 @@ export function EditSubjectButton({ subject }: { subject: any }) {
                   className="w-full rounded-md border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px]"
                   disabled={loading}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">Access Password (Optional)</label>
-                <input
-                  type="text"
-                  value={password}
-                  placeholder="Leave blank for public access"
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-md border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled={loading}
-                />
-                <p className="text-xs text-zinc-500 mt-1">If set, students must enter this password to access the subject.</p>
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <Button type="button" variant="outline" onClick={() => setIsEditing(false)} disabled={loading}>

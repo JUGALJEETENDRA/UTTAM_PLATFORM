@@ -58,7 +58,7 @@ export default function FacultyDashboardPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-3 md:gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-zinc-900">Faculty Dashboard</h1>
-          <p className="text-sm md:text-base text-zinc-500 mt-1">Manage subjects, content, and monitor student progress.</p>
+          <p className="text-sm md:text-base text-zinc-500 mt-1">Manage subjects and content.</p>
         </div>
       </div>
  

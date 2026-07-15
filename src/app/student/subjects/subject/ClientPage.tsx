@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchGAS } from "@/lib/apiClient";
 import { Button } from "@/components/ui/button";
+import { GoogleLogin } from "@react-oauth/google";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SubjectResourceCard } from "@/components/cards/SubjectResourceCard";
 import {
@@ -760,36 +761,53 @@ export default function StudentDashboard() {
   }, [subjectId]);
 
   useEffect(() => {
-    // Use the boolean flag — the actual password is never sent to the browser.
-    if (data && data.subject?.hasPassword) {
-      const unlocked = localStorage.getItem(`subject_unlocked_${data.subject.id}`);
-      if (unlocked !== "true") {
-        setIsLocked(true);
+    // Check if user is already unlocked for this subject
+    if (data && data.subject) {
+      if (data.subject.isPublic === "true" || data.subject.isPublic === true) {
+        setIsLocked(false);
+        return;
       }
+      
+      const expirationStr = localStorage.getItem(`subject_unlocked_expiry_${data.subject.id}`);
+      if (expirationStr) {
+        const expirationTime = parseInt(expirationStr, 10);
+        if (Date.now() < expirationTime) {
+          setIsLocked(false);
+          return;
+        } else {
+          // Token expired, clear it
+          localStorage.removeItem(`subject_unlocked_expiry_${data.subject.id}`);
+        }
+      }
+      setIsLocked(true);
+    } else if (data && data.encrypted) {
+      setIsLocked(true);
     }
   }, [data]);
 
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleGoogleSuccess = async (credentialResponse: any) => {
     if (isValidatingPassword) return;
     setIsValidatingPassword(true);
     setPasswordError("");
     try {
-      // Send the typed password to GAS for server-side validation.
-      // GAS compares it and returns {success: true/false} — the stored password never reaches the browser.
-      const result = await fetchGAS("validateSubjectPassword", {
+      const result = await fetchGAS("verifyStudentAccess", {
         subjectId: subjectId,
-        password: passwordInput.trim(),
+        credential: credentialResponse.credential,
       });
-      if (result?.success) {
-        localStorage.setItem(`subject_unlocked_${data.subject.id}`, "true");
+      if (result?.authorized) {
+        const expirationTime = Date.now() + 6 * 60 * 60 * 1000;
+        localStorage.setItem(`subject_unlocked_expiry_${subjectId}`, expirationTime.toString());
+        if (result.dataKey) {
+           localStorage.setItem(`subject_key_${subjectId}`, result.dataKey);
+        }
         setIsLocked(false);
         setPasswordError("");
+        window.location.reload();
       } else {
-        setPasswordError("Incorrect password");
+        setPasswordError(result?.error || "You are not authorized for this subject. Please contact faculty.");
       }
     } catch (err) {
-      setPasswordError("Unable to validate password. Please try again.");
+      setPasswordError("Verification failed. Please try again.");
     } finally {
       setIsValidatingPassword(false);
     }
@@ -812,7 +830,7 @@ export default function StudentDashboard() {
     );
   }
 
-  if (!data || !data.subject) {
+  if (!data || (!data.subject && !data.encrypted)) {
     return (
       <div className="p-8 text-center text-[#F43F5E] font-bold border-4 border-[#F43F5E] bg-white max-w-xl mx-auto mt-20">
         CRITICAL FAILURE: INSTANCE CONNECT PATHWAY TERMINATED.
@@ -821,6 +839,23 @@ export default function StudentDashboard() {
   }
 
   if (isLocked) {
+    if (isValidatingPassword) {
+      return (
+        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+          <div className="flex flex-col items-center text-indigo-600 space-y-6">
+            <div className="relative">
+              <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <ShieldAlert className="w-6 h-6 text-indigo-600 animate-pulse" />
+              </div>
+            </div>
+            <h2 className="text-xl font-semibold text-slate-800">Verifying Access...</h2>
+            <p className="text-slate-500 text-sm animate-pulse">Communicating with authorization servers</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <Card className="w-full max-w-md shadow-xl border-slate-200">
@@ -830,41 +865,18 @@ export default function StudentDashboard() {
             </div>
             <CardTitle className="text-2xl font-bold text-slate-900">Protected Subject</CardTitle>
             <CardDescription className="text-slate-500">
-              This subject requires a password for access.
+              Please sign in with your authorized Google account to access this subject.<br/>
+              <span className="font-semibold text-indigo-600 mt-2 inline-block">(Please use your Somaiya email ID)</span>
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <div>
-                <input
-                  type="password"
-                  required
-                  placeholder="Enter password..."
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  disabled={isValidatingPassword}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                />
-                {passwordError && <p className="text-sm text-red-500 mt-2">{passwordError}</p>}
-              </div>
-              <Button
-                type="submit"
-                disabled={isValidatingPassword}
-                className="w-full py-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-md disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {isValidatingPassword ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                    </svg>
-                    Verifying...
-                  </span>
-                ) : (
-                  "Unlock Subject"
-                )}
-              </Button>
-            </form>
+          <CardContent className="flex flex-col items-center">
+            <div className="w-full flex justify-center py-4">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setPasswordError("Google login failed")}
+              />
+            </div>
+            {passwordError && <p className="text-sm text-red-500 mt-4 text-center">{passwordError}</p>}
           </CardContent>
         </Card>
       </div>
@@ -2138,6 +2150,7 @@ export default function StudentDashboard() {
             stroke="#10B981"
             strokeDasharray="3 3"
             strokeWidth="1.5"
+            initial={{ strokeDashoffset: 0 }}
             variants={{
               rest: { strokeDashoffset: 0 },
               hover: { strokeDashoffset: [0, -6], transition: { repeat: Infinity, ease: "linear", duration: 0.8 } }
@@ -2390,7 +2403,6 @@ export default function StudentDashboard() {
 
   return (
     <div className={`min-h-screen relative ${t.bg} ${t.pattern} pb-16 pt-8 brutalist-transition transition-colors duration-300 overflow-hidden`}>
-
       {/* Structural Embedded CSS Overrides */}
       <style jsx global>{`
         .brutalist-transition {

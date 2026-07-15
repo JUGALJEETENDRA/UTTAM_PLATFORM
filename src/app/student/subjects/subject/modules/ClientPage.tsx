@@ -98,6 +98,7 @@ export default function ModulesPage() {
           fetchGAS("getModules", { subjectId, userId: "anonymous" }),
           fetchGAS("getSubjects")
         ]);
+        
         setData(result);
         if (Array.isArray(subjects)) {
           const currentSub = subjects.find((s: any) => s.id === subjectId);
@@ -567,6 +568,7 @@ export default function ModulesPage() {
             stroke="#10B981"
             strokeDasharray="3 3"
             strokeWidth="1.5"
+            initial={{ strokeDashoffset: 0 }}
             variants={{
               rest: { strokeDashoffset: 0 },
               hover: { strokeDashoffset: [0, -6], transition: { repeat: Infinity, ease: "linear", duration: 0.8 } }
