@@ -21,6 +21,7 @@ const team: TeamMember[] = [
     role: "Team Mentor",
     avatarBg: "from-blue-500 to-cyan-500",
     icon: <Terminal className="w-5 h-5 text-white" />,
+    githubUrl: "https://github.com/JUGALJEETENDRA",
     linkedinUrl: "https://www.linkedin.com/in/jugal-jeetendra-manek/",
     imageUrl: "/team/jugal-jeetendra-manek.jpg"
   },
@@ -98,7 +99,7 @@ function ImageWithFallback({ src, alt, fallback }: ImageWithFallbackProps) {
       src={imageSrc}
       alt={alt}
       onError={() => setError(true)}
-      className="w-12 h-12 rounded-xl object-cover shadow-sm shrink-0 border border-slate-200"
+      className="w-24 h-24 rounded-2xl object-cover shadow-md shrink-0 border border-slate-200/80"
     />
   );
 }
@@ -112,7 +113,7 @@ export default function TeamPage() {
         backgroundSize: '32px 32px'
       }} />
 
-      <div className="container mx-auto px-4 max-w-5xl relative z-10 space-y-8">
+      <div className="container mx-auto px-4 max-w-6xl relative z-10 space-y-8">
 
         {/* Back Link */}
         <div className="mb-2">
@@ -159,37 +160,39 @@ export default function TeamPage() {
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 pt-4"
         >
           {team.map((member, index) => (
             <motion.div
               key={index}
               variants={cardVariants}
-              whileHover={{ y: -6, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)" }}
-              className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden shadow-xs transition-shadow duration-300 group"
+              whileHover={{ y: -8, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -6px rgba(0, 0, 0, 0.04)" }}
+              className="bg-white border border-slate-200/80 rounded-2xl p-8 flex flex-col justify-between relative overflow-hidden shadow-sm transition-shadow duration-300 group"
             >
               {/* Card Decorative Edge */}
-              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-slate-100 to-slate-200/50 group-hover:from-indigo-400 group-hover:to-purple-400 transition-colors duration-300" />
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-slate-100 to-slate-200/50 group-hover:from-indigo-400 group-hover:to-purple-400 transition-colors duration-300" />
 
               <div className="space-y-4">
                 {/* Header with avatar / icon */}
-                <div className="flex items-center space-x-3.5">
+                <div className="flex items-center space-x-5">
                   <ImageWithFallback
                     src={member.imageUrl || ""}
                     alt={member.name}
                     fallback={
-                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${member.avatarBg} flex items-center justify-center shadow-sm shrink-0`}>
-                        {member.icon}
+                      <div className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${member.avatarBg} flex items-center justify-center shadow-md shrink-0`}>
+                         {React.isValidElement(member.icon) 
+                          ? React.cloneElement(member.icon as React.ReactElement<any>, { className: "w-10 h-10 text-white" })
+                          : member.icon}
                       </div>
                     }
                   />
                   <div>
-                    <h3 className="font-bold text-slate-900 text-base leading-tight">
+                    <h3 className="font-extrabold text-slate-900 text-xl tracking-tight leading-snug">
                       {member.name}
                     </h3>
-                    <span className={`inline-block mt-1 text-[11px] font-bold font-mono px-2 py-0.5 rounded ${member.role === "Team Mentor"
-                      ? "bg-blue-50 text-blue-700 border border-blue-200"
-                      : "bg-slate-100 text-slate-700 border border-slate-200"
+                    <span className={`inline-block mt-2 text-xs font-semibold px-2.5 py-1 rounded-md border ${member.role === "Team Mentor"
+                      ? "bg-blue-50 text-blue-700 border-blue-200"
+                      : "bg-slate-50 text-slate-700 border-slate-200/80"
                       }`}>
                       {member.role}
                     </span>
@@ -198,16 +201,16 @@ export default function TeamPage() {
               </div>
 
               {/* Social Icons Link Footer */}
-              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center space-x-4 text-slate-500 text-xs">
+              <div className="mt-8 pt-4 border-t border-slate-100 flex items-center space-x-5 text-slate-500">
                 {member.githubUrl && (
                   <a
                     href={member.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-slate-900 transition-colors flex items-center gap-1.5 p-1 rounded hover:bg-slate-100"
+                    className="hover:text-slate-900 transition-colors flex items-center gap-2 p-1.5 rounded hover:bg-slate-50"
                     title="GitHub Profile"
                   >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
                       <path d="M9 18c-4.51 2-5-2-7-2" />
                     </svg>
@@ -219,10 +222,10 @@ export default function TeamPage() {
                     href={member.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 transition-colors flex items-center gap-1.5 p-1 rounded hover:bg-slate-100"
+                    className="hover:text-blue-600 transition-colors flex items-center gap-2 p-1.5 rounded hover:bg-slate-50"
                     title="LinkedIn Profile"
                   >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
                       <rect width="4" height="12" x="2" y="9" />
                       <circle cx="4" cy="4" r="2" />
