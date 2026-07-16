@@ -24,14 +24,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const session = localStorage.getItem('faculty_session');
-    if (session === 'authenticated') {
-      setIsAuthenticated(true);
-      setStatus("authenticated");
-    } else {
-      setIsAuthenticated(false);
-      setStatus("unauthenticated");
+    const sessionExpiry = localStorage.getItem('faculty_session_expiry');
+    if (sessionExpiry) {
+      const expirationTime = parseInt(sessionExpiry, 10);
+      if (Date.now() < expirationTime) {
+        setIsAuthenticated(true);
+        setStatus("authenticated");
+        return;
+      } else {
+        // Expired
+        localStorage.removeItem('faculty_session_expiry');
+      }
     }
+    
+    // Clear old auth if exists
+    localStorage.removeItem('faculty_session');
+    setIsAuthenticated(false);
+    setStatus("unauthenticated");
   }, []);
 
   /**
@@ -51,7 +60,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const inputHash = await sha256(password.trim());
     if (inputHash === storedHash) {
-      localStorage.setItem('faculty_session', 'authenticated');
+      const expirationTime = Date.now() + 6 * 60 * 60 * 1000;
+      localStorage.setItem('faculty_session_expiry', expirationTime.toString());
       setIsAuthenticated(true);
       setStatus("authenticated");
       return true;
@@ -60,6 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
+    localStorage.removeItem('faculty_session_expiry');
     localStorage.removeItem('faculty_session');
     setIsAuthenticated(false);
     setStatus("unauthenticated");

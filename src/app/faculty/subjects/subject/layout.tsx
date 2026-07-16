@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ChevronLeft, LayoutDashboard, FolderOpen, Gamepad2, Brain, Activity, Layers, Sparkles } from "lucide-react";
+import { ChevronLeft, LayoutDashboard, FolderOpen, Gamepad2, Brain, Activity, Layers, Sparkles, Users } from "lucide-react";
 import { fetchGAS } from "@/lib/apiClient";
 import { useSession } from "@/components/AuthProvider";
 import { redirect } from "next/navigation";
@@ -53,6 +53,7 @@ function FacultySubjectLayoutInner({ children }: { children: React.ReactNode }) 
     { name: "Quizzes", href: `/faculty/subjects/subject/quizzes?subjectId=${subjectId}`, icon: Brain },
     { name: "Flashcards", href: `/faculty/subjects/subject/flashcards?subjectId=${subjectId}`, icon: Layers },
     { name: "Content Matrix", href: `/faculty/subjects/subject/content-matrix?subjectId=${subjectId}`, icon: Activity },
+    { name: "Access Management", href: `/faculty/subjects/subject/access?subjectId=${subjectId}`, icon: Users },
   ];
 
   return (
@@ -60,19 +61,19 @@ function FacultySubjectLayoutInner({ children }: { children: React.ReactNode }) 
       {/* Top Header / Breadcrumbs */}
       <div className="bg-white border-b border-zinc-200 sticky top-0 z-10 shadow-sm">
         <div className="container mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3 flex-shrink-0 whitespace-nowrap">
             <Link 
               href="/faculty/dashboard" 
-              className="text-zinc-500 hover:text-primary transition-colors flex items-center text-sm font-medium"
+              className="text-zinc-500 hover:text-primary transition-colors flex items-center text-xs sm:text-sm font-medium"
             >
-              <ChevronLeft className="w-4 h-4 mr-1" />
+              <ChevronLeft className="w-3.5 h-3.5 mr-1" />
               Back to Dashboard
             </Link>
             <div className="h-4 w-[1px] bg-zinc-300 hidden sm:block"></div>
-            <h1 className="text-lg font-bold text-zinc-900 hidden sm:block">{subjectName}</h1>
+            <h1 className="text-base font-bold text-zinc-900 hidden sm:block truncate">{subjectName}</h1>
           </div>
           
-          <nav className="flex space-x-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-hide">
+          <nav className="flex space-x-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {navLinks.map((link) => {
               const Icon = link.icon;
               const isActive = pathname.startsWith(link.href);

@@ -9,7 +9,6 @@ import { fetchGAS } from "@/lib/apiClient";
 export function CreateSubjectForm() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -19,12 +18,11 @@ export function CreateSubjectForm() {
 
     setLoading(true);
     try {
-      const res = await fetchGAS("createSubject", { name, description, password });
+      const res = await fetchGAS("createSubject", { name, description });
 
       if (res && !res.error) {
         setName("");
         setDescription("");
-        setPassword("");
         window.location.reload(); // Refresh to see new data
       } else {
         alert(res?.error || "Failed to create subject");
@@ -60,18 +58,6 @@ export function CreateSubjectForm() {
           className="w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           disabled={loading}
         />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-zinc-700 mb-1">Access Password (Optional)</label>
-        <input
-          type="text"
-          placeholder="Leave blank for public access"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-          disabled={loading}
-        />
-        <p className="text-xs text-zinc-500 mt-1">If set, students must enter this password to access the subject.</p>
       </div>
       <Button type="submit" disabled={loading || !name} className="w-full">
         {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <PlusCircle className="w-4 h-4 mr-2" />}

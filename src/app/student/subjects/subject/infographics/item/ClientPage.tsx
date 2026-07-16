@@ -111,16 +111,7 @@ export default function InfographicViewerClientPage() {
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={handleDownload}
-            className="bg-purple-600 hover:bg-purple-500 text-white border-none font-semibold text-xs px-3.5 py-2 rounded-lg shadow-lg flex items-center gap-1.5 transition-all"
-          >
-            <Download className="w-4 h-4 shrink-0" /> <span className="hidden xs:inline">Download Copy</span>
-          </Button>
-        </div>
+
       </div>
 
       {/* Interactive Canvas */}

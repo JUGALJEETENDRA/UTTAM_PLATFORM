@@ -83,7 +83,7 @@ The application follows a lightweight static-content architecture, allowing cont
 Faculty Dashboard
         │
         ▼
-Google Apps Script
+Google Apps Script (Database & Auth)
         │
         ▼
 Google Sheets
@@ -92,13 +92,13 @@ Google Sheets
 Publish to Student Dashboard
         │
         ▼
-Generate static data.json
+Generate static data.json (AES-256 Encryption for Private Courses)
         │
         ▼
-GitHub Pages
+GitHub Pages (Encrypted Hosting)
         │
         ▼
-Students
+Students (Decrypt via Google Login)
 ```
 
 ---
@@ -107,6 +107,8 @@ Students
 
 - Lightweight client-side architecture
 - Fast static content delivery
+- Zero-knowledge hosting with AES-256 encrypted content payloads
+- Secure Google Auth whitelisting for private subjects
 - Centralized faculty content management
 - Interactive educational resources
 - Responsive user interface

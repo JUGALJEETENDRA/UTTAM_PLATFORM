@@ -49,7 +49,23 @@ NEXT_PUBLIC_GAS_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
 
 # Set to true for production, false for local development
 NEXT_PUBLIC_IS_DEPLOYED=false
+
+# Google OAuth Client ID for Student Authentication
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+
+# Base64 encoded hash of the faculty password (used to secure endpoints & encryption)
+NEXT_PUBLIC_FACULTY_PASSWORD_HASH=your_base64_password_hash
 ```
+
+## 4. Google Auth Setup (Client ID)
+
+To allow students to log in and access private subjects:
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Create a new Project.
+3. Go to **APIs & Services > OAuth consent screen**. Choose "External", fill in the app name, and add your email. You don't need to add scopes.
+4. Go to **Credentials > Create Credentials > OAuth client ID**.
+5. Choose **Web application**. Add your domains (e.g., `http://localhost:3000` and `https://your-github-username.github.io`) to the **Authorized JavaScript origins**.
+6. Copy the generated Client ID and paste it into your `.env.local` as `NEXT_PUBLIC_GOOGLE_CLIENT_ID`.
 
 ## 4. Running the Application
 
@@ -70,5 +86,11 @@ You can deploy the Next.js frontend to platforms like Vercel or GitHub Pages. Th
 **How the Pipeline Works:**
 1. **Trigger:** When faculty updates content (like adding a quiz or flashcard) and hits "Deploy to Production" from the faculty dashboard, Google Apps Script sends a `repository_dispatch` event to GitHub.
 2. **Action:** A GitHub Actions workflow (defined in `.github/workflows/deploy.yml`) is triggered.
-3. **Build:** Next.js fetches the latest data from the Google Apps Script API and statically generates the student portal (`next build`).
-4. **Deploy:** The newly built static files are deployed to GitHub Pages (or another configured host), giving students instant access to the latest content with zero database latency.
+3. **Build & Encrypt:** The build script (`scripts/fetch-data.js`) fetches the latest data from the Google Apps Script API. It uses the `NEXT_PUBLIC_FACULTY_PASSWORD_HASH` stored in your GitHub Secrets to request AES-256 data keys from GAS. It encrypts all private subject payloads and saves them to `data.json`.
+4. **Deploy:** The newly built static files, containing the safely encrypted `data.json`, are deployed to GitHub Pages. Students authenticate via Google to securely receive the decryption keys just-in-time.
+
+### GitHub Repository Secrets setup:
+To ensure the deployment works, you must configure the following secrets in your GitHub repository (**Settings > Secrets and variables > Actions**):
+- `NEXT_PUBLIC_GAS_URL` - Your Google Apps Script Web App URL.
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` - Your Google OAuth Client ID.
+- `NEXT_PUBLIC_FACULTY_PASSWORD_HASH` - Your faculty password Base64 hash (this secures the encryption endpoints in GAS).

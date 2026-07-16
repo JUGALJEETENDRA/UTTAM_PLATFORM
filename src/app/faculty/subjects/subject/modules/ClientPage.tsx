@@ -677,7 +677,7 @@ export default function ManageModulesPage() {
                             <option value="videoUrl">Video</option>
                             <option value="notes">Notes</option>
                             <option value="audio">Audio</option>
-                            <option value="didYouKnow">Did You Know</option>
+                            <option value="didYouKnow">Case Studies</option>
                             <option value="reference">Reference</option>
                             <option value="lessonContent">Text Lesson</option>
                             
@@ -776,14 +776,13 @@ export default function ManageModulesPage() {
                           {["didYouKnow", "reference"].includes(st.selectedResourceType || "") && (
                             <div className="mb-4 p-3 bg-blue-50/50 rounded-lg border border-blue-100 space-y-3">
                               <div>
-                                <label className="block text-[10px] font-bold text-blue-900 mb-1">Paste External Resource Link</label>
+                                <label className="block text-[10px] font-bold text-blue-900 mb-1">Paste External Resource Link or Iframe HTML</label>
                                 <div className="flex items-center space-x-2">
-                                  <input
-                                    type="text"
-                                    placeholder="https://..."
+                                  <textarea
+                                    placeholder="https://... or <iframe src=...>"
                                     value={st[`${st.selectedResourceType}Url` as keyof SubtopicForm] as string || ""}
                                     onChange={(e) => handleSubtopicChange(index, `${st.selectedResourceType}Url` as keyof SubtopicForm, e.target.value)}
-                                    className="w-full px-2 py-1.5 bg-white border border-blue-200 rounded text-blue-900 text-xs focus:outline-none focus:border-blue-400"
+                                    className="w-full px-2 py-1.5 bg-white border border-blue-200 rounded text-blue-900 text-xs focus:outline-none focus:border-blue-400 min-h-[60px]"
                                   />
                                 </div>
                               </div>
@@ -871,7 +870,7 @@ export default function ManageModulesPage() {
                           <div className="mt-4 space-y-2">
                             {st.videoUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎥 YouTube Video Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "videoUrl", "")}>Remove</Button></div>}
                             {(st.notesUrl && st.notesUrl !== "[]") && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📄 Notes File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "notesUrl", ""); handleSubtopicChange(index, "notesDownloadUrl", "")}}>Remove</Button></div>}
-                            {st.didYouKnowUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>💡 Did You Know Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "didYouKnowUrl", ""); handleSubtopicChange(index, "didYouKnowDownloadUrl", "")}}>Remove</Button></div>}
+                            {st.didYouKnowUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>💡 Case Studies Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "didYouKnowUrl", ""); handleSubtopicChange(index, "didYouKnowDownloadUrl", "")}}>Remove</Button></div>}
                             {st.referenceUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📚 Reference File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "referenceUrl", ""); handleSubtopicChange(index, "referenceDownloadUrl", "")}}>Remove</Button></div>}
                             {st.audioUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎵 Audio File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "audioUrl", ""); handleSubtopicChange(index, "audioDownloadUrl", "")}}>Remove</Button></div>}
                             {st.lessonContent && <div className="text-[11px] flex justify-between bg-indigo-50 p-2 rounded items-center text-indigo-700"><span>📝 Text Lesson Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "lessonContent", "")}>Remove</Button></div>}

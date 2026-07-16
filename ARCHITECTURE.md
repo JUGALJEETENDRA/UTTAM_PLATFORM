@@ -27,13 +27,14 @@ The application is strictly separated by roles at the routing level:
 - **Shadcn UI** acts as the foundational component library (e.g., `Card`, `Button`, `Input`, `Dialog`). These components are highly customizable and reside in `src/components/ui/`.
 - Icons are provided by **Lucide React**.
 
-### 2.3 Data Fetching (`fetchGAS`)
+### 2.3 Data Fetching & Security (`fetchGAS`)
 All network requests to the backend are routed through a single utility function located in `src/lib/apiClient.ts`: `fetchGAS(action, payload)`.
 
 **Key features of `fetchGAS`:**
 1. **Action Dispatching**: Takes a string `action` (e.g., `getModules`) and a JSON `payload`.
 2. **Offline/Static Fallback**: If `process.env.NEXT_PUBLIC_IS_DEPLOYED` is true and the user is NOT on a `/faculty` path, `fetchGAS` attempts to read from a local `data.json` file generated at build time. This allows the student dashboard to remain lightning-fast and functional even if the backend is slow or offline.
-3. **POST Requests**: When communicating with GAS, all requests are sent as `POST` to avoid URL length limits, with `Content-Type: text/plain` to satisfy CORS requirements for Google Apps Script.
+3. **Transparent Decryption**: For private subjects, the static `data.json` payloads are encrypted at build time using AES-256. `fetchGAS` automatically detects encrypted payloads, retrieves the AES `dataKey` from `localStorage` (obtained after Google Login), and decrypts the data in-memory before passing it to the React components.
+4. **POST Requests**: When communicating with GAS, all requests are sent as `POST` to avoid URL length limits, with `Content-Type: text/plain` to satisfy CORS requirements for Google Apps Script.
 
 ---
 

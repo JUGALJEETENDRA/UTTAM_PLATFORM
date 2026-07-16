@@ -38,6 +38,7 @@ jobs:
       - name: Fetch Data from GAS
         env:
           NEXT_PUBLIC_GAS_URL: ${{ secrets.NEXT_PUBLIC_GAS_URL }}
+          NEXT_PUBLIC_FACULTY_PASSWORD_HASH: ${{ secrets.NEXT_PUBLIC_FACULTY_PASSWORD_HASH }}
         run: node scripts/fetch-data.js
 
       - name: Build with Next.js
@@ -48,6 +49,7 @@ jobs:
           # then set NEXT_PUBLIC_FACULTY_PASSWORD_HASH in GitHub repo → Settings → Secrets.
           NEXT_PUBLIC_FACULTY_PASSWORD_HASH: ${{ secrets.NEXT_PUBLIC_FACULTY_PASSWORD_HASH }}
           NEXT_PUBLIC_BUILD_TIME: ${{ github.run_id }}
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
         run: npm run build
 
       # Add SPA fallback for GitHub Pages dynamic routes
