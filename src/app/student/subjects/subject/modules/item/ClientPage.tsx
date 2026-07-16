@@ -485,17 +485,14 @@ export default function ModuleDetailPage() {
                 <span className="truncate max-w-[250px] text-slate-800 font-bold">{activeNote.title}</span>
               </div>
             </div>
-            <a href={activeNote.url} target="_blank" rel="noopener noreferrer" className={activeNote.url ? "" : "hidden"}>
-              <Button variant="ghost" size="sm" className="h-8 text-[11px] font-bold text-[#1E3A8A] hover:bg-slate-50 border border-slate-200">
-                <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Open in Drive
-              </Button>
-            </a>
           </div>
           <div className="flex-1 w-full bg-slate-50 relative overflow-hidden">
             {activeNote.content ? (
               <div className="w-full h-full overflow-auto p-4 sm:p-8 relative pt-6 bg-white">
                 <div className="prose max-w-3xl mx-auto prose-slate" dangerouslySetInnerHTML={{ __html: marked.parse(activeNote.content || '') as string }} />
               </div>
+            ) : activeNote.url?.trim().startsWith('<iframe') ? (
+              <div className="w-full h-full border-0 absolute inset-0 pt-6 [&>iframe]:w-full [&>iframe]:h-full" dangerouslySetInnerHTML={{ __html: activeNote.url }} />
             ) : (
               <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0 pt-6" allow="autoplay; fullscreen" />
             )}
@@ -724,11 +721,11 @@ export default function ModuleDetailPage() {
                           {subtopic.didYouKnowUrl && (
                             <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
                               <Button 
-                                onClick={() => setActiveNote({ url: subtopic.didYouKnowUrl, title: "Did You Know", id: subtopic.id })}
+                                onClick={() => setActiveNote({ url: subtopic.didYouKnowUrl, title: "Case Studies", id: subtopic.id })}
                                 variant="outline" 
                                 className="w-full sm:w-auto bg-white hover:bg-amber-50/30 border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-700 text-[11px] sm:text-xs font-bold h-9 sm:h-10 px-2.5 sm:px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5"
                               >
-                                <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Did You Know
+                                <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Case Studies
                               </Button>
                             </ResourceLinkTracker>
                           )}
@@ -825,13 +822,6 @@ export default function ModuleDetailPage() {
               <span className="text-slate-400 hidden sm:inline">/</span>
               <span className="text-[#3776AB] font-bold tracking-wider truncate max-w-[300px]">{activeNote.title}</span>
             </div>
-            <div className="flex items-center gap-4 text-[10px] text-slate-500">
-              <a href={activeNote.url} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="sm" className="h-7 text-[10px] text-[#3776AB] border-[#3776AB]/30 hover:bg-[#3776AB]/10 px-2 rounded flex items-center gap-1">
-                  <ExternalLink className="w-3.5 h-3.5 mr-1" /> open_external()
-                </Button>
-              </a>
-            </div>
           </div>
           <div className="flex-1 w-full bg-[#1e1e1e] relative p-1">
             <div className="w-full h-full bg-white rounded-sm overflow-hidden pt-6">
@@ -839,6 +829,8 @@ export default function ModuleDetailPage() {
                 <div className="w-full h-full overflow-auto p-4 sm:p-8">
                   <div className="prose max-w-3xl mx-auto prose-slate" dangerouslySetInnerHTML={{ __html: marked.parse(activeNote.content || '') as string }} />
                 </div>
+              ) : activeNote.url?.trim().startsWith('<iframe') ? (
+                <div className="w-full h-full border-0 absolute inset-0 pt-6 [&>iframe]:w-full [&>iframe]:h-full" dangerouslySetInnerHTML={{ __html: activeNote.url }} />
               ) : (
                 <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0 pt-6" allow="autoplay; fullscreen" />
               )}
@@ -1074,7 +1066,7 @@ export default function ModuleDetailPage() {
                       {subtopic.didYouKnowUrl && (
                         <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
                           <Button 
-                            onClick={() => setActiveNote({ url: subtopic.didYouKnowUrl, title: "Did You Know", id: subtopic.id })}
+                            onClick={() => setActiveNote({ url: subtopic.didYouKnowUrl, title: "Case Studies", id: subtopic.id })}
                             variant="outline" 
                             className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 text-[10px] font-mono font-semibold h-8 px-2.5 rounded shadow-xs flex items-center gap-1"
                           >
@@ -1174,11 +1166,6 @@ export default function ModuleDetailPage() {
               <span className="truncate max-w-[400px]">{activeNote.title}</span>
             </div>
           </div>
-          <a href={activeNote.url} target="_blank" rel="noopener noreferrer" className={activeNote.url ? "" : "hidden"}>
-            <Button className={isPremiumTheme ? "h-8 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-[11px] font-bold font-sans" : t.btnGhost + " h-8 text-xs border-2 border-black bg-white"}>
-              <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> OPEN
-            </Button>
-          </a>
         </div>
         <div className={`flex-1 w-full bg-white relative overflow-hidden`}>
           
@@ -1186,6 +1173,8 @@ export default function ModuleDetailPage() {
             <div className="w-full h-full overflow-auto p-4 sm:p-8 bg-white">
               <div className="prose max-w-3xl mx-auto prose-slate" dangerouslySetInnerHTML={{ __html: marked.parse(activeNote.content || '') as string }} />
             </div>
+          ) : activeNote.url?.trim().startsWith('<iframe') ? (
+            <div className="w-full h-full border-0 absolute inset-0 [&>iframe]:w-full [&>iframe]:h-full" dangerouslySetInnerHTML={{ __html: activeNote.url }} />
           ) : activeNote.url ? (
             <iframe src={getExternalEmbedUrl(activeNote.url) || activeNote.url} className="w-full h-full border-0 absolute inset-0" allow="autoplay; fullscreen" />
           ) : (
@@ -1475,7 +1464,7 @@ export default function ModuleDetailPage() {
                       <ResourceLinkTracker subtopicId={subtopic.id} moduleId={id} resourceType="didYouKnow">
                         <motion.div whileHover={isPremiumTheme ? { y: -2 } : {}} className="w-full sm:w-auto">
                           <Button 
-                            onClick={() => setActiveNote({ url: subtopic.didYouKnowUrl, title: "Did You Know", id: subtopic.id })}
+                            onClick={() => setActiveNote({ url: subtopic.didYouKnowUrl, title: "Case Studies", id: subtopic.id })}
                             variant="outline" 
                             className={
                               (isPremiumTheme 
@@ -1483,7 +1472,7 @@ export default function ModuleDetailPage() {
                                 : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
                             }
                           >
-                            <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" /> Did You Know
+                            <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" /> Case Studies
                           </Button>
                         </motion.div>
                       </ResourceLinkTracker>

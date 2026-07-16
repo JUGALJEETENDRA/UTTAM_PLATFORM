@@ -18,7 +18,7 @@ const RESOURCE_TYPES = [
   { id: "mindmap", label: "Mind Map", icon: Map, color: "text-cyan-500", href: "mindmaps" },
   { id: "infographic", label: "Infographic", icon: Map, color: "text-teal-500", href: "infographics" },
   { id: "reference", label: "Reference", icon: BookOpen, color: "text-emerald-500", href: "modules" },
-  { id: "didYouKnow", label: "Did You Know", icon: FileQuestion, color: "text-amber-500", href: "modules" },
+  { id: "didYouKnow", label: "Case Studies", icon: FileQuestion, color: "text-amber-500", href: "modules" },
   { id: "lessonContent", label: "Text Lesson", icon: FileText, color: "text-indigo-500", href: "modules" },
 ];
 
