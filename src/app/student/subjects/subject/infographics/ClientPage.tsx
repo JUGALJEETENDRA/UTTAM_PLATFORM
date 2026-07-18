@@ -58,6 +58,19 @@ const THEME_MAP: Record<string, {
     textMuted: "text-slate-500 font-medium font-sans",
     badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
     pattern: ""
+  },
+  "startup engineering": {
+    bg: "bg-slate-50 text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-550 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-blue-600",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
+    pattern: ""
   }
 };
 
@@ -129,35 +142,47 @@ export default function StudentInfographicsList() {
   const isDigitalBusiness = subjectId === 'id_pryay1ykw' || subjectNameLower.includes("digital business");
   const isUiProgramming = subjectId === 'id_mn573l5e5' || String(subjectName || "").toLowerCase().includes("ui programming");
   const isPythonProgramming = subjectId === 'id_hdzqxse2n' || String(subjectName || "").toLowerCase().includes("python");
-  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : isDigitalBusiness ? "digital business" : "";
+  const isStartupEngineering = subjectNameLower.includes("startup") || subjectNameLower.includes("engineering");
+  const themeKey = isUiProgramming 
+    ? "ui programming" 
+    : isPythonProgramming 
+      ? "python programming" 
+      : isDigitalBusiness 
+        ? "digital business" 
+        : isStartupEngineering 
+          ? "startup engineering" 
+          : "";
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
-  const isPremiumTheme = isUiProgramming || isPythonProgramming || isDigitalBusiness;
+  const isPremiumTheme = isUiProgramming || isPythonProgramming || isDigitalBusiness || isStartupEngineering;
 
-  const renderInfographicPlaceholder = () => (
-    <svg className="w-full h-full text-slate-350 bg-slate-50 border-b border-slate-200" viewBox="0 0 200 120" fill="none" stroke="currentColor" strokeWidth="1">
-      <rect x="0" y="0" width="200" height="120" fill="#F8FAFC" />
-      <circle cx="100" cy="60" r="14" stroke="#7C3AED" strokeWidth="1.5" fill="#7C3AED" fillOpacity="0.05" />
-      <text x="88" y="63" fill="#7C3AED" fontSize="8" fontWeight="bold" fontFamily="monospace">ROOT</text>
-      
-      <path d="M 100 46 L 100 24 M 100 74 L 100 96 M 86 60 L 50 60 M 114 60 L 150 60" stroke="#94A3B8" strokeWidth="1.2" strokeDasharray="3 3" />
-      
-      <circle cx="100" cy="20" r="8" stroke="#3B82F6" strokeWidth="1.2" fill="#3B82F6" fillOpacity="0.05" />
-      <circle cx="100" cy="100" r="8" stroke="#10B981" strokeWidth="1.2" fill="#10B981" fillOpacity="0.05" />
-      <circle cx="42" cy="60" r="8" stroke="#F59E0B" strokeWidth="1.2" fill="#F59E0B" fillOpacity="0.05" />
-      <circle cx="158" cy="60" r="8" stroke="#EC4899" strokeWidth="1.2" fill="#EC4899" fillOpacity="0.05" />
-      
-      <text x="96" y="23" fill="#3B82F6" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M1</text>
-      <text x="96" y="103" fill="#10B981" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M2</text>
-      <text x="38" y="63" fill="#F59E0B" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M3</text>
-      <text x="154" y="63" fill="#EC4899" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M4</text>
-      
-      <path d="M 10 10 L 190 10 M 10 110 L 190 110" stroke="#E2E8F0" strokeWidth="0.5" />
-      <circle cx="10" cy="10" r="1.5" fill="#EF4444" opacity="0.4" />
-      <circle cx="190" cy="10" r="1.5" fill="#EF4444" opacity="0.4" />
-      <circle cx="10" cy="110" r="1.5" fill="#EF4444" opacity="0.4" />
-      <circle cx="190" cy="110" r="1.5" fill="#EF4444" opacity="0.4" />
-    </svg>
-  );
+  const renderInfographicPlaceholder = () => {
+    const primaryColorHex = isStartupEngineering ? "#2563EB" : "#7C3AED";
+    return (
+      <svg className="w-full h-full text-slate-350 bg-slate-50 border-b border-slate-200" viewBox="0 0 200 120" fill="none" stroke="currentColor" strokeWidth="1">
+        <rect x="0" y="0" width="200" height="120" fill="#F8FAFC" />
+        <circle cx="100" cy="60" r="14" stroke={primaryColorHex} strokeWidth="1.5" fill={primaryColorHex} fillOpacity="0.05" />
+        <text x="88" y="63" fill={primaryColorHex} fontSize="8" fontWeight="bold" fontFamily="monospace">ROOT</text>
+        
+        <path d="M 100 46 L 100 24 M 100 74 L 100 96 M 86 60 L 50 60 M 114 60 L 150 60" stroke="#94A3B8" strokeWidth="1.2" strokeDasharray="3 3" />
+        
+        <circle cx="100" cy="20" r="8" stroke="#3B82F6" strokeWidth="1.2" fill="#3B82F6" fillOpacity="0.05" />
+        <circle cx="100" cy="100" r="8" stroke="#10B981" strokeWidth="1.2" fill="#10B981" fillOpacity="0.05" />
+        <circle cx="42" cy="60" r="8" stroke="#F59E0B" strokeWidth="1.2" fill="#F59E0B" fillOpacity="0.05" />
+        <circle cx="158" cy="60" r="8" stroke="#EC4899" strokeWidth="1.2" fill="#EC4899" fillOpacity="0.05" />
+        
+        <text x="96" y="23" fill="#3B82F6" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M1</text>
+        <text x="96" y="103" fill="#10B981" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M2</text>
+        <text x="38" y="63" fill="#F59E0B" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M3</text>
+        <text x="154" y="63" fill="#EC4899" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M4</text>
+        
+        <path d="M 10 10 L 190 10 M 10 110 L 190 110" stroke="#E2E8F0" strokeWidth="0.5" />
+        <circle cx="10" cy="10" r="1.5" fill="#EF4444" opacity="0.4" />
+        <circle cx="190" cy="10" r="1.5" fill="#EF4444" opacity="0.4" />
+        <circle cx="10" cy="110" r="1.5" fill="#EF4444" opacity="0.4" />
+        <circle cx="190" cy="110" r="1.5" fill="#EF4444" opacity="0.4" />
+      </svg>
+    );
+  };
 
   if (loading) {
     return (
@@ -230,6 +255,8 @@ export default function StudentInfographicsList() {
             type="infographics" 
             title="Visual Infographics" 
             subtitle="Visual explanations of key concepts." 
+            colorClass={isStartupEngineering ? "bg-blue-600/8 border-blue-600/15 text-blue-600" : undefined}
+            iconColor={isStartupEngineering ? "stroke-blue-600" : undefined}
           />
         </div>
 
@@ -279,7 +306,7 @@ export default function StudentInfographicsList() {
                     
                     {module && (
                       <div className={`absolute top-3 left-3 px-2.5 py-1 rounded shadow-xs ${isPremiumTheme ? "bg-white/95 border border-slate-200" : "bg-white/90 backdrop-blur-sm"}`}>
-                        <span className={`text-[10px] font-bold uppercase tracking-wider ${isPremiumTheme ? "text-slate-700 font-mono" : "text-purple-700"}`}>Module {module.moduleNo}</span>
+                        <span className={`text-[10px] font-bold uppercase tracking-wider ${isPremiumTheme ? (isStartupEngineering ? "text-blue-600 font-mono" : "text-slate-700 font-mono") : "text-purple-700"}`}>Module {module.moduleNo}</span>
                       </div>
                     )}
                     
@@ -288,7 +315,7 @@ export default function StudentInfographicsList() {
                         ? "bg-[#0A0E1A]/40 backdrop-blur-xs" 
                         : "bg-gradient-to-t from-purple-900/60 to-transparent"
                     }`}>
-                      <Button className={`w-full ${isPremiumTheme ? "bg-white text-slate-900 border border-slate-200 font-mono text-xs uppercase hover:bg-slate-50 shadow-sm" : "bg-white text-purple-700 hover:bg-zinc-100"}`}>
+                      <Button className={`w-full ${isPremiumTheme ? (isStartupEngineering ? "bg-blue-600 hover:bg-blue-700 text-white font-sans text-xs uppercase shadow-sm" : "bg-white text-slate-900 border border-slate-200 font-mono text-xs uppercase hover:bg-slate-50 shadow-sm") : "bg-white text-purple-700 hover:bg-zinc-100"}`}>
                         Open Viewer <ExternalLink className="w-4 h-4 ml-2" />
                       </Button>
                     </div>

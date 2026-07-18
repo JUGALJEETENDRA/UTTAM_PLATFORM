@@ -16,6 +16,7 @@ export default function InfographicViewerClientPage() {
   const router = useRouter();
 
   const [infographic, setInfographic] = useState<any>(null);
+  const [subjectName, setSubjectName] = useState("");
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -43,10 +44,17 @@ export default function InfographicViewerClientPage() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const mapsData = await fetchGAS("getInfographics", { subjectId });
+      const [mapsData, subjects] = await Promise.all([
+        fetchGAS("getInfographics", { subjectId }),
+        fetchGAS("getSubjects")
+      ]);
       const maps = Array.isArray(mapsData) ? mapsData : [];
       const found = maps.find(m => m.id === mapId);
       setInfographic(found || null);
+      if (Array.isArray(subjects)) {
+        const sub = subjects.find(s => s.id === subjectId);
+        if (sub) setSubjectName(sub.name || "");
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -61,10 +69,12 @@ export default function InfographicViewerClientPage() {
     }
   }, [subjectId, mapId]);
 
+  const isStartupEngineering = (subjectName || "").toLowerCase().includes("startup") || (subjectName || "").toLowerCase().includes("engineering");
+
   if (!mounted) {
     return (
       <div className="flex h-[80vh] items-center justify-center flex-col space-y-4 bg-zinc-950">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${isStartupEngineering ? 'border-blue-600' : 'border-purple-600'}`}></div>
         <p className="text-zinc-500 font-medium">Initializing Canvas...</p>
       </div>
     );
@@ -73,7 +83,7 @@ export default function InfographicViewerClientPage() {
   if (loading) {
     return (
       <div className="flex h-[80vh] items-center justify-center flex-col space-y-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${isStartupEngineering ? 'border-blue-600' : 'border-purple-600'}`}></div>
         <p className="text-zinc-500 font-medium">Loading Interactive Canvas...</p>
       </div>
     );
@@ -104,7 +114,7 @@ export default function InfographicViewerClientPage() {
           </Button>
           <div>
             <h1 className="text-white font-bold text-sm sm:text-lg flex items-center truncate max-w-[140px] xs:max-w-[200px] sm:max-w-xs md:max-w-md">
-              <Brain className="w-5 h-5 mr-2 text-purple-400 shrink-0" />
+              <Brain className={`w-5 h-5 mr-2 shrink-0 ${isStartupEngineering ? 'text-blue-400' : 'text-purple-400'}`} />
               {infographic.title}
             </h1>
             <p className="text-white/60 text-[10px] sm:text-xs mt-0.5 hidden xs:block">Interactive Viewer</p>

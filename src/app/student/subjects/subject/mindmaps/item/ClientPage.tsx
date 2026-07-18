@@ -14,6 +14,7 @@ export default function MindMapViewerClientPage() {
   const router = useRouter();
 
   const [mindMap, setMindMap] = useState<any>(null);
+  const [subjectName, setSubjectName] = useState("");
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -41,10 +42,17 @@ export default function MindMapViewerClientPage() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const mapsData = await fetchGAS("getMindMaps", { subjectId });
+      const [mapsData, subjects] = await Promise.all([
+        fetchGAS("getMindMaps", { subjectId }),
+        fetchGAS("getSubjects")
+      ]);
       const maps = Array.isArray(mapsData) ? mapsData : [];
       const found = maps.find(m => m.id === mapId);
       setMindMap(found || null);
+      if (Array.isArray(subjects)) {
+        const sub = subjects.find(s => s.id === subjectId);
+        if (sub) setSubjectName(sub.name || "");
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -59,10 +67,12 @@ export default function MindMapViewerClientPage() {
     }
   }, [subjectId, mapId]);
 
+  const isStartupEngineering = (subjectName || "").toLowerCase().includes("startup") || (subjectName || "").toLowerCase().includes("engineering");
+
   if (!mounted) {
     return (
       <div className="flex h-[80vh] items-center justify-center flex-col space-y-4 bg-zinc-950">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${isStartupEngineering ? 'border-blue-600' : 'border-purple-600'}`}></div>
         <p className="text-zinc-500 font-medium">Initializing Canvas...</p>
       </div>
     );
@@ -71,7 +81,7 @@ export default function MindMapViewerClientPage() {
   if (loading) {
     return (
       <div className="flex h-[80vh] items-center justify-center flex-col space-y-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${isStartupEngineering ? 'border-blue-600' : 'border-purple-600'}`}></div>
         <p className="text-zinc-500 font-medium">Loading Interactive Canvas...</p>
       </div>
     );
@@ -102,7 +112,7 @@ export default function MindMapViewerClientPage() {
           </Button>
           <div>
             <h1 className="text-white font-bold text-sm sm:text-lg flex items-center truncate max-w-[140px] xs:max-w-[200px] sm:max-w-xs md:max-w-md">
-              <Brain className="w-5 h-5 mr-2 text-purple-400 shrink-0" />
+              <Brain className={`w-5 h-5 mr-2 shrink-0 ${isStartupEngineering ? 'text-blue-400' : 'text-purple-400'}`} />
               {mindMap.title}
             </h1>
             <p className="text-white/60 text-[10px] sm:text-xs mt-0.5 hidden xs:block">Interactive Viewer</p>
@@ -173,7 +183,7 @@ export default function MindMapViewerClientPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-purple-400 hover:text-purple-300 hover:bg-zinc-800 rounded-lg h-10 w-10"
+                        className={`hover:bg-zinc-800 rounded-lg h-10 w-10 ${isStartupEngineering ? 'text-blue-400 hover:text-blue-300' : 'text-purple-400 hover:text-purple-300'}`}
                         onClick={() => resetTransform()}
                         title="Reset View"
                       >

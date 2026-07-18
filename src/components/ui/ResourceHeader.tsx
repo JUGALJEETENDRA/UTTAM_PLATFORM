@@ -40,6 +40,8 @@ interface ResourceHeaderProps {
   title: string;
   subtitle?: string;
   className?: string;
+  colorClass?: string;
+  iconColor?: string;
 }
 
 const TYPE_CONFIGS: Record<ResourceType, {
@@ -140,18 +142,20 @@ const TYPE_CONFIGS: Record<ResourceType, {
   },
 };
 
-export default function ResourceHeader({ type, title, subtitle, className = "" }: ResourceHeaderProps) {
+export default function ResourceHeader({ type, title, subtitle, className = "", colorClass, iconColor }: ResourceHeaderProps) {
   const config = TYPE_CONFIGS[type];
   if (!config) return null;
 
-  const { Icon, subtitle: defaultSubtitle, colorClass, iconColor } = config;
+  const { Icon, subtitle: defaultSubtitle, colorClass: defaultConfigColor, iconColor: defaultConfigIconColor } = config;
   const displaySubtitle = subtitle || defaultSubtitle;
+  const activeColorClass = colorClass || defaultConfigColor;
+  const activeIconColor = iconColor || defaultConfigIconColor;
 
   return (
     <div className={`flex items-start gap-4 select-none ${className}`}>
       {/* Icon Container: 44x44px, rounded-[14px], 7% opacity background */}
-      <div className={`w-11 h-11 flex-shrink-0 flex items-center justify-center rounded-[14px] border ${colorClass}`}>
-        <Icon className={`w-[22px] h-[22px] ${iconColor}`} strokeWidth={1.8} />
+      <div className={`w-11 h-11 flex-shrink-0 flex items-center justify-center rounded-[14px] border ${activeColorClass}`}>
+        <Icon className={`w-[22px] h-[22px] ${activeIconColor}`} strokeWidth={1.8} />
       </div>
 
       {/* Text Container: Title (18px) and Subtitle (14px, muted) */}
