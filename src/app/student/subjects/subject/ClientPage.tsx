@@ -34,21 +34,7 @@ const THEME_MAP: Record<string, {
   textMuted: string;
   badge: string;
   pattern: string;
-<<<<<<< HEAD
   iconColor: string;
-=======
-  primaryHex: string;
-  primaryText: string;
-  primaryBg: string;
-  primaryBorder: string;
-  primaryHoverText: string;
-  primaryHoverBorder: string;
-  primaryGroupHoverText: string;
-  primaryGroupHoverBg: string;
-  primaryGroupHoverBorder: string;
-  gradientFrom: string;
-  gradientTo: string;
->>>>>>> 04f762d (fixed locally server running bugs)
 }> = {
   "ui programming": {
     bg: "bg-slate-50 text-slate-800 font-sans",
@@ -62,21 +48,22 @@ const THEME_MAP: Record<string, {
     textMuted: "text-slate-500 font-medium font-sans",
     badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
     pattern: "",
-<<<<<<< HEAD
     iconColor: "text-indigo-600"
-=======
-    primaryHex: "#4F46E5",
-    primaryText: "text-indigo-600",
-    primaryBg: "bg-indigo-50",
-    primaryBorder: "border-indigo-200",
-    primaryHoverText: "hover:text-indigo-750",
-    primaryHoverBorder: "hover:border-indigo-400",
-    primaryGroupHoverText: "group-hover:text-indigo-700",
-    primaryGroupHoverBg: "group-hover:bg-indigo-600",
-    primaryGroupHoverBorder: "group-hover:border-indigo-600",
-    gradientFrom: "from-indigo-500",
-    gradientTo: "to-indigo-700",
->>>>>>> 04f762d (fixed locally server running bugs)
+  },
+
+  "startup engineering": {
+    bg: "bg-slate-50 text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-blue-600",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
+    pattern: "",
+    iconColor: "text-blue-600"
   },
 
   "python programming": {
@@ -91,46 +78,7 @@ const THEME_MAP: Record<string, {
     textMuted: "text-zinc-400 font-mono",
     badge: "bg-[#3776AB] text-white border-2 border-[#FFD43B] rounded-none font-mono",
     pattern: "python-matrix-terminal",
-<<<<<<< HEAD
     iconColor: "text-[#FFD43B]"
-=======
-    primaryHex: "#FFD43B",
-    primaryText: "text-[#FFD43B]",
-    primaryBg: "bg-[#1C1917]",
-    primaryBorder: "border-[#FFD43B]",
-    primaryHoverText: "hover:text-[#FFD43B]",
-    primaryHoverBorder: "hover:border-[#FFD43B]",
-    primaryGroupHoverText: "group-hover:text-[#FFD43B]",
-    primaryGroupHoverBg: "group-hover:bg-[#FFD43B]",
-    primaryGroupHoverBorder: "group-hover:border-[#FFD43B]",
-    gradientFrom: "from-[#3776AB]",
-    gradientTo: "to-[#FFD43B]",
-  },
-
-  "startup engineering": {
-    bg: "bg-slate-50 text-slate-800 font-sans",
-    cardBg: "bg-white",
-    borderClass: "border border-slate-200 rounded-xl",
-    shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-550 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
-    titleHover: "group-hover:text-blue-600",
-    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
-    textMuted: "text-slate-500 font-medium font-sans",
-    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
-    pattern: "",
-    primaryHex: "#2563EB",
-    primaryText: "text-blue-600",
-    primaryBg: "bg-blue-50",
-    primaryBorder: "border-blue-200",
-    primaryHoverText: "hover:text-blue-700",
-    primaryHoverBorder: "hover:border-blue-400",
-    primaryGroupHoverText: "group-hover:text-blue-700",
-    primaryGroupHoverBg: "group-hover:bg-blue-600",
-    primaryGroupHoverBorder: "group-hover:border-blue-600",
-    gradientFrom: "from-sky-400",
-    gradientTo: "to-blue-600",
->>>>>>> 04f762d (fixed locally server running bugs)
   }
 };
 
@@ -146,18 +94,7 @@ const DEFAULT_THEME = {
   textMuted: "text-zinc-700 font-medium",
   badge: "bg-zinc-200 text-black border-2 border-black rounded-none",
   pattern: "",
-  iconColor: "text-[#2dd4bf]",
-  primaryHex: "#7C3AED",
-  primaryText: "text-[#7C3AED]",
-  primaryBg: "bg-purple-50",
-  primaryBorder: "border-purple-200",
-  primaryHoverText: "hover:text-[#7C3AED]",
-  primaryHoverBorder: "hover:border-purple-400",
-  primaryGroupHoverText: "group-hover:text-purple-700",
-  primaryGroupHoverBg: "group-hover:bg-purple-600",
-  primaryGroupHoverBorder: "group-hover:border-purple-600",
-  gradientFrom: "from-indigo-500",
-  gradientTo: "to-purple-500",
+  iconColor: "text-[#2dd4bf]"
 };
 
 const brutalistThemeColors = [
@@ -178,16 +115,12 @@ const getDynamicTheme = (subjectId: string | null) => {
   }
   const colorIndex = Math.abs(hash) % brutalistThemeColors.length;
   const theme = brutalistThemeColors[colorIndex];
-  const cleanHex = theme.text.includes("[#") ? theme.text.substring(theme.text.indexOf("[") + 1, theme.text.indexOf("]")) : "#7C3AED";
   
   return {
     ...DEFAULT_THEME,
     btnPrimary: `${theme.bg} text-black hover:opacity-90 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`,
     iconColor: theme.text,
     titleHover: theme.hover,
-    primaryHex: cleanHex,
-    primaryText: theme.text,
-    primaryHoverText: `hover:${theme.text}`,
   };
 };
 
@@ -2858,11 +2791,7 @@ export default function StudentDashboard() {
     );
   };
 
-  const themeKey = isUiProgramming 
-    ? "ui programming" 
-    : (subjectNameLower.includes("python") 
-      ? "python programming" 
-      : (isStartupEngineering ? "startup engineering" : ""));
+  const themeKey = isUiProgramming ? "ui programming" : (isStartupEngineering ? "startup engineering" : (subjectNameLower.includes("python") ? "python programming" : ""));
   const t = THEME_MAP[themeKey] || getDynamicTheme(subject?.id || subjectId);
   const isPremiumTheme = isUiProgramming || isStartupEngineering;
 
@@ -2911,7 +2840,7 @@ export default function StudentDashboard() {
         /* Microinteractions: grows underline from left */
         .design-studio-link {
           position: relative;
-          color: ${t.primaryHex};
+          color: #7C3AED;
           font-weight: 600;
         }
         .design-studio-link::after {
@@ -2922,7 +2851,7 @@ export default function StudentDashboard() {
           height: 2px;
           bottom: -2px;
           left: 0;
-          background-color: ${t.primaryHex};
+          background-color: #7C3AED;
           transform-origin: bottom left;
           transition: transform 0.25s ease-out;
         }
@@ -2942,27 +2871,16 @@ export default function StudentDashboard() {
               <span className="w-3 h-3 rounded-full bg-[#22c55e] border border-black" />
             </div>
             <span className="text-slate-300">|</span>
-<<<<<<< HEAD
             <span className={`font-black ${t.iconColor}`}>DESIGN STUDIO</span>
-=======
-            <span className="font-bold" style={{ color: t.primaryHex }}>DESIGN STUDIO</span>
->>>>>>> 04f762d (fixed locally server running bugs)
             <span className="text-slate-300">/</span>
             <span className="text-black font-black uppercase tracking-wider truncate max-w-[200px] md:max-w-none">{subject.name}</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-4 w-full md:w-auto font-ibm">
-<<<<<<< HEAD
             {/* Design Metrics - Styled Neobrutalist */}
             <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
-              <span className="text-indigo-600 font-bold">Design System:</span>
+              <span className={`${isStartupEngineering ? 'text-blue-600' : 'text-indigo-600'} font-bold`}>Design System:</span>
               <span className="text-black font-black">88.4%</span>
-=======
-            {/* Design Metrics */}
-            <div className="flex items-center gap-2 bg-indigo-50/80 border border-indigo-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default">
-              <span className="text-indigo-600 font-semibold">Design System:</span>
-              <span className="font-bold" style={{ color: t.primaryHex }}>88.4%</span>
->>>>>>> 04f762d (fixed locally server running bugs)
             </div>
             <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
               <span className="text-emerald-600 font-bold">Figma Sync:</span>
@@ -2971,15 +2889,9 @@ export default function StudentDashboard() {
                 <span className="text-emerald-800 font-black uppercase">SUCCESSFUL</span>
               </span>
             </div>
-<<<<<<< HEAD
             <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
-              <span className="text-purple-600 font-bold">Accessibility:</span>
-              <span className="text-purple-800 font-black">98.4%</span>
-=======
-            <div className={`flex items-center gap-2 ${t.primaryBg}/80 border ${t.primaryBorder} px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default`}>
-              <span className={`${t.primaryText} font-semibold`}>Accessibility:</span>
-              <span className={`${t.primaryText} font-bold`}>98.4%</span>
->>>>>>> 04f762d (fixed locally server running bugs)
+              <span className={`${isStartupEngineering ? 'text-blue-600' : 'text-purple-600'} font-bold`}>Accessibility:</span>
+              <span className={`${isStartupEngineering ? 'text-blue-800' : 'text-purple-800'} font-black`}>98.4%</span>
             </div>
             <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default font-mono">
               <span className="text-amber-600 font-bold">UX Score:</span>
@@ -2988,7 +2900,6 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-<<<<<<< HEAD
         {/* UI LEARNING MODULES */}
         <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 relative z-10 transition-all duration-300`}>
           <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
@@ -3055,18 +2966,6 @@ export default function StudentDashboard() {
                 <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
                   <span>View All Quizzes</span>
                   <ArrowRight className="w-4 h-4" />
-=======
-          {/* UI LEARNING MODULES */}
-          <div className="bg-white border border-slate-200 rounded p-6 shadow-sm relative z-10">
-            <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-              <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2" style={{ color: t.primaryHex }}>
-                <Layers className="w-4 h-4" style={{ color: t.primaryHex }} /> {subject.name} Learning Modules
-              </h3>
-              <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
-                <Button variant="ghost" className={`text-slate-700 ${t.primaryHoverText} font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn`}>
-                  <span>View All Modules</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
->>>>>>> 04f762d (fixed locally server running bugs)
                 </Button>
               </Link>
             </div>
@@ -3074,38 +2973,9 @@ export default function StudentDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {quizzesWithAttempts.slice(0, 6).map((quiz: any) => {
                 return (
-<<<<<<< HEAD
                   <div key={quiz.id} className="bg-white border-2 border-black rounded-none p-4 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-150 group">
                     <div className="flex justify-start items-start mb-2">
                       <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-mono font-bold tracking-widest uppercase`}>🏆 PRACTICE QUIZ</span>
-=======
-                  <Link key={mod.id} href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
-                    <div className={`bg-slate-50 border border-slate-200 rounded p-4 ${t.primaryHoverBorder} hover:bg-white hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 group h-full flex flex-col justify-between cursor-pointer relative overflow-hidden`}>
-                      {/* Subtle accent bar for UI premium feel */}
-                      <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${t.gradientFrom} ${t.gradientTo} opacity-0 group-hover:opacity-100 transition-opacity`} />
-                      
-                      <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <span className={`text-[10px] ${t.primaryText} ${t.primaryBg} border ${t.primaryBorder} px-2 py-0.5 rounded font-mono font-bold tracking-widest uppercase`}>
-                            MODULE 0{mod.moduleNo || (idx + 1)}
-                          </span>
-                        </div>
-                        <h4 className={`font-mono text-xs font-bold text-slate-800 mb-2 line-clamp-2 ${t.primaryGroupHoverText} transition-colors`}>
-                          {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
-                        </h4>
-                        <p className="text-[10px] text-slate-500 line-clamp-2 mb-4 font-sans leading-relaxed">
-                          {mod.co || "Introduces core concepts and key terminology."}
-                        </p>
-                      </div>
-                      <div className="pt-2.5 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                        <span className="flex items-center gap-1">
-                          <Book className="w-3.5 h-3.5" /> {subtopicsCount} Subtopics
-                        </span>
-                        <span className={`${t.primaryText} font-bold group-hover:translate-x-1 transition-transform flex items-center gap-0.5`}>
-                          Study <ArrowRight className="w-3 h-3" />
-                        </span>
-                      </div>
->>>>>>> 04f762d (fixed locally server running bugs)
                     </div>
                     <h4 className={`font-mono text-xs font-bold text-black mb-3 line-clamp-1 ${t.titleHover} transition-colors`}>{getQuizDisplayTitle(quiz, modules)}</h4>
                     <div className="mt-4 flex justify-end">
@@ -3144,62 +3014,12 @@ export default function StudentDashboard() {
                 const keywordsList = ["Figma", "Spacing", "Colors", "A11y"];
                 const kw = keywordsList[idx % keywordsList.length];
 
-<<<<<<< HEAD
                 return (
                   <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
                     <div className="bg-white border-2 border-black rounded-none p-3.5 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-150 flex justify-between items-center cursor-pointer group">
                       <div className="flex items-center gap-2 overflow-hidden">
                         <span className={`font-mono text-[10px] font-bold px-2 py-0.5 ${t.badge} flex-shrink-0 transition-colors`}>{kw}</span>
                         <span className={`font-mono text-xs text-black font-bold ${t.titleHover} transition-colors truncate`}>{getFlashcardDisplayTitle(deck, modules)}</span>
-=======
-              {/* 2. Quizzes & Assessments */}
-              <div className="lg:col-span-2 bg-white border border-slate-200 rounded p-6 shadow-sm">
-                <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                  <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2" style={{ color: t.primaryHex }}>
-                    <Component className="w-4 h-4" style={{ color: t.primaryHex }} /> Interactive Design Challenges
-                  </h3>
-                  <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
-                    <Button variant="ghost" className={`text-slate-700 ${t.primaryHoverText} font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn`}>
-                      <span>View All Quizzes</span>
-                      <ArrowRight className="w-4 h-4 ml-1.5" />
-                    </Button>
-                  </Link>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {quizzesWithAttempts.slice(0, 6).map((quiz: any, idx: number) => {
-                    const difficulty = idx % 2 === 0 ? "Medium" : "Hard";
-                    const isHard = difficulty === "Hard";
-
-                    // Color configurations
-                    let themeColor = isHard ? "text-purple-700 bg-purple-50 border-purple-200" : "text-indigo-700 bg-indigo-50 border-indigo-200";
-                    let btnColorClass = isHard
-                      ? "bg-purple-600 hover:bg-purple-700 border-purple-700 shadow-purple-100"
-                      : "bg-indigo-500 hover:bg-indigo-600 border-indigo-600 shadow-indigo-100";
-                    
-                    if (isStartupEngineering) {
-                      themeColor = isHard ? "text-blue-700 bg-blue-50 border-blue-200" : "text-sky-700 bg-sky-50 border-sky-200";
-                      btnColorClass = isHard
-                        ? "bg-blue-600 hover:bg-blue-700 border-blue-700 shadow-blue-100"
-                        : "bg-sky-500 hover:bg-sky-600 border-sky-600 shadow-sky-100";
-                    }
-
-                    return (
-                      <div key={quiz.id} className={`bg-slate-50 border border-slate-200 rounded p-4 ${t.primaryHoverBorder} hover:bg-white hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 group`}>
-                        <div className="flex justify-start items-start mb-2">
-                          <span className={`text-[10px] ${themeColor} border px-2 py-0.5 rounded font-mono font-bold tracking-widest uppercase`}>
-                            {isStartupEngineering ? "🚀 CHALLENGE" : "🎨 UI CHALLENGE"}
-                          </span>
-                        </div>
-                        <h4 className={`font-sans text-xs font-bold text-slate-800 mb-3 line-clamp-1 ${t.primaryGroupHoverText} transition-colors`}>{getQuizDisplayTitle(quiz, modules)}</h4>
-                        <div className="mt-4 flex justify-end">
-                          <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`}>
-                            <Button className={`${btnColorClass} text-white border rounded font-mono text-[10px] py-1.5 px-4 h-8 uppercase tracking-wider hover:scale-105 active:scale-95 hover:shadow-md transition-all duration-200`}>
-                              Start Challenge →
-                            </Button>
-                          </Link>
-                        </div>
->>>>>>> 04f762d (fixed locally server running bugs)
                       </div>
                       <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-mono font-bold whitespace-nowrap`}>{deck.cards?.length || 0} CARDS</span>
                     </div>
@@ -3215,7 +3035,6 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-<<<<<<< HEAD
         {/* CONNECTED ARCHITECTURE DIAGRAMS (MINDMAPS) */}
         <div className="w-full relative z-10 mt-6">
           <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 flex flex-col justify-between transition-all duration-300`}>
@@ -3261,212 +3080,6 @@ export default function StudentDashboard() {
                 </div>
               </div>
             </div>
-=======
-            {/* 3. Flashcard Decks */}
-            <div className="bg-white border border-slate-200 rounded p-6 shadow-sm">
-              <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2" style={{ color: t.primaryHex }}>
-                  <Palette className="w-4 h-4" style={{ color: t.primaryHex }} /> {subject.name} Flashcard Decks
-                </h3>
-                <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
-                  <Button variant="ghost" className={`text-slate-700 ${t.primaryHoverText} font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn`}>
-                    <span>View All Decks</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </Button>
-                </Link>
-              </div>
-              <div className="space-y-3">
-                {flashcardDecks.slice(0, 4).map((deck: any, idx: number) => {
-                  const keywordsList = isStartupEngineering ? ["Pitch", "Equity", "Funding", "Growth"] : ["Figma", "Spacing", "Colors", "A11y"];
-                  const kw = keywordsList[idx % keywordsList.length];
-
-                  const badgeColors = isStartupEngineering ? [
-                    "text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100",
-                    "text-sky-700 bg-sky-50 border-sky-200 hover:bg-sky-100",
-                    "text-indigo-700 bg-indigo-50 border-indigo-200 hover:bg-indigo-100",
-                    "text-cyan-700 bg-cyan-50 border-cyan-200 hover:bg-cyan-100"
-                  ] : [
-                    "text-indigo-700 bg-indigo-50 border-indigo-200 hover:bg-indigo-100",
-                    "text-purple-700 bg-purple-50 border-purple-200 hover:bg-purple-100",
-                    "text-pink-700 bg-pink-50 border-pink-200 hover:bg-pink-100",
-                    "text-fuchsia-700 bg-fuchsia-50 border-fuchsia-200 hover:bg-fuchsia-100"
-                  ];
-                  const badgeClass = badgeColors[idx % badgeColors.length];
-
-                  return (
-                    <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
-                      <div className={`bg-slate-50 border border-slate-200 p-3.5 rounded ${t.primaryHoverBorder} hover:bg-white hover:shadow-md hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 flex justify-between items-center cursor-pointer group`}>
-                        <div className="flex items-center gap-2 overflow-hidden">
-                          <span className={`font-mono text-[10px] font-bold px-2 py-0.5 border rounded flex-shrink-0 ${badgeClass} transition-colors`}>{kw}</span>
-                          <span className={`font-sans text-xs text-slate-800 font-semibold ${t.primaryGroupHoverText} transition-colors truncate`}>{getFlashcardDisplayTitle(deck, modules)}</span>
-                        </div>
-                        <span className={`text-[10px] ${t.primaryText} ${t.primaryBg} px-2 py-0.5 border ${t.primaryBorder} rounded font-mono font-bold whitespace-nowrap`}>{deck.cards?.length || 0} CARDS</span>
-                      </div>
-                    </Link>
-                  );
-                })}
-                {flashcardDecks.length === 0 && (
-                  <div className="p-4 border border-dashed border-slate-200 text-center text-slate-450 font-mono text-[10px] rounded">
-                    Library index is empty.
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            </div>
-
-            {/* CONNECTED ARCHITECTURE DIAGRAMS (MINDMAPS) */}
-            <div className="w-full relative z-10 mt-6">
-              <div className="bg-white border border-slate-200 rounded p-6 flex flex-col justify-between shadow-sm">
-                <div>
-                  <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                    <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2" style={{ color: t.primaryHex }}>
-                      <Grid className="w-4 h-4" style={{ color: t.primaryHex }} /> {subject.name} Mind Maps
-                    </h3>
-                    <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
-                      <Button variant="ghost" className={`text-slate-700 ${t.primaryHoverText} font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn`}>
-                        <span>View All Mind Maps</span>
-                        <ArrowRight className="w-4 h-4 ml-1.5" />
-                      </Button>
-                    </Link>
-                  </div>
-
-                  <div className="relative flex flex-col items-center justify-center py-6">
-                    {/* SVG Connector Lines */}
-                    <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-                      <svg className="w-full h-full stroke-slate-200 stroke-[2]" style={{ strokeDasharray: "4 4" }}>
-                        <line x1="15%" y1="50%" x2="38%" y2="50%" />
-                        <line x1="38%" y1="50%" x2="62%" y2="50%" />
-                        <line x1="62%" y1="50%" x2="85%" y2="50%" />
-                      </svg>
-                    </div>
-
-                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
-                      {mindmaps.slice(0, 4).map((map: any, idx: number) => {
-                        const nodeColors = isStartupEngineering ? [
-                          { bg: "bg-blue-50 text-blue-700 border-blue-200", hover: "group-hover:bg-blue-600 group-hover:border-blue-600" },
-                          { bg: "bg-sky-50 text-sky-700 border-sky-200", hover: "group-hover:bg-sky-600 group-hover:border-sky-600" },
-                          { bg: "bg-indigo-50 text-indigo-700 border-indigo-200", hover: "group-hover:bg-indigo-600 group-hover:border-indigo-600" },
-                          { bg: "bg-cyan-50 text-cyan-700 border-cyan-200", hover: "group-hover:bg-cyan-600 group-hover:border-cyan-600" },
-                        ] : [
-                          { bg: "bg-indigo-50 text-indigo-700 border-indigo-200", hover: "group-hover:bg-indigo-600 group-hover:border-indigo-600" },
-                          { bg: "bg-purple-50 text-purple-700 border-purple-200", hover: "group-hover:bg-purple-600 group-hover:border-purple-600" },
-                          { bg: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200", hover: "group-hover:bg-fuchsia-600 group-hover:border-fuchsia-600" },
-                          { bg: "bg-violet-50 text-violet-700 border-violet-200", hover: "group-hover:bg-violet-600 group-hover:border-violet-600" },
-                        ];
-                        const colors = nodeColors[idx % nodeColors.length];
-
-                        return (
-                          <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="w-full h-full flex">
-                            <div className={`bg-slate-50 border border-slate-200 ${t.primaryHoverBorder} rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm w-full h-full transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md flex flex-col justify-between items-center gap-2`}>
-                              <div className="w-full flex flex-col items-center">
-                                <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
-                                  M0{idx + 1}
-                                </div>
-                                <h4 className={`font-sans text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-2 ${t.primaryGroupHoverText} transition-colors px-1 leading-normal`}>{map.title}</h4>
-                              </div>
-                              <p className="text-[9px] text-slate-400 font-mono mt-auto">Design Node</p>
-                            </div>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* CONNECTED ARCHITECTURE DIAGRAMS (INFOGRAPHICS) */}
-            <div className="w-full relative z-10 mt-6">
-              <div className="bg-white border border-slate-200 rounded p-6 flex flex-col justify-between shadow-sm">
-                <div>
-                  <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                    <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2" style={{ color: isStartupEngineering ? t.primaryHex : "#ec4899" }}>
-                      <Grid className="w-4 h-4" style={{ color: isStartupEngineering ? t.primaryHex : "#ec4899" }} /> {isStartupEngineering ? subject.name : "UI"} Infographics
-                    </h3>
-                    <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
-                      <Button variant="ghost" className={`text-slate-700 ${isStartupEngineering ? t.primaryHoverText : 'hover:text-[#ec4899]'} font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn`}>
-                        <span>View All Infographics</span>
-                        <ArrowRight className="w-4 h-4 ml-1.5" />
-                      </Button>
-                    </Link>
-                  </div>
-
-                  <div className="relative flex flex-col items-center justify-center py-6">
-                    {/* SVG Connector Lines */}
-                    <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-                      <svg className="w-full h-full stroke-slate-200 stroke-[2]" style={{ strokeDasharray: "4 4" }}>
-                        <line x1="15%" y1="50%" x2="38%" y2="50%" />
-                        <line x1="38%" y1="50%" x2="62%" y2="50%" />
-                        <line x1="62%" y1="50%" x2="85%" y2="50%" />
-                      </svg>
-                    </div>
-
-                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
-                      {infographics.slice(0, 4).map((info: any, idx: number) => {
-                        const nodeColors = isStartupEngineering ? [
-                          { bg: "bg-blue-50 text-blue-700 border-blue-200", hover: "group-hover:bg-blue-600 group-hover:border-blue-600" },
-                          { bg: "bg-sky-50 text-sky-700 border-sky-200", hover: "group-hover:bg-sky-600 group-hover:border-sky-600" },
-                          { bg: "bg-cyan-50 text-cyan-700 border-cyan-200", hover: "group-hover:bg-cyan-600 group-hover:border-cyan-600" },
-                          { bg: "bg-indigo-50 text-indigo-700 border-indigo-200", hover: "group-hover:bg-indigo-600 group-hover:border-indigo-600" },
-                        ] : [
-                          { bg: "bg-pink-50 text-pink-700 border-pink-200", hover: "group-hover:bg-pink-600 group-hover:border-pink-600" },
-                          { bg: "bg-rose-50 text-rose-700 border-rose-200", hover: "group-hover:bg-rose-600 group-hover:border-rose-600" },
-                          { bg: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200", hover: "group-hover:bg-fuchsia-600 group-hover:border-fuchsia-600" },
-                          { bg: "bg-purple-50 text-purple-700 border-purple-200", hover: "group-hover:bg-purple-600 group-hover:border-purple-600" },
-                        ];
-                        const colors = nodeColors[idx % nodeColors.length];
-
-                        return (
-                          <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="w-full h-full flex">
-                            <div className={`bg-slate-50 border border-slate-200 ${isStartupEngineering ? t.primaryHoverBorder : 'hover:border-pink-400'} rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm w-full h-full transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md flex flex-col justify-between items-center gap-2`}>
-                              <div className="w-full flex flex-col items-center">
-                                <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
-                                  I0{idx + 1}
-                                </div>
-                                <h4 className={`font-sans text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-2 ${isStartupEngineering ? t.primaryGroupHoverText : 'group-hover:text-pink-600'} transition-colors px-1 leading-normal`}>{info.title}</h4>
-                              </div>
-                              <p className="text-[9px] text-slate-400 font-mono mt-auto">Infographic Node</p>
-                            </div>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-          {/* Reference Materials (Bottom Column) */}
-          <div className="w-full relative z-10 mt-6 pb-20">
-            <div className="bg-white border border-slate-200 rounded p-6 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <FileText className="w-4 h-4" style={{ color: t.primaryHex }} />
-                <h3 className="text-sm font-bold uppercase tracking-widest" style={{ color: t.primaryHex }}>{isStartupEngineering ? "Resources & Documentation" : "Design Resources & Documentation"}</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {subjectResources.slice(0, 4).map((resource: any, index: number) => (
-                  <a key={index} href={resource.link} target="_blank" rel="noopener noreferrer" className="block w-full">
-                    <div className={`bg-slate-50 border border-slate-200 p-3 rounded ${t.primaryBg}/20 ${t.primaryHoverBorder} hover:shadow-sm transition-all duration-200 flex items-start gap-3 group h-full`}>
-                      <div className={`bg-white border border-slate-200 rounded p-1.5 mt-0.5 ${t.primaryHoverBorder} transition-colors`}>
-                        <FileText className={`w-3.5 h-3.5 text-slate-400 ${t.primaryGroupHoverText}`} />
-                      </div>
-                      <div>
-                        <p className={`text-xs font-bold text-slate-700 ${t.primaryGroupHoverText} transition-colors line-clamp-1`}>{resource.title}</p>
-                        <p className="text-[9px] text-slate-400 font-mono mt-0.5 uppercase tracking-wider">{resource.type}</p>
-                      </div>
-                    </div>
-                  </a>
-                ))}
-                {subjectResources.length === 0 && (
-                  <div className="col-span-full py-4 text-center text-slate-400 text-xs font-mono border border-dashed rounded">
-                    No official design assets linked.
-                  </div>
-                )}
-              </div>
-            </div>
->>>>>>> 04f762d (fixed locally server running bugs)
           </div>
         </div>
 
