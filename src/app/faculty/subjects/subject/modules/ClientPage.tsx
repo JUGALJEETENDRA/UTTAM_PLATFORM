@@ -144,10 +144,12 @@ export default function ManageModulesPage() {
       setSubtopics(subtopics.filter((_, i) => i !== index));
     }
   };
-  const handleSubtopicChange = (index: number, field: keyof SubtopicForm, value: string) => {
-    const updated = [...subtopics];
-    updated[index] = { ...updated[index], [field]: value };
-    setSubtopics(updated);
+  const handleSubtopicChange = (index: number, field: keyof SubtopicForm, value: any) => {
+    setSubtopics(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
   };
 
   const handleLanguageChange = (index: number, type: "videoLanguages" | "audioLanguages", langIndex: number, field: "language" | "url", value: string) => {
@@ -199,19 +201,7 @@ export default function ManageModulesPage() {
           parsedData = st.simulationData;
         }
 
-        let unpackedOther: any = { 
-          didYouKnowUrl: "", 
-          didYouKnowDownloadUrl: "", 
-          referenceUrl: "", 
-          referenceDownloadUrl: "",
-          notesUrl: "",
-          notesDownloadUrl: "",
-          audioUrl: "",
-          audioLanguages: [],
-          audioDownloadUrl: "",
-          lessonContent: "",
-          imageUrl: ""
-        };
+        let unpackedOther: any = {};
         if (typeof st.otherUrl === 'string' && st.otherUrl.trim().startsWith("{")) {
           try {
             const sanitizedStr = st.otherUrl.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
@@ -241,7 +231,7 @@ export default function ManageModulesPage() {
           try { vidLangs = JSON.parse(vidLangs); } catch(e){ vidLangs = []; }
         }
 
-        let audLangs = unpackedOther.audioLanguages || parsedData.audioLanguages || st.audioLanguages || [];
+        let audLangs = unpackedOther.audioLanguages ?? parsedData.audioLanguages ?? st.audioLanguages ?? [];
         if (typeof audLangs === 'string') {
           try { audLangs = JSON.parse(audLangs); } catch(e){ audLangs = []; }
         }
@@ -254,19 +244,20 @@ export default function ManageModulesPage() {
           learningOutcome: st.learningOutcome || "",
           videoUrl: safeUrlFallback(st.videoUrl, st.mediaUrl, st.type, 'videoUrl'),
           videoLanguages: vidLangs,
-          notesUrl: unpackedOther.notesUrl || parsedData.notesUrl || safeUrlFallback(st.notesUrl, st.mediaUrl, st.type, 'notes'),
-          notesDownloadUrl: unpackedOther.notesDownloadUrl || parsedData.notesDownloadUrl || st.notesDownloadUrl || "",
+          notesUrl: unpackedOther.notesUrl ?? parsedData.notesUrl ?? safeUrlFallback(st.notesUrl, st.mediaUrl, st.type, 'notes'),
+          notesDownloadUrl: unpackedOther.notesDownloadUrl ?? parsedData.notesDownloadUrl ?? st.notesDownloadUrl ?? "",
 
-          audioUrl: unpackedOther.audioUrl || parsedData.audioUrl || safeUrlFallback(st.audioUrl, st.mediaUrl, st.type, 'audio'),
+          audioUrl: unpackedOther.audioUrl ?? parsedData.audioUrl ?? safeUrlFallback(st.audioUrl, st.mediaUrl, st.type, 'audio'),
           audioLanguages: audLangs,
-          audioDownloadUrl: unpackedOther.audioDownloadUrl || parsedData.audioDownloadUrl || st.audioDownloadUrl || "",
-          didYouKnowUrl: unpackedOther.didYouKnowUrl || parsedData.didYouKnowUrl || safeUrlFallback(st.didYouKnowUrl, st.mediaUrl, st.type, 'didYouKnow'),
-          didYouKnowDownloadUrl: unpackedOther.didYouKnowDownloadUrl || parsedData.didYouKnowDownloadUrl || st.didYouKnowDownloadUrl || "",
-          referenceUrl: unpackedOther.referenceUrl || parsedData.referenceUrl || safeUrlFallback(st.referenceUrl, st.mediaUrl, st.type, 'reference'),
-          referenceDownloadUrl: unpackedOther.referenceDownloadUrl || parsedData.referenceDownloadUrl || st.referenceDownloadUrl || "",
-          lessonContent: unpackedOther.lessonContent || parsedData.lessonContent || st.lessonContent || "",
-          imageUrl: unpackedOther.imageUrl || parsedData.imageUrl || st.imageUrl || "",
+          audioDownloadUrl: unpackedOther.audioDownloadUrl ?? parsedData.audioDownloadUrl ?? st.audioDownloadUrl ?? "",
+          didYouKnowUrl: unpackedOther.didYouKnowUrl ?? parsedData.didYouKnowUrl ?? safeUrlFallback(st.didYouKnowUrl, st.mediaUrl, st.type, 'didYouKnow'),
+          didYouKnowDownloadUrl: unpackedOther.didYouKnowDownloadUrl ?? parsedData.didYouKnowDownloadUrl ?? st.didYouKnowDownloadUrl ?? "",
+          referenceUrl: unpackedOther.referenceUrl ?? parsedData.referenceUrl ?? safeUrlFallback(st.referenceUrl, st.mediaUrl, st.type, 'reference'),
+          referenceDownloadUrl: unpackedOther.referenceDownloadUrl ?? parsedData.referenceDownloadUrl ?? st.referenceDownloadUrl ?? "",
+          lessonContent: unpackedOther.lessonContent ?? parsedData.lessonContent ?? st.lessonContent ?? "",
+          imageUrl: unpackedOther.imageUrl ?? parsedData.imageUrl ?? st.imageUrl ?? "",
           type: st.type || "",
+          selectedResourceType: st.type || "none",
           mediaUrl: st.mediaUrl || "",
           isVisible: st.isVisible !== false,
         };
@@ -868,12 +859,12 @@ export default function ManageModulesPage() {
                             </div>
                           )}
                           <div className="mt-4 space-y-2">
-                            {st.videoUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎥 YouTube Video Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "videoUrl", "")}>Remove</Button></div>}
-                            {(st.notesUrl && st.notesUrl !== "[]") && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📄 Notes File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "notesUrl", ""); handleSubtopicChange(index, "notesDownloadUrl", "")}}>Remove</Button></div>}
-                            {st.didYouKnowUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>💡 Case Studies Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "didYouKnowUrl", ""); handleSubtopicChange(index, "didYouKnowDownloadUrl", "")}}>Remove</Button></div>}
-                            {st.referenceUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📚 Reference File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "referenceUrl", ""); handleSubtopicChange(index, "referenceDownloadUrl", "")}}>Remove</Button></div>}
-                            {st.audioUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎵 Audio File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "audioUrl", ""); handleSubtopicChange(index, "audioDownloadUrl", "")}}>Remove</Button></div>}
-                            {st.lessonContent && <div className="text-[11px] flex justify-between bg-indigo-50 p-2 rounded items-center text-indigo-700"><span>📝 Text Lesson Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => handleSubtopicChange(index, "lessonContent", "")}>Remove</Button></div>}
+                            {st.videoUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎥 YouTube Video Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => { handleSubtopicChange(index, "videoUrl", ""); handleSubtopicChange(index, "selectedResourceType", "none"); }}>Remove</Button></div>}
+                            {(st.notesUrl && st.notesUrl !== "[]") && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📄 Notes File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "notesUrl", ""); handleSubtopicChange(index, "notesDownloadUrl", ""); handleSubtopicChange(index, "selectedResourceType", "none"); }}>Remove</Button></div>}
+                            {st.didYouKnowUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>💡 Case Studies Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "didYouKnowUrl", ""); handleSubtopicChange(index, "didYouKnowDownloadUrl", ""); handleSubtopicChange(index, "selectedResourceType", "none"); }}>Remove</Button></div>}
+                            {st.referenceUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>📚 Reference File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "referenceUrl", ""); handleSubtopicChange(index, "referenceDownloadUrl", ""); handleSubtopicChange(index, "selectedResourceType", "none"); }}>Remove</Button></div>}
+                            {st.audioUrl && <div className="text-[11px] flex justify-between bg-zinc-100 p-2 rounded items-center"><span>🎵 Audio File Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => {handleSubtopicChange(index, "audioUrl", ""); handleSubtopicChange(index, "audioDownloadUrl", ""); handleSubtopicChange(index, "selectedResourceType", "none"); }}>Remove</Button></div>}
+                            {st.lessonContent && <div className="text-[11px] flex justify-between bg-indigo-50 p-2 rounded items-center text-indigo-700"><span>📝 Text Lesson Attached</span> <Button type="button" variant="ghost" size="sm" className="h-5 text-red-500 p-0" onClick={() => { handleSubtopicChange(index, "lessonContent", ""); handleSubtopicChange(index, "selectedResourceType", "none"); }}>Remove</Button></div>}
                             
                           </div>
                         </div>
