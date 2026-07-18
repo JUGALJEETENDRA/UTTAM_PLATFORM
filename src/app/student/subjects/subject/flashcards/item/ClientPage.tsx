@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { ArrowLeft, Layers } from "lucide-react";
 import { FlashcardViewer } from "@/components/student/FlashcardViewer";
+import ResourceHeader from "@/components/ui/ResourceHeader";
 import { useEffect, useState } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 import { useSearchParams } from "next/navigation";
@@ -73,16 +74,12 @@ export default function FlashcardDeckPage() {
           <Link href={backHref} className="text-xs font-semibold text-zinc-500 hover:text-primary flex items-center mb-2 transition-colors w-fit">
             <ArrowLeft className="w-3.5 h-3.5 mr-1" /> {moduleId ? "Back to Subtopic" : "Back to Flashcards"}
           </Link>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center mr-3">
-                <Layers className="w-5 h-5" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-zinc-900">{getFlashcardDisplayTitle(deck, modules)}</h1>
-                <p className="text-xs text-zinc-500 font-medium">Module {deck.module?.moduleNo || "?"} • {deck.cards?.length || 0} Cards</p>
-              </div>
-            </div>
+          <div className="flex items-center justify-between mt-2">
+            <ResourceHeader 
+              type="flashcards" 
+              title={getFlashcardDisplayTitle(deck, modules)} 
+              subtitle={`Module ${deck.module?.moduleNo || "?"} • ${deck.cards?.length || 0} Cards`} 
+            />
           </div>
         </div>
       </div>

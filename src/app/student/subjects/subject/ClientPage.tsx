@@ -9,11 +9,14 @@ import { Button } from "@/components/ui/button";
 import { GoogleLogin } from "@react-oauth/google";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SubjectResourceCard } from "@/components/cards/SubjectResourceCard";
+import FloatingBackground from "@/components/ui/FloatingBackground";
+import ResourceHeader from "@/components/ui/ResourceHeader";
 import {
   TrendingUp, TrendingDown, Layers, Target, Zap, Brain, FileText,
   ArrowRight, Clock, Book, ExternalLink, Globe, Activity, ShieldAlert, Send, BookOpen,
   Folder, FolderOpen, FileCode, Terminal, Play, CheckCircle, Calendar, Bug, Settings, Code,
-  ChevronDown, ChevronRight, FileJson, Component, Palette, Monitor, Grid, MousePointer, Layout, Columns
+  ChevronDown, ChevronRight, FileJson, Component, Palette, Monitor, Grid, MousePointer, Layout, Columns,
+  Search, Bookmark, Award, Info, Check
 } from "lucide-react";
 
 
@@ -658,6 +661,7 @@ export default function StudentDashboard() {
   const [data, setData] = useState<any>(null);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const [activeNode, setActiveNode] = useState<number | null>(0);
   const [tickerX, setTickerX] = useState(0);
   const [aiInput, setAiInput] = useState("");
@@ -918,7 +922,378 @@ export default function StudentDashboard() {
 
   const pythonModules = isPythonProgramming
     ? ((modules && modules.length > 0) ? modules : PYTHON_FALLBACK_MODULES)
-    : [];
+    : [];  // ==========================================
+  // RENDER VARIANT C: UI PROGRAMMING REDESIGN (PREMIUM SaaS STYLE)
+  // ==========================================
+  if (isUiProgramming) {
+    const filteredModules = modules.filter((mod: any) => {
+      if (!searchQuery.trim()) return true;
+      const query = searchQuery.toLowerCase();
+      return (
+        String(mod.title || "").toLowerCase().includes(query) ||
+        String(mod.description || "").toLowerCase().includes(query) ||
+        (mod.subtopics || []).some((st: any) => String(st.title || "").toLowerCase().includes(query))
+      );
+    });
+
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] pb-20 relative overflow-hidden font-sans antialiased selection:bg-blue-600/10 selection:text-blue-600">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-blue-600" />
+        <FloatingBackground />
+        
+        <div className="container mx-auto px-4 mt-8 relative z-10 max-w-6xl space-y-8">
+          
+          {/* Breadcrumbs */}
+          <nav className="flex items-center gap-2 text-xs text-[#64748B] font-medium" aria-label="Breadcrumb">
+            <Link href="/student/subjects" className="hover:text-blue-650 transition-colors">
+              Subjects
+            </Link>
+            <span className="text-slate-300">/</span>
+            <span className="text-[#0F172A] font-semibold">{subject.name}</span>
+          </nav>
+
+          {/* Premium Subject Header Hero */}
+          <header className="relative bg-white rounded-lg border border-[#E2E8F0] shadow-xs p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div className="space-y-3 flex-1">
+              <div className="flex items-center gap-2.5">
+                <span className="text-[10px] uppercase font-mono tracking-widest text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+                  Course
+                </span>
+              </div>
+              <h1 className="text-3xl font-extrabold tracking-tight text-[#0F172A] font-sans">
+                {subject.name}
+              </h1>
+              <p className="text-[#64748B] text-sm font-sans max-w-2xl leading-relaxed">
+                {subject.description || "Master the concepts of modern typography, layouts, user centered wireframes, interface hierarchies, and usability rules."}
+              </p>
+              
+              {/* Search within subject */}
+              <div className="relative max-w-sm w-full pt-2">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search topics or modules..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 text-sm text-[#0F172A] bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg outline-hidden focus:ring-2 focus:ring-blue-600/10 focus:border-blue-600 transition-all font-sans"
+                />
+              </div>
+            </div>
+          </header>
+
+          {/* Quick Actions Navigation Grid */}
+          <nav className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4" aria-label="Quick Actions">
+            <a 
+              href="#journey-section"
+              className="bg-white border border-[#E2E8F0] rounded-lg p-3 sm:p-4 flex items-center gap-2.5 sm:gap-3 hover:border-blue-500 hover:shadow-xs transition-all duration-150 group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-150">
+                <Layers className="w-4 h-4" />
+              </div>
+              <div className="text-left">
+                <div className="text-xs font-bold text-[#0F172A]">Learning Path</div>
+                <div className="text-[10px] text-[#64748B]">{modules.length} Modules</div>
+              </div>
+            </a>
+
+            <a 
+              href="#quizzes-section"
+              className="bg-white border border-[#E2E8F0] rounded-lg p-3 sm:p-4 flex items-center gap-2.5 sm:gap-3 hover:border-blue-500 hover:shadow-xs transition-all duration-150 group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-[#16A34A] group-hover:bg-[#16A34A] group-hover:text-white transition-all duration-150">
+                <Target className="w-4 h-4" />
+              </div>
+              <div className="text-left">
+                <div className="text-xs font-bold text-[#0F172A]">Assessments</div>
+                <div className="text-[10px] text-[#64748B]">{quizzesWithAttempts.length} Quizzes</div>
+              </div>
+            </a>
+
+            <a 
+              href="#flashcards-section"
+              className="bg-white border border-[#E2E8F0] rounded-lg p-3 sm:p-4 flex items-center gap-2.5 sm:gap-3 hover:border-blue-500 hover:shadow-xs transition-all duration-150 group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-[#F59E0B] group-hover:bg-[#F59E0B] group-hover:text-white transition-all duration-150">
+                <Zap className="w-4 h-4" />
+              </div>
+              <div className="text-left">
+                <div className="text-xs font-bold text-[#0F172A]">Revision Decks</div>
+                <div className="text-[10px] text-[#64748B]">{flashcardDecks.length} Decks</div>
+              </div>
+            </a>
+
+            <a 
+              href="#visuals-section"
+              className="bg-white border border-[#E2E8F0] rounded-lg p-3 sm:p-4 flex items-center gap-2.5 sm:gap-3 hover:border-blue-500 hover:shadow-xs transition-all duration-150 group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-all duration-150">
+                <Brain className="w-4 h-4" />
+              </div>
+              <div className="text-left">
+                <div className="text-xs font-bold text-[#0F172A]">Visual Aids</div>
+                <div className="text-[10px] text-[#64748B]">{mindmaps.length + infographics.length} Topologies</div>
+              </div>
+            </a>
+          </nav>
+
+          {/* Learning Journey Timeline & Modules */}
+          <section id="journey-section" className="space-y-6">
+            <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
+              <ResourceHeader 
+                type="journey" 
+                title="Learning Journey" 
+                subtitle="Follow your structured learning path." 
+              />
+              {searchQuery && (
+                <span className="text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-100 rounded px-2.5 py-1">
+                  Found {filteredModules.length} matches
+                </span>
+              )}
+            </div>
+
+            <div className="relative pl-6 md:pl-8 border-l-2 border-[#E2E8F0] space-y-8 py-2">
+              {filteredModules.map((mod: any) => {
+                const difficultyLabel = mod.moduleNo <= 2 ? "Beginner" : mod.moduleNo <= 4 ? "Intermediate" : "Advanced";
+                const difficultyColor = mod.moduleNo <= 2 
+                  ? "bg-slate-50 text-[#64748B] border-[#E2E8F0]" 
+                  : mod.moduleNo <= 4 
+                    ? "bg-amber-50 text-[#F59E0B] border-amber-200" 
+                    : "bg-red-50 text-[#DC2626] border-red-200";
+
+                return (
+                  <article key={mod.id} className="relative group">
+                    {/* Timeline circle node anchor */}
+                    <div className="absolute -left-[31px] md:-left-[39px] top-6 w-4 h-4 rounded-full border-4 border-slate-200 bg-white" />
+
+                    <div className="bg-white border border-[#E2E8F0] rounded-lg p-5 md:p-6 shadow-xs hover:shadow-sm hover:border-slate-350 transition-all duration-150 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                      <div className="flex-1 space-y-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-[10px] font-mono font-bold tracking-wider text-[#64748B] uppercase">Module 0{mod.moduleNo}</span>
+                          <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded border ${difficultyColor}`}>{difficultyLabel}</span>
+                          <span className="text-xs text-[#64748B] font-medium flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {mod.hours || 4} Hrs</span>
+                        </div>
+
+                        <h3 className="text-lg font-bold text-[#0F172A] tracking-tight">
+                          {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
+                        </h3>
+                        <p className="text-sm text-[#64748B] leading-relaxed max-w-2xl">
+                          {mod.description || "Master custom visual interfaces, structured wireframes, dynamic typographic scales, padding grids, and responsive components."}
+                        </p>
+
+                        {/* Chips for topics */}
+                        {mod.subtopics && mod.subtopics.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 pt-1">
+                            {mod.subtopics.map((st: any) => (
+                              <span key={st.id} className="text-[11px] bg-slate-50 text-[#64748B] px-2.5 py-0.5 rounded-lg border border-[#E2E8F0] font-medium">
+                                {st.title}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-shrink-0 w-full md:w-auto">
+                        <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
+                          <Button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2.5 flex items-center justify-center gap-1.5 transition-all duration-150 shadow-xs">
+                            <span>View Module</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+              {filteredModules.length === 0 && (
+                <div className="text-center py-10 border border-dashed border-[#E2E8F0] bg-white rounded-lg">
+                  <Info className="w-8 h-8 mx-auto text-slate-350" />
+                  <p className="text-sm text-[#64748B] mt-2">No matching modules found in this subject.</p>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* Quizzes & Flashcards Double Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Quizzes Column */}
+            <section id="quizzes-section" className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-xs space-y-5">
+              <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
+                <ResourceHeader 
+                  type="quizzes" 
+                  title="Quizzes & Assessments" 
+                  subtitle="Test your understanding with adaptive quizzes." 
+                />
+                <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
+                  <span className="text-[10px] font-mono font-bold uppercase text-blue-600 hover:text-blue-700 cursor-pointer">View All →</span>
+                </Link>
+              </div>
+
+              <div className="space-y-3">
+                {quizzesWithAttempts.slice(0, 4).map((quiz: any) => (
+                  <div key={quiz.id} className="border border-[#E2E8F0] hover:border-slate-350 p-4 rounded-lg flex justify-between items-center gap-4 transition-all duration-150 bg-[#F8FAFC]">
+                    <div className="min-w-0">
+                      <span className="text-[9px] font-mono text-[#64748B] uppercase">Module {quiz.module?.moduleNo || quiz.title.split(".")[0]}</span>
+                      <h4 className="text-sm font-semibold text-[#0F172A] tracking-tight truncate mt-0.5">
+                        {getQuizDisplayTitle(quiz, modules)}
+                      </h4>
+                    </div>
+                    <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="flex-shrink-0">
+                      <Button className="bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#0F172A] text-xs font-semibold px-3 py-1.5 h-8 rounded-lg shadow-2xs">
+                        Start
+                      </Button>
+                    </Link>
+                  </div>
+                ))}
+                {quizzesWithAttempts.length === 0 && (
+                  <div className="text-center py-6 text-xs text-[#64748B] border border-dashed border-[#E2E8F0] rounded-lg font-medium bg-slate-50">
+                    No quizzes assigned.
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* Flashcards Column */}
+            <section id="flashcards-section" className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-xs space-y-5">
+              <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
+                <ResourceHeader 
+                  type="flashcards" 
+                  title="Revision Flashcards" 
+                  subtitle="Practice with active recall and spaced repetition." 
+                />
+                <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
+                  <span className="text-[10px] font-mono font-bold uppercase text-blue-600 hover:text-blue-700 cursor-pointer">View All →</span>
+                </Link>
+              </div>
+
+              <div className="space-y-3">
+                {flashcardDecks.slice(0, 4).map((deck: any) => (
+                  <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`} className="block">
+                    <div className="border border-[#E2E8F0] hover:border-slate-350 p-4 rounded-lg flex justify-between items-center gap-4 transition-all duration-150 bg-[#F8FAFC] group">
+                      <div className="min-w-0">
+                        <span className="text-[9px] font-mono text-[#64748B] uppercase">Module {deck.module?.moduleNo || deck.title.split(".")[0]}</span>
+                        <h4 className="text-sm font-semibold text-[#0F172A] tracking-tight truncate group-hover:text-blue-600 transition-colors mt-0.5">
+                          {getFlashcardDisplayTitle(deck, modules)}
+                        </h4>
+                      </div>
+                      <span className="text-[10px] font-mono bg-white text-[#64748B] border border-[#E2E8F0] px-2 py-0.5 rounded-md font-bold flex-shrink-0">
+                        {deck.cards?.length || 0} Cards
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+                {flashcardDecks.length === 0 && (
+                  <div className="text-center py-6 text-xs text-[#64748B] border border-dashed border-[#E2E8F0] rounded-lg font-medium bg-slate-50">
+                    No flashcard decks logged.
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
+
+          {/* Visual Aids section (Mind Maps & Infographics) */}
+          <section id="visuals-section" className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Mind Maps Card */}
+            <div className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-xs space-y-5">
+              <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
+                <ResourceHeader 
+                  type="mindmaps" 
+                  title="Subject Mind Maps" 
+                  subtitle="Explore relationships between concepts." 
+                />
+                <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
+                  <span className="text-[10px] font-mono font-bold uppercase text-blue-600 hover:text-blue-700 cursor-pointer">View All →</span>
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {mindmaps.slice(0, 4).map((map: any, idx: number) => (
+                  <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="block">
+                    <div className="border border-[#E2E8F0] hover:border-slate-350 p-4 rounded-lg text-center transition-all duration-150 bg-[#F8FAFC] group flex flex-col justify-between items-center h-28">
+                      <div className="w-7 h-7 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold text-xs font-mono group-hover:bg-purple-600 group-hover:text-white transition-all duration-150">
+                        M0{idx + 1}
+                      </div>
+                      <h4 className="text-xs font-bold text-[#0F172A] line-clamp-2 px-1 text-center w-full leading-normal">
+                        {map.title}
+                      </h4>
+                    </div>
+                  </Link>
+                ))}
+                {mindmaps.length === 0 && (
+                  <div className="col-span-2 text-center py-6 text-xs text-[#64748B] border border-dashed border-[#E2E8F0] rounded-lg font-medium bg-slate-50">
+                    No mind maps available.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Infographics Card */}
+            <div className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-xs space-y-5">
+              <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
+                <ResourceHeader 
+                  type="infographics" 
+                  title="Visual Infographics" 
+                  subtitle="Visual explanations of key concepts." 
+                />
+                <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
+                  <span className="text-[10px] font-mono font-bold uppercase text-blue-600 hover:text-blue-700 cursor-pointer">View All →</span>
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {infographics.slice(0, 4).map((info: any, idx: number) => (
+                  <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="block">
+                    <div className="border border-[#E2E8F0] hover:border-slate-350 p-4 rounded-lg text-center transition-all duration-150 bg-[#F8FAFC] group flex flex-col justify-between items-center h-28">
+                      <div className="w-7 h-7 rounded-full bg-pink-50 text-pink-650 border border-pink-100 flex items-center justify-center font-bold text-xs font-mono group-hover:bg-pink-600 group-hover:text-white transition-all duration-150">
+                        I0{idx + 1}
+                      </div>
+                      <h4 className="text-xs font-bold text-[#0F172A] line-clamp-2 px-1 text-center w-full leading-normal">
+                        {info.title}
+                      </h4>
+                    </div>
+                  </Link>
+                ))}
+                {infographics.length === 0 && (
+                  <div className="col-span-2 text-center py-6 text-xs text-[#64748B] border border-dashed border-[#E2E8F0] rounded-lg font-medium bg-slate-50">
+                    No infographics topologies.
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* Reference resources */}
+          <section className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-xs space-y-5">
+            <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
+              <ResourceHeader 
+                type="resources" 
+                title="Reference Materials" 
+                subtitle="Browse notes, PDFs and supporting resources." 
+              />
+              <span className="text-[10px] font-mono text-[#64748B] uppercase">Reference Docs</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {subjectResources.map((resource: any, index: number) => (
+                <div key={index} className="transition-all duration-150 hover:-translate-y-0.5">
+                  <SubjectResourceCard
+                    title={resource.title}
+                    type={resource.type}
+                    link={resource.link}
+                  />
+                </div>
+              ))}
+              {subjectResources.length === 0 && (
+                <p className="col-span-4 text-xs font-mono text-[#64748B] text-center py-4 border border-dashed border-[#E2E8F0] rounded-lg bg-slate-50">
+                  No resources uploaded yet.
+                </p>
+              )}
+            </div>
+          </section>
+
+        </div>
+      </div>
+    );
+  }
 
   // ==========================================
   // RENDER VARIANT A: DIGITAL BUSINESS & TRANSFORMATION (PREMIUM LIGHT THEME)

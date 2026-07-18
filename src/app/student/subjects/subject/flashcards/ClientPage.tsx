@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Layers, ArrowLeft, Clock, Book, ChevronRight, Terminal, Code } from "lucide-react";
+import ResourceHeader from "@/components/ui/ResourceHeader";
 import { useEffect, useState } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 import { useSearchParams } from "next/navigation";
@@ -26,10 +27,10 @@ const THEME_MAP: Record<string, {
   "ui programming": {
     bg: "bg-slate-50 text-slate-800 font-sans",
     cardBg: "bg-white",
-    borderClass: "border border-slate-200 rounded-xl",
+    borderClass: "border border-slate-200 rounded-lg",
     shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-500 hover:text-indigo-655 font-sans text-xs hover:bg-slate-55 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-500 hover:text-indigo-655 font-sans text-xs hover:bg-slate-55 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
     titleHover: "group-hover:text-indigo-600",
     textHeading: "text-slate-900 font-bold tracking-tight font-sans",
     textMuted: "text-slate-500 font-medium font-sans",
@@ -368,35 +369,13 @@ export default function FlashcardsListPage() {
         </div>
 
         {/* Section Header Card */}
-        <Card className={`${isPremiumTheme
-          ? 'bg-white border border-slate-200 shadow-xs'
-          : t.borderClass + ' ' + t.cardBg + ' ' + t.shadowClass
-          } brutalist-transition mb-8 relative overflow-hidden rounded-lg`}>
-          <CardHeader className="pt-8 pb-6 relative z-10">
-            <div>
-              {isPremiumTheme ? (
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200/50">
-                    Workspace
-                  </span>
-                  <span className="text-[10px] font-mono text-slate-400">flashcards.console</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge className={`text-[10px] font-mono px-2.5 py-1 ${t.badge}`}>
-                    Workspace
-                  </Badge>
-                </div>
-              )}
-              <CardTitle className={`text-2xl md:text-3xl ${isPremiumTheme ? 'text-slate-900 font-semibold tracking-tight' : t.textHeading} flex items-center gap-3`}>
-                <Layers className={`w-7 h-7 ${isPremiumTheme ? "text-slate-500" : "text-primary"}`} /> Interactive Flashcards
-              </CardTitle>
-              <CardDescription className={`${isPremiumTheme ? 'text-slate-550 font-medium font-sans' : t.textMuted} mt-2 text-sm leading-relaxed`}>
-                Review key design principles, usability metrics, and typography terms interactively.
-              </CardDescription>
-            </div>
-          </CardHeader>
-        </Card>
+        <div className="bg-white border border-slate-200 p-6 md:p-8 rounded-lg shadow-xs mb-8">
+          <ResourceHeader 
+            type="flashcards" 
+            title="Revision Flashcards" 
+            subtitle="Practice with active recall and spaced repetition." 
+          />
+        </div>
 
         {/* Flashcard Decks Grid */}
         <motion.div
@@ -408,7 +387,7 @@ export default function FlashcardsListPage() {
           {flashcardDecks.map((deck) => {
             const cardContent = (
               <Card className={`flex flex-col h-full transition-all duration-300 overflow-hidden ${isPremiumTheme
-                  ? "bg-white border border-slate-200 rounded-xl shadow-sm"
+                  ? "bg-white border border-slate-200 rounded-lg shadow-sm"
                   : "hover:border-primary/40 hover:shadow-lg bg-white"
                 }`}>
                 <CardHeader className={`${isPremiumTheme ? "p-5 md:p-6 pb-2 border-b border-slate-100" : "pb-3 border-b border-zinc-50"}`}>
@@ -443,7 +422,7 @@ export default function FlashcardsListPage() {
 
                   <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`} className="w-full mt-auto">
                     <Button className={`w-full ${isPremiumTheme
-                        ? "bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm font-sans text-xs font-semibold transition-all duration-150"
+                        ? "bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-sm font-sans text-xs font-semibold transition-all duration-150"
                         : "bg-primary hover:bg-primary/95 text-white shadow-sm font-bold h-10 transition-transform active:scale-[0.98]"
                       }`}>
                       Study Deck
@@ -471,10 +450,10 @@ export default function FlashcardsListPage() {
                     >
                       {/* Stack offset backgrounds — frozen, no hover changes */}
                       <div
-                        className="absolute inset-0 bg-slate-100 rounded-xl border border-slate-200 translate-y-1 translate-x-1 pointer-events-none transition-opacity duration-200 group-hover:opacity-0"
+                        className="absolute inset-0 bg-slate-100 rounded-lg border border-slate-200 translate-y-1 translate-x-1 pointer-events-none transition-opacity duration-200 group-hover:opacity-0"
                       />
                       <div
-                        className="absolute inset-0 bg-slate-50 rounded-xl border border-slate-200/60 translate-y-2 translate-x-2 pointer-events-none transition-opacity duration-200 opacity-60 group-hover:opacity-0"
+                        className="absolute inset-0 bg-slate-50 rounded-lg border border-slate-200/60 translate-y-2 translate-x-2 pointer-events-none transition-opacity duration-200 opacity-60 group-hover:opacity-0"
                       />
                       <DesignStudioCard isPremium={true} label={`Deck.Topology M0${deck.module?.moduleNo || 1}`} className="h-full relative z-10">
                         {cardContent}
@@ -490,7 +469,7 @@ export default function FlashcardsListPage() {
         </motion.div>
 
         {flashcardDecks.length === 0 && (
-          <div className={`py-12 text-center font-bold border border-dashed rounded-xl ${isPremiumTheme
+          <div className={`py-12 text-center font-bold border border-dashed rounded-lg ${isPremiumTheme
             ? 'bg-white/50 border-slate-200 text-slate-400 shadow-none'
             : 'bg-zinc-50 border-zinc-200 text-zinc-700'
             }`}>

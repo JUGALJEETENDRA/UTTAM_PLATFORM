@@ -7,6 +7,7 @@ import { fetchGAS } from "@/lib/apiClient";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import ResourceHeader from "@/components/ui/ResourceHeader";
 import {
   BookOpen, Clock, Book, ArrowRight, ChevronRight, Layers,
   TrendingUp, Activity, Terminal, ShieldAlert, Sparkles, Code, MousePointer
@@ -30,10 +31,10 @@ const THEME_MAP: Record<string, {
   "ui programming": {
     bg: "bg-slate-50 text-slate-800 font-sans",
     cardBg: "bg-white",
-    borderClass: "border border-slate-200 rounded-xl",
+    borderClass: "border border-slate-200 rounded-lg",
     shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-500 hover:text-indigo-655 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-500 hover:text-indigo-655 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
     titleHover: "group-hover:text-indigo-600",
     textHeading: "text-slate-900 font-bold tracking-tight font-sans",
     textMuted: "text-slate-500 font-medium font-sans",
@@ -797,35 +798,13 @@ export default function ModulesPage() {
         </div>
 
         {/* Section Header Card */}
-        <Card className={`${isPremiumTheme
-          ? 'bg-white border border-slate-200 shadow-xs'
-          : t.borderClass + ' ' + t.cardBg + ' ' + t.shadowClass
-          } brutalist-transition mb-8 relative overflow-hidden rounded-lg`}>
-          <CardHeader className="pt-8 pb-6 relative z-10">
-            <div>
-              {isPremiumTheme ? (
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200/50">
-                    Workspace
-                  </span>
-                  <span className="text-[10px] font-mono text-slate-400">modules.console</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge className={`text-[10px] font-mono px-2.5 py-1 ${t.badge}`}>
-                    Workspace
-                  </Badge>
-                </div>
-              )}
-              <CardTitle className={`text-2xl md:text-3xl ${isPremiumTheme ? 'text-slate-900 font-semibold tracking-tight' : t.textHeading} flex items-center gap-3`}>
-                {isPremiumTheme ? <Layers className="w-6 h-6 text-slate-500" /> : <BookOpen className="w-8 h-8" />} Component Inspector
-              </CardTitle>
-              <CardDescription className={`${isPremiumTheme ? 'text-slate-550 font-medium font-sans' : t.textMuted} mt-2 text-sm leading-relaxed`}>
-                Master UI layout constraints across {modules.length} design canvas frames.
-              </CardDescription>
-            </div>
-          </CardHeader>
-        </Card>
+        <div className="bg-white border border-slate-200 p-6 md:p-8 rounded-lg shadow-xs mb-8">
+          <ResourceHeader 
+            type="journey" 
+            title="Learning Journey" 
+            subtitle="Follow your structured learning path." 
+          />
+        </div>
 
         {/* Modules Grid */}
         <motion.div
@@ -934,7 +913,7 @@ export default function ModulesPage() {
 
         {modules.length === 0 && (
           <div className={`py-12 text-center font-bold ${isPremiumTheme
-            ? 'bg-white/50 border border-slate-200 border-dashed text-slate-400 rounded-xl shadow-none'
+            ? 'bg-white/50 border border-slate-200 border-dashed text-slate-400 rounded-lg shadow-none'
             : t.borderClass + ' ' + t.cardBg + ' border-dashed text-zinc-500 shadow-sm'
             }`}>
             NO ACTIVE LAYOUT NODES GENERATED.

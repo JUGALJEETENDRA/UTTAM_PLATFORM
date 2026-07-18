@@ -17,6 +17,7 @@ import { ResourceLinkTracker } from "@/components/student/ResourceLinkTracker";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import ResourceHeader from "@/components/ui/ResourceHeader";
 import { 
   ChevronLeft, PlayCircle, FileText, CheckCircle2, Gamepad2, Target, 
   Download, Book, BookOpen, BrainCircuit, CreditCard, Link as LinkIcon, 
@@ -46,10 +47,10 @@ const THEME_MAP: Record<string, {
   "ui programming": {
     bg: "bg-slate-50 text-slate-800 font-sans",
     cardBg: "bg-white",
-    borderClass: "border border-slate-200 rounded-xl",
+    borderClass: "border border-slate-200 rounded-lg",
     shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-550 hover:text-indigo-650 font-sans text-xs hover:bg-slate-55 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-550 hover:text-indigo-650 font-sans text-xs hover:bg-slate-55 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
     titleHover: "group-hover:text-indigo-600",
     textHeading: "text-slate-900 font-bold tracking-tight font-sans",
     textMuted: "text-slate-500 font-medium font-sans",
@@ -211,7 +212,7 @@ const InlineVideoPlayer = ({ url, title, downloadUrl }: { url: string; title: st
   return (
     <div className="w-full flex flex-col select-none">
       {/* Video Viewport Container - Responsive Aspect Ratio */}
-      <div className="w-full aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-200 shadow-sm relative">
+      <div className="w-full aspect-video bg-slate-950 rounded-lg overflow-hidden border border-slate-200 shadow-sm relative">
         {isYouTube || (!isDirectVideo && embedUrl) ? (
           <iframe
             src={embedUrl || url}
@@ -269,7 +270,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   const activeAudioSrc = googleDriveDirectUrl;
 
   return (
-    <div className="w-full bg-white text-slate-800 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
+    <div className="w-full bg-white text-slate-800 p-3.5 rounded-lg border border-slate-200 shadow-sm flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center space-x-2 shrink-0">
           <Headphones className="w-4 h-4 text-blue-600 shrink-0" />
@@ -1245,43 +1246,22 @@ export default function ModuleDetailPage() {
         </div>
 
         {/* Section Header Card */}
-        <Card className={`${
-          isPremiumTheme 
-            ? 'bg-white border border-slate-200 shadow-xs' 
-            : t.borderClass + ' ' + t.cardBg + ' ' + t.shadowClass
-        } brutalist-transition mb-8 relative overflow-hidden rounded-lg`}>
-          <CardHeader className="pt-8 pb-6 relative z-10">
-            <div>
-              {isPremiumTheme ? (
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200/50">
-                    Workspace
-                  </span>
-                  <span className="text-[10px] font-mono text-slate-400">module.console</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge className={`text-[10px] font-mono px-2.5 py-1 ${t.badge}`}>
-                    Workspace
-                  </Badge>
-                </div>
-              )}
-              <CardTitle className={`text-2xl md:text-3xl ${isPremiumTheme ? 'text-slate-900 font-semibold tracking-tight' : t.textHeading} flex items-center gap-3`}>
-                {isPremiumTheme ? <Layers className="w-6 h-6 text-slate-500" /> : <BookOpen className="w-8 h-8" />} {moduleData.title}
-              </CardTitle>
-              <CardDescription className={`${isPremiumTheme ? 'text-slate-550 font-medium font-sans' : t.textMuted} mt-2 text-sm leading-relaxed`}>
-                {moduleData.description}
-              </CardDescription>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold font-sans">
-                <span className={`px-2.5 py-1 border ${
-                  isPremiumTheme 
-                    ? 'bg-slate-100 text-slate-700 border border-slate-200 rounded font-semibold' 
-                    : 'bg-zinc-100 border-2 border-black'
-                }`}>{moduleData.co}</span>
-              </div>
+        <div className="bg-white border border-slate-200 p-6 md:p-8 rounded-lg shadow-xs mb-8 flex flex-col gap-4">
+          <ResourceHeader 
+            type="journey" 
+            title={moduleData.title} 
+            subtitle={moduleData.description} 
+          />
+          {moduleData.co && (
+            <div className="flex flex-wrap gap-2 text-xs font-bold font-sans pl-15">
+              <span className={`px-2.5 py-1 border ${
+                isPremiumTheme 
+                  ? 'bg-slate-100 text-slate-700 border-slate-200 rounded font-semibold' 
+                  : 'bg-zinc-100 border-2 border-black'
+              }`}>{moduleData.co}</span>
             </div>
-          </CardHeader>
-        </Card>
+          )}
+        </div>
 
         {/* Subtopics stack */}
         <h2 className={`text-xs font-mono uppercase tracking-wider text-slate-500 font-bold mb-4`}>
