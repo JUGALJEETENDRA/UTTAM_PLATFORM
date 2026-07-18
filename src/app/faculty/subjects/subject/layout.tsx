@@ -24,6 +24,7 @@ function FacultySubjectLayoutInner({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     if (!subjectId) return;
+    setSubjectName("Subject Loading...");
     fetchGAS("getSubjects")
       .then(subjects => {
         if (Array.isArray(subjects)) {
@@ -76,7 +77,8 @@ function FacultySubjectLayoutInner({ children }: { children: React.ReactNode }) 
           <nav className="flex space-x-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {navLinks.map((link) => {
               const Icon = link.icon;
-              const isActive = pathname.startsWith(link.href);
+              const linkPath = link.href.split('?')[0];
+              const isActive = pathname === linkPath || pathname.startsWith(linkPath + '/');
               
               return (
                 <Link
