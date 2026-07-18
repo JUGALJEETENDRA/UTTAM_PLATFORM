@@ -77,7 +77,7 @@ export default function FacultyDashboardPage() {
               subjects.map((subject: any) => (
                 <Card 
                   key={subject.id} 
-                  onClick={() => { window.location.href = `/faculty/subjects/subject/modules?subjectId=${subject.id}`; }}
+                  onClick={() => { window.location.href = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/faculty/subjects/subject/modules?subjectId=${subject.id}`; }}
                   className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer h-full border-zinc-200 relative min-h-[150px]"
                 >
                   <DeleteSubjectButton subjectId={subject.id} subjectName={subject.name} />
