@@ -527,7 +527,7 @@ const highlightPythonCode = (code: string) => {
 const DesignStudioCard = ({ children, className = "", style = {}, isPremium, label, ...props }: any) => {
   return (
     <div
-      className={`relative transition-all duration-300 ease-out rounded-lg ${className}`}
+      className={`relative transition-all duration-300 ease-out rounded-md ${className}`}
       style={style}
       {...props}
     >
@@ -2845,735 +2845,345 @@ export default function StudentDashboard() {
 
       {/* Layered Design-System inspired Background - Disabled for Clean EdTech Minimal */}
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 mt-6 relative z-10 space-y-6">
+        
+        {/* Top IDE Header / Status bar styled as DESIGN STUDIO */}
+        <div className="bg-white border border-slate-200 rounded p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 font-mono text-xs text-slate-655 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1.5 flex-shrink-0">
+              <span className="w-3 h-3 rounded-full bg-[#ef4444]" />
+              <span className="w-3 h-3 rounded-full bg-[#eab308]" />
+              <span className="w-3 h-3 rounded-full bg-[#22c55e]" />
+            </div>
+            <span className="text-slate-300">|</span>
+            <span className="font-bold text-[#7C3AED]">DESIGN STUDIO</span>
+            <span className="text-slate-300">/</span>
+            <span className="text-slate-600 font-bold uppercase tracking-wider truncate max-w-[200px] md:max-w-none">{subject.name}</span>
+          </div>
 
-        {/* Welcome Banner Area */}
-        <div className="w-full mb-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <Card className={`${isPremiumTheme
-              ? 'bg-white border border-slate-200 shadow-sm'
-              : t.borderClass + ' ' + t.cardBg + ' ' + t.shadowClass
-              } brutalist-transition overflow-hidden relative w-full rounded-xl`}>
-
-              {isPremiumTheme ? (
-                /* Subtle full-width layout grid overlay for Clean EdTech Minimal theme */
-                <div className="absolute inset-0 opacity-[0.22] pointer-events-none select-none overflow-hidden">
-                  <svg className="w-full h-full" viewBox="0 0 800 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                    {/* Grid background - very light gray */}
-                    <g stroke="#E2E8F0" strokeWidth="0.8" strokeDasharray="3 3">
-                      <path d="M0,20 L800,20 M0,40 L800,40 M0,60 L800,60 M0,80 L800,80 M0,100 L800,100" />
-                      <path d="M100,0 L100,120 M200,0 L200,120 M300,0 L300,120 M400,0 L400,120 M500,0 L500,120 M600,0 L600,120 M700,0 L700,120" />
-                    </g>
-
-                    {/* Interactive designer blueprint elements - colored */}
-                    <g strokeWidth="0.8">
-                      {/* Left workspace element - blue accent */}
-                      <circle cx="240" cy="40" r="25" stroke="#3B82F6" strokeDasharray="4 2" />
-                      <circle cx="240" cy="40" r="12" stroke="#2563EB" />
-                      <circle cx="240" cy="40" r="3" fill="#2563EB" />
-                      <line x1="240" y1="5" x2="240" y2="75" stroke="#93C5FD" strokeDasharray="2 2" />
-                      <line x1="205" y1="40" x2="275" y2="40" stroke="#93C5FD" strokeDasharray="2 2" />
-                      <rect x="225" y="25" width="30" height="30" rx="3" stroke="#60A5FA" fill="#DBEAFE" fillOpacity="0.1" />
-
-                      {/* Right focus node - violet/indigo accent */}
-                      <circle cx="680" cy="60" r="35" stroke="#8B5CF6" strokeDasharray="4 4" />
-                      <circle cx="680" cy="60" r="20" stroke="#6366F1" />
-                      <circle cx="680" cy="60" r="4" fill="#4F46E5" />
-
-                      {/* Diagnostic label nodes - monospace texts */}
-                      <text x="685" y="28" fill="#6366F1" fontSize="6" fontFamily="monospace">GRID_FOCUS: 680,60</text>
-                      <text x="245" y="18" fill="#2563EB" fontSize="6" fontFamily="monospace">WORKSPACE: 240,40</text>
-
-                      {/* Connecting paths - soft blue transition line */}
-                      <path d="M240,40 L680,60" stroke="#818CF8" strokeWidth="1" strokeDasharray="3 1" opacity="0.6" />
-                    </g>
-                  </svg>
-                </div>
-              ) : (
-                <>
-                  <div className={`absolute top-0 left-0 right-0 h-4 ${t.btnPrimary.split(" ")[0] || "bg-black"} border-b-4 border-black`} />
-                  {/* General theme background pattern */}
-                  <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-[0.05] pointer-events-none hidden md:block select-none overflow-hidden text-slate-700">
-                    <svg className="w-full h-full" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g stroke="currentColor" strokeWidth="1">
-                        <circle cx="140" cy="50" r="40" strokeDasharray="4 4" />
-                        <line x1="100" y1="50" x2="180" y2="50" />
-                        <line x1="140" y1="10" x2="140" y2="90" strokeDasharray="2 2" />
-                      </g>
-                    </svg>
-                  </div>
-                </>
-              )}
-              <CardHeader className="pt-8 pb-6 relative z-10">
-                <div className="w-full max-w-3xl">
-                  <CardTitle className={`text-2xl md:text-3xl ${t.textHeading}`}>
-                    Welcome to {subject.name}
-                  </CardTitle>
-                  <CardDescription className={`${t.textMuted} mt-2 text-sm leading-relaxed`}>
-                    {subject.description || "Explore modules, quizzes, and resources."}
-                  </CardDescription>
-                </div>
-              </CardHeader>
-            </Card>
-          </motion.div>
+          <div className="flex flex-wrap items-center gap-4 w-full md:w-auto font-ibm">
+            {/* Design Metrics */}
+            <div className="flex items-center gap-2 bg-indigo-50/80 border border-indigo-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default">
+              <span className="text-indigo-600 font-semibold">Design System:</span>
+              <span className="text-[#7C3AED] font-bold">88.4%</span>
+            </div>
+            <div className="flex items-center gap-2 bg-emerald-50/80 border border-emerald-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default">
+              <span className="text-emerald-600 font-semibold">Figma Sync:</span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
+                <span className="text-emerald-800 font-bold uppercase">SUCCESSFUL</span>
+              </span>
+            </div>
+            <div className="flex items-center gap-2 bg-purple-50/80 border border-purple-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default">
+              <span className="text-purple-600 font-semibold">Accessibility:</span>
+              <span className="text-purple-800 font-bold">98.4%</span>
+            </div>
+            <div className="flex items-center gap-2 bg-amber-50/80 border border-amber-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default font-mono">
+              <span className="text-amber-600 font-semibold">UX Score:</span>
+              <span className="text-amber-800 font-bold px-1.5 py-0.5 bg-amber-100/50 border border-amber-200 rounded">A+</span>
+            </div>
+          </div>
         </div>
 
-        {/* Main Layout Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Column */}
-          <div className="lg:col-span-2 space-y-10">
-
-            {/* 1. Learning Modules */}
-            <div>
-              <div className="flex justify-between items-center mb-5">
-                <div>
-                  <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Layers className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Layers className={`w-6 h-6 mr-2 ${t.textHeading || ''}`} />} Learning Modules
-                  </h2>
-                  <p className={`text-sm ${t.textMuted} mt-1`}>Explore all the topics for this subject</p>
-                </div>
-                <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
-                  <Button variant="ghost" className={`${t.btnGhost} flex items-center view-all-btn`}>
-                    <span>View All Modules</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {modules.slice(0, 4).map((mod: any) => {
-                  return (
-                    <Link key={mod.id} href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
-                      <motion.div
-                        whileHover={isPremiumTheme ? "hover" : ""}
-                        animate="rest"
-                        className="h-full"
-                      >
-                        <motion.div
-                          variants={{
-                            rest: { y: 0, scale: 1 },
-                            hover: { y: -8, scale: 1.03 }
-                          }}
-                          transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                          className="h-full"
-                        >
-                          <DesignStudioCard
-                            isPremium={isPremiumTheme}
-                            label={`Module.Card M0${mod.moduleNo}`}
-                            className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group relative`}
-                          >
-                            <CardHeader className={isPremiumTheme ? "p-5 md:p-6 pb-2 relative z-10" : "pt-5 px-5 pb-2.5 relative z-10"}>
-                              {/* Badge */}
-                              <div className="flex justify-between items-center mb-3">
-                                <motion.span
-                                  variants={{
-                                    rest: { y: 0, boxShadow: "0 0px 0px rgba(0,0,0,0)" },
-                                    hover: { y: -1, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.03)" }
-                                  }}
-                                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                                  className={`inline-block text-[10px] px-2.5 py-1 transition-all duration-150 font-sans ${isPremiumTheme
-                                    ? "bg-indigo-50 text-indigo-850 border border-indigo-200/50 rounded-lg font-semibold"
-                                    : t.badge
-                                    }`}
-                                >
-                                  Module 0{mod.moduleNo}
-                                </motion.span>
-                                {isPremiumTheme && (
-                                  <span className={`text-[9px] font-sans font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${mod.moduleNo <= 2
-                                    ? "bg-green-100 text-green-800"
-                                    : mod.moduleNo <= 4
-                                      ? "bg-amber-100 text-amber-850"
-                                      : "bg-red-100 text-red-800"
-                                    }`}>
-                                    {mod.moduleNo <= 2 ? "Beginner" : mod.moduleNo <= 4 ? "Intermediate" : "Advanced"}
-                                  </span>
-                                )}
-                              </div>
-
-                              {/* ── ILLUSTRATION — PROTECTED ZONE, FADES ON HOVER ── */}
-                              {isPremiumTheme && (
-                                <motion.div
-                                  variants={{
-                                    rest: { opacity: 1, scale: 1 },
-                                    hover: { opacity: 1, scale: 1.02 }
-                                  }}
-                                  className="w-full h-20 bg-slate-50/50 border border-slate-200/60 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden"
-                                >
-                                  <div className="w-full h-full">
-                                    {renderModulePreview(mod.moduleNo, mod.title)}
-                                  </div>
-                                  <div className="absolute inset-0 opacity-[0.015] pointer-events-none" style={{
-                                    backgroundImage: `linear-gradient(to right, #3B82F6 1px, transparent 1px), linear-gradient(to bottom, #3B82F6 1px, transparent 1px)`,
-                                    backgroundSize: '8px 8px'
-                                  }} />
-                                </motion.div>
-                              )}
-
-                              {/* Title */}
-                              <CardTitle className={`text-base transition-colors duration-150 line-clamp-1 ${isPremiumTheme
-                                ? 'font-bold font-sans tracking-tight text-slate-800'
-                                : 'font-black leading-tight'
-                                }`}>
-                                {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
-                              </CardTitle>
-                            </CardHeader>
-
-                            <CardContent className={isPremiumTheme ? "p-5 md:p-6 pt-0 relative z-10 flex-1 flex flex-col justify-end" : "px-5 pb-5 pt-0 flex-1 flex flex-col justify-between"}>
-                              <div className={`pt-3 flex justify-between items-center text-xs font-semibold transition-all duration-150 ${isPremiumTheme
-                                ? 'border-t border-slate-100 text-slate-500 font-sans'
-                                : 'border-t-2 border-black text-zinc-500'
-                                }`}>
-                                <div className="flex gap-3">
-                                  <span className="flex items-center"><Book className="w-3.5 h-3.5 mr-1" /> {mod.subtopics?.length || 0} Units</span>
-                                </div>
-                                {isPremiumTheme && (
-                                  <motion.span
-                                    variants={{ hover: { x: 4 } }}
-                                    className="text-slate-655 flex items-center transition-colors"
-                                  >
-                                    <ArrowRight className="w-4 h-4" />
-                                  </motion.span>
-                                )}
-                              </div>
-                            </CardContent>
-                          </DesignStudioCard>
-                        </motion.div>
-                      </motion.div>
-                    </Link>
-                  );
-                })}
-                {modules.length === 0 && (
-                  <div className={`col-span-full py-8 text-center font-bold ${t.borderClass} ${t.cardBg} border-dashed`}>
-                    No modules available yet.
-                  </div>
-                )}
-              </div>
+          {/* UI LEARNING MODULES */}
+          <div className="bg-white border border-slate-200 rounded p-6 shadow-sm relative z-10">
+            <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-[#7C3AED] flex items-center gap-2">
+                <Layers className="w-4 h-4 text-[#7C3AED]" /> UI Learning Modules
+              </h3>
+              <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
+                <Button variant="ghost" className="text-slate-700 hover:text-[#7C3AED] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
+                  <span>View All Modules</span>
+                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                </Button>
+              </Link>
             </div>
 
-            {/* 2. Available Quizzes */}
-            <div>
-              <div className="flex justify-between items-center mb-5">
-                <div>
-                  <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Component className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Target className={`w-6 h-6 mr-2 ${t.textHeading || ''}`} />} Quizzes & Assessments
-                  </h2>
-                  <p className={`text-sm ${t.textMuted} mt-1`}>Test your knowledge</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+              {modules.slice(0, 5).map((mod: any, idx: number) => {
+                const subtopicsCount = mod.subtopics?.length || 0;
+                return (
+                  <Link key={mod.id} href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
+                    <div className="bg-slate-50 border border-slate-200 rounded p-4 hover:border-indigo-400 hover:bg-white hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 group h-full flex flex-col justify-between cursor-pointer relative overflow-hidden">
+                      {/* Subtle accent bar for UI premium feel */}
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      
+                      <div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-[10px] text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded font-mono font-bold tracking-widest uppercase">
+                            MODULE 0{mod.moduleNo || (idx + 1)}
+                          </span>
+                        </div>
+                        <h4 className="font-mono text-xs font-bold text-slate-800 mb-2 line-clamp-2 group-hover:text-indigo-600 transition-colors">
+                          {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
+                        </h4>
+                        <p className="text-[10px] text-slate-500 line-clamp-2 mb-4 font-sans leading-relaxed">
+                          {mod.co || "Introduces core concepts and key terminology."}
+                        </p>
+                      </div>
+                      <div className="pt-2.5 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-400 font-mono">
+                        <span className="flex items-center gap-1">
+                          <Book className="w-3.5 h-3.5" /> {subtopicsCount} Subtopics
+                        </span>
+                        <span className="text-indigo-600 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
+                          Study <ArrowRight className="w-3 h-3" />
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+              {modules.length === 0 && (
+                <div className="col-span-full py-8 text-center font-bold text-slate-400 border border-dashed border-slate-200 rounded">
+                  No modules available yet.
                 </div>
-                <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
-                  <Button variant="ghost" className={`${t.btnGhost} flex items-center view-all-btn`}>
-                    <span>View All Quizzes</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4">
-                {quizzesWithAttempts.slice(0, 3).map((quiz: any) => {
-                  return (
-                    <motion.div
-                      key={quiz.id}
-                      className="h-full"
-                      whileHover={isPremiumTheme ? "hover" : ""}
-                      animate="rest"
-                    >
-                      <motion.div
-                        variants={{
-                          rest: { y: 0, scale: 1 },
-                          hover: { y: -3, scale: 1.015 }
-                        }}
-                        transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                      >
-                        <DesignStudioCard isPremium={isPremiumTheme} label={`Quiz.Card M0${quiz.module?.moduleNo || '?'}`} className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group relative`}
-                        >
-                          {/* Clean layout */}
-                          <div className="flex flex-col sm:flex-row relative z-10 w-full h-full">
-                            {isPremiumTheme ? (
-                              <div className="flex flex-col sm:flex-row flex-1">
-                                <div className="w-full sm:w-28 bg-slate-50 border-b sm:border-b-0 sm:border-r border-slate-200 flex items-center justify-center p-3 flex-shrink-0 relative overflow-hidden">
-                                  <div className="w-full h-16 flex items-center justify-center">
-                                    {renderQuizPreview(quizzesWithAttempts.indexOf(quiz) + 1, quiz.title)}
-                                  </div>
-                                  <div className="absolute inset-0 opacity-[0.015] pointer-events-none" style={{
-                                    backgroundImage: `linear-gradient(to right, #3B82F6 1px, transparent 1px), linear-gradient(to bottom, #3B82F6 1px, transparent 1px)`,
-                                    backgroundSize: '6px 6px'
-                                  }} />
-                                </div>
-                                <div className="p-5 flex-1 text-left">
-                                  <div className="flex justify-between items-start mb-2">
-                                    <span className="text-[10px] font-mono px-2.5 py-1 bg-slate-100 text-slate-700 border border-slate-200 rounded font-semibold">
-                                      Module {quiz.module?.moduleNo || "?"}
-                                    </span>
-                                  </div>
-                                  <h3 className="text-base font-semibold font-sans text-slate-850 mb-2">
-                                    {getQuizDisplayTitle(quiz, modules)}
-                                  </h3>
-
-                                </div>
-                              </div>
-                            ) : (
-                              <>
-                                {isPremiumTheme && (
-                                  <div className="w-full sm:w-28 bg-slate-50 border-b sm:border-b-0 sm:border-r border-slate-200 flex items-center justify-center p-3 flex-shrink-0 relative overflow-hidden">
-                                    <motion.div
-                                      variants={{ hover: { x: 3, y: -2 } }}
-                                      className="w-full h-16 flex items-center justify-center"
-                                    >
-                                      {renderQuizPreview(quizzesWithAttempts.indexOf(quiz) + 1, quiz.title)}
-                                    </motion.div>
-                                    <div className="absolute inset-0 opacity-[0.015] pointer-events-none" style={{
-                                      backgroundImage: `linear-gradient(to right, #3B82F6 1px, transparent 1px), linear-gradient(to bottom, #3B82F6 1px, transparent 1px)`,
-                                      backgroundSize: '6px 6px'
-                                    }} />
-                                  </div>
-                                )}
-                                <div className="p-5 flex-1 text-left">
-                                  <div className="flex justify-between items-start mb-2">
-                                    <span className={`text-[10px] font-mono px-2.5 py-1 transition-all duration-150 ${t.badge}`}>
-                                      Module {quiz.module?.moduleNo || "?"}
-                                    </span>
-                                  </div>
-                                  <h3 className={`text-base transition-colors mb-2 font-black leading-tight`}>
-                                    {getQuizDisplayTitle(quiz, modules)}
-                                  </h3>
-                                </div>
-                              </>
-                            )}
-
-                            <div className={`p-5 flex flex-col justify-center items-center transition-all duration-300 relative z-20 w-full sm:w-auto ${isPremiumTheme
-                              ? 'sm:min-w-[150px] border-t sm:border-t-0 sm:border-l border-slate-200 group-hover:border-transparent'
-                              : 'border-t sm:border-t-0 sm:border-l-4 border-black ' + (themeKey === 'python programming' ? 'bg-zinc-900' : 'bg-zinc-100')
-                              }`}
-                            >
-                              <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="w-full block">
-                                <Button className={`w-full group/btn ${isPremiumTheme ? "font-semibold tracking-normal text-sm group-hover:bg-white group-hover:text-[#8B5CF6] group-hover:border-white transition-all duration-300" : "font-black uppercase tracking-wider"} ${t.btnPrimary}`}>
-                                  <span>Start Quiz</span>
-                                  {isPremiumTheme && <ArrowRight className="w-4 h-4 ml-1.5 transition-transform duration-200 group-hover/btn:translate-x-1.5" />}
-                                </Button>
-                              </Link>
-                            </div>
-                          </div>
-                        </DesignStudioCard>
-                      </motion.div>
-                    </motion.div>
-                  );
-                })}
-                {quizzesWithAttempts.length === 0 && (
-                  <div className={`py-8 text-center font-bold ${t.borderClass} ${t.cardBg} border-dashed`}>
-                    No quizzes assigned yet.
-                  </div>
-                )}
-              </div>
+              )}
             </div>
+          </div>
+
+            {/* TWO COLUMN GRID FOR QUIZZES AND FLASHCARDS (Like Python) */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10 w-full">
+
+              {/* 2. Quizzes & Assessments */}
+              <div className="lg:col-span-2 bg-white border border-slate-200 rounded p-6 shadow-sm">
+                <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-[#7C3AED] flex items-center gap-2">
+                    <Component className="w-4 h-4 text-[#7C3AED]" /> Interactive Design Challenges
+                  </h3>
+                  <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
+                    <Button variant="ghost" className="text-slate-700 hover:text-[#7C3AED] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
+                      <span>View All Quizzes</span>
+                      <ArrowRight className="w-4 h-4 ml-1.5" />
+                    </Button>
+                  </Link>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {quizzesWithAttempts.slice(0, 6).map((quiz: any, idx: number) => {
+                    const difficulty = idx % 2 === 0 ? "Medium" : "Hard";
+                    const isHard = difficulty === "Hard";
+
+                    // Color configurations for UI Programming
+                    const themeColor = isHard ? "text-purple-700 bg-purple-50 border-purple-200" : "text-indigo-700 bg-indigo-50 border-indigo-200";
+                    const btnColorClass = isHard
+                      ? "bg-purple-600 hover:bg-purple-700 border-purple-700 shadow-purple-100"
+                      : "bg-indigo-500 hover:bg-indigo-600 border-indigo-600 shadow-indigo-100";
+
+                    return (
+                      <div key={quiz.id} className="bg-slate-50 border border-slate-200 rounded p-4 hover:border-indigo-400 hover:bg-white hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 group">
+                        <div className="flex justify-start items-start mb-2">
+                          <span className={`text-[10px] ${themeColor} border px-2 py-0.5 rounded font-mono font-bold tracking-widest uppercase`}>🎨 UI CHALLENGE</span>
+                        </div>
+                        <h4 className="font-sans text-xs font-bold text-slate-800 mb-3 line-clamp-1 group-hover:text-indigo-600 transition-colors">{getQuizDisplayTitle(quiz, modules)}</h4>
+                        <div className="mt-4 flex justify-end">
+                          <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`}>
+                            <Button className={`${btnColorClass} text-white border rounded font-mono text-[10px] py-1.5 px-4 h-8 uppercase tracking-wider hover:scale-105 active:scale-95 hover:shadow-md transition-all duration-200`}>
+                              Start Challenge →
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {quizzesWithAttempts.length === 0 && (
+                    <div className="col-span-2 p-6 border border-dashed border-slate-200 text-center text-slate-450 font-mono text-xs rounded">
+                      All design specs met. No active challenges.
+                    </div>
+                  )}
+                </div>
+              </div>
 
             {/* 3. Flashcard Decks */}
-            <div>
-              <div className="flex justify-between items-center mb-5">
-                <div>
-                  <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Palette className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Zap className={`w-6 h-6 mr-2 ${t.textHeading || ''}`} />} Flashcard Decks
-                  </h2>
-                  <p className={`text-sm ${t.textMuted} mt-1`}>Quick revision decks</p>
-                </div>
+            <div className="bg-white border border-slate-200 rounded p-6 shadow-sm">
+              <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-[#7C3AED] flex items-center gap-2">
+                  <Palette className="w-4 h-4 text-[#7C3AED]" /> UI Flashcard Decks
+                </h3>
                 <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
-                  <Button variant="ghost" className={`${t.btnGhost} flex items-center view-all-btn`}>
+                  <Button variant="ghost" className="text-slate-700 hover:text-[#7C3AED] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
                     <span>View All Decks</span>
                     <ArrowRight className="w-4 h-4 ml-1.5" />
                   </Button>
                 </Link>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
-                {flashcardDecks.slice(0, 4).map((deck: any) => {
+              <div className="space-y-3">
+                {flashcardDecks.slice(0, 4).map((deck: any, idx: number) => {
+                  const keywordsList = ["Figma", "Spacing", "Colors", "A11y"];
+                  const kw = keywordsList[idx % keywordsList.length];
+
+                  const badgeColors = [
+                    "text-indigo-700 bg-indigo-50 border-indigo-200 hover:bg-indigo-100",
+                    "text-purple-700 bg-purple-50 border-purple-200 hover:bg-purple-100",
+                    "text-pink-700 bg-pink-50 border-pink-200 hover:bg-pink-100",
+                    "text-fuchsia-700 bg-fuchsia-50 border-fuchsia-200 hover:bg-fuchsia-100"
+                  ];
+                  const badgeClass = badgeColors[idx % badgeColors.length];
+
                   return (
-                    <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`} className="block h-full">
-                      <motion.div
-                        whileHover={isPremiumTheme ? "hover" : ""}
-                        animate="rest"
-                        className="h-full"
-                      >
-                        <motion.div
-                          variants={{
-                            rest: { y: 0, scale: 1 },
-                            hover: { y: -8, scale: 1.012 }
-                          }}
-                          transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                          className="h-full relative group"
-                        >
-                          {/* Stack offset backgrounds — frozen, no hover changes */}
-                          {isPremiumTheme && (
-                            <>
-                              <div
-                                className="absolute inset-0 bg-slate-100 rounded-lg border border-slate-200/80 translate-y-1 translate-x-1 pointer-events-none transition-opacity duration-200 group-hover:opacity-0"
-                              />
-                              <div
-                                className="absolute inset-0 bg-slate-50 rounded-lg border border-slate-200/60 translate-y-2 translate-x-2 pointer-events-none transition-opacity duration-200 opacity-60 group-hover:opacity-0"
-                              />
-                            </>
-                          )}
-                          <DesignStudioCard isPremium={isPremiumTheme} label={`FlashcardDeck M0${deck.module?.moduleNo || '?'}`} className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition relative z-10 overflow-hidden group`}
-                          >
-                            <CardHeader className="p-5 md:p-6 pb-2">
-                              <div className="flex justify-between items-start mb-2">
-                                <motion.span
-                                  variants={{
-                                    rest: { y: 0, boxShadow: "0 0px 0px rgba(0,0,0,0)" },
-                                    hover: { y: -1, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.03)" }
-                                  }}
-                                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                                  className={`text-[10px] font-sans px-2.5 py-1 rounded-lg font-semibold transition-all duration-150 ${isPremiumTheme
-                                    ? "bg-indigo-50 text-indigo-800 border border-indigo-200/50 group-hover:bg-indigo-100 group-hover:text-indigo-950"
-                                    : t.badge
-                                    }`}
-                                >
-                                  Module {deck.module?.moduleNo || "?"}
-                                </motion.span>
-                              </div>
-                              {/* ── ILLUSTRATION — PROTECTED ZONE ── */}
-                              {isPremiumTheme && (
-                                <div className="w-full h-24 bg-slate-50/50 border border-slate-200/60 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
-                                  <motion.div
-                                    variants={{ hover: { x: 3, y: -2 } }}
-                                    className="w-full h-full flex items-center justify-center"
-                                  >
-                                    {renderFlashcardPreview(deck.module?.moduleNo || 0, getFlashcardDisplayTitle(deck, modules))}
-                                  </motion.div>
-                                  <div className="absolute inset-0 opacity-[0.015] pointer-events-none" style={{
-                                    backgroundImage: `linear-gradient(to right, #3B82F6 1px, transparent 1px), linear-gradient(to bottom, #3B82F6 1px, transparent 1px)`,
-                                    backgroundSize: '6px 6px'
-                                  }} />
-                                </div>
-                              )}
-                              <CardTitle
-                                className={`text-base transition-colors line-clamp-2 ${isPremiumTheme
-                                  ? 'font-bold font-sans tracking-tight text-slate-800'
-                                  : t.titleHover + ' font-black leading-tight'
-                                  }`}
-                              >
-                                {getFlashcardDisplayTitle(deck, modules)}
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-5 md:p-6 pt-0">
-                              <div
-                                className={`flex items-center text-xs font-semibold font-mono text-slate-450`}
-                              >
-                                <Layers
-                                  className={`w-3.5 h-3.5 mr-1.5 text-slate-450`}
-                                />
-                                {deck.cards?.length || 0} Cards
-                              </div>
-                            </CardContent>
-                          </DesignStudioCard>
-                        </motion.div>
-                      </motion.div>
+                    <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
+                      <div className="bg-slate-50 border border-slate-200 p-3.5 rounded hover:border-purple-400 hover:bg-white hover:shadow-md hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 flex justify-between items-center cursor-pointer group">
+                        <div className="flex items-center gap-2 overflow-hidden">
+                          <span className={`font-mono text-[10px] font-bold px-2 py-0.5 border rounded flex-shrink-0 ${badgeClass} transition-colors`}>{kw}</span>
+                          <span className="font-sans text-xs text-slate-800 font-semibold group-hover:text-purple-700 transition-colors truncate">{getFlashcardDisplayTitle(deck, modules)}</span>
+                        </div>
+                        <span className="text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 border border-indigo-100 rounded font-mono font-bold whitespace-nowrap">{deck.cards?.length || 0} CARDS</span>
+                      </div>
                     </Link>
                   );
                 })}
                 {flashcardDecks.length === 0 && (
-                  <div className={`col-span-full py-8 text-center font-bold ${t.borderClass} ${t.cardBg} border-dashed`}>
-                    No flashcard decks available yet.
+                  <div className="p-4 border border-dashed border-slate-200 text-center text-slate-450 font-mono text-[10px] rounded">
+                    Library index is empty.
                   </div>
                 )}
               </div>
             </div>
+            
+            </div>
 
-            {/* 4. Mind Maps */}
-            <div>
-              <div className="flex justify-between items-center mb-5">
+            {/* CONNECTED ARCHITECTURE DIAGRAMS (MINDMAPS) */}
+            <div className="w-full relative z-10 mt-6">
+              <div className="bg-white border border-slate-200 rounded p-6 flex flex-col justify-between shadow-sm">
                 <div>
-                  <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Grid className="w-6 h-6 mr-2 text-[#7C3AED]" /> : <Brain className={`w-6 h-6 mr-2 ${t.textHeading || ''}`} />} Mind Maps
-                  </h2>
-                  <p className={`text-sm ${t.textMuted} mt-1`}>Explore visual topic structures</p>
-                </div>
-                <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
-                  <Button variant="ghost" className={`${t.btnGhost} flex items-center view-all-btn`}>
-                    <span>View All Mind Maps</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </Button>
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {mindmaps.slice(0, 4).map((map: any) => {
-                  return (
-                    <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="block h-full">
-                      <motion.div
-                        whileHover={isPremiumTheme ? "hover" : ""}
-                        animate="rest"
-                        className="h-full"
-                      >
-                        <motion.div
-                          variants={{
-                            rest: { y: 0, scale: 1 },
-                            hover: { y: -8, scale: 1.012 }
-                          }}
-                          transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                          className="h-full"
-                        >
-                          <DesignStudioCard isPremium={isPremiumTheme} label="MindMap.Card" className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group`}
-                          >
-                            <CardHeader className="p-5 md:p-6 pb-2">
-                              <div className="flex justify-between items-start mb-2">
-                                <motion.span
-                                  variants={{
-                                    rest: { y: 0, boxShadow: "0 0px 0px rgba(0,0,0,0)" },
-                                    hover: { y: -1, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.03)" }
-                                  }}
-                                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                                  className={`text-[10px] font-sans px-2.5 py-1 rounded-lg font-semibold transition-all duration-150 ${isPremiumTheme
-                                    ? "bg-indigo-50 text-indigo-800 border border-indigo-200/50 group-hover:bg-indigo-100 group-hover:text-indigo-950"
-                                    : t.badge
-                                    }`}
-                                >
-                                  Mind Map
-                                </motion.span>
-                              </div>
-                              {/* ── ILLUSTRATION — PROTECTED ZONE ── */}
-                              {isPremiumTheme && (
-                                <div className="w-full h-12 bg-slate-50/50 border border-slate-200/60 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden transition-all duration-300">
-                                  <motion.div
-                                    variants={{ hover: { x: 3, y: -2 } }}
-                                    className="w-full h-full flex items-center justify-center"
-                                  >
-                                    <svg className="w-full h-full text-slate-400" viewBox="0 0 150 40" fill="none" stroke="currentColor" strokeWidth="1.2">
-                                      {/* Left connection nodes */}
-                                      <circle cx="28" cy="20" r="2" fill="currentColor" opacity="0.5" />
-                                      <line x1="30" y1="20" x2="54" y2="20" stroke="currentColor" strokeDasharray="3 3" opacity="0.3" />
-
-                                      {/* Right connection nodes */}
-                                      <circle cx="122" cy="20" r="2" fill="currentColor" opacity="0.5" />
-                                      <line x1="96" y1="20" x2="120" y2="20" stroke="currentColor" strokeDasharray="3 3" opacity="0.3" />
-
-                                      <g transform="translate(59, 4) scale(1.3)">
-                                        <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M12 5v14" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M12 9h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-4" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M12 15h-4a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h4" strokeLinecap="round" strokeLinejoin="round" />
-                                      </g>
-                                    </svg>
-                                  </motion.div>
-                                </div>
-                              )}
-                              <CardTitle
-                                className={`text-base transition-colors line-clamp-2 ${isPremiumTheme
-                                  ? 'font-bold font-sans tracking-tight text-slate-800'
-                                  : t.titleHover + ' font-black leading-tight'
-                                  }`}
-                              >
-                                {map.title}
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-5 md:p-6 pt-0">
-                              <div
-                                className={`flex items-center text-xs font-semibold font-mono text-slate-450`}
-                              >
-                                <ExternalLink
-                                  className="w-3.5 h-3.5 mr-1.5 text-slate-450"
-                                />
-                                Interactive View
-                              </div>
-                            </CardContent>
-                          </DesignStudioCard>
-                        </motion.div>
-                      </motion.div>
+                  <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-[#7C3AED] flex items-center gap-2">
+                      <Grid className="w-4 h-4 text-[#7C3AED]" /> UI Mind Maps
+                    </h3>
+                    <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
+                      <Button variant="ghost" className="text-slate-700 hover:text-[#7C3AED] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
+                        <span>View All Mind Maps</span>
+                        <ArrowRight className="w-4 h-4 ml-1.5" />
+                      </Button>
                     </Link>
-                  );
-                })}
-                {mindmaps.length === 0 && (
-                  <div className={`col-span-full py-8 text-center font-bold ${t.borderClass} ${t.cardBg} border-dashed`}>
-                    No mind maps available yet.
                   </div>
-                )}
+
+                  <div className="relative flex flex-col items-center justify-center py-6">
+                    {/* SVG Connector Lines */}
+                    <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
+                      <svg className="w-full h-full stroke-slate-200 stroke-[2]" style={{ strokeDasharray: "4 4" }}>
+                        <line x1="15%" y1="50%" x2="38%" y2="50%" />
+                        <line x1="38%" y1="50%" x2="62%" y2="50%" />
+                        <line x1="62%" y1="50%" x2="85%" y2="50%" />
+                      </svg>
+                    </div>
+
+                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
+                      {mindmaps.slice(0, 4).map((map: any, idx: number) => {
+                        const nodeColors = [
+                          { bg: "bg-indigo-50 text-indigo-700 border-indigo-200", hover: "group-hover:bg-indigo-600 group-hover:border-indigo-600" },
+                          { bg: "bg-purple-50 text-purple-700 border-purple-200", hover: "group-hover:bg-purple-600 group-hover:border-purple-600" },
+                          { bg: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200", hover: "group-hover:bg-fuchsia-600 group-hover:border-fuchsia-600" },
+                          { bg: "bg-violet-50 text-violet-700 border-violet-200", hover: "group-hover:bg-violet-600 group-hover:border-violet-600" },
+                        ];
+                        const colors = nodeColors[idx % nodeColors.length];
+
+                        return (
+                          <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="w-full h-full flex">
+                            <div className="bg-slate-50 border border-slate-200 hover:border-indigo-400 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm w-full h-full transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md flex flex-col justify-between items-center gap-2">
+                              <div className="w-full flex flex-col items-center">
+                                <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
+                                  M0{idx + 1}
+                                </div>
+                                <h4 className="font-sans text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-2 group-hover:text-indigo-600 transition-colors px-1 leading-normal">{map.title}</h4>
+                              </div>
+                              <p className="text-[9px] text-slate-400 font-mono mt-auto">Design Node</p>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* 5. Infographics */}
-            <div className="mt-8">
-              <div className="flex justify-between items-center mb-5">
+            {/* CONNECTED ARCHITECTURE DIAGRAMS (INFOGRAPHICS) */}
+            <div className="w-full relative z-10 mt-6">
+              <div className="bg-white border border-slate-200 rounded p-6 flex flex-col justify-between shadow-sm">
                 <div>
-                  <h2 className={`text-2xl ${t.textHeading} flex items-center`}>
-                    {isPremiumTheme ? <Grid className="w-6 h-6 mr-2 text-[#ec4899]" /> : <Brain className="w-6 h-6 mr-2 text-pink-600" />} Infographics Topologies
-                  </h2>
-                  <p className={`text-sm ${t.textMuted} mt-1`}>Explore visual learning paths</p>
-                </div>
-                <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
-                  <Button variant="ghost" className={`${t.btnGhost} flex items-center view-all-btn`}>
-                    <span>View All Infographics</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </Button>
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {infographics.slice(0, 4).map((info: any) => {
-                  return (
-                    <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="block h-full">
-                      <motion.div
-                        whileHover={isPremiumTheme ? "hover" : ""}
-                        animate="rest"
-                        className="h-full"
-                      >
-                        <motion.div
-                          variants={{
-                            rest: { y: 0, scale: 1 },
-                            hover: { y: -8, scale: 1.012 }
-                          }}
-                          transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                          className="h-full"
-                        >
-                          <DesignStudioCard isPremium={isPremiumTheme} label="Infographic.Card" className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} flex flex-col justify-between brutalist-transition overflow-hidden group`}
-                          >
-                            <CardHeader className="p-5 md:p-6 pb-2">
-                              <div className="flex justify-between items-start mb-2">
-                                <motion.span
-                                  variants={{
-                                    rest: { y: 0, boxShadow: "0 0px 0px rgba(0,0,0,0)" },
-                                    hover: { y: -1, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.03)" }
-                                  }}
-                                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                                  className={`text-[10px] font-sans px-2.5 py-1 rounded-lg font-semibold transition-all duration-150 ${isPremiumTheme
-                                    ? "bg-pink-50 text-pink-800 border border-pink-200/50 group-hover:bg-pink-100 group-hover:text-pink-950"
-                                    : t.badge
-                                    }`}
-                                >
-                                  Infographic
-                                </motion.span>
-                              </div>
-                              {/* ── ILLUSTRATION — PROTECTED ZONE ── */}
-                              {isPremiumTheme && (
-                                <div className="w-full h-12 bg-slate-50/50 border border-slate-200/60 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden transition-all duration-300">
-                                  <motion.div
-                                    variants={{ hover: { x: 3, y: -2 } }}
-                                    className="w-full h-full flex items-center justify-center"
-                                  >
-                                    <svg className="w-full h-full text-slate-400" viewBox="0 0 150 40" fill="none" stroke="currentColor" strokeWidth="1.2">
-                                      {/* Left connection nodes */}
-                                      <circle cx="28" cy="20" r="2" fill="currentColor" opacity="0.5" />
-                                      <line x1="30" y1="20" x2="54" y2="20" stroke="currentColor" strokeDasharray="3 3" opacity="0.3" />
-
-                                      {/* Right connection nodes */}
-                                      <circle cx="122" cy="20" r="2" fill="currentColor" opacity="0.5" />
-                                      <line x1="96" y1="20" x2="120" y2="20" stroke="currentColor" strokeDasharray="3 3" opacity="0.3" />
-
-                                      <g transform="translate(59, 4) scale(1.3)">
-                                        <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M12 5v14" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M12 9h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-4" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M12 15h-4a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h4" strokeLinecap="round" strokeLinejoin="round" />
-                                      </g>
-                                    </svg>
-                                  </motion.div>
-                                </div>
-                              )}
-                              <CardTitle
-                                className={`text-base transition-colors line-clamp-2 ${isPremiumTheme
-                                  ? 'font-bold font-sans tracking-tight text-slate-800'
-                                  : t.titleHover + ' font-black leading-tight'
-                                  }`}
-                              >
-                                {info.title}
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-5 md:p-6 pt-0">
-                              <div
-                                className={`flex items-center text-xs font-semibold font-mono text-slate-450`}
-                              >
-                                <ExternalLink
-                                  className="w-3.5 h-3.5 mr-1.5 text-slate-450"
-                                />
-                                Interactive View
-                              </div>
-                            </CardContent>
-                          </DesignStudioCard>
-                        </motion.div>
-                      </motion.div>
+                  <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-[#ec4899] flex items-center gap-2">
+                      <Grid className="w-4 h-4 text-[#ec4899]" /> Infographics Topologies
+                    </h3>
+                    <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
+                      <Button variant="ghost" className="text-slate-700 hover:text-[#ec4899] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
+                        <span>View All Infographics</span>
+                        <ArrowRight className="w-4 h-4 ml-1.5" />
+                      </Button>
                     </Link>
-                  );
-                })}
-                {infographics.length === 0 && (
-                  <div className={`col-span-full py-8 text-center font-bold ${t.borderClass} ${t.cardBg} border-dashed`}>
-                    No infographics available yet.
+                  </div>
+
+                  <div className="relative flex flex-col items-center justify-center py-6">
+                    {/* SVG Connector Lines */}
+                    <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
+                      <svg className="w-full h-full stroke-slate-200 stroke-[2]" style={{ strokeDasharray: "4 4" }}>
+                        <line x1="15%" y1="50%" x2="38%" y2="50%" />
+                        <line x1="38%" y1="50%" x2="62%" y2="50%" />
+                        <line x1="62%" y1="50%" x2="85%" y2="50%" />
+                      </svg>
+                    </div>
+
+                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
+                      {infographics.slice(0, 4).map((info: any, idx: number) => {
+                        const nodeColors = [
+                          { bg: "bg-pink-50 text-pink-700 border-pink-200", hover: "group-hover:bg-pink-600 group-hover:border-pink-600" },
+                          { bg: "bg-rose-50 text-rose-700 border-rose-200", hover: "group-hover:bg-rose-600 group-hover:border-rose-600" },
+                          { bg: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200", hover: "group-hover:bg-fuchsia-600 group-hover:border-fuchsia-600" },
+                          { bg: "bg-purple-50 text-purple-700 border-purple-200", hover: "group-hover:bg-purple-600 group-hover:border-purple-600" },
+                        ];
+                        const colors = nodeColors[idx % nodeColors.length];
+
+                        return (
+                          <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="w-full h-full flex">
+                            <div className="bg-slate-50 border border-slate-200 hover:border-pink-400 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm w-full h-full transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md flex flex-col justify-between items-center gap-2">
+                              <div className="w-full flex flex-col items-center">
+                                <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
+                                  I0{idx + 1}
+                                </div>
+                                <h4 className="font-sans text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-2 group-hover:text-pink-600 transition-colors px-1 leading-normal">{info.title}</h4>
+                              </div>
+                              <p className="text-[9px] text-slate-400 font-mono mt-auto">Infographic Node</p>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          {/* Reference Materials (Bottom Column) */}
+          <div className="w-full relative z-10 mt-6 pb-20">
+            <div className="bg-white border border-slate-200 rounded p-6 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <FileText className="w-4 h-4 text-[#7C3AED]" />
+                <h3 className="text-sm font-bold uppercase tracking-widest text-[#7C3AED]">Design Resources & Documentation</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {subjectResources.slice(0, 4).map((resource: any, index: number) => (
+                  <a key={index} href={resource.link} target="_blank" rel="noopener noreferrer" className="block w-full">
+                    <div className="bg-slate-50 border border-slate-200 p-3 rounded hover:bg-indigo-50/50 hover:border-indigo-400 hover:shadow-sm transition-all duration-200 flex items-start gap-3 group h-full">
+                      <div className="bg-white border border-slate-200 rounded p-1.5 mt-0.5 group-hover:border-indigo-400 transition-colors">
+                        <FileText className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-700 group-hover:text-indigo-700 transition-colors line-clamp-1">{resource.title}</p>
+                        <p className="text-[9px] text-slate-400 font-mono mt-0.5 uppercase tracking-wider">{resource.type}</p>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+                {subjectResources.length === 0 && (
+                  <div className="col-span-full py-4 text-center text-slate-400 text-xs font-mono border border-dashed rounded">
+                    No official design assets linked.
                   </div>
                 )}
               </div>
             </div>
-          </div>
-
-          {/* Sidebar Column */}
-          <div className="space-y-8">
-            {/* Resources */}
-            <motion.div
-              initial={{ opacity: 0, x: 15 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-            >
-              <motion.div
-                whileHover={isPremiumTheme ? "hover" : ""}
-                animate="rest"
-                className="h-full"
-              >
-                <motion.div
-                  variants={{
-                    rest: { y: 0, scale: 1 },
-                    hover: { y: -8, scale: 1.012 }
-                  }}
-                  transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                  className="h-full relative group"
-                >
-                  {/* Stack offset backgrounds — frozen, no hover changes */}
-                  {isPremiumTheme && (
-                    <>
-                      <div
-                        className="absolute inset-0 bg-slate-100 rounded-lg border border-slate-200/80 translate-y-1 translate-x-1 pointer-events-none transition-opacity duration-200 group-hover:opacity-0"
-                      />
-                      <div
-                        className="absolute inset-0 bg-slate-50 rounded-lg border border-slate-200/60 translate-y-2 translate-x-2 pointer-events-none transition-opacity duration-200 opacity-60 group-hover:opacity-0"
-                      />
-                    </>
-                  )}
-                  <DesignStudioCard isPremium={isPremiumTheme} label="ResourceCard" className={`h-full ${t.cardBg} ${t.borderClass} ${t.shadowClass} brutalist-transition relative z-10 overflow-hidden group`}
-                  >
-                    <CardHeader className={`pb-4 relative overflow-hidden transition-colors duration-300 ${isPremiumTheme ? 'border-b border-slate-100' : 'border-b-4 border-black'}`}>
-                      <CardTitle
-                        className={`text-base flex items-center justify-center w-full transition-colors duration-300 ${isPremiumTheme ? 'font-bold font-sans tracking-tight text-slate-800' : t.textHeading}`}
-                      >
-                        {isPremiumTheme ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <Columns className="w-4 h-4 text-slate-500" />
-                            Reference Materials
-                          </span>
-                        ) : (
-                          <span className="flex items-center justify-center gap-2">
-                            <FileText className={`w-4 h-4 ${t.textHeading || ''}`} />
-                            Reference Materials
-                          </span>
-                        )}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-4 pb-4 px-4 space-y-4 w-full">
-                      {subjectResources.map((resource: any, index: number) => (
-                        <div key={index} className="w-full transition-all duration-200 hover:-translate-y-1">
-                          <SubjectResourceCard
-                            title={resource.title}
-                            type={resource.type}
-                            link={resource.link}
-                          />
-                        </div>
-                      ))}
-                      {subjectResources.length === 0 && (
-                        <p className={`text-sm font-bold text-center py-2 transition-colors duration-300 ${isPremiumTheme ? 'text-slate-400' : 'text-zinc-500'}`}>No resources provided yet.</p>
-                      )}
-                    </CardContent>
-                  </DesignStudioCard>
-                </motion.div>
-              </motion.div>
-            </motion.div>
           </div>
         </div>
       </div>
-    </div>
   );
 }

@@ -14,6 +14,7 @@ export function DeleteSubjectButton({ subjectId, subjectName }: { subjectId: str
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigating to the subject link
+    e.stopPropagation(); // Prevent triggering Card onClick
     setIsConfirmOpen(true);
   };
 
