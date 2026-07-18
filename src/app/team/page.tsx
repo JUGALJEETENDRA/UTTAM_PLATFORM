@@ -80,27 +80,135 @@ const cardVariants = {
   }
 };
 
-interface ImageWithFallbackProps {
-  src: string;
-  alt: string;
-  fallback: React.ReactNode;
+const Github = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+    <path d="M9 18c-4.51 2-5-2-7-2" />
+  </svg>
+);
+
+const Linkedin = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .filter(Boolean)
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
 
-function ImageWithFallback({ src, alt, fallback }: ImageWithFallbackProps) {
+interface TeamImageProps {
+  src?: string;
+  name: string;
+}
+
+function TeamImage({ src, name }: TeamImageProps) {
   const [error, setError] = React.useState(false);
-
-  if (!src || error) return <>{fallback}</>;
-
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-  const imageSrc = src.startsWith('http') || src.startsWith('data:') ? src : `${basePath}${src}`;
+  const imageSrc = src && (src.startsWith('http') || src.startsWith('data:')) ? src : src ? `${basePath}${src}` : '';
+
+  if (!src || error) {
+    return (
+      <div className="w-24 h-24 rounded-2xl bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-400 font-bold font-mono text-xl shrink-0 transition-transform duration-300 group-hover:scale-106 select-none">
+        {getInitials(name)}
+      </div>
+    );
+  }
 
   return (
-    <img
-      src={imageSrc}
-      alt={alt}
-      onError={() => setError(true)}
-      className="w-24 h-24 rounded-2xl object-cover shadow-md shrink-0 border border-slate-200/80"
-    />
+    <div className="w-24 h-24 rounded-2xl border border-slate-200/80 overflow-hidden shrink-0">
+      <img
+        src={imageSrc}
+        alt={name}
+        onError={() => setError(true)}
+        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-106"
+      />
+    </div>
+  );
+}
+
+interface TeamCardProps {
+  member: TeamMember;
+}
+
+function TeamCard({ member }: TeamCardProps) {
+  const isMentor = member.role === "Team Mentor";
+  
+  return (
+    <div className="w-[340px] h-[150px] flex flex-row items-center p-5 bg-white border-2 border-[var(--primary)] rounded-2xl shadow-[5px_5px_0px_var(--primary)] transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[8px_8px_0px_var(--primary)] hover:border-red-500 group select-none">
+      {/* Left: Profile Image */}
+      <TeamImage src={member.imageUrl} name={member.name} />
+      
+      {/* Right: Name, Role & Social Links */}
+      <div className="flex flex-col justify-between h-24 flex-1 min-w-0 pl-3">
+        <div className="space-y-1">
+          <h3 className="font-bold text-[#18181b] text-base tracking-tight leading-tight truncate" title={member.name}>
+            {member.name}
+          </h3>
+          <div className="flex">
+            {isMentor ? (
+              <span className="inline-flex items-center rounded-full bg-[var(--accent)] text-[var(--accent-foreground)] px-2.5 py-0.5 text-[10px] font-bold border border-[var(--accent)]/30 tracking-wide">
+                {member.role}
+              </span>
+            ) : (
+              <span className="inline-flex items-center rounded-full bg-slate-100 text-slate-600 px-2.5 py-0.5 text-[10px] font-semibold border border-slate-200/80 tracking-wide">
+                {member.role}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Social Links */}
+        <div className="flex items-center gap-4 mt-auto">
+          {member.githubUrl && (
+            <a
+              href={member.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-400 group-hover:text-slate-500 hover:!text-[var(--primary)] hover:-translate-y-1 opacity-70 group-hover:opacity-100 transition-all duration-300 p-1"
+              title={`${member.name}'s GitHub`}
+            >
+              <Github className="w-5 h-5" />
+            </a>
+          )}
+          {member.linkedinUrl && (
+            <a
+              href={member.linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-400 group-hover:text-slate-500 hover:!text-blue-600 hover:-translate-y-1 opacity-70 group-hover:opacity-100 transition-all duration-300 p-1"
+              title={`${member.name}'s LinkedIn`}
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -160,80 +268,11 @@ export default function TeamPage() {
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 pt-4"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4 justify-items-center max-w-6xl mx-auto"
         >
           {team.map((member, index) => (
-            <motion.div
-              key={index}
-              variants={cardVariants}
-              whileHover={{ y: -8, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -6px rgba(0, 0, 0, 0.04)" }}
-              className="bg-white border border-slate-200/80 rounded-2xl p-8 flex flex-col justify-between relative overflow-hidden shadow-sm transition-shadow duration-300 group"
-            >
-              {/* Card Decorative Edge */}
-              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-slate-100 to-slate-200/50 group-hover:from-indigo-400 group-hover:to-purple-400 transition-colors duration-300" />
-
-              <div className="space-y-4">
-                {/* Header with avatar / icon */}
-                <div className="flex items-center space-x-5">
-                  <ImageWithFallback
-                    src={member.imageUrl || ""}
-                    alt={member.name}
-                    fallback={
-                      <div className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${member.avatarBg} flex items-center justify-center shadow-md shrink-0`}>
-                         {React.isValidElement(member.icon) 
-                          ? React.cloneElement(member.icon as React.ReactElement<any>, { className: "w-10 h-10 text-white" })
-                          : member.icon}
-                      </div>
-                    }
-                  />
-                  <div>
-                    <h3 className="font-extrabold text-slate-900 text-xl tracking-tight leading-snug">
-                      {member.name}
-                    </h3>
-                    <span className={`inline-block mt-2 text-xs font-semibold px-2.5 py-1 rounded-md border ${member.role === "Team Mentor"
-                      ? "bg-blue-50 text-blue-700 border-blue-200"
-                      : "bg-slate-50 text-slate-700 border-slate-200/80"
-                      }`}>
-                      {member.role}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Social Icons Link Footer */}
-              <div className="mt-8 pt-4 border-t border-slate-100 flex items-center space-x-5 text-slate-500">
-                {member.githubUrl && (
-                  <a
-                    href={member.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-slate-900 transition-colors flex items-center gap-2 p-1.5 rounded hover:bg-slate-50"
-                    title="GitHub Profile"
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                      <path d="M9 18c-4.51 2-5-2-7-2" />
-                    </svg>
-                    <span className="text-xs font-mono font-bold">GitHub</span>
-                  </a>
-                )}
-                {member.linkedinUrl && (
-                  <a
-                    href={member.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-blue-600 transition-colors flex items-center gap-2 p-1.5 rounded hover:bg-slate-50"
-                    title="LinkedIn Profile"
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                      <rect width="4" height="12" x="2" y="9" />
-                      <circle cx="4" cy="4" r="2" />
-                    </svg>
-                    <span className="text-xs font-mono font-bold">LinkedIn</span>
-                  </a>
-                )}
-              </div>
+            <motion.div key={index} variants={cardVariants}>
+              <TeamCard member={member} />
             </motion.div>
           ))}
         </motion.div>

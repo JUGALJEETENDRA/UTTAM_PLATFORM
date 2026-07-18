@@ -34,6 +34,7 @@ const THEME_MAP: Record<string, {
   textMuted: string;
   badge: string;
   pattern: string;
+  iconColor: string;
 }> = {
   "ui programming": {
     bg: "bg-slate-50 text-slate-800 font-sans",
@@ -41,12 +42,13 @@ const THEME_MAP: Record<string, {
     borderClass: "border border-slate-200 rounded-xl",
     shadowClass: "shadow-sm transition-all duration-200",
     btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-550 hover:text-indigo-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    btnGhost: "text-slate-555 hover:text-indigo-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
     titleHover: "group-hover:text-indigo-600",
     textHeading: "text-slate-900 font-bold tracking-tight font-sans",
     textMuted: "text-slate-500 font-medium font-sans",
     badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    pattern: "",
+    iconColor: "text-indigo-600"
   },
 
   //"python programming"
@@ -62,7 +64,8 @@ const THEME_MAP: Record<string, {
     textHeading: "text-[#FFD43B] font-mono uppercase tracking-widest",
     textMuted: "text-zinc-400 font-mono",
     badge: "bg-[#3776AB] text-white border-2 border-[#FFD43B] rounded-none font-mono",
-    pattern: "python-matrix-terminal"
+    pattern: "python-matrix-terminal",
+    iconColor: "text-[#FFD43B]"
   }
 };
 
@@ -2843,347 +2846,307 @@ export default function StudentDashboard() {
         }
       `}</style>
 
-      {/* Layered Design-System inspired Background - Disabled for Clean EdTech Minimal */}
-
       <div className="container mx-auto px-4 mt-6 relative z-10 space-y-6">
         
         {/* Top IDE Header / Status bar styled as DESIGN STUDIO */}
-        <div className="bg-white border border-slate-200 rounded p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 font-mono text-xs text-slate-655 shadow-sm">
+        <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 font-mono text-xs text-slate-655 transition-all duration-300`}>
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5 flex-shrink-0">
-              <span className="w-3 h-3 rounded-full bg-[#ef4444]" />
-              <span className="w-3 h-3 rounded-full bg-[#eab308]" />
-              <span className="w-3 h-3 rounded-full bg-[#22c55e]" />
+              <span className="w-3 h-3 rounded-full bg-[#ef4444] border border-black" />
+              <span className="w-3 h-3 rounded-full bg-[#eab308] border border-black" />
+              <span className="w-3 h-3 rounded-full bg-[#22c55e] border border-black" />
             </div>
             <span className="text-slate-300">|</span>
-            <span className="font-bold text-[#7C3AED]">DESIGN STUDIO</span>
+            <span className={`font-black ${t.iconColor}`}>DESIGN STUDIO</span>
             <span className="text-slate-300">/</span>
-            <span className="text-slate-600 font-bold uppercase tracking-wider truncate max-w-[200px] md:max-w-none">{subject.name}</span>
+            <span className="text-black font-black uppercase tracking-wider truncate max-w-[200px] md:max-w-none">{subject.name}</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-4 w-full md:w-auto font-ibm">
-            {/* Design Metrics */}
-            <div className="flex items-center gap-2 bg-indigo-50/80 border border-indigo-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default">
-              <span className="text-indigo-600 font-semibold">Design System:</span>
-              <span className="text-[#7C3AED] font-bold">88.4%</span>
+            {/* Design Metrics - Styled Neobrutalist */}
+            <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
+              <span className="text-indigo-600 font-bold">Design System:</span>
+              <span className="text-black font-black">88.4%</span>
             </div>
-            <div className="flex items-center gap-2 bg-emerald-50/80 border border-emerald-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default">
-              <span className="text-emerald-600 font-semibold">Figma Sync:</span>
+            <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
+              <span className="text-emerald-600 font-bold">Figma Sync:</span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
-                <span className="text-emerald-800 font-bold uppercase">SUCCESSFUL</span>
+                <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse border border-black" />
+                <span className="text-emerald-800 font-black uppercase">SUCCESSFUL</span>
               </span>
             </div>
-            <div className="flex items-center gap-2 bg-purple-50/80 border border-purple-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default">
-              <span className="text-purple-600 font-semibold">Accessibility:</span>
-              <span className="text-purple-800 font-bold">98.4%</span>
+            <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
+              <span className="text-purple-600 font-bold">Accessibility:</span>
+              <span className="text-purple-800 font-black">98.4%</span>
             </div>
-            <div className="flex items-center gap-2 bg-amber-50/80 border border-amber-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default font-mono">
-              <span className="text-amber-600 font-semibold">UX Score:</span>
-              <span className="text-amber-800 font-bold px-1.5 py-0.5 bg-amber-100/50 border border-amber-200 rounded">A+</span>
+            <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default font-mono">
+              <span className="text-amber-600 font-bold">UX Score:</span>
+              <span className="text-amber-850 font-black px-1.5 py-0.5 bg-amber-100 border border-black rounded-none">A+</span>
             </div>
           </div>
         </div>
 
-          {/* UI LEARNING MODULES */}
-          <div className="bg-white border border-slate-200 rounded p-6 shadow-sm relative z-10">
-            <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-[#7C3AED] flex items-center gap-2">
-                <Layers className="w-4 h-4 text-[#7C3AED]" /> UI Learning Modules
+        {/* UI LEARNING MODULES */}
+        <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 relative z-10 transition-all duration-300`}>
+          <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
+            <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} flex items-center gap-2 font-mono`}>
+              <Layers className={`w-4 h-4 ${t.iconColor}`} /> {subject.name} Modules
+            </h3>
+            <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
+              <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
+                <span>View All Modules</span>
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            {modules.slice(0, 5).map((mod: any, idx: number) => {
+              const subtopicsCount = mod.subtopics?.length || 0;
+              return (
+                <Link key={mod.id} href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
+                  <div className="bg-white border-2 border-black rounded-none p-4 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-150 group h-full flex flex-col justify-between cursor-pointer relative">
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-mono font-bold tracking-widest uppercase`}>
+                          MODULE 0{mod.moduleNo || (idx + 1)}
+                        </span>
+                      </div>
+                      <h4 className={`font-mono text-xs font-bold text-black mb-2 line-clamp-2 ${t.titleHover} transition-colors`}>
+                        {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
+                      </h4>
+                      <p className="text-[10px] text-zinc-700 line-clamp-2 mb-4 font-sans leading-relaxed">
+                        {mod.co || "Introduces core concepts and key terminology."}
+                      </p>
+                    </div>
+                    <div className="pt-2.5 border-t border-black flex justify-between items-center text-[10px] text-slate-500 font-mono">
+                      <span className="flex items-center gap-1">
+                        <Book className="w-3.5 h-3.5" /> {subtopicsCount} Subtopics
+                      </span>
+                      <span className={`font-bold group-hover:translate-x-1 transition-transform flex items-center gap-0.5 ${t.iconColor}`}>
+                        Study <ArrowRight className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+            {modules.length === 0 && (
+              <div className="col-span-full py-8 text-center font-bold text-slate-450 border-2 border-dashed border-black rounded-none">
+                No modules available yet.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* TWO COLUMN GRID FOR QUIZZES AND FLASHCARDS (Like Python) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10 w-full">
+
+          {/* 2. Quizzes & Assessments */}
+          <div className={`lg:col-span-2 ${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 transition-all duration-300`}>
+            <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
+              <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} flex items-center gap-2 font-mono`}>
+                <Component className={`w-4 h-4 ${t.iconColor}`} /> Assessments & Challenges
               </h3>
-              <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
-                <Button variant="ghost" className="text-slate-700 hover:text-[#7C3AED] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
-                  <span>View All Modules</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
+              <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
+                <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
+                  <span>View All Quizzes</span>
+                  <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-              {modules.slice(0, 5).map((mod: any, idx: number) => {
-                const subtopicsCount = mod.subtopics?.length || 0;
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {quizzesWithAttempts.slice(0, 6).map((quiz: any) => {
                 return (
-                  <Link key={mod.id} href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
-                    <div className="bg-slate-50 border border-slate-200 rounded p-4 hover:border-indigo-400 hover:bg-white hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 group h-full flex flex-col justify-between cursor-pointer relative overflow-hidden">
-                      {/* Subtle accent bar for UI premium feel */}
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      
-                      <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <span className="text-[10px] text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded font-mono font-bold tracking-widest uppercase">
-                            MODULE 0{mod.moduleNo || (idx + 1)}
-                          </span>
-                        </div>
-                        <h4 className="font-mono text-xs font-bold text-slate-800 mb-2 line-clamp-2 group-hover:text-indigo-600 transition-colors">
-                          {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
-                        </h4>
-                        <p className="text-[10px] text-slate-500 line-clamp-2 mb-4 font-sans leading-relaxed">
-                          {mod.co || "Introduces core concepts and key terminology."}
-                        </p>
-                      </div>
-                      <div className="pt-2.5 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                        <span className="flex items-center gap-1">
-                          <Book className="w-3.5 h-3.5" /> {subtopicsCount} Subtopics
-                        </span>
-                        <span className="text-indigo-600 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
-                          Study <ArrowRight className="w-3 h-3" />
-                        </span>
-                      </div>
+                  <div key={quiz.id} className="bg-white border-2 border-black rounded-none p-4 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-150 group">
+                    <div className="flex justify-start items-start mb-2">
+                      <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-mono font-bold tracking-widest uppercase`}>🏆 PRACTICE QUIZ</span>
                     </div>
-                  </Link>
+                    <h4 className={`font-mono text-xs font-bold text-black mb-3 line-clamp-1 ${t.titleHover} transition-colors`}>{getQuizDisplayTitle(quiz, modules)}</h4>
+                    <div className="mt-4 flex justify-end">
+                      <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`}>
+                        <Button className={`${t.btnPrimary} font-mono text-[10px] py-1.5 px-4 h-8 uppercase tracking-wider transition-all duration-150`}>
+                          Start Challenge →
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
                 );
               })}
-              {modules.length === 0 && (
-                <div className="col-span-full py-8 text-center font-bold text-slate-400 border border-dashed border-slate-200 rounded">
-                  No modules available yet.
+              {quizzesWithAttempts.length === 0 && (
+                <div className="col-span-2 p-6 border-2 border-dashed border-black text-center text-slate-450 font-mono text-xs rounded-none">
+                  All design specs met. No active challenges.
                 </div>
               )}
             </div>
           </div>
 
-            {/* TWO COLUMN GRID FOR QUIZZES AND FLASHCARDS (Like Python) */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10 w-full">
+          {/* 3. Flashcard Decks */}
+          <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 transition-all duration-300`}>
+            <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
+              <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} flex items-center gap-2 font-mono`}>
+                <Palette className={`w-4 h-4 ${t.iconColor}`} /> Flashcard Decks
+              </h3>
+              <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
+                <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
+                  <span>View All Decks</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {flashcardDecks.slice(0, 4).map((deck: any, idx: number) => {
+                const keywordsList = ["Figma", "Spacing", "Colors", "A11y"];
+                const kw = keywordsList[idx % keywordsList.length];
 
-              {/* 2. Quizzes & Assessments */}
-              <div className="lg:col-span-2 bg-white border border-slate-200 rounded p-6 shadow-sm">
-                <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-[#7C3AED] flex items-center gap-2">
-                    <Component className="w-4 h-4 text-[#7C3AED]" /> Interactive Design Challenges
-                  </h3>
-                  <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
-                    <Button variant="ghost" className="text-slate-700 hover:text-[#7C3AED] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
-                      <span>View All Quizzes</span>
-                      <ArrowRight className="w-4 h-4 ml-1.5" />
-                    </Button>
-                  </Link>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {quizzesWithAttempts.slice(0, 6).map((quiz: any, idx: number) => {
-                    const difficulty = idx % 2 === 0 ? "Medium" : "Hard";
-                    const isHard = difficulty === "Hard";
-
-                    // Color configurations for UI Programming
-                    const themeColor = isHard ? "text-purple-700 bg-purple-50 border-purple-200" : "text-indigo-700 bg-indigo-50 border-indigo-200";
-                    const btnColorClass = isHard
-                      ? "bg-purple-600 hover:bg-purple-700 border-purple-700 shadow-purple-100"
-                      : "bg-indigo-500 hover:bg-indigo-600 border-indigo-600 shadow-indigo-100";
-
-                    return (
-                      <div key={quiz.id} className="bg-slate-50 border border-slate-200 rounded p-4 hover:border-indigo-400 hover:bg-white hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 group">
-                        <div className="flex justify-start items-start mb-2">
-                          <span className={`text-[10px] ${themeColor} border px-2 py-0.5 rounded font-mono font-bold tracking-widest uppercase`}>🎨 UI CHALLENGE</span>
-                        </div>
-                        <h4 className="font-sans text-xs font-bold text-slate-800 mb-3 line-clamp-1 group-hover:text-indigo-600 transition-colors">{getQuizDisplayTitle(quiz, modules)}</h4>
-                        <div className="mt-4 flex justify-end">
-                          <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`}>
-                            <Button className={`${btnColorClass} text-white border rounded font-mono text-[10px] py-1.5 px-4 h-8 uppercase tracking-wider hover:scale-105 active:scale-95 hover:shadow-md transition-all duration-200`}>
-                              Start Challenge →
-                            </Button>
-                          </Link>
-                        </div>
+                return (
+                  <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
+                    <div className="bg-white border-2 border-black rounded-none p-3.5 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-150 flex justify-between items-center cursor-pointer group">
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <span className={`font-mono text-[10px] font-bold px-2 py-0.5 ${t.badge} flex-shrink-0 transition-colors`}>{kw}</span>
+                        <span className={`font-mono text-xs text-black font-bold ${t.titleHover} transition-colors truncate`}>{getFlashcardDisplayTitle(deck, modules)}</span>
                       </div>
-                    );
-                  })}
-                  {quizzesWithAttempts.length === 0 && (
-                    <div className="col-span-2 p-6 border border-dashed border-slate-200 text-center text-slate-450 font-mono text-xs rounded">
-                      All design specs met. No active challenges.
+                      <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-mono font-bold whitespace-nowrap`}>{deck.cards?.length || 0} CARDS</span>
                     </div>
-                  )}
+                  </Link>
+                );
+              })}
+              {flashcardDecks.length === 0 && (
+                <div className="p-4 border-2 border-dashed border-black text-center text-slate-450 font-mono text-[10px] rounded-none">
+                  Library index is empty.
                 </div>
-              </div>
+              )}
+            </div>
+          </div>
+        </div>
 
-            {/* 3. Flashcard Decks */}
-            <div className="bg-white border border-slate-200 rounded p-6 shadow-sm">
-              <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-[#7C3AED] flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-[#7C3AED]" /> UI Flashcard Decks
+        {/* CONNECTED ARCHITECTURE DIAGRAMS (MINDMAPS) */}
+        <div className="w-full relative z-10 mt-6">
+          <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 flex flex-col justify-between transition-all duration-300`}>
+            <div>
+              <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
+                <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} flex items-center gap-2 font-mono`}>
+                  <Grid className={`w-4 h-4 ${t.iconColor}`} /> Subject Mind Maps
                 </h3>
-                <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
-                  <Button variant="ghost" className="text-slate-700 hover:text-[#7C3AED] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
-                    <span>View All Decks</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
+                <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
+                  <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
+                    <span>View All Mind Maps</span>
+                    <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
               </div>
-              <div className="space-y-3">
-                {flashcardDecks.slice(0, 4).map((deck: any, idx: number) => {
-                  const keywordsList = ["Figma", "Spacing", "Colors", "A11y"];
-                  const kw = keywordsList[idx % keywordsList.length];
 
-                  const badgeColors = [
-                    "text-indigo-700 bg-indigo-50 border-indigo-200 hover:bg-indigo-100",
-                    "text-purple-700 bg-purple-50 border-purple-200 hover:bg-purple-100",
-                    "text-pink-700 bg-pink-50 border-pink-200 hover:bg-pink-100",
-                    "text-fuchsia-700 bg-fuchsia-50 border-fuchsia-200 hover:bg-fuchsia-100"
-                  ];
-                  const badgeClass = badgeColors[idx % badgeColors.length];
+              <div className="relative flex flex-col items-center justify-center py-6">
+                {/* SVG Connector Lines */}
+                <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
+                  <svg className="w-full h-full stroke-black stroke-[2]" style={{ strokeDasharray: "4 4" }}>
+                    <line x1="15%" y1="50%" x2="38%" y2="50%" />
+                    <line x1="38%" y1="50%" x2="62%" y2="50%" />
+                    <line x1="62%" y1="50%" x2="85%" y2="50%" />
+                  </svg>
+                </div>
 
-                  return (
-                    <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
-                      <div className="bg-slate-50 border border-slate-200 p-3.5 rounded hover:border-purple-400 hover:bg-white hover:shadow-md hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 flex justify-between items-center cursor-pointer group">
-                        <div className="flex items-center gap-2 overflow-hidden">
-                          <span className={`font-mono text-[10px] font-bold px-2 py-0.5 border rounded flex-shrink-0 ${badgeClass} transition-colors`}>{kw}</span>
-                          <span className="font-sans text-xs text-slate-800 font-semibold group-hover:text-purple-700 transition-colors truncate">{getFlashcardDisplayTitle(deck, modules)}</span>
+                <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
+                  {mindmaps.slice(0, 4).map((map: any, idx: number) => {
+                    return (
+                      <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="w-full h-full flex">
+                        <div className="bg-white border-2 border-black rounded-none p-4 text-center group cursor-pointer transition-all duration-150 relative w-full h-full hover:-translate-y-1 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between items-center gap-2">
+                          <div className="w-full flex flex-col items-center">
+                            <div className={`w-7 h-7 ${t.badge} flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 transition-all duration-300`}>
+                              M0{idx + 1}
+                            </div>
+                            <h4 className={`font-mono text-[10px] font-bold text-black uppercase tracking-wider line-clamp-2 ${t.titleHover} transition-colors px-1 leading-normal`}>{map.title}</h4>
+                          </div>
+                          <p className="text-[9px] text-slate-400 font-mono mt-auto">Design Node</p>
                         </div>
-                        <span className="text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 border border-indigo-100 rounded font-mono font-bold whitespace-nowrap">{deck.cards?.length || 0} CARDS</span>
-                      </div>
-                    </Link>
-                  );
-                })}
-                {flashcardDecks.length === 0 && (
-                  <div className="p-4 border border-dashed border-slate-200 text-center text-slate-450 font-mono text-[10px] rounded">
-                    Library index is empty.
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            </div>
-
-            {/* CONNECTED ARCHITECTURE DIAGRAMS (MINDMAPS) */}
-            <div className="w-full relative z-10 mt-6">
-              <div className="bg-white border border-slate-200 rounded p-6 flex flex-col justify-between shadow-sm">
-                <div>
-                  <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-[#7C3AED] flex items-center gap-2">
-                      <Grid className="w-4 h-4 text-[#7C3AED]" /> UI Mind Maps
-                    </h3>
-                    <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
-                      <Button variant="ghost" className="text-slate-700 hover:text-[#7C3AED] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
-                        <span>View All Mind Maps</span>
-                        <ArrowRight className="w-4 h-4 ml-1.5" />
-                      </Button>
-                    </Link>
-                  </div>
-
-                  <div className="relative flex flex-col items-center justify-center py-6">
-                    {/* SVG Connector Lines */}
-                    <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-                      <svg className="w-full h-full stroke-slate-200 stroke-[2]" style={{ strokeDasharray: "4 4" }}>
-                        <line x1="15%" y1="50%" x2="38%" y2="50%" />
-                        <line x1="38%" y1="50%" x2="62%" y2="50%" />
-                        <line x1="62%" y1="50%" x2="85%" y2="50%" />
-                      </svg>
-                    </div>
-
-                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
-                      {mindmaps.slice(0, 4).map((map: any, idx: number) => {
-                        const nodeColors = [
-                          { bg: "bg-indigo-50 text-indigo-700 border-indigo-200", hover: "group-hover:bg-indigo-600 group-hover:border-indigo-600" },
-                          { bg: "bg-purple-50 text-purple-700 border-purple-200", hover: "group-hover:bg-purple-600 group-hover:border-purple-600" },
-                          { bg: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200", hover: "group-hover:bg-fuchsia-600 group-hover:border-fuchsia-600" },
-                          { bg: "bg-violet-50 text-violet-700 border-violet-200", hover: "group-hover:bg-violet-600 group-hover:border-violet-600" },
-                        ];
-                        const colors = nodeColors[idx % nodeColors.length];
-
-                        return (
-                          <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="w-full h-full flex">
-                            <div className="bg-slate-50 border border-slate-200 hover:border-indigo-400 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm w-full h-full transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md flex flex-col justify-between items-center gap-2">
-                              <div className="w-full flex flex-col items-center">
-                                <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
-                                  M0{idx + 1}
-                                </div>
-                                <h4 className="font-sans text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-2 group-hover:text-indigo-600 transition-colors px-1 leading-normal">{map.title}</h4>
-                              </div>
-                              <p className="text-[9px] text-slate-400 font-mono mt-auto">Design Node</p>
-                            </div>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
+                      </Link>
+                    );
+                  })}
                 </div>
-              </div>
-            </div>
-
-            {/* CONNECTED ARCHITECTURE DIAGRAMS (INFOGRAPHICS) */}
-            <div className="w-full relative z-10 mt-6">
-              <div className="bg-white border border-slate-200 rounded p-6 flex flex-col justify-between shadow-sm">
-                <div>
-                  <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-[#ec4899] flex items-center gap-2">
-                      <Grid className="w-4 h-4 text-[#ec4899]" /> Infographics Topologies
-                    </h3>
-                    <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
-                      <Button variant="ghost" className="text-slate-700 hover:text-[#ec4899] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
-                        <span>View All Infographics</span>
-                        <ArrowRight className="w-4 h-4 ml-1.5" />
-                      </Button>
-                    </Link>
-                  </div>
-
-                  <div className="relative flex flex-col items-center justify-center py-6">
-                    {/* SVG Connector Lines */}
-                    <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-                      <svg className="w-full h-full stroke-slate-200 stroke-[2]" style={{ strokeDasharray: "4 4" }}>
-                        <line x1="15%" y1="50%" x2="38%" y2="50%" />
-                        <line x1="38%" y1="50%" x2="62%" y2="50%" />
-                        <line x1="62%" y1="50%" x2="85%" y2="50%" />
-                      </svg>
-                    </div>
-
-                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
-                      {infographics.slice(0, 4).map((info: any, idx: number) => {
-                        const nodeColors = [
-                          { bg: "bg-pink-50 text-pink-700 border-pink-200", hover: "group-hover:bg-pink-600 group-hover:border-pink-600" },
-                          { bg: "bg-rose-50 text-rose-700 border-rose-200", hover: "group-hover:bg-rose-600 group-hover:border-rose-600" },
-                          { bg: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200", hover: "group-hover:bg-fuchsia-600 group-hover:border-fuchsia-600" },
-                          { bg: "bg-purple-50 text-purple-700 border-purple-200", hover: "group-hover:bg-purple-600 group-hover:border-purple-600" },
-                        ];
-                        const colors = nodeColors[idx % nodeColors.length];
-
-                        return (
-                          <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="w-full h-full flex">
-                            <div className="bg-slate-50 border border-slate-200 hover:border-pink-400 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm w-full h-full transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md flex flex-col justify-between items-center gap-2">
-                              <div className="w-full flex flex-col items-center">
-                                <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
-                                  I0{idx + 1}
-                                </div>
-                                <h4 className="font-sans text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-2 group-hover:text-pink-600 transition-colors px-1 leading-normal">{info.title}</h4>
-                              </div>
-                              <p className="text-[9px] text-slate-400 font-mono mt-auto">Infographic Node</p>
-                            </div>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-          {/* Reference Materials (Bottom Column) */}
-          <div className="w-full relative z-10 mt-6 pb-20">
-            <div className="bg-white border border-slate-200 rounded p-6 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <FileText className="w-4 h-4 text-[#7C3AED]" />
-                <h3 className="text-sm font-bold uppercase tracking-widest text-[#7C3AED]">Design Resources & Documentation</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {subjectResources.slice(0, 4).map((resource: any, index: number) => (
-                  <a key={index} href={resource.link} target="_blank" rel="noopener noreferrer" className="block w-full">
-                    <div className="bg-slate-50 border border-slate-200 p-3 rounded hover:bg-indigo-50/50 hover:border-indigo-400 hover:shadow-sm transition-all duration-200 flex items-start gap-3 group h-full">
-                      <div className="bg-white border border-slate-200 rounded p-1.5 mt-0.5 group-hover:border-indigo-400 transition-colors">
-                        <FileText className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-slate-700 group-hover:text-indigo-700 transition-colors line-clamp-1">{resource.title}</p>
-                        <p className="text-[9px] text-slate-400 font-mono mt-0.5 uppercase tracking-wider">{resource.type}</p>
-                      </div>
-                    </div>
-                  </a>
-                ))}
-                {subjectResources.length === 0 && (
-                  <div className="col-span-full py-4 text-center text-slate-400 text-xs font-mono border border-dashed rounded">
-                    No official design assets linked.
-                  </div>
-                )}
               </div>
             </div>
           </div>
         </div>
+
+        {/* CONNECTED ARCHITECTURE DIAGRAMS (INFOGRAPHICS) */}
+        <div className="w-full relative z-10 mt-6">
+          <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 flex flex-col justify-between transition-all duration-300`}>
+            <div>
+              <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
+                <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} flex items-center gap-2 font-mono`}>
+                  <Grid className={`w-4 h-4 ${t.iconColor}`} /> Infographics Topologies
+                </h3>
+                <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
+                  <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
+                    <span>View All Infographics</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="relative flex flex-col items-center justify-center py-6">
+                {/* SVG Connector Lines */}
+                <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
+                  <svg className="w-full h-full stroke-black stroke-[2]" style={{ strokeDasharray: "4 4" }}>
+                    <line x1="15%" y1="50%" x2="38%" y2="50%" />
+                    <line x1="38%" y1="50%" x2="62%" y2="50%" />
+                    <line x1="62%" y1="50%" x2="85%" y2="50%" />
+                  </svg>
+                </div>
+
+                <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
+                  {infographics.slice(0, 4).map((info: any, idx: number) => {
+                    return (
+                      <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="w-full h-full flex">
+                        <div className="bg-white border-2 border-black rounded-none p-4 text-center group cursor-pointer transition-all duration-150 relative w-full h-full hover:-translate-y-1 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between items-center gap-2">
+                          <div className="w-full flex flex-col items-center">
+                            <div className={`w-7 h-7 ${t.badge} flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 transition-all duration-300`}>
+                              I0{idx + 1}
+                            </div>
+                            <h4 className={`font-mono text-[10px] font-bold text-black uppercase tracking-wider line-clamp-2 ${t.titleHover} transition-colors px-1 leading-normal`}>{info.title}</h4>
+                          </div>
+                          <p className="text-[9px] text-slate-400 font-mono mt-auto">Infographic Node</p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Reference Materials (Bottom Column) */}
+        <div className="w-full relative z-10 mt-6 pb-20">
+          <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 transition-all duration-300`}>
+            <div className="flex items-center gap-2 mb-4">
+              <FileText className={`w-4 h-4 ${t.iconColor}`} />
+              <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} font-mono`}>Design Resources & Documentation</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {subjectResources.slice(0, 4).map((resource: any, index: number) => (
+                <a key={index} href={resource.link} target="_blank" rel="noopener noreferrer" className="block w-full">
+                  <div className="bg-white border-2 border-black rounded-none p-3 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-150 flex items-start gap-3 group h-full">
+                    <div className="bg-white border-2 border-black rounded-none p-1.5 mt-0.5 group-hover:bg-zinc-100 transition-colors">
+                      <FileText className="w-3.5 h-3.5 text-slate-600 group-hover:text-black" />
+                    </div>
+                    <div>
+                      <p className={`text-xs font-bold text-black ${t.titleHover} transition-colors line-clamp-1`}>{resource.title}</p>
+                      <p className={`text-[9px] ${t.textMuted} font-mono mt-0.5 uppercase tracking-wider`}>{resource.type}</p>
+                    </div>
+                  </div>
+                </a>
+              ))}
+              {subjectResources.length === 0 && (
+                <div className="col-span-full py-4 text-center text-slate-400 text-xs font-mono border-2 border-dashed border-black rounded-none">
+                  No official design assets linked.
+                </div>
+              )}
+            </div>
+        </div>
       </div>
+    </div>
+  </div>
   );
 }
