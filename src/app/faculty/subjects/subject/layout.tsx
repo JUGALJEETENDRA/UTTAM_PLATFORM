@@ -98,7 +98,7 @@ function FacultySubjectLayoutInner({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full bg-white">
+      <main key={subjectId} className="flex-1 w-full bg-white">
         {children}
       </main>
     </div>
