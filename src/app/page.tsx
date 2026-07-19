@@ -102,6 +102,8 @@ interface HeroSectionProps {
 }
 
 function HeroSection({ onStartLearning, heroOpacity }: HeroSectionProps) {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
   const scrollToFeatures = () => {
     const el = document.getElementById("features-section");
     if (el) {
@@ -225,7 +227,7 @@ function HeroSection({ onStartLearning, heroOpacity }: HeroSectionProps) {
             <div className="w-full overflow-hidden mix-blend-screen p-1 relative z-10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
-                src="/uttam-new-banner.png" 
+                src={`${basePath}/uttam-new-banner.png`} 
                 alt="UTTAM Chalkboard" 
                 className="w-full h-auto object-contain select-none"
               />
