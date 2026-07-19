@@ -57,6 +57,19 @@ const THEME_MAP: Record<string, {
     badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
     pattern: ""
   },
+  "startup engineering": {
+    bg: "bg-slate-50 text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-lg",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-550 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-blue-600",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
+    pattern: ""
+  },
 };
 
 const DEFAULT_THEME = {
@@ -346,6 +359,7 @@ export default function ModuleDetailPage() {
   const subjectId = searchParams.get('subjectId') || '';
   const [moduleData, setModuleData] = useState<any>(null);
   const [allModules, setAllModules] = useState<any[]>([]);
+  const [subjectName, setSubjectName] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedLanguages, setSelectedLanguages] = useState<{[id: string]: {video: string, audio: string}}>({});
   const [activeNote, setActiveNote] = useState<{url: string, title: string, id: string, content?: string} | null>(null);
@@ -364,12 +378,17 @@ export default function ModuleDetailPage() {
     if (id) {
       const loadModule = async () => {
         try {
-          const [result, modulesResult] = await Promise.all([
+          const [result, modulesResult, subjects] = await Promise.all([
             fetchGAS("getModule", { moduleId: id, userId: "anonymous" }),
-            fetchGAS("getModules", { subjectId, userId: "anonymous" })
+            fetchGAS("getModules", { subjectId, userId: "anonymous" }),
+            fetchGAS("getSubjects")
           ]);
           if (Array.isArray(modulesResult)) {
             setAllModules(modulesResult);
+          }
+          if (Array.isArray(subjects)) {
+            const sub = subjects.find(s => s.id === subjectId);
+            if (sub) setSubjectName(sub.name || "");
           }
           if (result && result.subtopics) {
             result.subtopics = result.subtopics.filter((st: any) => {
@@ -1148,9 +1167,10 @@ export default function ModuleDetailPage() {
   // ==========================================
   // RENDER VARIANT B: UI PROGRAMMING & DEFAULT FALLBACK LOOK (NEUBRUTALISM STYLE)
   // ==========================================
-  const themeKey = isUiProgramming ? "ui programming" : "";
+  const isStartupEngineering = (subjectName || "").toLowerCase().includes("startup") || (subjectName || "").toLowerCase().includes("engineering");
+  const themeKey = isUiProgramming ? "ui programming" : (isStartupEngineering ? "startup engineering" : "");
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
-  const isPremiumTheme = isUiProgramming;
+  const isPremiumTheme = isUiProgramming || isStartupEngineering;
 
   if (activeNote) {
     return (
@@ -1251,6 +1271,8 @@ export default function ModuleDetailPage() {
             type="journey" 
             title={moduleData.title} 
             subtitle={moduleData.description} 
+            colorClass={isStartupEngineering ? "bg-blue-600/8 border-blue-600/15 text-blue-600" : undefined}
+            iconColor={isStartupEngineering ? "stroke-blue-600" : undefined}
           />
           {moduleData.co && (
             <div className="flex flex-wrap gap-2 text-xs font-bold font-sans pl-15">
@@ -1482,7 +1504,7 @@ export default function ModuleDetailPage() {
                                 ? t.btnGhost 
                                 : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
                             }>
-                              <BrainCircuit className="w-3.5 h-3.5 text-purple-500 shrink-0" /> View Mind Map
+                              <BrainCircuit className={`w-3.5 h-3.5 shrink-0 ${isStartupEngineering ? 'text-blue-500' : 'text-purple-500'}`} /> View Mind Map
                             </Button>
                           </motion.div>
                         </Link>
@@ -1497,7 +1519,7 @@ export default function ModuleDetailPage() {
                                 ? t.btnGhost 
                                 : t.btnPrimary + ' flex items-center gap-1.5') + ' w-full sm:w-auto justify-center text-[11px] sm:text-xs h-9 sm:h-10 px-2.5 sm:px-4'
                             }>
-                              <ImageIcon className="w-3.5 h-3.5 text-pink-500 shrink-0" /> Infographics
+                              <ImageIcon className={`w-3.5 h-3.5 shrink-0 ${isStartupEngineering ? 'text-sky-500' : 'text-pink-500'}`} /> Infographics
                             </Button>
                           </motion.div>
                         </Link>

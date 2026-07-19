@@ -325,6 +325,13 @@ function SubjectSelectionSection({ subjects, loading }: SubjectSelectionSectionP
         arrowShadow: "shadow-[#eab308]"
       };
     }
+    if (lowerName.includes("startup") || lowerName.includes("engineering")) {
+      return {
+        iconBg: "bg-[#3b82f6]", // Sky Blue
+        titleHover: "group-hover:text-[#1d4ed8]", // Dark Blue
+        arrowShadow: "shadow-[#1d4ed8]"
+      };
+    }
 
     return fallback;
   };

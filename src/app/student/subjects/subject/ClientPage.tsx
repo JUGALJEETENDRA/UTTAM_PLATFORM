@@ -51,7 +51,20 @@ const THEME_MAP: Record<string, {
     iconColor: "text-indigo-600"
   },
 
-  //"python programming"
+  "startup engineering": {
+    bg: "bg-slate-50 text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-blue-600",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
+    pattern: "",
+    iconColor: "text-blue-600"
+  },
 
   "python programming": {
     bg: "bg-[#0C0A09]",
@@ -922,6 +935,7 @@ export default function StudentDashboard() {
   const isDigitalBusiness = subjectId === 'id_pryay1ykw' || subjectNameLower.includes("digital business");
   const isUiProgramming = subjectId === 'id_mn573l5e5' || subjectNameLower.includes("ui programming");
   const isPythonProgramming = subjectId === 'id_hdzqxse2n' || subjectNameLower.includes("python");
+  const isStartupEngineering = subjectNameLower.includes("startup") || subjectNameLower.includes("engineering");
 
   const pythonModules = isPythonProgramming
     ? ((modules && modules.length > 0) ? modules : PYTHON_FALLBACK_MODULES)
@@ -2777,9 +2791,9 @@ export default function StudentDashboard() {
     );
   };
 
-  const themeKey = isUiProgramming ? "ui programming" : (subjectNameLower.includes("python") ? "python programming" : "");
+  const themeKey = isUiProgramming ? "ui programming" : (isStartupEngineering ? "startup engineering" : (subjectNameLower.includes("python") ? "python programming" : ""));
   const t = THEME_MAP[themeKey] || getDynamicTheme(subject?.id || subjectId);
-  const isPremiumTheme = isUiProgramming;
+  const isPremiumTheme = isUiProgramming || isStartupEngineering;
 
   return (
     <div className={`min-h-screen relative ${t.bg} ${t.pattern} pb-16 pt-8 brutalist-transition transition-colors duration-300 overflow-hidden`}>
@@ -2865,7 +2879,7 @@ export default function StudentDashboard() {
           <div className="flex flex-wrap items-center gap-4 w-full md:w-auto font-ibm">
             {/* Design Metrics - Styled Neobrutalist */}
             <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
-              <span className="text-indigo-600 font-bold">Design System:</span>
+              <span className={`${isStartupEngineering ? 'text-blue-600' : 'text-indigo-600'} font-bold`}>Design System:</span>
               <span className="text-black font-black">88.4%</span>
             </div>
             <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
@@ -2876,8 +2890,8 @@ export default function StudentDashboard() {
               </span>
             </div>
             <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
-              <span className="text-purple-600 font-bold">Accessibility:</span>
-              <span className="text-purple-800 font-black">98.4%</span>
+              <span className={`${isStartupEngineering ? 'text-blue-600' : 'text-purple-600'} font-bold`}>Accessibility:</span>
+              <span className={`${isStartupEngineering ? 'text-blue-800' : 'text-purple-800'} font-black`}>98.4%</span>
             </div>
             <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default font-mono">
               <span className="text-amber-600 font-bold">UX Score:</span>
