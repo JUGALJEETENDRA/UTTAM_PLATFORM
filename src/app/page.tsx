@@ -207,23 +207,58 @@ function HeroSection({ onStartLearning, heroOpacity }: HeroSectionProps) {
           </button>
         </div>
 
-        {/* Right Column: Chalkboard Centered Image */}
+        {/* Right Column: Chalkboard Wooden Board Design */}
         <div className="relative w-full max-w-[90%] sm:max-w-[440px] md:max-w-[500px] lg:max-w-[560px] flex justify-center items-center">
           {/* Soft Teal Glow Behind Board */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.15)_0%,transparent_65%)] filter blur-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.18)_0%,transparent_65%)] filter blur-3xl pointer-events-none" />
 
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="relative z-10 w-full overflow-hidden mix-blend-screen"
+            className="relative z-10 w-full rounded-lg overflow-visible bg-[#092B21]/15 border-[12px] md:border-[16px] border-t-[#8B5A2B] border-r-[#5C3A21] border-b-[#3D2517] border-l-[#704214] shadow-[inset_0_5px_15px_rgba(0,0,0,0.95),0_20px_50px_rgba(0,0,0,0.7)]"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src="/Uttam New banner.png" 
-              alt="UTTAM Chalkboard" 
-              className="w-full h-auto object-contain select-none"
-            />
+            {/* Bevel Lining Shadow */}
+            <div className="absolute inset-0 border border-black/50 pointer-events-none z-20" />
+
+            {/* Blackboard Canvas Wrapper */}
+            <div className="w-full overflow-hidden mix-blend-screen p-1 relative z-10">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src="/Uttam%20New%20banner.png" 
+                alt="UTTAM Chalkboard" 
+                className="w-full h-auto object-contain select-none"
+              />
+            </div>
+
+            {/* Wooden Chalk Shelf / Ledge Tray */}
+            <div className="absolute bottom-[-12px] md:bottom-[-16px] left-[-12px] md:left-[-16px] right-[-12px] md:right-[-16px] h-[12px] md:h-[16px] bg-gradient-to-r from-[#6e3f16] via-[#855325] to-[#593410] border-b-[3px] border-black/50 shadow-md z-30 select-none pointer-events-auto">
+              
+              {/* Chalk Dust Smudges */}
+              {/* White Dust Ledge Smudge */}
+              <div className="absolute bottom-[2px] right-[23%] w-10 h-1 bg-white/15 blur-[1.5px] rounded-full pointer-events-none z-35" />
+              {/* Duster Dust Ledge Smudge */}
+              <div className="absolute bottom-[2px] right-[9%] w-12 h-1 bg-zinc-200/10 blur-[1.5px] rounded-full pointer-events-none z-35" />
+
+              {/* White Chalk stick */}
+              <motion.div 
+                whileHover={{ y: -1, rotate: 5 }}
+                className="absolute bottom-[3px] md:bottom-[4px] right-[24%] w-6 md:w-8 h-1 md:h-1.5 bg-zinc-100 rounded-xs shadow-[0_1px_2px_rgba(0,0,0,0.4)] z-45 cursor-pointer border-r border-zinc-350"
+                title="White Chalk"
+              />
+
+              {/* Blackboard Duster */}
+              <motion.div 
+                whileHover={{ y: -1, rotate: 1 }}
+                className="absolute bottom-[3.5px] md:bottom-[4.5px] right-[8%] flex flex-col justify-end w-10 md:w-12 z-45 cursor-pointer shadow-[0_1.5px_3px_rgba(0,0,0,0.5)] transition-all duration-200"
+                title="Blackboard Duster"
+              >
+                {/* Wood Handle - Dark Charcoal Wood handle */}
+                <div className="bg-[#2e2e2e] bg-gradient-to-b from-[#3a3a3a] to-[#202020] h-2 md:h-2.5 rounded-t border-t border-zinc-600" />
+                {/* Felt Bottom Layer */}
+                <div className="bg-zinc-800 h-1.5 rounded-b border-t border-zinc-700" />
+              </motion.div>
+            </div>
           </motion.div>
         </div>
       </motion.div>
