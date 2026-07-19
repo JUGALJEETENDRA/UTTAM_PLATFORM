@@ -102,6 +102,63 @@ const DesignStudioCard = ({ children, className = "", style = {}, isPremium, lab
   );
 };
 
+const sortMindMaps = (items: MindMap[], modulesList: any[]) => {
+  return [...items].sort((a, b) => {
+    const modA = modulesList.find(m => m.id === a.moduleId);
+    const modB = modulesList.find(m => m.id === b.moduleId);
+    
+    const modNumA = modA ? parseInt(modA.moduleNo) || 0 : 9999;
+    const modNumB = modB ? parseInt(modB.moduleNo) || 0 : 9999;
+    
+    if (modNumA !== modNumB) {
+      return modNumA - modNumB;
+    }
+    
+    const getSubtopicInfo = (item: MindMap, mod: any) => {
+      if (!mod) return { isModule: true, index: -1, parts: [0] };
+      
+      const subtopics = mod.subtopics || [];
+      const idx = subtopics.findIndex((s: any) => s.title === item.title);
+      
+      if (idx !== -1) {
+        const sub = subtopics[idx];
+        const subNo = sub.subtopicNo || "";
+        const parts = subNo.split(".").map((p: string) => parseInt(p) || 0);
+        return { isModule: item.title === mod.title, index: idx, parts };
+      }
+      
+      const match = (item.title || "").match(/^(\d+)\.(\d+)/);
+      if (match) {
+        return { isModule: false, index: 999, parts: [parseInt(match[1]), parseInt(match[2])] };
+      }
+      
+      return { isModule: true, index: -1, parts: [0] };
+    };
+    
+    const infoA = getSubtopicInfo(a, modA);
+    const infoB = getSubtopicInfo(b, modB);
+    
+    if (infoA.isModule && !infoB.isModule) return -1;
+    if (!infoA.isModule && infoB.isModule) return 1;
+    if (infoA.isModule && infoB.isModule) return 0;
+    
+    if (infoA.index !== -1 && infoB.index !== -1) {
+      return infoA.index - infoB.index;
+    }
+    
+    const maxLen = Math.max(infoA.parts.length, infoB.parts.length);
+    for (let i = 0; i < maxLen; i++) {
+      const partA = infoA.parts[i] || 0;
+      const partB = infoB.parts[i] || 0;
+      if (partA !== partB) {
+        return partA - partB;
+      }
+    }
+    
+    return 0;
+  });
+};
+
 export default function StudentMindMapsList() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
@@ -126,7 +183,8 @@ export default function StudentMindMapsList() {
         fetchGAS("getModules", { subjectId }),
         fetchGAS("getSubjects")
       ]);
-      setMindmaps(Array.isArray(mapsData) ? mapsData : []);
+      const sortedMaps = Array.isArray(mapsData) ? sortMindMaps(mapsData, modsData) : [];
+      setMindmaps(sortedMaps);
       setModules(Array.isArray(modsData) ? modsData : []);
       if (Array.isArray(subjects)) {
         const currentSub = subjects.find((s: any) => s.id === subjectId);

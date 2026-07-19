@@ -17,6 +17,63 @@ interface MindMap {
   imageUrl: string;
 }
 
+const sortMindMaps = (items: MindMap[], modulesList: any[]) => {
+  return [...items].sort((a, b) => {
+    const modA = modulesList.find(m => m.id === a.moduleId);
+    const modB = modulesList.find(m => m.id === b.moduleId);
+    
+    const modNumA = modA ? parseInt(modA.moduleNo) || 0 : 9999;
+    const modNumB = modB ? parseInt(modB.moduleNo) || 0 : 9999;
+    
+    if (modNumA !== modNumB) {
+      return modNumA - modNumB;
+    }
+    
+    const getSubtopicInfo = (item: MindMap, mod: any) => {
+      if (!mod) return { isModule: true, index: -1, parts: [0] };
+      
+      const subtopics = mod.subtopics || [];
+      const idx = subtopics.findIndex((s: any) => s.title === item.title);
+      
+      if (idx !== -1) {
+        const sub = subtopics[idx];
+        const subNo = sub.subtopicNo || "";
+        const parts = subNo.split(".").map((p: string) => parseInt(p) || 0);
+        return { isModule: item.title === mod.title, index: idx, parts };
+      }
+      
+      const match = (item.title || "").match(/^(\d+)\.(\d+)/);
+      if (match) {
+        return { isModule: false, index: 999, parts: [parseInt(match[1]), parseInt(match[2])] };
+      }
+      
+      return { isModule: true, index: -1, parts: [0] };
+    };
+    
+    const infoA = getSubtopicInfo(a, modA);
+    const infoB = getSubtopicInfo(b, modB);
+    
+    if (infoA.isModule && !infoB.isModule) return -1;
+    if (!infoA.isModule && infoB.isModule) return 1;
+    if (infoA.isModule && infoB.isModule) return 0;
+    
+    if (infoA.index !== -1 && infoB.index !== -1) {
+      return infoA.index - infoB.index;
+    }
+    
+    const maxLen = Math.max(infoA.parts.length, infoB.parts.length);
+    for (let i = 0; i < maxLen; i++) {
+      const partA = infoA.parts[i] || 0;
+      const partB = infoB.parts[i] || 0;
+      if (partA !== partB) {
+        return partA - partB;
+      }
+    }
+    
+    return 0;
+  });
+};
+
 export default function MindMapsClientPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId') || '';
@@ -51,7 +108,8 @@ export default function MindMapsClientPage() {
         fetchGAS("getMindMaps", { subjectId }),
         fetchGAS("getModules", { subjectId })
       ]);
-      setMindmaps(Array.isArray(mapsData) ? mapsData : []);
+      const sortedMaps = Array.isArray(mapsData) ? sortMindMaps(mapsData, modsData) : [];
+      setMindmaps(sortedMaps);
       setModules(Array.isArray(modsData) ? modsData : []);
     } catch (err) {
       toast.error("Failed to load mind maps");
@@ -289,7 +347,7 @@ export default function MindMapsClientPage() {
 
       {!showForm && mindmaps.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mindmaps.map(map => {
+          {sortMindMaps(mindmaps, modules).map(map => {
             const module = modules.find(m => m.id === map.moduleId);
             return (
               <Card key={map.id} className="overflow-hidden hover:shadow-lg transition-all group p-0 gap-0">

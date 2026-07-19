@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={outfit.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `
           if ('serviceWorker' in navigator) {
@@ -36,7 +36,7 @@ export default function RootLayout({
         ` }} />
       </head>
       <body
-        className={`${outfit.variable} font-sans antialiased bg-zinc-50 flex flex-col min-h-screen`}
+        className="font-sans antialiased bg-zinc-50 flex flex-col min-h-screen"
       >
         <Providers>
           <Toaster />

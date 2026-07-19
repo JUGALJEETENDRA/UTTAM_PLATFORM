@@ -1,7 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import { GraduationCap, ArrowRight } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export function Footer() {
+  const pathname = usePathname();
+
+  if (pathname !== "/") {
+    return null;
+  }
+
   return (
     <footer className="bg-zinc-900 text-zinc-300 pt-10 pb-6 border-t-4 border-red-600">
       <div className="container mx-auto px-4">
