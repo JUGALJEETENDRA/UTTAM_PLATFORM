@@ -225,7 +225,7 @@ function HeroSection({ onStartLearning, heroOpacity }: HeroSectionProps) {
             <div className="w-full overflow-hidden mix-blend-screen p-1 relative z-10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
-                src="/Uttam%20New%20banner.png" 
+                src="/uttam-new-banner.png" 
                 alt="UTTAM Chalkboard" 
                 className="w-full h-auto object-contain select-none"
               />
