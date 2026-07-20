@@ -33,16 +33,16 @@ const sortMindMaps = (items: MindMap[], modulesList: any[]) => {
       if (!mod) return { isModule: true, index: -1, parts: [0] };
       
       const subtopics = mod.subtopics || [];
-      const idx = subtopics.findIndex((s: any) => s.title === item.title);
+      const idx = subtopics.findIndex((s: any) => String(s.title) === String(item.title));
       
       if (idx !== -1) {
         const sub = subtopics[idx];
-        const subNo = sub.subtopicNo || "";
+        const subNo = String(sub.subtopicNo || "");
         const parts = subNo.split(".").map((p: string) => parseInt(p) || 0);
-        return { isModule: item.title === mod.title, index: idx, parts };
+        return { isModule: String(item.title) === String(mod.title), index: idx, parts };
       }
       
-      const match = (item.title || "").match(/^(\d+)\.(\d+)/);
+      const match = String(item.title || "").match(/^(\d+)\.(\d+)/);
       if (match) {
         return { isModule: false, index: 999, parts: [parseInt(match[1]), parseInt(match[2])] };
       }
