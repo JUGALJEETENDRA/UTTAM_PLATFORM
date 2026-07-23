@@ -21,7 +21,7 @@ import ResourceHeader from "@/components/ui/ResourceHeader";
 import { 
   ChevronLeft, PlayCircle, FileText, CheckCircle2, Gamepad2, Target, 
   Download, Book, BookOpen, BrainCircuit, CreditCard, Link as LinkIcon, 
-  HelpCircle, Layers, Headphones, Lightbulb, Clock, Terminal, Activity, Code, Settings, ChevronRight, MousePointer, ExternalLink, X, Maximize2, Volume2, Play, Pause, Image as ImageIcon
+  HelpCircle, Layers, Headphones, Lightbulb, Clock, Terminal, Activity, Code, Settings, ChevronRight, MousePointer, ExternalLink, X, Maximize2, Volume2, Play, Pause, Image as ImageIcon, VolumeX, RotateCcw
 } from "lucide-react";
 import { module1Quizzes } from "@/data/module1QuizData";
 import { module2Quizzes } from "@/data/module2QuizData";
@@ -264,79 +264,276 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   if (!url || typeof url !== 'string') return null;
   const driveFileId = getGoogleDriveFileId(url);
   const embedUrl = getExternalEmbedUrl(url);
-  const viewUrl = driveFileId 
-    ? `https://drive.google.com/file/d/${driveFileId}/view` 
-    : url;
   
   // Use the standard Google Docs direct download endpoint
   const googleDriveDirectUrl = driveFileId 
     ? `https://docs.google.com/uc?export=download&id=${driveFileId}` 
     : url;
 
-  // Default to native player
   const [useDriveFallback, setUseDriveFallback] = useState(false);
+  const [isPlayerModalOpen, setIsPlayerModalOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const [volume, setVolume] = useState(1);
+
+  useEffect(() => {
+    // Reset state when source changes
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+  }, [url]);
+
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play()
+        .then(() => setIsPlaying(true))
+        .catch(err => {
+          console.error("Play failed:", err);
+          if (driveFileId) {
+            setUseDriveFallback(true);
+          }
+        });
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration || 0);
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseFloat(e.target.value);
+    setCurrentTime(val);
+    if (audioRef.current) {
+      audioRef.current.currentTime = val;
+    }
+  };
+
+  const toggleMute = () => {
+    if (!audioRef.current) return;
+    audioRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseFloat(e.target.value);
+    setVolume(val);
+    if (audioRef.current) {
+      audioRef.current.volume = val;
+      audioRef.current.muted = val === 0;
+      setIsMuted(val === 0);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    if (isNaN(time) || !isFinite(time)) return "0:00";
+    const mins = Math.floor(time / 60);
+    const secs = Math.floor(time % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
 
   if (!url) return null;
 
-  // Use the direct for drive files or the standard URL
   const activeAudioSrc = googleDriveDirectUrl;
 
   return (
-    <div className="w-full bg-white text-slate-800 p-3.5 rounded-lg border border-slate-200 shadow-sm flex flex-col gap-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center space-x-2 shrink-0">
-          <Headphones className="w-4 h-4 text-blue-600 shrink-0" />
-          <span className="text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[200px] sm:max-w-xs">
-            {title || "Audio Lesson"}
-          </span>
+    <>
+      {/* Mini CTA Button in Card */}
+      <button
+        type="button"
+        onClick={() => setIsPlayerModalOpen(true)}
+        className="w-full bg-slate-50 hover:bg-slate-100/80 text-slate-800 px-3 py-2.5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between transition-all duration-150 group"
+      >
+        <div className="flex items-center space-x-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-full bg-blue-50 group-hover:bg-blue-100 flex items-center justify-center shrink-0 transition-colors">
+            <Headphones className="w-4 h-4 text-blue-600" />
+          </div>
+          <div className="flex flex-col text-left min-w-0">
+            <span className="text-xs font-bold text-slate-800 truncate max-w-[200px] sm:max-w-xs">
+              {title || "Audio Lesson"}
+            </span>
+            <span className="text-[10px] text-slate-500 font-medium">
+              Click to open audio player
+            </span>
+          </div>
         </div>
-      </div>
+        <Play className="w-3.5 h-3.5 text-blue-600 fill-blue-600/30 group-hover:fill-blue-600 group-hover:scale-105 transition-all shrink-0" />
+      </button>
 
-      {/* Audio Player Container */}
-      {!useDriveFallback && activeAudioSrc ? (
-        <div className="w-full bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col gap-1.5">
-          <audio 
-            key={activeAudioSrc}
-            ref={audioRef}
-            src={activeAudioSrc}
-            controls 
-            playsInline
-            preload="auto"
-            className="w-full h-10 accent-blue-600 rounded-md"
-            onError={() => {
-              if (driveFileId) setUseDriveFallback(true);
-            }}
-          >
-            Your browser does not support the audio element.
-          </audio>
-          {driveFileId && (
-            <div className="flex justify-end px-1">
+      {/* Floating Audio Player Modal Overlay */}
+      {isPlayerModalOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs select-none pointer-events-auto">
+          {/* Backdrop click close */}
+          <div className="absolute inset-0" onClick={() => setIsPlayerModalOpen(false)} />
+          
+          {/* Modal Box */}
+          <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 p-5 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200 z-10">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div className="flex items-center gap-2 min-w-0">
+                <Headphones className="w-4.5 h-4.5 text-blue-600 shrink-0" />
+                <h3 className="text-sm font-bold text-slate-900 truncate">
+                  {title || "Audio Lesson"}
+                </h3>
+              </div>
               <button
                 type="button"
-                onClick={() => setUseDriveFallback(true)}
-                className="text-[10px] text-blue-600 hover:underline font-semibold"
+                onClick={() => {
+                  if (audioRef.current) audioRef.current.pause();
+                  setIsPlaying(false);
+                  setIsPlayerModalOpen(false);
+                }}
+                className="text-slate-400 hover:text-slate-600 transition-colors p-1.5 rounded-full hover:bg-slate-50"
               >
-                No sound output? Switch to Drive Embed Player
+                <X className="w-4 h-4" />
               </button>
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="w-full h-16 bg-slate-50 rounded-lg overflow-hidden border border-slate-200">
-          <iframe
-            src={embedUrl || url}
-            className="w-full h-full border-0"
-            allow="autoplay"
-            title={title || "Drive Audio Player"}
-          />
+
+            {/* Player Container */}
+            {!useDriveFallback && activeAudioSrc ? (
+              <div className="w-full bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3.5 overflow-hidden">
+                <audio 
+                  key={activeAudioSrc}
+                  ref={audioRef}
+                  src={activeAudioSrc}
+                  onTimeUpdate={handleTimeUpdate}
+                  onLoadedMetadata={handleLoadedMetadata}
+                  onEnded={() => setIsPlaying(false)}
+                  preload="metadata"
+                  className="hidden"
+                  onError={() => {
+                    if (driveFileId) setUseDriveFallback(true);
+                  }}
+                />
+
+                {/* Main Controls Row */}
+                <div className="flex items-center gap-3 w-full min-w-0">
+                  {/* Play/Pause Button */}
+                  <button
+                    type="button"
+                    onClick={togglePlay}
+                    className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shadow-md shrink-0 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                  >
+                    {isPlaying ? (
+                      <Pause className="w-4.5 h-4.5 fill-white text-white" />
+                    ) : (
+                      <Play className="w-4.5 h-4.5 fill-white text-white translate-x-[1px]" />
+                    )}
+                  </button>
+
+                  {/* Rewind 10s */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (audioRef.current) {
+                        audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10);
+                      }
+                    }}
+                    className="hover:text-slate-800 transition-colors focus:outline-none text-slate-505 shrink-0 p-1.5 hover:bg-slate-200/50 rounded-full"
+                    title="Rewind 10s"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                  </button>
+
+                  {/* Timeline Slider & Time Labels */}
+                  <div className="flex-1 flex items-center gap-2 min-w-0">
+                    <span className="text-[10px] font-mono text-slate-500 shrink-0 select-none">
+                      {formatTime(currentTime)}
+                    </span>
+                    
+                    <input
+                      type="range"
+                      min="0"
+                      max={duration || 100}
+                      value={currentTime}
+                      onChange={handleSeek}
+                      className="flex-1 h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600 focus:outline-none min-w-0"
+                      style={{
+                        background: `linear-gradient(to right, #2563eb 0%, #2563eb ${
+                          duration ? (currentTime / duration) * 100 : 0
+                        }%, #e2e8f0 ${
+                          duration ? (currentTime / duration) * 100 : 0
+                        }%, #e2e8f0 100%)`
+                      }}
+                    />
+
+                    <span className="text-[10px] font-mono text-slate-500 shrink-0 select-none">
+                      {formatTime(duration)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Volume Controls Row - Horizontal layout */}
+                <div className="flex items-center justify-end gap-2 text-slate-500 text-xs border-t border-slate-200/50 pt-3">
+                  <button
+                    type="button"
+                    onClick={toggleMute}
+                    className="hover:text-slate-800 transition-colors focus:outline-none"
+                  >
+                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  </button>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={isMuted ? 0 : volume}
+                    onChange={handleVolumeChange}
+                    className="w-20 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-500 focus:outline-none"
+                    style={{
+                      background: `linear-gradient(to right, #64748b 0%, #64748b ${
+                        (isMuted ? 0 : volume) * 100
+                      }%, #e2e8f0 ${(isMuted ? 0 : volume) * 100}%, #e2e8f0 100%)`
+                    }}
+                  />
+                </div>
+
+                {driveFileId && (
+                  <div className="flex justify-end px-1 border-t border-slate-200/50 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setUseDriveFallback(true)}
+                      className="text-[10px] text-blue-600 hover:underline font-semibold"
+                    >
+                      Switch to Drive Embed Player
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="w-full h-[220px] bg-slate-950 rounded-xl overflow-hidden border border-slate-800 relative shadow-inner">
+                <iframe
+                  src={embedUrl || url}
+                  className="w-full h-full border-0 absolute inset-0 max-w-full"
+                  allow="autoplay"
+                  title={title || "Drive Audio Player"}
+                />
+              </div>
+            )}
+
+            {/* Note disclaimer inside modal */}
+            <div className="text-[10px] text-amber-700 bg-amber-50/50 border border-amber-200/50 px-2.5 py-2 rounded-lg flex items-start gap-1.5 font-medium leading-normal min-w-0">
+              <span className="font-bold shrink-0 text-amber-800">Note:</span>
+              <span className="min-w-0 flex-1 break-words">For Mac users with Chrome: if the audio files do not play, use the web app on Safari.</span>
+            </div>
+          </div>
         </div>
       )}
-      <div className="text-[10px] text-amber-700 bg-amber-50/50 border border-amber-200/50 px-2.5 py-1.5 rounded-lg flex items-start gap-1.5 font-medium leading-normal mt-0.5">
-        <span className="font-bold shrink-0 text-amber-800">Note:</span>
-        <span>For Mac users with Chrome: if the audio files do not play, use the web app on Safari.</span>
-      </div>
-    </div>
+    </>
   );
 };
 
