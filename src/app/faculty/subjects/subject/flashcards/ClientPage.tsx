@@ -230,6 +230,26 @@ export default function ManageFlashcardsPage() {
       setIsDeleting(false);
     }
   };
+
+  const handleDeleteAllDecks = async () => {
+    if (decks.length === 0) return;
+    const confirm = window.confirm(`Are you sure you want to delete all ${decks.length} flashcard decks in this subject? This action cannot be undone.`);
+    if (!confirm) return;
+
+    setLoading(true);
+    try {
+      await Promise.all(decks.map(deck => fetchGAS("deleteFlashcardDeck", { id: deck.id })));
+      toast.success("All flashcard decks deleted successfully!");
+      fetchDecks();
+      handleCancelEdit();
+    } catch (err) {
+      console.error("Error deleting all decks:", err);
+      toast.error("Failed to delete all decks.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCancelEdit = () => {
     setEditingDeckId(null);
     setTitle("");
@@ -443,7 +463,7 @@ export default function ManageFlashcardsPage() {
                     disabled={loading}
                     className="w-full bg-primary hover:bg-primary/95 text-white font-bold h-11 shadow-md transition-colors"
                   >
-                    {loading ? (editingDeckId ? "Updating..." : "Creating...") : (editingDeckId ? "Update Deck" : "Create Deck")}
+                    {loading ? (editingDeckId ? "Saving..." : "Creating...") : (editingDeckId ? "Save Edited Changes" : "Create Deck")}
                   </Button>
                 </div>
                 <p className="text-xs text-zinc-500 text-center mt-3">
@@ -456,6 +476,16 @@ export default function ManageFlashcardsPage() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-bold text-zinc-900">Current Decks</h3>
+            {decks.length > 0 && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleDeleteAllDecks}
+                className="h-8 text-xs font-bold bg-red-600 hover:bg-red-700 text-white flex items-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" /> Delete All
+              </Button>
+            )}
           </div>
           <div className="space-y-3">
             {decks.length > 0 ? (

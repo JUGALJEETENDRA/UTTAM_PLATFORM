@@ -342,6 +342,25 @@ export default function ManageQuizzesPage() {
       setIsDeleting(false);
     }
   };
+  
+  const handleDeleteAllQuizzes = async () => {
+    if (quizzes.length === 0) return;
+    const confirm = window.confirm(`Are you sure you want to delete all ${quizzes.length} quizzes in this subject? This action cannot be undone.`);
+    if (!confirm) return;
+
+    setLoading(true);
+    try {
+      await Promise.all(quizzes.map(quiz => fetchGAS("deleteQuiz", { id: quiz.id })));
+      toast.success("All quizzes deleted successfully!");
+      fetchQuizzes();
+      handleCancelEdit();
+    } catch (err) {
+      console.error("Error deleting all quizzes:", err);
+      toast.error("Failed to delete all quizzes.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCancelEdit = () => {
     setEditingQuizId(null);
@@ -732,7 +751,7 @@ export default function ManageQuizzesPage() {
                     disabled={loading}
                     className="w-full bg-primary hover:bg-primary/95 text-white font-bold h-11 shadow-md transition-colors"
                   >
-                    {loading ? (editingQuizId ? "Updating..." : "Creating...") : (editingQuizId ? "Update Quiz" : "Create Quiz")}
+                    {loading ? (editingQuizId ? "Saving..." : "Creating...") : (editingQuizId ? "Save Edited Changes" : "Create Quiz")}
                   </Button>
                 </div>
                 <p className="text-xs text-zinc-500 text-center mt-3">
@@ -749,6 +768,16 @@ export default function ManageQuizzesPage() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-bold text-zinc-900">Current Quizzes</h3>
+            {quizzes.length > 0 && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleDeleteAllQuizzes}
+                className="h-8 text-xs font-bold bg-red-600 hover:bg-red-700 text-white flex items-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" /> Delete All
+              </Button>
+            )}
           </div>
           <div className="space-y-3">
             {quizzes.length > 0 ? (
