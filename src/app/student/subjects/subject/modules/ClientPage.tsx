@@ -13,6 +13,7 @@ import {
   TrendingUp, Activity, Terminal, ShieldAlert, Sparkles, Code, MousePointer
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { UttamLoader } from "@/components/ui/UttamLoader";
 
 // Theme Configuration lookup table used by fallback default and custom layouts
 const THEME_MAP: Record<string, {
@@ -119,12 +120,7 @@ export default function ModulesPage() {
   }, [subjectId]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F1F5F9] flex flex-col justify-center items-center font-mono text-zinc-800 space-y-4">
-        <div className="w-12 h-12 border-4 border-t-[#3b82f6] border-zinc-200 rounded-full animate-spin" />
-        <p className="text-xs uppercase font-bold tracking-wider animate-pulse text-zinc-500">Retrieving modules pipeline...</p>
-      </div>
-    );
+    return <UttamLoader isLoading={true} />;
   }
 
   const modules = data || [];

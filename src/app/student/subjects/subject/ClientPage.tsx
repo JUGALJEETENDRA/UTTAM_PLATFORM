@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SubjectResourceCard } from "@/components/cards/SubjectResourceCard";
 import FloatingBackground from "@/components/ui/FloatingBackground";
 import ResourceHeader from "@/components/ui/ResourceHeader";
+import { UttamLoader } from "@/components/ui/UttamLoader";
 import {
   TrendingUp, TrendingDown, Layers, Target, Zap, Brain, FileText,
   ArrowRight, Clock, Book, ExternalLink, Globe, Activity, ShieldAlert, Send, BookOpen,
@@ -842,12 +843,7 @@ export default function StudentDashboard() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#E2E8F0] flex flex-col justify-center items-center font-mono text-zinc-800 space-y-4">
-        <div className="w-12 h-12 border-4 border-t-[#6366F1] border-zinc-300 rounded-full animate-spin" />
-        <p className="text-sm tracking-widest uppercase font-bold animate-pulse">Establishing Terminal Baseline...</p>
-      </div>
-    );
+    return <UttamLoader isLoading={true} />;
   }
 
   if (!data || (!data.subject && !data.encrypted)) {

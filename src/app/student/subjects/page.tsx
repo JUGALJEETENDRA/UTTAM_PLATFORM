@@ -78,18 +78,22 @@ export default function StudentSubjectsListPage() {
     return (
       <div className="bg-[#f4f4f0] min-h-screen py-20 px-4 flex flex-col items-center justify-center">
         <div className="text-center mb-12">
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-black uppercase bg-[#eab308] border-2 md:border-4 border-black px-4 py-3 inline-block shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-black uppercase bg-[#eab308] border-2 md:border-4 border-black px-6 py-3 inline-block shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] animate-pulse tracking-tight select-none">
             Loading subjects...
           </h1>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
           {[1, 2, 3].map((n) => (
-            <Card key={n} className="border-4 border-black rounded-none bg-white p-6 space-y-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-              <Skeleton className="w-12 h-12 rounded-none bg-zinc-200 border-2 border-black" />
-              <div className="space-y-2">
-                <Skeleton className="h-6 w-3/4 bg-zinc-200" />
-                <Skeleton className="h-4 w-full bg-zinc-200" />
-                <Skeleton className="h-4 w-5/6 bg-zinc-200" />
+            <Card key={n} className="border-4 border-black rounded-none bg-white p-6 space-y-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] animate-pulse">
+              <div className="w-12 h-12 rounded-none bg-zinc-200 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]" />
+              <div className="space-y-3">
+                <Skeleton className="h-6 w-3/4 bg-zinc-200 rounded-none border border-black/10" />
+                <Skeleton className="h-4 w-full bg-zinc-200 rounded-none" />
+                <Skeleton className="h-4 w-5/6 bg-zinc-200 rounded-none" />
+              </div>
+              <div className="pt-4 border-t-2 border-dashed border-black/10 flex justify-between items-center">
+                <Skeleton className="h-4 w-24 bg-zinc-200 rounded-none" />
+                <div className="w-8 h-8 bg-zinc-200 border-2 border-black" />
               </div>
             </Card>
           ))}
@@ -100,11 +104,11 @@ export default function StudentSubjectsListPage() {
 
   return (
     <div className="bg-[#f4f4f0] min-h-screen py-20 px-4 flex flex-col justify-center items-center relative">
-      <div className="text-center mb-12 md:mb-16 space-y-3 md:space-y-4 px-2">
-        <h1 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight uppercase bg-[#eab308] border-2 md:border-4 border-black px-4 py-3 md:px-6 md:py-4 inline-block shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] font-sans leading-tight">
+      <div className="text-center mb-12 md:mb-16 space-y-4 px-2">
+        <h1 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight uppercase bg-[#eab308] border-2 md:border-4 border-black px-5 py-3.5 md:px-7 md:py-4.5 inline-block shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] font-sans leading-tight select-none">
           Choose your subject to learn
         </h1>
-        <p className="text-zinc-700 text-sm sm:text-base md:text-lg max-w-md mx-auto font-bold pt-2 md:pt-4 px-4">
+        <p className="text-zinc-700 text-sm sm:text-base md:text-lg max-w-md mx-auto font-extrabold pt-2 md:pt-4 px-4 leading-relaxed">
           Pick an active study unit to pull open modules, retro practice arenas, and grading modules.
         </p>
       </div>

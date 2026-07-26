@@ -43,6 +43,7 @@ export function DeleteConfirmDialog({
           </Button>
         </CardHeader>
         <CardContent className="p-6 py-5">
+          <p className="text-sm font-bold text-zinc-900 mb-2">Are you sure you want to delete this?</p>
           <p className="text-sm text-zinc-500 leading-relaxed font-normal">{message}</p>
         </CardContent>
         <CardFooter className="flex justify-end gap-3 p-6 pt-4 border-t border-zinc-100 bg-zinc-50/50 rounded-b-xl">
