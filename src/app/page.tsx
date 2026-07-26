@@ -23,15 +23,6 @@ import {
   BarChart2,
   Briefcase
 } from "lucide-react";
-          >
-            <span>Faculty Login</span>
-            <span className="w-4 h-4 flex items-center justify-center border border-black bg-[#a81a1a] rounded-none">
-              <ArrowRight className="w-2.5 h-2.5 text-white" />
-            </span>
-          </button>
-        </Link>
-      </header>
-
 export default function LandingPage() {
   const router = useRouter();
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
@@ -65,9 +56,7 @@ export default function LandingPage() {
           >
             <span>Faculty Login</span>
             <span className="w-4 h-4 flex items-center justify-center border border-black bg-[#a81a1a] rounded-none">
-        </div>
-      </section>
-
+              <ArrowRight className="w-2.5 h-2.5 text-white" />
             </span>
           </button>
         </Link>
@@ -253,41 +242,31 @@ export default function LandingPage() {
               An interactive EdTech platform that brings together simulations, quizzes, flashcards, mind maps, and infographics helping students learn through interactive and visual content.
             </p>
           </div>
+        {/* Team Column */}
+        <div className="space-y-4">
+          <h4 className="text-xs font-black uppercase text-black font-sans flex items-center">
+            <span className="w-2.5 h-2.5 bg-[#ef4444] border border-black rounded-full mr-2"></span>
+            Our Team
+          </h4>
+          <p className="text-zinc-700 text-[11px] font-bold leading-relaxed font-sans max-w-xs">
+            Discover the engineering roles, layout frameworks, and collaborative contributions behind this project.
+          </p>
+          <button
+            onClick={() => router.push("/team")}
+            className="border border-black bg-white text-black font-black text-[10px] px-3.5 py-1.5 uppercase shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center gap-1.5 cursor-pointer rounded-none"
+          >
+            <span>View Team Description</span>
+            <ArrowRight className="w-3 h-3 text-black" />
+          </button>
         </div>
-      </section>
 
-
-          {/* Team Column */}
-          <div className="space-y-4">
-
-          {/* Team Column */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-black uppercase text-black font-sans flex items-center">
-              <span className="w-2.5 h-2.5 bg-[#ef4444] border border-black rounded-full mr-2"></span>
-              Our Team
-            </h4>
-            <p className="text-zinc-700 text-[11px] font-bold leading-relaxed font-sans max-w-xs">
-              Discover the engineering roles, layout frameworks, and collaborative contributions behind this project.
-            </p>
-            <button
-              onClick={() => router.push("/team")}
-              className="border border-black bg-white text-black font-black text-[10px] px-3.5 py-1.5 uppercase shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center gap-1.5 cursor-pointer rounded-none"
-            >
-              <span>View Team Description</span>
-              <ArrowRight className="w-3 h-3 text-black" />
-            </button>
-          </div>
-
-          {/* Build Details Column */}
-          <div className="flex flex-col justify-end items-start md:items-end text-zinc-500 font-mono text-[9px] font-bold">
-            <p>Last updated: 26 Jul 2026, 03:54 pm IST</p>
-          </div>
-
+        {/* Build Details Column */}
+        <div className="flex flex-col justify-end items-start md:items-end text-zinc-500 font-mono text-[9px] font-bold">
+          <p>Last updated: 26 Jul 2026, 03:54 pm IST</p>
         </div>
-      </footer>
-    </div>
-  );
 
-    </div>
-  );
+      </div>
+    </footer>
+  </div>
+);
 }
