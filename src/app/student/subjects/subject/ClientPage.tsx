@@ -16,7 +16,7 @@ import {
   ArrowRight, Clock, Book, ExternalLink, Globe, Activity, ShieldAlert, Send, BookOpen,
   Folder, FolderOpen, FileCode, Terminal, Play, CheckCircle, Calendar, Bug, Settings, Code,
   ChevronDown, ChevronRight, FileJson, Component, Palette, Monitor, Grid, MousePointer, Layout, Columns,
-  Search, Bookmark, Award, Info, Check
+  Search, Bookmark, Award, Info, Check, Gamepad2, Presentation, Headphones
 } from "lucide-react";
 
 
@@ -670,6 +670,57 @@ const getFlashcardDisplayTitle = (deck: any, modules: any[] = []) => {
   return deck.title;
 };
 
+interface ResourceRowItemProps {
+  icon: React.ComponentType<any>;
+  title: string;
+  description: string;
+  count?: number;
+  countLabel: string;
+  href?: string;
+  onClick?: () => void;
+}
+
+function ResourceRowItem({ icon: Icon, title, description, count, countLabel, href, onClick }: ResourceRowItemProps) {
+  const content = (
+    <div className="flex items-center justify-between py-3.5 px-4 bg-white hover:bg-slate-50 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(79,70,229,1)] hover:-translate-y-0.5 transition-all duration-150 group cursor-pointer">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div className="w-8 h-8 rounded-none bg-slate-50 border-2 border-black flex items-center justify-center text-[#4f46e5] flex-shrink-0 group-hover:bg-[#4f46e5] group-hover:text-white transition-colors">
+          <Icon className="w-4 h-4" />
+        </div>
+        <div className="flex flex-col min-w-0 flex-1">
+          <span className="text-black font-extrabold uppercase text-xs tracking-wider truncate leading-tight">
+            {title}
+          </span>
+          <span className="text-[10px] text-zinc-655 font-bold truncate leading-relaxed">
+            {description}
+          </span>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 flex-shrink-0 pl-2">
+        {count !== undefined && (
+          <span className="text-[9px] font-mono font-bold uppercase bg-slate-100 border border-black px-1.5 py-0.5 text-zinc-700">
+            {count} {countLabel}
+          </span>
+        )}
+        <ChevronRight className="w-4 h-4 text-black group-hover:translate-x-0.5 transition-transform" />
+      </div>
+    </div>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className="block outline-none focus-visible:ring-2 focus-visible:ring-black">
+        {content}
+      </Link>
+    );
+  }
+  return (
+    <button onClick={onClick} className="w-full text-left outline-none focus-visible:ring-2 focus-visible:ring-black border-none bg-transparent p-0">
+      {content}
+    </button>
+  );
+}
+
 export default function StudentDashboard() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get('subjectId');
@@ -677,6 +728,8 @@ export default function StudentDashboard() {
   const [data, setData] = useState<any>(null);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [simulationsCount, setSimulationsCount] = useState<number | null>(null);
+  const [pdfModalOpen, setPdfModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeNode, setActiveNode] = useState<number | null>(0);
   const [tickerX, setTickerX] = useState(0);
@@ -765,11 +818,22 @@ export default function StudentDashboard() {
     if (subjectId) {
       const loadDashboardData = async () => {
         try {
-          const result = await fetchGAS("getStudentDashboard", {
-            userId: "anonymous",
-            subjectId: subjectId
-          });
+          const [result, sims] = await Promise.all([
+            fetchGAS("getStudentDashboard", {
+              userId: "anonymous",
+              subjectId: subjectId
+            }),
+            fetchGAS("getSimulations", { subjectId }).catch(e => {
+              console.warn("Failed to load simulations in dashboard", e);
+              return [];
+            })
+          ]);
           setData(result);
+          if (Array.isArray(sims)) {
+            setSimulationsCount(sims.length);
+          } else {
+            setSimulationsCount(0);
+          }
         } catch (err) {
           console.error("Failed to load dashboard data", err);
         } finally {
@@ -953,359 +1017,327 @@ export default function StudentDashboard() {
       );
     });
 
+    const notesCount = modules.length;
+    const mindmapsCount = mindmaps.length;
+    const infographicsCount = infographics.length;
+    const flashcardsCount = flashcardDecks.length;
+    const quizzesCount = quizzesWithAttempts.length;
+    const pdfCount = subjectResources.length;
+
+    // Count video subtopics
+    const videosCount = modules.reduce((acc: number, mod: any) => 
+      acc + (mod.subtopics || []).filter((st: any) => !!st.videoUrl || st.type === "videoUrl" || st.selectedResourceType === "videoUrl").length, 0
+    );
+
+    // Count audio subtopics
+    const audiosCount = modules.reduce((acc: number, mod: any) => 
+      acc + (mod.subtopics || []).filter((st: any) => !!st.audioUrl || st.type === "audioUrl" || st.selectedResourceType === "audioUrl").length, 0
+    );
+
+    const actualSimulationsCount = simulationsCount ?? 0;
+
     return (
-      <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] pb-20 relative overflow-hidden font-sans antialiased selection:bg-blue-600/10 selection:text-blue-600">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-blue-600" />
+      <div className="min-h-screen bg-[#FAF9F5] text-black pb-24 relative overflow-hidden font-sans antialiased selection:bg-indigo-600/10 selection:text-[#4f46e5]">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-black" />
         <FloatingBackground />
         
-        <div className="container mx-auto px-4 mt-8 relative z-10 max-w-6xl space-y-8">
+        <div className="container mx-auto px-4 mt-8 relative z-10 max-w-6xl space-y-12">
           
           {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs text-[#64748B] font-medium" aria-label="Breadcrumb">
-            <Link href="/student/subjects" className="hover:text-blue-650 transition-colors">
+          <nav className="flex items-center gap-2 text-xs text-zinc-655 font-bold" aria-label="Breadcrumb">
+            <Link href="/student/subjects" className="hover:text-[#4f46e5] hover:underline transition-all">
               Subjects
             </Link>
-            <span className="text-slate-300">/</span>
-            <span className="text-[#0F172A] font-semibold">{subject.name}</span>
+            <span className="text-zinc-400">/</span>
+            <span className="text-black uppercase tracking-wider font-extrabold">{subject.name}</span>
           </nav>
 
-          {/* Premium Subject Header Hero */}
-          <header className="relative bg-white rounded-lg border border-[#E2E8F0] shadow-xs p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="space-y-3 flex-1">
-              <div className="flex items-center gap-2.5">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
-                  Course
+          {/* 1. SUBJECT HEADER */}
+          <header className="relative bg-white rounded-none border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div className="space-y-4 flex-1 w-full">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] uppercase font-mono tracking-widest text-[#4f46e5] font-black bg-indigo-50 px-2.5 py-1 border-2 border-black shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)]">
+                  Subject Workspace
                 </span>
               </div>
-              <h1 className="text-3xl font-extrabold tracking-tight text-[#0F172A] font-sans">
+              <h1 className="text-3xl font-black uppercase text-slate-900 tracking-tight leading-none font-sans">
                 {subject.name}
               </h1>
-              <p className="text-[#64748B] text-sm font-sans max-w-2xl leading-relaxed">
+              <p className="text-zinc-700 text-sm font-bold max-w-2xl leading-relaxed">
                 {subject.description || "Master the concepts of modern typography, layouts, user centered wireframes, interface hierarchies, and usability rules."}
               </p>
-              
-              {/* Search within subject */}
-              <div className="relative max-w-sm w-full pt-2">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+
+              {/* Statistics Panel */}
+              <div className="flex flex-wrap gap-4 pt-2">
+                <span className="text-[10px] font-mono font-extrabold uppercase bg-slate-100 text-zinc-800 border-2 border-black px-2.5 py-1">
+                  📚 {notesCount} Modules
+                </span>
+                <span className="text-[10px] font-mono font-extrabold uppercase bg-slate-100 text-zinc-800 border-2 border-black px-2.5 py-1">
+                  🎥 {videosCount} Videos
+                </span>
+                <span className="text-[10px] font-mono font-extrabold uppercase bg-slate-100 text-zinc-800 border-2 border-black px-2.5 py-1">
+                  🎮 {actualSimulationsCount} Simulations
+                </span>
+                <span className="text-[10px] font-mono font-extrabold uppercase bg-slate-100 text-zinc-800 border-2 border-black px-2.5 py-1">
+                  📄 {pdfCount} Resources
+                </span>
+              </div>
+
+              {/* Search Bar */}
+              <div className="relative max-w-md w-full pt-2">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                 <input
                   type="text"
-                  placeholder="Search topics or modules..."
+                  placeholder="Search modules or subtopics..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 text-sm text-[#0F172A] bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg outline-hidden focus:ring-2 focus:ring-blue-600/10 focus:border-blue-600 transition-all font-sans"
+                  className="w-full pl-10 pr-4 py-2.5 text-xs text-black bg-[#FAF9F5] border-2 border-black rounded-none shadow-[2px_2px_0px_rgba(0,0,0,1)] outline-hidden focus:shadow-[4px_4px_0px_rgba(79,70,229,1)] focus:-translate-x-0.5 focus:-translate-y-0.5 transition-all font-bold"
                 />
               </div>
             </div>
           </header>
 
-          {/* Quick Actions Navigation Grid */}
-          <nav className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4" aria-label="Quick Actions">
-            <a 
-              href="#journey-section"
-              className="bg-white border border-[#E2E8F0] rounded-lg p-3 sm:p-4 flex items-center gap-2.5 sm:gap-3 hover:border-blue-500 hover:shadow-xs transition-all duration-150 group"
-            >
-              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-150">
-                <Layers className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-xs font-bold text-[#0F172A]">Learning Path</div>
-                <div className="text-[10px] text-[#64748B]">{modules.length} Modules</div>
-              </div>
-            </a>
-
-            <a 
-              href="#quizzes-section"
-              className="bg-white border border-[#E2E8F0] rounded-lg p-3 sm:p-4 flex items-center gap-2.5 sm:gap-3 hover:border-blue-500 hover:shadow-xs transition-all duration-150 group"
-            >
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-[#16A34A] group-hover:bg-[#16A34A] group-hover:text-white transition-all duration-150">
-                <Target className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-xs font-bold text-[#0F172A]">Assessments</div>
-                <div className="text-[10px] text-[#64748B]">{quizzesWithAttempts.length} Quizzes</div>
-              </div>
-            </a>
-
-            <a 
-              href="#flashcards-section"
-              className="bg-white border border-[#E2E8F0] rounded-lg p-3 sm:p-4 flex items-center gap-2.5 sm:gap-3 hover:border-blue-500 hover:shadow-xs transition-all duration-150 group"
-            >
-              <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-[#F59E0B] group-hover:bg-[#F59E0B] group-hover:text-white transition-all duration-150">
-                <Zap className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-xs font-bold text-[#0F172A]">Revision Decks</div>
-                <div className="text-[10px] text-[#64748B]">{flashcardDecks.length} Decks</div>
-              </div>
-            </a>
-
-            <a 
-              href="#visuals-section"
-              className="bg-white border border-[#E2E8F0] rounded-lg p-3 sm:p-4 flex items-center gap-2.5 sm:gap-3 hover:border-blue-500 hover:shadow-xs transition-all duration-150 group"
-            >
-              <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-all duration-150">
-                <Brain className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-xs font-bold text-[#0F172A]">Visual Aids</div>
-                <div className="text-[10px] text-[#64748B]">{mindmaps.length + infographics.length} Topologies</div>
-              </div>
-            </a>
-          </nav>
-
-          {/* Learning Journey Timeline & Modules */}
-          <section id="journey-section" className="space-y-6">
-            <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
-              <ResourceHeader 
-                type="journey" 
-                title="Learning Journey" 
-                subtitle="Follow your structured learning path." 
-              />
-              {searchQuery && (
-                <span className="text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-100 rounded px-2.5 py-1">
-                  Found {filteredModules.length} matches
-                </span>
-              )}
+          {/* 2. MODULE LIBRARY */}
+          <section className="space-y-6">
+            <div className="border-b-4 border-black pb-3">
+              <h2 className="text-xl font-black uppercase tracking-tight text-black">
+                Module Library
+              </h2>
+              <p className="text-xs text-zinc-655 font-bold mt-1">
+                Explore the primary learning structure of this course
+              </p>
             </div>
 
-            <div className="relative pl-6 md:pl-8 border-l-2 border-[#E2E8F0] space-y-8 py-2">
-              {filteredModules.map((mod: any) => {
-                const difficultyLabel = mod.moduleNo <= 2 ? "Beginner" : mod.moduleNo <= 4 ? "Intermediate" : "Advanced";
-                const difficultyColor = mod.moduleNo <= 2 
-                  ? "bg-slate-50 text-[#64748B] border-[#E2E8F0]" 
-                  : mod.moduleNo <= 4 
-                    ? "bg-amber-50 text-[#F59E0B] border-amber-200" 
-                    : "bg-red-50 text-[#DC2626] border-red-200";
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredModules.map((mod: any, index: number) => {
+                const totalTopics = mod.subtopics?.length || 0;
                 return (
-                  <article key={mod.id} className="relative group">
-                    {/* Timeline circle node anchor */}
-                    <div className="absolute -left-[31px] md:-left-[39px] top-6 w-4 h-4 rounded-full border-4 border-slate-200 bg-white" />
-
-                    <div className="bg-white border border-[#E2E8F0] rounded-lg p-5 md:p-6 shadow-xs hover:shadow-sm hover:border-slate-350 transition-all duration-150 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                      <div className="flex-1 space-y-3">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-[10px] font-mono font-bold tracking-wider text-[#64748B] uppercase">Module 0{mod.moduleNo}</span>
-                          <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded border ${difficultyColor}`}>{difficultyLabel}</span>
-                          <span className="text-xs text-[#64748B] font-medium flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {mod.hours || 4} Hrs</span>
+                  <article 
+                    key={mod.id || index} 
+                    className="bg-white border-4 border-black p-5 md:p-6 shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_rgba(79,70,229,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all duration-150 flex flex-col justify-between min-h-[220px] group"
+                  >
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] font-mono font-extrabold uppercase tracking-widest text-[#4f46e5] bg-indigo-50 border-2 border-black px-2 py-0.5 shadow-[1px_1px_0px_rgba(0,0,0,1)]">
+                          Module {mod.moduleNo < 10 ? `0${mod.moduleNo}` : mod.moduleNo}
+                        </span>
+                        <div className="flex gap-3">
+                          <span className="text-[10px] font-mono font-bold text-zinc-600 flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5" /> {mod.hours || 4} Hrs
+                          </span>
+                          <span className="text-[10px] font-mono font-bold text-zinc-600 flex items-center gap-1.5">
+                            <BookOpen className="w-3.5 h-3.5" /> {totalTopics} Topics
+                          </span>
                         </div>
-
-                        <h3 className="text-lg font-bold text-[#0F172A] tracking-tight">
-                          {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
-                        </h3>
-                        <p className="text-sm text-[#64748B] leading-relaxed max-w-2xl">
-                          {mod.description || "Master custom visual interfaces, structured wireframes, dynamic typographic scales, padding grids, and responsive components."}
-                        </p>
-
-                        {/* Chips for topics */}
-                        {mod.subtopics && mod.subtopics.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 pt-1">
-                            {mod.subtopics.map((st: any) => (
-                              <span key={st.id} className="text-[11px] bg-slate-50 text-[#64748B] px-2.5 py-0.5 rounded-lg border border-[#E2E8F0] font-medium">
-                                {st.title}
-                              </span>
-                            ))}
-                          </div>
-                        )}
                       </div>
 
-                      <div className="flex-shrink-0 w-full md:w-auto">
-                        <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
-                          <Button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2.5 flex items-center justify-center gap-1.5 transition-all duration-150 shadow-xs">
-                            <span>View Module</span>
-                            <ArrowRight className="w-4 h-4" />
-                          </Button>
-                        </Link>
-                      </div>
+                      <h3 className="text-base font-black uppercase text-slate-900 tracking-tight line-clamp-1 leading-snug group-hover:text-[#4f46e5] transition-colors">
+                        {mod.title ? mod.title.replace(/^[●•]\s*/, "") : `Module ${mod.moduleNo}`}
+                      </h3>
+                      <p className="text-xs text-zinc-700 font-medium leading-relaxed line-clamp-3">
+                        {mod.description || "Learn the concepts of custom visual interfaces, structured wireframes, dynamic typographic scales, padding grids, and responsive components."}
+                      </p>
+                    </div>
+
+                    <div className="pt-5 mt-auto">
+                      <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
+                        <Button className="w-full bg-black hover:bg-zinc-900 text-white font-black uppercase tracking-wider text-xs border-2 border-black shadow-[3px_3px_0px_rgba(79,70,229,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all py-2.5 flex items-center justify-center gap-1.5 cursor-pointer">
+                          <span>Open Module</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </Button>
+                      </Link>
                     </div>
                   </article>
                 );
               })}
               {filteredModules.length === 0 && (
-                <div className="text-center py-10 border border-dashed border-[#E2E8F0] bg-white rounded-lg">
-                  <Info className="w-8 h-8 mx-auto text-slate-350" />
-                  <p className="text-sm text-[#64748B] mt-2">No matching modules found in this subject.</p>
+                <div className="col-span-1 md:col-span-2 text-center py-12 border-4 border-dashed border-zinc-300 bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                  <Info className="w-8 h-8 mx-auto text-zinc-400" />
+                  <p className="text-sm font-bold text-zinc-700 mt-2">No matching modules found in this subject.</p>
                 </div>
               )}
             </div>
           </section>
 
-          {/* Quizzes & Flashcards Double Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Quizzes Column */}
-            <section id="quizzes-section" className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-xs space-y-5">
-              <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
-                <ResourceHeader 
-                  type="quizzes" 
-                  title="Quizzes & Assessments" 
-                  subtitle="Test your understanding with adaptive quizzes." 
-                />
-                <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
-                  <span className="text-[10px] font-mono font-bold uppercase text-blue-600 hover:text-blue-700 cursor-pointer">View All →</span>
-                </Link>
+          {/* Secondary Resource Sections Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
+            
+            {/* 3. RESOURCES SECTION */}
+            <section className="space-y-4">
+              <div className="border-b-4 border-black pb-2">
+                <h2 className="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
+                  <FolderOpen className="w-4 h-4 text-[#4f46e5]" />
+                  Resources
+                </h2>
               </div>
-
               <div className="space-y-3">
-                {quizzesWithAttempts.slice(0, 4).map((quiz: any) => (
-                  <div key={quiz.id} className="border border-[#E2E8F0] hover:border-slate-350 p-4 rounded-lg flex justify-between items-center gap-4 transition-all duration-150 bg-[#F8FAFC]">
-                    <div className="min-w-0">
-                      <span className="text-[9px] font-mono text-[#64748B] uppercase">Module {quiz.module?.moduleNo || quiz.title.split(".")[0]}</span>
-                      <h4 className="text-sm font-semibold text-[#0F172A] tracking-tight truncate mt-0.5">
-                        {getQuizDisplayTitle(quiz, modules)}
-                      </h4>
-                    </div>
-                    <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="flex-shrink-0">
-                      <Button className="bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#0F172A] text-xs font-semibold px-3 py-1.5 h-8 rounded-lg shadow-2xs">
-                        Start
-                      </Button>
-                    </Link>
-                  </div>
-                ))}
-                {quizzesWithAttempts.length === 0 && (
-                  <div className="text-center py-6 text-xs text-[#64748B] border border-dashed border-[#E2E8F0] rounded-lg font-medium bg-slate-50">
-                    No quizzes assigned.
-                  </div>
-                )}
+                <ResourceRowItem 
+                  icon={BookOpen}
+                  title="Notes"
+                  description="Lecture notes & explanations"
+                  count={notesCount}
+                  countLabel="Modules"
+                  href={`/student/subjects/subject/notes?subjectId=${subjectId}`}
+                />
+                <ResourceRowItem 
+                  icon={Play}
+                  title="Videos"
+                  description="Recorded video walkthroughs"
+                  count={videosCount}
+                  countLabel="Videos"
+                  href={`/student/subjects/subject/videos?subjectId=${subjectId}`}
+                />
+                <ResourceRowItem 
+                  icon={FileText}
+                  title="PDF Resources"
+                  description="Reference manuals & slides"
+                  count={pdfCount}
+                  countLabel="Files"
+                  href={`/student/subjects/subject/pdfs?subjectId=${subjectId}`}
+                />
+                <ResourceRowItem 
+                  icon={Headphones}
+                  title="Audio Lessons"
+                  description="Audio explanations & lectures"
+                  count={audiosCount}
+                  countLabel="Audios"
+                  href={`/student/subjects/subject/audio?subjectId=${subjectId}`}
+                />
               </div>
             </section>
 
-            {/* Flashcards Column */}
-            <section id="flashcards-section" className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-xs space-y-5">
-              <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
-                <ResourceHeader 
-                  type="flashcards" 
-                  title="Revision Flashcards" 
-                  subtitle="Practice with active recall and spaced repetition." 
-                />
-                <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
-                  <span className="text-[10px] font-mono font-bold uppercase text-blue-600 hover:text-blue-700 cursor-pointer">View All →</span>
-                </Link>
+            {/* 4. PRACTICE SECTION */}
+            <section className="space-y-4">
+              <div className="border-b-4 border-black pb-2">
+                <h2 className="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
+                  <Award className="w-4 h-4 text-[#4f46e5]" />
+                  Practice
+                </h2>
               </div>
-
               <div className="space-y-3">
-                {flashcardDecks.slice(0, 4).map((deck: any) => (
-                  <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`} className="block">
-                    <div className="border border-[#E2E8F0] hover:border-slate-350 p-4 rounded-lg flex justify-between items-center gap-4 transition-all duration-150 bg-[#F8FAFC] group">
-                      <div className="min-w-0">
-                        <span className="text-[9px] font-mono text-[#64748B] uppercase">Module {deck.module?.moduleNo || deck.title.split(".")[0]}</span>
-                        <h4 className="text-sm font-semibold text-[#0F172A] tracking-tight truncate group-hover:text-blue-600 transition-colors mt-0.5">
-                          {getFlashcardDisplayTitle(deck, modules)}
-                        </h4>
-                      </div>
-                      <span className="text-[10px] font-mono bg-white text-[#64748B] border border-[#E2E8F0] px-2 py-0.5 rounded-md font-bold flex-shrink-0">
-                        {deck.cards?.length || 0} Cards
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-                {flashcardDecks.length === 0 && (
-                  <div className="text-center py-6 text-xs text-[#64748B] border border-dashed border-[#E2E8F0] rounded-lg font-medium bg-slate-50">
-                    No flashcard decks logged.
-                  </div>
-                )}
+                <ResourceRowItem 
+                  icon={Zap}
+                  title="Flashcards"
+                  description="Active recall flashcard decks"
+                  count={flashcardsCount}
+                  countLabel="Decks"
+                  href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}
+                />
+                <ResourceRowItem 
+                  icon={CheckCircle}
+                  title="Quizzes"
+                  description="Adaptive subject assessments"
+                  count={quizzesCount}
+                  countLabel="Quizzes"
+                  href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}
+                />
+                <ResourceRowItem 
+                  icon={Gamepad2}
+                  title="Simulations"
+                  description="Interactive sandbox exercises"
+                  count={actualSimulationsCount}
+                  countLabel="Sims"
+                  href={`/student/subjects/subject/simulations?subjectId=${subjectId}`}
+                />
               </div>
             </section>
+
+            {/* 5. VISUAL LEARNING SECTION */}
+            <section className="space-y-4">
+              <div className="border-b-4 border-black pb-2">
+                <h2 className="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
+                  <Brain className="w-4 h-4 text-[#4f46e5]" />
+                  Visual Learning
+                </h2>
+              </div>
+              <div className="space-y-3">
+                <ResourceRowItem 
+                  icon={Terminal}
+                  title="Mind Maps"
+                  description="Visual concept layout topologies"
+                  count={mindmapsCount}
+                  countLabel="Maps"
+                  href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}
+                />
+                <ResourceRowItem 
+                  icon={Presentation}
+                  title="Infographics"
+                  description="Design grids & visual guidelines"
+                  count={infographicsCount}
+                  countLabel="Graphics"
+                  href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}
+                />
+              </div>
+            </section>
+
           </div>
 
-          {/* Visual Aids section (Mind Maps & Infographics) */}
-          <section id="visuals-section" className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Mind Maps Card */}
-            <div className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-xs space-y-5">
-              <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
-                <ResourceHeader 
-                  type="mindmaps" 
-                  title="Subject Mind Maps" 
-                  subtitle="Explore relationships between concepts." 
-                />
-                <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
-                  <span className="text-[10px] font-mono font-bold uppercase text-blue-600 hover:text-blue-700 cursor-pointer">View All →</span>
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {mindmaps.slice(0, 4).map((map: any, idx: number) => (
-                  <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="block">
-                    <div className="border border-[#E2E8F0] hover:border-slate-350 p-4 rounded-lg text-center transition-all duration-150 bg-[#F8FAFC] group flex flex-col justify-between items-center h-28">
-                      <div className="w-7 h-7 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold text-xs font-mono group-hover:bg-purple-600 group-hover:text-white transition-all duration-150">
-                        M0{idx + 1}
-                      </div>
-                      <h4 className="text-xs font-bold text-[#0F172A] line-clamp-2 px-1 text-center w-full leading-normal">
-                        {map.title}
-                      </h4>
-                    </div>
-                  </Link>
-                ))}
-                {mindmaps.length === 0 && (
-                  <div className="col-span-2 text-center py-6 text-xs text-[#64748B] border border-dashed border-[#E2E8F0] rounded-lg font-medium bg-slate-50">
-                    No mind maps available.
+          {/* PDF Dialog Modal */}
+          {pdfModalOpen && (
+            <div 
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="pdf-modal-title"
+            >
+              <div className="bg-[#FAF9F5] border-4 border-black p-6 md:p-8 max-w-lg w-full shadow-[8px_8px_0px_rgba(0,0,0,1)] relative animate-in fade-in zoom-in-95 duration-150">
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h2 id="pdf-modal-title" className="text-xl font-black uppercase tracking-tight text-black flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-[#4f46e5]" />
+                      PDF Resources
+                    </h2>
+                    <p className="text-zinc-650 text-xs font-bold mt-1">
+                      Select a textbook or reading manual to view in Google Drive
+                    </p>
                   </div>
-                )}
-              </div>
-            </div>
-
-            {/* Infographics Card */}
-            <div className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-xs space-y-5">
-              <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
-                <ResourceHeader 
-                  type="infographics" 
-                  title="Visual Infographics" 
-                  subtitle="Visual explanations of key concepts." 
-                />
-                <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
-                  <span className="text-[10px] font-mono font-bold uppercase text-blue-600 hover:text-blue-700 cursor-pointer">View All →</span>
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {infographics.slice(0, 4).map((info: any, idx: number) => (
-                  <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="block">
-                    <div className="border border-[#E2E8F0] hover:border-slate-350 p-4 rounded-lg text-center transition-all duration-150 bg-[#F8FAFC] group flex flex-col justify-between items-center h-28">
-                      <div className="w-7 h-7 rounded-full bg-pink-50 text-pink-650 border border-pink-100 flex items-center justify-center font-bold text-xs font-mono group-hover:bg-pink-600 group-hover:text-white transition-all duration-150">
-                        I0{idx + 1}
-                      </div>
-                      <h4 className="text-xs font-bold text-[#0F172A] line-clamp-2 px-1 text-center w-full leading-normal">
-                        {info.title}
-                      </h4>
-                    </div>
-                  </Link>
-                ))}
-                {infographics.length === 0 && (
-                  <div className="col-span-2 text-center py-6 text-xs text-[#64748B] border border-dashed border-[#E2E8F0] rounded-lg font-medium bg-slate-50">
-                    No infographics topologies.
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-
-          {/* Reference resources */}
-          <section className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-xs space-y-5">
-            <div className="flex justify-between items-end pb-3 border-b border-[#E2E8F0]">
-              <ResourceHeader 
-                type="resources" 
-                title="Reference Materials" 
-                subtitle="Browse notes, PDFs and supporting resources." 
-              />
-              <span className="text-[10px] font-mono text-[#64748B] uppercase">Reference Docs</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {subjectResources.map((resource: any, index: number) => (
-                <div key={index} className="transition-all duration-150 hover:-translate-y-0.5">
-                  <SubjectResourceCard
-                    title={resource.title}
-                    type={resource.type}
-                    link={resource.link}
-                  />
+                  <button
+                    onClick={() => setPdfModalOpen(false)}
+                    className="text-black hover:text-red-500 font-mono font-black text-sm border-2 border-black bg-white hover:bg-slate-50 px-2 py-0.5 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-black"
+                    aria-label="Close dialog"
+                  >
+                    ESC
+                  </button>
                 </div>
-              ))}
-              {subjectResources.length === 0 && (
-                <p className="col-span-4 text-xs font-mono text-[#64748B] text-center py-4 border border-dashed border-[#E2E8F0] rounded-lg bg-slate-50">
-                  No resources uploaded yet.
-                </p>
-              )}
+
+                <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                  {subjectResources.map((resource: any, index: number) => (
+                    <a
+                      key={index}
+                      href={resource.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-3.5 bg-white hover:bg-indigo-50/50 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(79,70,229,1)] hover:-translate-y-0.5 transition-all duration-150 group outline-none focus-visible:ring-2 focus-visible:ring-black"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-7 h-7 bg-indigo-50 border border-black text-[#4f46e5] flex items-center justify-center flex-shrink-0 group-hover:bg-[#4f46e5] group-hover:text-white transition-colors">
+                          <FileText className="w-4 h-4" />
+                        </div>
+                        <span className="text-xs font-extrabold uppercase text-slate-800 tracking-wide truncate">
+                          {resource.title}
+                        </span>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-black flex-shrink-0" />
+                    </a>
+                  ))}
+                  {subjectResources.length === 0 && (
+                    <div className="text-center py-6 text-xs text-zinc-500 border-2 border-dashed border-zinc-300">
+                      No PDF resources uploaded yet.
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={() => setPdfModalOpen(false)}
+                    className="px-4 py-2 bg-black hover:bg-zinc-900 text-white text-xs font-black uppercase border-2 border-black shadow-[2px_2px_0px_rgba(79,70,229,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-black"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
             </div>
-          </section>
+          )}
 
         </div>
       </div>
