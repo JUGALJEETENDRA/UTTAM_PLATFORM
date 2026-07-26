@@ -24,6 +24,7 @@ import {
 
 export default function LandingPage() {
   const router = useRouter();
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
   // Simple animations for whiteboard elements
   const floatTransition = {
@@ -113,7 +114,7 @@ export default function LandingPage() {
         <div className="lg:col-span-7 w-full flex flex-col select-none justify-center items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
-            src="/uttam-whiteboard.png" 
+            src={`${basePath}/uttam-whiteboard.png`} 
             alt="UTTAM Whiteboard" 
             className="w-full h-auto object-contain select-none max-w-full rounded-none"
           />
@@ -206,7 +207,7 @@ export default function LandingPage() {
           <div className="hidden lg:block select-none max-w-[150px] shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src="/uttam-cta-books.png" 
+              src={`${basePath}/uttam-cta-books.png`} 
               alt="UTTAM Books" 
               className="w-full h-auto object-contain mix-blend-multiply"
             />
@@ -235,7 +236,7 @@ export default function LandingPage() {
           <div className="hidden lg:block select-none max-w-[150px] shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src="/uttam-cta-backpack.png" 
+              src={`${basePath}/uttam-cta-backpack.png`} 
               alt="UTTAM Backpack" 
               className="w-full h-auto object-contain mix-blend-multiply"
             />
