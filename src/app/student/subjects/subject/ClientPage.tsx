@@ -3002,15 +3002,11 @@ export default function StudentDashboard() {
               </Link>
             </div>
             <div className="space-y-3">
-              {flashcardDecks.slice(0, 4).map((deck: any, idx: number) => {
-                const keywordsList = ["Figma", "Spacing", "Colors", "A11y"];
-                const kw = keywordsList[idx % keywordsList.length];
-
+              {flashcardDecks.slice(0, 4).map((deck: any) => {
                 return (
                   <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
                     <div className={`bg-white p-3.5 flex justify-between items-center cursor-pointer group transition-all duration-200 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none'}`}>
                       <div className="flex items-center gap-2 overflow-hidden">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 ${t.badge} flex-shrink-0 transition-colors ${isSaaS ? 'font-sans' : 'font-mono'}`}>{kw}</span>
                         <span className={`text-xs text-black font-bold ${t.titleHover} transition-colors truncate ${isSaaS ? 'font-sans' : 'font-mono'}`}>{getFlashcardDisplayTitle(deck, modules)}</span>
                       </div>
                       <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-bold whitespace-nowrap ${isSaaS ? 'font-sans' : 'font-mono'}`}>{deck.cards?.length || 0} CARDS</span>
@@ -3167,13 +3163,13 @@ export default function StudentDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {subjectResources.slice(0, 4).map((resource: any, index: number) => (
                 <a key={index} href={resource.link} target="_blank" rel="noopener noreferrer" className="block w-full">
-                  <div className={`bg-white p-3 flex items-start gap-3 group h-full transition-all duration-250 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]'}`}>
-                    <div className={`p-1.5 mt-0.5 transition-colors ${isSaaS ? 'bg-blue-50 text-blue-600 rounded-lg' : 'bg-white border-2 border-black rounded-none group-hover:bg-zinc-100'}`}>
-                      <FileText className={`w-3.5 h-3.5 ${isSaaS ? 'text-blue-600' : 'text-slate-600 group-hover:text-black'}`} />
+                  <div className={`bg-white p-4 flex flex-col justify-center items-center text-center gap-3 group aspect-square w-full transition-all duration-250 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]'}`}>
+                    <div className={`p-3 transition-colors ${isSaaS ? 'bg-blue-50 text-blue-600 rounded-xl' : 'bg-white border-2 border-black rounded-none group-hover:bg-zinc-100'}`}>
+                      <FileText className={`w-6 h-6 ${isSaaS ? 'text-blue-600' : 'text-slate-600 group-hover:text-black'}`} />
                     </div>
-                    <div>
-                      <p className={`text-xs font-bold text-black ${t.titleHover} transition-colors line-clamp-1 ${isSaaS ? 'font-sans' : ''}`}>{resource.title}</p>
-                      <p className={`text-[9px] ${t.textMuted} mt-0.5 uppercase tracking-wider ${isSaaS ? 'font-sans' : 'font-mono'}`}>{resource.type}</p>
+                    <div className="space-y-1">
+                      <p className={`text-xs font-bold text-black ${t.titleHover} transition-colors line-clamp-2 ${isSaaS ? 'font-sans' : ''}`}>{resource.title}</p>
+                      <p className={`text-[10px] ${t.textMuted} uppercase tracking-wider ${isSaaS ? 'font-sans' : 'font-mono'}`}>{resource.type}</p>
                     </div>
                   </div>
                 </a>

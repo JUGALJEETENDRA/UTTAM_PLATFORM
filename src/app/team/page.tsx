@@ -32,7 +32,7 @@ const team: TeamMember[] = [
     icon: <Layout className="w-5 h-5 text-white" />,
     githubUrl: "https://github.com/jainamdavda1-pixel",
     linkedinUrl: "https://www.linkedin.com/in/jainam-davda-a9589a328/",
-    imageUrl: "/team/jainam-davda.jpg"
+    imageUrl: "/team/Jainam-Davda.jpg"
   },
   {
     name: "Chinmay Chavan",
@@ -127,11 +127,57 @@ interface TeamImageProps {
 }
 
 function TeamImage({ src, name }: TeamImageProps) {
-  const [error, setError] = React.useState(false);
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-  const imageSrc = src && (src.startsWith('http') || src.startsWith('data:')) ? src : src ? `${basePath}${src}` : '';
 
-  if (!src || error) {
+  const getFallbacks = (originalSrc: string) => {
+    if (!originalSrc) return [];
+    const paths = [originalSrc];
+    const resolve = (p: string) => (p.startsWith('http') || p.startsWith('data:')) ? p : `${basePath}${p}`;
+
+    const lowercase = originalSrc.toLowerCase();
+    if (!paths.includes(lowercase)) paths.push(lowercase);
+
+    const parts = originalSrc.split('/');
+    const fileName = parts.pop() || '';
+    const capFileName = fileName.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-');
+    const capitalized = [...parts, capFileName].join('/');
+    if (!paths.includes(capitalized)) paths.push(capitalized);
+
+    const ext = fileName.split('.').pop() || '';
+    const lastDotIdx = fileName.lastIndexOf('.');
+    const baseName = lastDotIdx !== -1 ? fileName.substring(0, lastDotIdx) : fileName;
+
+    const alternativeExts = ['jpg', 'png', 'jpeg', 'JPG', 'PNG', 'JPEG'];
+    for (const altExt of alternativeExts) {
+      if (altExt !== ext) {
+        const altFile = `${baseName}.${altExt}`;
+        const altPath = [...parts, altFile].join('/');
+        if (!paths.includes(altPath)) paths.push(altPath);
+
+        const altCapFile = `${capFileName.substring(0, capFileName.lastIndexOf('.'))}.${altExt}`;
+        const altCapPath = [...parts, altCapFile].join('/');
+        if (!paths.includes(altCapPath)) paths.push(altCapPath);
+      }
+    }
+
+    return paths.map(resolve);
+  };
+
+  const fallbacks = React.useMemo(() => getFallbacks(src || ''), [src]);
+  const [fallbackIdx, setFallbackIdx] = React.useState(0);
+  const [failed, setFailed] = React.useState(false);
+
+  const handleImgError = () => {
+    if (fallbackIdx < fallbacks.length - 1) {
+      setFallbackIdx(prev => prev + 1);
+    } else {
+      setFailed(true);
+    }
+  };
+
+  const currentSrc = fallbacks[fallbackIdx];
+
+  if (!src || failed || !currentSrc) {
     return (
       <div className="w-24 h-24 rounded-2xl bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-400 font-bold font-mono text-xl shrink-0 transition-transform duration-300 group-hover:scale-106 select-none">
         {getInitials(name)}
@@ -142,9 +188,9 @@ function TeamImage({ src, name }: TeamImageProps) {
   return (
     <div className="w-24 h-24 rounded-2xl border border-slate-200/80 overflow-hidden shrink-0">
       <img
-        src={imageSrc}
+        src={currentSrc}
         alt={name}
-        onError={() => setError(true)}
+        onError={handleImgError}
         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-106"
       />
     </div>
