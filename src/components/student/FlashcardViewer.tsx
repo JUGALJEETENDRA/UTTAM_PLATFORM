@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, RotateCcw, CheckCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -19,6 +18,35 @@ interface FlashcardViewerProps {
 export function FlashcardViewer({ cards }: FlashcardViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName || "")) {
+        return;
+      }
+
+      if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        setIsFlipped((prev) => !prev);
+      } else if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+        e.preventDefault();
+        if (currentIndex < cards.length - 1) {
+          handleNext();
+        }
+      } else if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+        e.preventDefault();
+        if (currentIndex > 0) {
+          handlePrev();
+        }
+      } else if (e.key.toLowerCase() === "r" && currentIndex === cards.length - 1) {
+        e.preventDefault();
+        handleRestart();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentIndex, cards.length]);
 
   if (!cards || cards.length === 0) {
     return <div className="text-center py-10 text-zinc-500">No flashcards available in this deck.</div>;
@@ -62,7 +90,9 @@ export function FlashcardViewer({ cards }: FlashcardViewerProps) {
 
       {/* 3D Flip Card */}
       <div 
-        className="relative w-full aspect-[4/3] sm:aspect-[16/9] max-w-2xl cursor-pointer group perspective-1000"
+        tabIndex={0}
+        aria-label={`Flashcard: ${isFlipped ? "Showing answer" : "Showing question"}. Press Space or Enter to flip, Arrow keys to navigate.`}
+        className="relative w-full aspect-[4/3] sm:aspect-[16/9] max-w-2xl cursor-pointer group perspective-1000 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-2xl"
         onClick={() => setIsFlipped(!isFlipped)}
       >
         <div 

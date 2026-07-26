@@ -122,6 +122,44 @@ export function QuizActive({ quiz, onBack, subjectId: propSubjectId, moduleId: p
     return () => clearInterval(timer);
   }, [timeLeft, result, isUnlimited]);
 
+  // Keyboard shortcut listener for options (1-4 or A-D) and arrow keys for navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (result) return;
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName || "")) {
+        return;
+      }
+
+      const keyLower = e.key.toLowerCase();
+      if (keyLower === "1" || keyLower === "a") {
+        e.preventDefault();
+        handleSelectOption("A");
+      } else if (keyLower === "2" || keyLower === "b") {
+        e.preventDefault();
+        handleSelectOption("B");
+      } else if (keyLower === "3" || keyLower === "c") {
+        e.preventDefault();
+        handleSelectOption("C");
+      } else if (keyLower === "4" || keyLower === "d") {
+        e.preventDefault();
+        handleSelectOption("D");
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        if (currentQuestionIndex < quiz.questions.length - 1) {
+          handleNext();
+        } else {
+          handleSubmit();
+        }
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        handlePrev();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentQuestionIndex, quiz.questions.length, selectedAnswers, result]);
+
   const formatTime = (seconds: number) => {
     if (isUnlimited) return "∞ Unlimited";
     const mins = Math.floor(seconds / 60);
@@ -281,20 +319,20 @@ export function QuizActive({ quiz, onBack, subjectId: propSubjectId, moduleId: p
                 <button
                   key={key}
                   onClick={() => handleSelectOption(key)}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center space-x-4 ${isSelected
-                      ? "border-primary bg-primary/5 text-primary font-semibold shadow-sm"
-                      : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 text-zinc-700"
+                  className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-150 flex items-center space-x-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 active:scale-[0.99] select-none ${isSelected
+                      ? "border-primary bg-primary/5 text-primary font-semibold shadow-xs"
+                      : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50/70 text-zinc-700"
                     }`}
                 >
                   <span
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold border-2 ${isSelected
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold border-2 transition-colors ${isSelected
                         ? "bg-primary text-white border-primary"
-                        : "bg-zinc-100 text-zinc-500 border-zinc-300"
+                        : "bg-zinc-100 text-zinc-500 border-zinc-300 group-hover:bg-zinc-200"
                       }`}
                   >
                     {key}
                   </span>
-                  <span className="text-base">{label}</span>
+                  <span className="text-base font-medium">{label}</span>
                 </button>
               );
             })

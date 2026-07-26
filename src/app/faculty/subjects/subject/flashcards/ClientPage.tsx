@@ -233,7 +233,7 @@ export default function ManageFlashcardsPage() {
 
   const handleDeleteAllDecks = async () => {
     if (decks.length === 0) return;
-    const confirm = window.confirm(`Are you sure you want to delete all ${decks.length} flashcard decks in this subject? This action cannot be undone.`);
+    const confirm = window.confirm(`Are you sure you want to delete this? This will delete all ${decks.length} flashcard decks in this subject. This action cannot be undone.`);
     if (!confirm) return;
 
     setLoading(true);

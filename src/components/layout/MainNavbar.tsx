@@ -4,10 +4,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Gamepad2, LayoutDashboard, Target, Trophy, LogOut, GraduationCap, Shield, User } from "lucide-react";
 import { useSession } from "@/components/AuthProvider";
+import { usePathname } from "next/navigation";
 
 export function MainNavbar() {
+  const pathname = usePathname();
   const { isAuthenticated, status, logout } = useSession();
   const isLoaded = status !== "loading";
+
+  if (pathname === "/") {
+    return null;
+  }
 
   return (
     <nav className="w-full bg-white/90 backdrop-blur-md border-b border-zinc-200 sticky top-0 z-50 shadow-sm transition-all duration-300">

@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { UttamLoader } from "@/components/ui/UttamLoader";
 
 // Theme Configuration lookup table used by fallback default and custom layouts
 const THEME_MAP: Record<string, {
@@ -37,6 +38,19 @@ const THEME_MAP: Record<string, {
     badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
     pattern: ""
   },
+  "startup engineering": {
+    bg: "bg-[#F8FAFC] text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-xs transition-all duration-200",
+    btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-blue-600",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
+    pattern: ""
+  },
   "digital business": {
     bg: "bg-slate-50 text-slate-800 font-sans",
     cardBg: "bg-white",
@@ -53,16 +67,16 @@ const THEME_MAP: Record<string, {
 };
 
 const DEFAULT_THEME = {
-  bg: "bg-[#f4f4f0]",
+  bg: "bg-[#F8FAFC] text-slate-800 font-sans",
   cardBg: "bg-white",
-  borderClass: "border-4 border-black rounded-none",
-  shadowClass: "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-2",
-  btnPrimary: "bg-[#2dd4bf] text-black hover:bg-[#2dd4bf]/90 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
-  btnGhost: "text-black font-black hover:bg-zinc-200 border-2 border-black rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5 transition-all text-xs h-9 px-3 flex items-center bg-white",
-  titleHover: "group-hover:text-primary",
-  textHeading: "text-black font-black uppercase",
-  textMuted: "text-zinc-700 font-medium",
-  badge: "bg-zinc-200 text-black border-2 border-black rounded-none",
+  borderClass: "border border-slate-200 rounded-xl",
+  shadowClass: "shadow-xs transition-all duration-200",
+  btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+  btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+  titleHover: "group-hover:text-blue-600",
+  textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+  textMuted: "text-slate-500 font-medium font-sans",
+  badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
   pattern: ""
 };
 
@@ -131,13 +145,13 @@ export default function FlashcardsListPage() {
     };
     loadDecks();
   }, [subjectId]);
-
   const isDigitalBusiness = subjectId === 'id_pryay1ykw' || String(subjectName || "").toLowerCase().includes("digital business");
   const isUiProgramming = subjectId === 'id_mn573l5e5' || String(subjectName || "").toLowerCase().includes("ui programming");
   const isPythonProgramming = subjectId === 'id_hdzqxse2n' || String(subjectName || "").toLowerCase().includes("python");
-  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : isDigitalBusiness ? "digital business" : "";
+  const isStartupEngineering = subjectId === 'id_1i2u3y4t5' || String(subjectName || "").toLowerCase().includes("startup");
+  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : isDigitalBusiness ? "digital business" : (isStartupEngineering ? "startup engineering" : "");
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
-  const isPremiumTheme = isUiProgramming || isPythonProgramming || isDigitalBusiness;
+  const isPremiumTheme = !isPythonProgramming && !isDigitalBusiness;
 
   const renderFlashcardPreview = (moduleNo: number, title: string) => {
     return (
@@ -173,12 +187,7 @@ export default function FlashcardsListPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F1F5F9] flex flex-col justify-center items-center font-mono text-zinc-800 space-y-4">
-        <div className="w-12 h-12 border-4 border-t-[#3b82f6] border-zinc-200 rounded-full animate-spin" />
-        <p className="text-xs uppercase font-bold tracking-wider animate-pulse text-zinc-500">Retrieving flashcards index...</p>
-      </div>
-    );
+    return <UttamLoader isLoading={true} />;
   }
   const containerVariants = {
     hidden: { opacity: 0 },

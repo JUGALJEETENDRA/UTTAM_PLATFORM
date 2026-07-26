@@ -30,6 +30,63 @@ import { useEffect, useState, useRef } from "react";
 import { fetchGAS } from "@/lib/apiClient";
 import { redirect, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { UttamLoader } from "@/components/ui/UttamLoader";
+
+// Theme Configuration lookup table used by fallback default and custom layouts
+const THEME_MAP: Record<string, {
+  bg: string;
+  cardBg: string;
+  borderClass: string;
+  shadowClass: string;
+  btnPrimary: string;
+  btnGhost: string;
+  titleHover: string;
+  textHeading: string;
+  textMuted: string;
+  badge: string;
+  pattern: string;
+}> = {
+  "ui programming": {
+    bg: "bg-slate-50 text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-lg",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-550 hover:text-indigo-650 font-sans text-xs hover:bg-slate-55 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-indigo-600",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
+    pattern: ""
+  },
+  "startup engineering": {
+    bg: "bg-slate-50 text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-lg",
+    shadowClass: "shadow-sm transition-all duration-200",
+    btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-550 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-blue-600",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
+    pattern: ""
+  },
+};
+
+const DEFAULT_THEME = {
+  bg: "bg-[#f4f4f0]",
+  cardBg: "bg-white",
+  borderClass: "border-4 border-black rounded-none",
+  shadowClass: "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1.5 hover:translate-y-1.5",
+  btnPrimary: "bg-[#2dd4bf] text-black hover:bg-[#2dd4bf]/90 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+  btnGhost: "text-black font-black hover:bg-zinc-200 rounded-none",
+  titleHover: "group-hover:text-primary",
+  textHeading: "text-black font-black uppercase",
+  textMuted: "text-zinc-700 font-medium",
+  badge: "bg-zinc-200 text-black border-2 border-black rounded-none",
+  pattern: ""
+};
 
 function getEmbedUrl(url: string | null | undefined): string | null {
   if (!url) return null;
@@ -605,12 +662,7 @@ export default function ModuleDetailPage() {
   }, [id, subjectId]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#FAF9F5] flex flex-col justify-center items-center font-sans text-zinc-800 space-y-4">
-        <div className="w-10 h-10 border-4 border-black border-t-[#2dd4bf] rounded-full animate-spin" />
-        <p className="text-xs uppercase font-black tracking-wider animate-pulse text-zinc-700">Loading learning workspace...</p>
-      </div>
-    );
+    return <UttamLoader isLoading={true} />;
   }
 
   if (!moduleData || moduleData.error) {
