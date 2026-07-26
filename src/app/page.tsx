@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -19,36 +19,14 @@ import {
   Trophy,
   Book,
   Network,
-  Rocket
+  Rocket,
+  BarChart2,
+  Briefcase
 } from "lucide-react";
 
 export default function LandingPage() {
   const router = useRouter();
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
-
-  // Simple animations for whiteboard elements
-  const floatTransition = {
-    animate: {
-      y: [0, -6, 0],
-    },
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
-  };
-
-  const floatTransitionDelay = {
-    animate: {
-      y: [0, -5, 0],
-    },
-    transition: {
-      duration: 3.5,
-      repeat: Infinity,
-      ease: "easeInOut",
-      delay: 0.5
-    }
-  };
 
   return (
     <div className="bg-[#f4f4f0] min-h-screen text-black flex flex-col font-sans relative antialiased px-4 sm:px-6 md:px-8 selection:bg-red-500 selection:text-white brutalist-grid-bg">
@@ -122,36 +100,38 @@ export default function LandingPage() {
       </main>
 
       {/* 3. Features Row ("EVERYTHING YOU NEED IN ONE PLACE") */}
-      <section className="container mx-auto max-w-6xl py-12 border-t border-black/10 select-none">
+      <section className="container mx-auto max-w-[1440px] py-12 border-t border-black/10 select-none">
         <div className="flex flex-col items-center space-y-8">
           <h2 className="text-xl sm:text-2xl font-black tracking-tight uppercase text-black font-sans text-center">
             Everything you need in <span className="text-[#ef4444]">one place</span>
           </h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 w-full">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 w-full justify-center max-w-6xl">
             {[
-              { title: "Structured Notes", desc: "Well-organized notes to understand concepts better.", color: "bg-[#a855f7]", icon: <Book className="w-5 h-5 text-black stroke-[2.5px]" /> },
-              { title: "Concept Videos", desc: "Watch, learn and build clarity with concept videos.", color: "bg-[#22c55e]", icon: <Play className="w-5 h-5 text-black fill-black stroke-[2.5px]" /> },
-              { title: "Interactive Quizzes", desc: "Test your knowledge with topic-wise quizzes.", color: "bg-[#eab308]", icon: <span className="text-black font-black text-lg font-sans">?</span> },
-              { title: "Mind Maps", desc: "Visualize and remember complex concepts with ease.", color: "bg-[#3b82f6]", icon: <Network className="w-5 h-5 text-black stroke-[2.5px]" /> },
-              { title: "Flashcards", desc: "Quick revision cards for better retention.", color: "bg-[#ec4899]", icon: <Layers className="w-5 h-5 text-black stroke-[2.5px]" /> },
-              { title: "Simulations", desc: "Learn by doing with interactive simulations.", color: "bg-[#f97316]", icon: <Gamepad2 className="w-5 h-5 text-black stroke-[2.5px]" /> },
-              { title: "Audio Lectures", desc: "Listen and learn anytime, anywhere.", color: "bg-[#06b6d4]", icon: <Headphones className="w-5 h-5 text-black stroke-[2.5px]" /> },
-              { title: "Resources", desc: "Helpful references and downloads in one place.", color: "bg-[#71717a]", icon: <Folder className="w-5 h-5 text-black stroke-[2.5px]" /> }
+              { title: "Structured Notes", desc: "Well-organized notes to understand concepts better.", color: "bg-[#a855f7]", icon: <Book className="w-10 h-10 text-black stroke-[2.5px]" /> },
+              { title: "Concept Videos", desc: "Watch, learn and build clarity with concept videos.", color: "bg-[#22c55e]", icon: <Play className="w-10 h-10 text-black fill-black stroke-[2.5px]" /> },
+              { title: "Interactive Quizzes", desc: "Test your knowledge with topic-wise quizzes.", color: "bg-[#eab308]", icon: <span className="text-black font-black text-5xl font-sans">?</span> },
+              { title: "Mind Maps", desc: "Visualize and remember complex concepts with ease.", color: "bg-[#3b82f6]", icon: <Network className="w-10 h-10 text-black stroke-[2.5px]" /> },
+              { title: "Flashcards", desc: "Quick revision cards for better retention.", color: "bg-[#ec4899]", icon: <Layers className="w-10 h-10 text-black stroke-[2.5px]" /> },
+              { title: "Simulations", desc: "Learn by doing with interactive simulations.", color: "bg-[#f97316]", icon: <Gamepad2 className="w-10 h-10 text-black stroke-[2.5px]" /> },
+              { title: "Infographics", desc: "Syllabus topics visually simplified with diagrams.", color: "bg-[#f43f5e]", icon: <BarChart2 className="w-10 h-10 text-black stroke-[2.5px]" /> },
+              { title: "Case Studies", desc: "Real-world business case studies analyzed.", color: "bg-[#10b981]", icon: <Briefcase className="w-10 h-10 text-black stroke-[2.5px]" /> },
+              { title: "Audio Lectures", desc: "Listen and learn anytime, anywhere.", color: "bg-[#06b6d4]", icon: <Headphones className="w-10 h-10 text-black stroke-[2.5px]" /> },
+              { title: "Resources", desc: "Helpful references and downloads in one place.", color: "bg-[#71717a]", icon: <Folder className="w-10 h-10 text-black stroke-[2.5px]" /> }
             ].map((feat, idx) => (
               <div 
                 key={idx}
                 onClick={() => router.push("/student/subjects")}
-                className="bg-white border-2 border-black p-4 flex flex-col justify-between items-center text-center shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_rgba(0,0,0,1)] transition-all min-h-[160px] group cursor-pointer rounded-none"
+                className="bg-white border-2 border-black p-4 flex flex-col justify-center items-center text-center shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_rgba(0,0,0,1)] transition-all aspect-square w-full max-w-[220px] mx-auto group cursor-pointer rounded-none"
               >
-                <div className={`w-10 h-10 border-2 border-black flex items-center justify-center font-bold shadow-[1px_1px_0px_rgba(0,0,0,1)] ${feat.color}`}>
+                <div className={`w-20 h-20 border-2 border-black flex items-center justify-center font-bold shadow-[2px_2px_0px_rgba(0,0,0,1)] ${feat.color}`}>
                   {feat.icon}
                 </div>
-                <div className="space-y-2 mt-3 flex-1 flex flex-col">
-                  <h3 className="text-black font-black uppercase text-[10px] tracking-wider font-mono leading-tight">
+                <div className="space-y-2.5 mt-4 flex-1 flex flex-col justify-center">
+                  <h3 className="text-black font-black uppercase text-sm sm:text-base tracking-wider font-mono leading-tight">
                     {feat.title}
                   </h3>
-                  <p className="text-[9.5px] text-zinc-650 font-bold leading-normal font-sans">
+                  <p className="text-xs sm:text-sm text-zinc-650 font-bold leading-normal font-sans">
                     {feat.desc}
                   </p>
                 </div>
@@ -162,34 +142,37 @@ export default function LandingPage() {
       </section>
 
       {/* 4. Your Learning Journey Pathway */}
-      <section className="container mx-auto max-w-6xl py-12 border-t border-black/10 select-none">
+      <section className="container mx-auto max-w-[1440px] py-12 border-t border-black/10 select-none">
         <div className="flex flex-col items-center space-y-8">
           <h2 className="text-xl sm:text-2xl font-black tracking-tight uppercase text-black font-sans text-center">
             Your <span className="text-[#ef4444]">Learning Journey</span> on UTTAM
           </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-7 gap-4 w-full items-stretch">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 w-full justify-center max-w-6xl">
             {[
-              { step: "1. Choose Subject", desc: "Pick a subject you want to learn.", icon: <GraduationCap className="w-5 h-5 text-black stroke-[2.5px]" /> },
-              { step: "2. Read Notes", desc: "Understand concepts with structured notes.", icon: <Book className="w-5 h-5 text-black stroke-[2.5px]" /> },
-              { step: "3. Watch Videos", desc: "Watch concept videos to build clarity.", icon: <Play className="w-5 h-5 text-black fill-black stroke-[2.5px]" /> },
-              { step: "4. Practice Quiz", desc: "Test your knowledge with quizzes.", icon: <HelpCircle className="w-5 h-5 text-black stroke-[2.5px]" /> },
-              { step: "5. Explore Simulation", desc: "Visualize concepts with interactive simulations.", icon: <Gamepad2 className="w-5 h-5 text-black stroke-[2.5px]" /> },
-              { step: "6. Revise Flashcards", desc: "Reinforce memory with flashcards.", icon: <Layers className="w-5 h-5 text-black stroke-[2.5px]" /> },
-              { step: "7. Master the Topic", desc: "Strengthen and master every concept.", icon: <Trophy className="w-5 h-5 text-black stroke-[2.5px]" /> }
+              { step: "01. Choose Subject", desc: "Begin your learning journey by selecting the subject you want to explore and master.", icon: <GraduationCap className="w-9 h-9 text-black stroke-[2.5px]" /> },
+              { step: "02. Read Notes", desc: "Build a strong conceptual foundation with well-structured notes prepared for every topic.", icon: <BookOpen className="w-9 h-9 text-black stroke-[2.5px]" /> },
+              { step: "03. Watch Videos", desc: "Understand concepts more effectively through engaging video lectures and visual explanations.", icon: <Play className="w-9 h-9 text-black fill-black stroke-[2.5px]" /> },
+              { step: "04. Listen to Audio", desc: "Learn and revise anytime with audio lectures designed for flexible, on-the-go learning.", icon: <Headphones className="w-9 h-9 text-black stroke-[2.5px]" /> },
+              { step: "05. Explore Mind Maps", desc: "Connect key concepts and visualize relationships through interactive and easy-to-follow mind maps.", icon: <Network className="w-9 h-9 text-black stroke-[2.5px]" /> },
+              { step: "06. Learn Infographics", desc: "Simplify complex ideas using concise, visually engaging infographics for quick understanding.", icon: <BarChart2 className="w-9 h-9 text-black stroke-[2.5px]" /> },
+              { step: "07. Study Case Studies", desc: "Discover how concepts are applied in real-world scenarios through practical industry case studies.", icon: <Briefcase className="w-9 h-9 text-black stroke-[2.5px]" /> },
+              { step: "08. Practice Simulations", desc: "Strengthen your practical understanding with interactive simulations and hands-on learning experiences.", icon: <Gamepad2 className="w-9 h-9 text-black stroke-[2.5px]" /> },
+              { step: "09. Practice & Revise", desc: "Test your knowledge with quizzes and reinforce learning through quick flashcard revision.", icon: <Layers className="w-9 h-9 text-black stroke-[2.5px]" /> },
+              { step: "10. Master the Subject", desc: "Complete your learning journey with confidence by mastering concepts through continuous learning, practice, and revision.", icon: <Trophy className="w-9 h-9 text-black stroke-[2.5px]" /> }
             ].map((step, idx) => (
               <div 
                 key={idx}
-                className="bg-white border-2 border-black p-4 text-center shadow-[4px_4px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-between min-h-[140px] rounded-none relative"
+                className="bg-white border-2 border-black p-3 text-center shadow-[4px_4px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-between aspect-square w-full max-w-[220px] mx-auto rounded-none relative"
               >
-                <div className="w-8 h-8 rounded-full border border-black bg-zinc-50 flex items-center justify-center">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-black bg-zinc-50 flex items-center justify-center shadow-[1px_1px_0px_rgba(0,0,0,1)] shrink-0">
                   {step.icon}
                 </div>
-                <div className="space-y-1 mt-3">
-                  <h4 className="font-mono text-[9.5px] font-black uppercase text-black">
+                <div className="space-y-1.5 mt-2 flex-1 flex flex-col justify-center">
+                  <h4 className="font-mono text-xs sm:text-sm font-black uppercase text-black leading-tight">
                     {step.step}
                   </h4>
-                  <p className="text-[9px] text-zinc-650 font-bold leading-normal font-sans">
+                  <p className="text-[10px] sm:text-xs text-zinc-650 font-bold leading-tight font-sans mt-0.5">
                     {step.desc}
                   </p>
                 </div>

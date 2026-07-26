@@ -17,7 +17,7 @@ import {
   ArrowRight, Clock, Book, ExternalLink, Globe, Activity, ShieldAlert, Send, BookOpen,
   Folder, FolderOpen, FileCode, Terminal, Play, CheckCircle, Calendar, Bug, Settings, Code,
   ChevronDown, ChevronRight, FileJson, Component, Palette, Monitor, Grid, MousePointer, Layout, Columns,
-  Search, Bookmark, Award, Info, Check
+  Search, Bookmark, Award, Info, Check, Home
 } from "lucide-react";
 
 
@@ -84,18 +84,18 @@ const THEME_MAP: Record<string, {
 };
 
 const DEFAULT_THEME = {
-  bg: "bg-[#f4f4f0]",
+  bg: "bg-[#F8FAFC] text-slate-800 font-sans",
   cardBg: "bg-white",
-  borderClass: "border-4 border-black rounded-none",
-  shadowClass: "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-2",
-  btnPrimary: "bg-[#2dd4bf] text-black hover:bg-[#2dd4bf]/90 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
-  btnGhost: "text-black font-black hover:bg-zinc-200 border-2 border-black rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5 transition-all text-xs h-9 px-3 flex items-center bg-white",
-  titleHover: "group-hover:text-[#2dd4bf]",
-  textHeading: "text-black font-black uppercase",
-  textMuted: "text-zinc-700 font-medium",
-  badge: "bg-zinc-200 text-black border-2 border-black rounded-none",
+  borderClass: "border border-slate-200 rounded-xl",
+  shadowClass: "shadow-xs transition-all duration-200",
+  btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+  btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+  titleHover: "group-hover:text-blue-600",
+  textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+  textMuted: "text-slate-500 font-medium font-sans",
+  badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
   pattern: "",
-  iconColor: "text-[#2dd4bf]"
+  iconColor: "text-blue-600"
 };
 
 const brutalistThemeColors = [
@@ -119,7 +119,7 @@ const getDynamicTheme = (subjectId: string | null) => {
   
   return {
     ...DEFAULT_THEME,
-    btnPrimary: `${theme.bg} text-black hover:opacity-90 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`,
+    btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
     iconColor: theme.text,
     titleHover: theme.hover,
   };
@@ -2790,6 +2790,7 @@ export default function StudentDashboard() {
   const themeKey = isUiProgramming ? "ui programming" : (isStartupEngineering ? "startup engineering" : (subjectNameLower.includes("python") ? "python programming" : ""));
   const t = THEME_MAP[themeKey] || getDynamicTheme(subject?.id || subjectId);
   const isPremiumTheme = isUiProgramming || isStartupEngineering;
+  const isSaaS = !isPythonProgramming;
 
   return (
     <div className={`min-h-screen relative ${t.bg} ${t.pattern} pb-16 pt-8 brutalist-transition transition-colors duration-300 overflow-hidden`}>
@@ -2859,47 +2860,34 @@ export default function StudentDashboard() {
       <div className="container mx-auto px-4 mt-6 relative z-10 space-y-6">
         
         {/* Top IDE Header / Status bar styled as DESIGN STUDIO */}
-        <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 font-mono text-xs text-slate-655 transition-all duration-300`}>
-          <div className="flex items-center gap-3">
-            <div className="flex gap-1.5 flex-shrink-0">
-              <span className="w-3 h-3 rounded-full bg-[#ef4444] border border-black" />
-              <span className="w-3 h-3 rounded-full bg-[#eab308] border border-black" />
-              <span className="w-3 h-3 rounded-full bg-[#22c55e] border border-black" />
-            </div>
-            <span className="text-slate-300">|</span>
-            <span className={`font-black ${t.iconColor}`}>DESIGN STUDIO</span>
+        {isSaaS ? (
+          <div className="bg-white border border-slate-200 rounded-xl shadow-xs p-4 flex items-center gap-3 relative z-10 font-sans text-xs text-slate-600 transition-all duration-300">
+            <Link href="/student/subjects" className="hover:text-blue-600 transition-colors flex items-center justify-center">
+              <Home className="w-4 h-4 text-blue-600" />
+            </Link>
             <span className="text-slate-300">/</span>
-            <span className="text-black font-black uppercase tracking-wider truncate max-w-[200px] md:max-w-none">{subject.name}</span>
+            <span className="text-slate-900 font-extrabold uppercase tracking-wide">{subject.name}</span>
           </div>
-
-          <div className="flex flex-wrap items-center gap-4 w-full md:w-auto font-ibm">
-            {/* Design Metrics - Styled Neobrutalist */}
-            <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
-              <span className={`${isStartupEngineering ? 'text-blue-600' : 'text-indigo-600'} font-bold`}>Design System:</span>
-              <span className="text-black font-black">88.4%</span>
-            </div>
-            <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
-              <span className="text-emerald-600 font-bold">Figma Sync:</span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse border border-black" />
-                <span className="text-emerald-800 font-black uppercase">SUCCESSFUL</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default">
-              <span className={`${isStartupEngineering ? 'text-blue-600' : 'text-purple-600'} font-bold`}>Accessibility:</span>
-              <span className={`${isStartupEngineering ? 'text-blue-800' : 'text-purple-800'} font-black`}>98.4%</span>
-            </div>
-            <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 cursor-default font-mono">
-              <span className="text-amber-600 font-bold">UX Score:</span>
-              <span className="text-amber-850 font-black px-1.5 py-0.5 bg-amber-100 border border-black rounded-none">A+</span>
+        ) : (
+          <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 font-mono text-xs text-slate-655 transition-all duration-300`}>
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1.5 flex-shrink-0">
+                <span className="w-3 h-3 rounded-full bg-[#ef4444] border border-black" />
+                <span className="w-3 h-3 rounded-full bg-[#eab308] border border-black" />
+                <span className="w-3 h-3 rounded-full bg-[#22c55e] border border-black" />
+              </div>
+              <span className="text-slate-300">|</span>
+              <span className={`font-black ${t.iconColor}`}>DESIGN STUDIO</span>
+              <span className="text-slate-300">/</span>
+              <span className="text-black font-black uppercase tracking-wider truncate max-w-[200px] md:max-w-none">{subject.name}</span>
             </div>
           </div>
-        </div>
+        )}
 
         {/* UI LEARNING MODULES */}
         <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 relative z-10 transition-all duration-300`}>
-          <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
-            <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} flex items-center gap-2 font-mono`}>
+          <div className={`flex justify-between items-center mb-5 pb-3 ${isSaaS ? 'border-b border-slate-100' : 'border-b-2 border-black'}`}>
+            <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} flex items-center gap-2 ${isSaaS ? 'font-sans text-blue-600' : 'font-mono'}`}>
               <Layers className={`w-4 h-4 ${t.iconColor}`} /> {subject.name} Modules
             </h3>
             <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
@@ -2915,21 +2903,21 @@ export default function StudentDashboard() {
               const subtopicsCount = mod.subtopics?.length || 0;
               return (
                 <Link key={mod.id} href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
-                  <div className="bg-white border-2 border-black rounded-none p-4 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-150 group h-full flex flex-col justify-between cursor-pointer relative">
+                  <div className={`bg-white p-4 transition-all duration-200 group h-full flex flex-col justify-between cursor-pointer relative ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none'}`}>
                     <div>
                       <div className="flex justify-between items-start mb-2">
-                        <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-mono font-bold tracking-widest uppercase`}>
+                        <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-bold tracking-widest uppercase ${isSaaS ? 'font-sans' : 'font-mono'}`}>
                           MODULE 0{mod.moduleNo || (idx + 1)}
                         </span>
                       </div>
-                      <h4 className={`font-mono text-xs font-bold text-black mb-2 line-clamp-2 ${t.titleHover} transition-colors`}>
+                      <h4 className={`text-xs font-bold text-black mb-2 line-clamp-2 ${t.titleHover} transition-colors ${isSaaS ? 'font-sans' : 'font-mono'}`}>
                         {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
                       </h4>
                       <p className="text-[10px] text-zinc-700 line-clamp-2 mb-4 font-sans leading-relaxed">
                         {mod.co || "Introduces core concepts and key terminology."}
                       </p>
                     </div>
-                    <div className="pt-2.5 border-t border-black flex justify-between items-center text-[10px] text-slate-500 font-mono">
+                    <div className={`pt-2.5 flex justify-between items-center text-[10px] text-slate-500 ${isSaaS ? 'border-t border-slate-100 font-sans' : 'border-t border-black font-mono'}`}>
                       <span className="flex items-center gap-1">
                         <Book className="w-3.5 h-3.5" /> {subtopicsCount} Subtopics
                       </span>
@@ -2942,7 +2930,7 @@ export default function StudentDashboard() {
               );
             })}
             {modules.length === 0 && (
-              <div className="col-span-full py-8 text-center font-bold text-slate-450 border-2 border-dashed border-black rounded-none">
+              <div className={`col-span-full py-8 text-center font-bold text-slate-450 rounded-none ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl' : 'border-2 border-dashed border-black'}`}>
                 No modules available yet.
               </div>
             )}
@@ -2950,12 +2938,12 @@ export default function StudentDashboard() {
         </div>
 
         {/* TWO COLUMN GRID FOR QUIZZES AND FLASHCARDS (Like Python) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10 w-full">
+        <div className={`grid grid-cols-1 ${isSaaS ? 'lg:grid-cols-2' : 'lg:grid-cols-3'} gap-6 relative z-10 w-full`}>
 
           {/* 2. Quizzes & Assessments */}
-          <div className={`lg:col-span-2 ${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 transition-all duration-300`}>
-            <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
-              <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} flex items-center gap-2 font-mono`}>
+          <div className={`${isSaaS ? 'lg:col-span-1' : 'lg:col-span-2'} ${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 transition-all duration-300`}>
+            <div className={`flex justify-between items-center mb-5 pb-3 ${isSaaS ? 'border-b border-slate-100' : 'border-b-2 border-black'}`}>
+              <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} flex items-center gap-2 ${isSaaS ? 'font-sans text-blue-600' : 'font-mono'}`}>
                 <Component className={`w-4 h-4 ${t.iconColor}`} /> Assessments & Challenges
               </h3>
               <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
@@ -2969,11 +2957,11 @@ export default function StudentDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {quizzesWithAttempts.slice(0, 6).map((quiz: any) => {
                 return (
-                  <div key={quiz.id} className="bg-white border-2 border-black rounded-none p-4 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-150 group">
+                  <div key={quiz.id} className={`bg-white p-4 transition-all duration-200 group ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none'}`}>
                     <div className="flex justify-start items-start mb-2">
-                      <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-mono font-bold tracking-widest uppercase`}>🏆 PRACTICE QUIZ</span>
+                      <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-bold tracking-widest uppercase ${isSaaS ? 'font-sans' : 'font-mono'}`}>PRACTICE QUIZ</span>
                     </div>
-                    <h4 className={`font-mono text-xs font-bold text-black mb-3 line-clamp-1 ${t.titleHover} transition-colors`}>{getQuizDisplayTitle(quiz, modules)}</h4>
+                    <h4 className={`text-xs font-bold text-black mb-3 line-clamp-1 ${t.titleHover} transition-colors ${isSaaS ? 'font-sans' : 'font-mono'}`}>{getQuizDisplayTitle(quiz, modules)}</h4>
                     <div className="mt-4 flex justify-end">
                       <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`}>
                         <Button className={`${t.btnPrimary} font-mono text-[10px] py-1.5 px-4 h-8 uppercase tracking-wider transition-all duration-150`}>
@@ -2985,8 +2973,16 @@ export default function StudentDashboard() {
                 );
               })}
               {quizzesWithAttempts.length === 0 && (
-                <div className="col-span-2 p-6 border-2 border-dashed border-black text-center text-slate-450 font-mono text-xs rounded-none">
-                  All design specs met. No active challenges.
+                <div className={`col-span-2 p-6 text-center text-slate-450 text-xs ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl flex flex-col md:flex-row items-center justify-center gap-6' : 'border-2 border-dashed border-black rounded-none font-mono'}`}>
+                  {isSaaS && (
+                    <div className="w-16 h-16 shrink-0 text-blue-500 bg-blue-50 rounded-lg border border-blue-100 flex items-center justify-center">
+                      <FileText className="w-8 h-8" />
+                    </div>
+                  )}
+                  <div className={isSaaS ? 'text-left' : ''}>
+                    <p className="font-bold text-slate-800 text-sm">All design specs met. No active challenges.</p>
+                    <p className="text-[11px] text-slate-500 mt-1">New quizzes and challenges will appear here once they are published.</p>
+                  </div>
                 </div>
               )}
             </div>
@@ -2994,8 +2990,8 @@ export default function StudentDashboard() {
 
           {/* 3. Flashcard Decks */}
           <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 transition-all duration-300`}>
-            <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
-              <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} flex items-center gap-2 font-mono`}>
+            <div className={`flex justify-between items-center mb-5 pb-3 ${isSaaS ? 'border-b border-slate-100' : 'border-b-2 border-black'}`}>
+              <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} flex items-center gap-2 ${isSaaS ? 'font-sans text-blue-600' : 'font-mono'}`}>
                 <Palette className={`w-4 h-4 ${t.iconColor}`} /> Flashcard Decks
               </h3>
               <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
@@ -3012,19 +3008,27 @@ export default function StudentDashboard() {
 
                 return (
                   <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
-                    <div className="bg-white border-2 border-black rounded-none p-3.5 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-150 flex justify-between items-center cursor-pointer group">
+                    <div className={`bg-white p-3.5 flex justify-between items-center cursor-pointer group transition-all duration-200 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none'}`}>
                       <div className="flex items-center gap-2 overflow-hidden">
-                        <span className={`font-mono text-[10px] font-bold px-2 py-0.5 ${t.badge} flex-shrink-0 transition-colors`}>{kw}</span>
-                        <span className={`font-mono text-xs text-black font-bold ${t.titleHover} transition-colors truncate`}>{getFlashcardDisplayTitle(deck, modules)}</span>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 ${t.badge} flex-shrink-0 transition-colors ${isSaaS ? 'font-sans' : 'font-mono'}`}>{kw}</span>
+                        <span className={`text-xs text-black font-bold ${t.titleHover} transition-colors truncate ${isSaaS ? 'font-sans' : 'font-mono'}`}>{getFlashcardDisplayTitle(deck, modules)}</span>
                       </div>
-                      <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-mono font-bold whitespace-nowrap`}>{deck.cards?.length || 0} CARDS</span>
+                      <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-bold whitespace-nowrap ${isSaaS ? 'font-sans' : 'font-mono'}`}>{deck.cards?.length || 0} CARDS</span>
                     </div>
                   </Link>
                 );
               })}
               {flashcardDecks.length === 0 && (
-                <div className="p-4 border-2 border-dashed border-black text-center text-slate-450 font-mono text-[10px] rounded-none">
-                  Library index is empty.
+                <div className={`p-6 text-center text-slate-450 text-xs ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl flex flex-col md:flex-row items-center justify-center gap-6 font-sans' : 'border-2 border-dashed border-black rounded-none font-mono'}`}>
+                  {isSaaS && (
+                    <div className="w-16 h-16 shrink-0 text-indigo-500 bg-indigo-50 rounded-lg border border-indigo-100 flex items-center justify-center">
+                      <Layers className="w-8 h-8" />
+                    </div>
+                  )}
+                  <div className={isSaaS ? 'text-left' : ''}>
+                    <p className="font-bold text-slate-800 text-sm">Library index is empty.</p>
+                    <p className="text-[11px] text-slate-500 mt-1">Flashcards will appear here once faculty publishes new decks.</p>
+                  </div>
                 </div>
               )}
             </div>
@@ -3035,8 +3039,8 @@ export default function StudentDashboard() {
         <div className="w-full relative z-10 mt-6">
           <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 flex flex-col justify-between transition-all duration-300`}>
             <div>
-              <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
-                <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} flex items-center gap-2 font-mono`}>
+              <div className={`flex justify-between items-center mb-5 pb-3 ${isSaaS ? 'border-b border-slate-100' : 'border-b-2 border-black'}`}>
+                <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} flex items-center gap-2 ${isSaaS ? 'font-sans text-blue-600' : 'font-mono'}`}>
                   <Grid className={`w-4 h-4 ${t.iconColor}`} /> Subject Mind Maps
                 </h3>
                 <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
@@ -3050,7 +3054,7 @@ export default function StudentDashboard() {
               <div className="relative flex flex-col items-center justify-center py-6">
                 {/* SVG Connector Lines */}
                 <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-                  <svg className="w-full h-full stroke-black stroke-[2]" style={{ strokeDasharray: "4 4" }}>
+                  <svg className={`w-full h-full ${isSaaS ? 'stroke-slate-200' : 'stroke-black stroke-[2]'}`} style={{ strokeDasharray: "4 4" }}>
                     <line x1="15%" y1="50%" x2="38%" y2="50%" />
                     <line x1="38%" y1="50%" x2="62%" y2="50%" />
                     <line x1="62%" y1="50%" x2="85%" y2="50%" />
@@ -3061,18 +3065,31 @@ export default function StudentDashboard() {
                   {mindmaps.slice(0, 4).map((map: any, idx: number) => {
                     return (
                       <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="w-full h-full flex">
-                        <div className="bg-white border-2 border-black rounded-none p-4 text-center group cursor-pointer transition-all duration-150 relative w-full h-full hover:-translate-y-1 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between items-center gap-2">
+                        <div className={`bg-white p-4 text-center group cursor-pointer transition-all duration-200 relative w-full h-full flex flex-col justify-between items-center gap-2 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'}`}>
                           <div className="w-full flex flex-col items-center">
-                            <div className={`w-7 h-7 ${t.badge} flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 transition-all duration-300`}>
+                            <div className={`w-7 h-7 ${t.badge} flex items-center justify-center font-bold text-xs mx-auto mb-2 transition-all duration-300 ${isSaaS ? 'font-sans' : 'font-mono'}`}>
                               M0{idx + 1}
                             </div>
-                            <h4 className={`font-mono text-[10px] font-bold text-black uppercase tracking-wider line-clamp-2 ${t.titleHover} transition-colors px-1 leading-normal`}>{map.title}</h4>
+                            <h4 className={`text-[10px] font-bold text-black uppercase tracking-wider line-clamp-2 ${t.titleHover} transition-colors px-1 leading-normal ${isSaaS ? 'font-sans' : 'font-mono'}`}>{map.title}</h4>
                           </div>
-                          <p className="text-[9px] text-slate-400 font-mono mt-auto">Design Node</p>
+                          <p className={`text-[9px] text-slate-400 mt-auto ${isSaaS ? 'font-sans' : 'font-mono'}`}>Design Node</p>
                         </div>
                       </Link>
                     );
                   })}
+                  {mindmaps.length === 0 && (
+                    <div className={`col-span-full py-6 text-center text-slate-450 text-xs ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl flex items-center justify-center gap-4' : 'border-2 border-dashed border-black rounded-none font-mono'}`}>
+                      {isSaaS && (
+                        <div className="w-10 h-10 rounded-full bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
+                          <Grid className="w-5 h-5" />
+                        </div>
+                      )}
+                      <div className={isSaaS ? 'text-left' : ''}>
+                        <p className="font-bold text-slate-800 text-sm">No mind maps available yet.</p>
+                        <p className="text-[11px] text-slate-500 mt-1">Mind maps will be available here soon.</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -3083,8 +3100,8 @@ export default function StudentDashboard() {
         <div className="w-full relative z-10 mt-6">
           <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 flex flex-col justify-between transition-all duration-300`}>
             <div>
-              <div className="flex justify-between items-center mb-5 pb-3 border-b-2 border-black">
-                <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} flex items-center gap-2 font-mono`}>
+              <div className={`flex justify-between items-center mb-5 pb-3 ${isSaaS ? 'border-b border-slate-100' : 'border-b-2 border-black'}`}>
+                <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} flex items-center gap-2 ${isSaaS ? 'font-sans text-blue-600' : 'font-mono'}`}>
                   <Grid className={`w-4 h-4 ${t.iconColor}`} /> Infographics Topologies
                 </h3>
                 <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
@@ -3098,7 +3115,7 @@ export default function StudentDashboard() {
               <div className="relative flex flex-col items-center justify-center py-6">
                 {/* SVG Connector Lines */}
                 <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-                  <svg className="w-full h-full stroke-black stroke-[2]" style={{ strokeDasharray: "4 4" }}>
+                  <svg className={`w-full h-full ${isSaaS ? 'stroke-slate-200' : 'stroke-black stroke-[2]'}`} style={{ strokeDasharray: "4 4" }}>
                     <line x1="15%" y1="50%" x2="38%" y2="50%" />
                     <line x1="38%" y1="50%" x2="62%" y2="50%" />
                     <line x1="62%" y1="50%" x2="85%" y2="50%" />
@@ -3109,18 +3126,31 @@ export default function StudentDashboard() {
                   {infographics.slice(0, 4).map((info: any, idx: number) => {
                     return (
                       <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="w-full h-full flex">
-                        <div className="bg-white border-2 border-black rounded-none p-4 text-center group cursor-pointer transition-all duration-150 relative w-full h-full hover:-translate-y-1 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between items-center gap-2">
+                        <div className={`bg-white p-4 text-center group cursor-pointer transition-all duration-200 relative w-full h-full flex flex-col justify-between items-center gap-2 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'}`}>
                           <div className="w-full flex flex-col items-center">
-                            <div className={`w-7 h-7 ${t.badge} flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 transition-all duration-300`}>
+                            <div className={`w-7 h-7 ${t.badge} flex items-center justify-center font-bold text-xs mx-auto mb-2 transition-all duration-300 ${isSaaS ? 'font-sans' : 'font-mono'}`}>
                               I0{idx + 1}
                             </div>
-                            <h4 className={`font-mono text-[10px] font-bold text-black uppercase tracking-wider line-clamp-2 ${t.titleHover} transition-colors px-1 leading-normal`}>{info.title}</h4>
+                            <h4 className={`text-[10px] font-bold text-black uppercase tracking-wider line-clamp-2 ${t.titleHover} transition-colors px-1 leading-normal ${isSaaS ? 'font-sans' : 'font-mono'}`}>{info.title}</h4>
                           </div>
-                          <p className="text-[9px] text-slate-400 font-mono mt-auto">Infographic Node</p>
+                          <p className={`text-[9px] text-slate-400 mt-auto ${isSaaS ? 'font-sans' : 'font-mono'}`}>Infographic Node</p>
                         </div>
                       </Link>
                     );
                   })}
+                  {infographics.length === 0 && (
+                    <div className={`col-span-full py-6 text-center text-slate-450 text-xs ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl flex items-center justify-center gap-4' : 'border-2 border-dashed border-black rounded-none font-mono'}`}>
+                      {isSaaS && (
+                        <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
+                          <Activity className="w-5 h-5" />
+                        </div>
+                      )}
+                      <div className={isSaaS ? 'text-left' : ''}>
+                        <p className="font-bold text-slate-800 text-sm">No infographics available yet.</p>
+                        <p className="text-[11px] text-slate-500 mt-1">Infographics will be available here soon.</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -3132,31 +3162,31 @@ export default function StudentDashboard() {
           <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 transition-all duration-300`}>
             <div className="flex items-center gap-2 mb-4">
               <FileText className={`w-4 h-4 ${t.iconColor}`} />
-              <h3 className={`text-sm font-black uppercase tracking-widest ${t.iconColor} font-mono`}>Design Resources & Documentation</h3>
+              <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} ${isSaaS ? 'font-sans' : 'font-mono'}`}>Design Resources & Documentation</h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {subjectResources.slice(0, 4).map((resource: any, index: number) => (
                 <a key={index} href={resource.link} target="_blank" rel="noopener noreferrer" className="block w-full">
-                  <div className="bg-white border-2 border-black rounded-none p-3 hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-150 flex items-start gap-3 group h-full">
-                    <div className="bg-white border-2 border-black rounded-none p-1.5 mt-0.5 group-hover:bg-zinc-100 transition-colors">
-                      <FileText className="w-3.5 h-3.5 text-slate-600 group-hover:text-black" />
+                  <div className={`bg-white p-3 flex items-start gap-3 group h-full transition-all duration-250 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]'}`}>
+                    <div className={`p-1.5 mt-0.5 transition-colors ${isSaaS ? 'bg-blue-50 text-blue-600 rounded-lg' : 'bg-white border-2 border-black rounded-none group-hover:bg-zinc-100'}`}>
+                      <FileText className={`w-3.5 h-3.5 ${isSaaS ? 'text-blue-600' : 'text-slate-600 group-hover:text-black'}`} />
                     </div>
                     <div>
-                      <p className={`text-xs font-bold text-black ${t.titleHover} transition-colors line-clamp-1`}>{resource.title}</p>
-                      <p className={`text-[9px] ${t.textMuted} font-mono mt-0.5 uppercase tracking-wider`}>{resource.type}</p>
+                      <p className={`text-xs font-bold text-black ${t.titleHover} transition-colors line-clamp-1 ${isSaaS ? 'font-sans' : ''}`}>{resource.title}</p>
+                      <p className={`text-[9px] ${t.textMuted} mt-0.5 uppercase tracking-wider ${isSaaS ? 'font-sans' : 'font-mono'}`}>{resource.type}</p>
                     </div>
                   </div>
                 </a>
               ))}
               {subjectResources.length === 0 && (
-                <div className="col-span-full py-4 text-center text-slate-400 text-xs font-mono border-2 border-dashed border-black rounded-none">
+                <div className={`col-span-full py-4 text-center text-slate-450 text-xs rounded-none ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl font-sans' : 'border-2 border-dashed border-black font-mono'}`}>
                   No official design assets linked.
                 </div>
               )}
             </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   );
 }
