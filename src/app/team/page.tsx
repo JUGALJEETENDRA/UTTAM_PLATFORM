@@ -32,7 +32,7 @@ const team: TeamMember[] = [
     icon: <Layout className="w-5 h-5 text-white" />,
     githubUrl: "https://github.com/jainamdavda1-pixel",
     linkedinUrl: "https://www.linkedin.com/in/jainam-davda-a9589a328/",
-    imageUrl: "/team/jainam-davda-a9589a328.jpg"
+    imageUrl: "/team/jainam-davda.jpg"
   },
   {
     name: "Chinmay Chavan",
@@ -157,12 +157,12 @@ interface TeamCardProps {
 
 function TeamCard({ member }: TeamCardProps) {
   const isMentor = member.role === "Team Mentor";
-  
+
   return (
     <div className="w-[340px] h-[150px] flex flex-row items-center p-5 bg-white border-2 border-[var(--primary)] rounded-2xl shadow-[5px_5px_0px_var(--primary)] transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[8px_8px_0px_var(--primary)] hover:border-red-500 group select-none">
       {/* Left: Profile Image */}
       <TeamImage src={member.imageUrl} name={member.name} />
-      
+
       {/* Right: Name, Role & Social Links */}
       <div className="flex flex-col justify-between h-24 flex-1 min-w-0 pl-3">
         <div className="space-y-1">
