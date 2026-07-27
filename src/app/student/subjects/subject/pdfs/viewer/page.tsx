@@ -1,9 +1,14 @@
+import { Suspense } from "react";
 import ClientPage from "./ClientPage";
 
 export const metadata = {
-  title: "Resource Viewer",
+  title: "PDF Reader",
 };
 
 export default function Page() {
-  return <ClientPage />;
+  return (
+    <Suspense fallback={<div className="p-8 text-center font-bold">Loading PDF reader...</div>}>
+      <ClientPage />
+    </Suspense>
+  );
 }

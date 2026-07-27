@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ClientPage from "./ClientPage";
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <ClientPage />;
+  return (
+    <Suspense fallback={<div className="p-8 text-center font-bold">Loading video viewer...</div>}>
+      <ClientPage />
+    </Suspense>
+  );
 }
