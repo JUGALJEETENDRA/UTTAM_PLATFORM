@@ -4,18 +4,18 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { 
-  GraduationCap, 
-  ArrowRight, 
-  BookOpen, 
-  Play, 
-  HelpCircle, 
-  Layers, 
-  Gamepad2, 
-  Headphones, 
-  Folder, 
-  TrendingUp, 
-  ChevronRight, 
+import {
+  GraduationCap,
+  ArrowRight,
+  BookOpen,
+  Play,
+  HelpCircle,
+  Layers,
+  Gamepad2,
+  Headphones,
+  Folder,
+  TrendingUp,
+  ChevronRight,
   Trophy,
   Book,
   Network,
@@ -29,9 +29,10 @@ export default function LandingPage() {
 
   return (
     <div className="bg-[#f4f4f0] min-h-screen text-black flex flex-col font-sans relative antialiased px-4 sm:px-6 md:px-8 selection:bg-red-500 selection:text-white brutalist-grid-bg">
-      
+
       {/* Structural Embedded CSS for Dot Matrix Background */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .brutalist-grid-bg {
           background-color: #f4f4f0;
           background-image: radial-gradient(#d8d8d2 1.5px, transparent 1.5px);
@@ -64,7 +65,7 @@ export default function LandingPage() {
 
       {/* 2. Hero Section */}
       <main className="container mx-auto max-w-6xl py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center flex-1">
-        
+
         {/* Hero Copy (Left Column) */}
         <div className="lg:col-span-5 flex flex-col items-start space-y-6 text-left">
           <div className="space-y-4">
@@ -90,9 +91,9 @@ export default function LandingPage() {
         {/* Hero Interactive Whiteboard (Right Column) */}
         <div className="lg:col-span-7 w-full flex flex-col select-none justify-center items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
-            src={`${basePath}/uttam-whiteboard.png`} 
-            alt="UTTAM Whiteboard" 
+          <img
+            src={`${basePath}/uttam-whiteboard.png`}
+            alt="UTTAM Whiteboard"
             className="w-full h-auto object-contain select-none max-w-full rounded-none"
           />
         </div>
@@ -118,7 +119,7 @@ export default function LandingPage() {
               { title: "Audio Lectures", desc: "Listen and learn anytime, anywhere.", color: "bg-[#06b6d4]", icon: <Headphones className="w-10 h-10 text-black stroke-[2.5px]" /> },
               { title: "Resources", desc: "Helpful references and downloads in one place.", color: "bg-[#71717a]", icon: <Folder className="w-10 h-10 text-black stroke-[2.5px]" /> }
             ].map((feat, idx) => (
-              <div 
+              <div
                 key={idx}
                 onClick={() => router.push("/student/subjects")}
                 className="bg-white border-2 border-black p-4 flex flex-col justify-center items-center text-center shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_rgba(0,0,0,1)] transition-all aspect-square w-full max-w-[220px] mx-auto group cursor-pointer rounded-none"
@@ -160,7 +161,7 @@ export default function LandingPage() {
               { step: "09. Practice & Revise", desc: "Test your knowledge with quizzes and reinforce learning through quick flashcard revision.", icon: <Layers className="w-9 h-9 text-black stroke-[2.5px]" /> },
               { step: "10. Master the Subject", desc: "Complete your learning journey with confidence by mastering concepts through continuous learning, practice, and revision.", icon: <Trophy className="w-9 h-9 text-black stroke-[2.5px]" /> }
             ].map((step, idx) => (
-              <div 
+              <div
                 key={idx}
                 className="bg-white border-2 border-black p-3 text-center shadow-[4px_4px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-between aspect-square w-full max-w-[220px] mx-auto rounded-none relative"
               >
@@ -184,13 +185,13 @@ export default function LandingPage() {
       {/* 5. Bottom CTA Box ("READY TO LEARN SMARTER?") */}
       <section className="container mx-auto max-w-6xl py-12 border-t border-black/10 select-none">
         <div className="border-4 border-black bg-white p-8 md:p-12 shadow-[8px_8px_0px_rgba(0,0,0,1)] flex flex-col md:flex-row justify-between items-center w-full gap-8 relative overflow-hidden rounded-none">
-          
+
           {/* Books Drawing (Left) */}
           <div className="hidden lg:block select-none max-w-[150px] shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={`${basePath}/uttam-cta-books.png`} 
-              alt="UTTAM Books" 
+            <img
+              src={`${basePath}/uttam-cta-books.png`}
+              alt="UTTAM Books"
               className="w-full h-auto object-contain mix-blend-multiply"
             />
           </div>
@@ -217,9 +218,9 @@ export default function LandingPage() {
           {/* Backpack Drawing (Right) */}
           <div className="hidden lg:block select-none max-w-[150px] shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={`${basePath}/uttam-cta-backpack.png`} 
-              alt="UTTAM Backpack" 
+            <img
+              src={`${basePath}/uttam-cta-backpack.png`}
+              alt="UTTAM Backpack"
               className="w-full h-auto object-contain mix-blend-multiply"
             />
           </div>
@@ -229,7 +230,7 @@ export default function LandingPage() {
       {/* 6. Custom Neubrutalist Footer */}
       <footer className="border-t-4 border-black bg-[#f4f4f0] py-10 mt-auto select-none">
         <div className="container mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-8">
-          
+
           {/* Logo & Intro Column */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
@@ -242,31 +243,31 @@ export default function LandingPage() {
               An interactive EdTech platform that brings together simulations, quizzes, flashcards, mind maps, and infographics helping students learn through interactive and visual content.
             </p>
           </div>
-        {/* Team Column */}
-        <div className="space-y-4">
-          <h4 className="text-xs font-black uppercase text-black font-sans flex items-center">
-            <span className="w-2.5 h-2.5 bg-[#ef4444] border border-black rounded-full mr-2"></span>
-            Our Team
-          </h4>
-          <p className="text-zinc-700 text-[11px] font-bold leading-relaxed font-sans max-w-xs">
-            Discover the engineering roles, layout frameworks, and collaborative contributions behind this project.
-          </p>
-          <button
-            onClick={() => router.push("/team")}
-            className="border border-black bg-white text-black font-black text-[10px] px-3.5 py-1.5 uppercase shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center gap-1.5 cursor-pointer rounded-none"
-          >
-            <span>View Team Description</span>
-            <ArrowRight className="w-3 h-3 text-black" />
-          </button>
-        </div>
+          {/* Team Column */}
+          <div className="space-y-4">
+            <h4 className="text-xs font-black uppercase text-black font-sans flex items-center">
+              <span className="w-2.5 h-2.5 bg-[#ef4444] border border-black rounded-full mr-2"></span>
+              Our Team
+            </h4>
+            <p className="text-zinc-700 text-[11px] font-bold leading-relaxed font-sans max-w-xs">
+              Discover the engineering roles, layout frameworks, and collaborative contributions behind this project.
+            </p>
+            <button
+              onClick={() => router.push("/team")}
+              className="border border-black bg-white text-black font-black text-[10px] px-3.5 py-1.5 uppercase shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center gap-1.5 cursor-pointer rounded-none"
+            >
+              <span>View Team Description</span>
+              <ArrowRight className="w-3 h-3 text-black" />
+            </button>
+          </div>
 
-        {/* Build Details Column */}
-        <div className="flex flex-col justify-end items-start md:items-end text-zinc-500 font-mono text-[9px] font-bold">
-          <p>Last updated: 26 Jul 2026, 03:54 pm IST</p>
-        </div>
+          {/* Build Details Column */}
+          <div className="flex flex-col justify-end items-start md:items-end text-zinc-500 font-mono text-[9px] font-bold">
+            <p>Last updated: 26 Jul 2026, 03:54 pm IST</p>
+          </div>
 
-      </div>
-    </footer>
-  </div>
-);
+        </div>
+      </footer>
+    </div>
+  );
 }

@@ -392,3 +392,9 @@
 .animate-uttam-logo {
   animation: uttam-logo-float 1.4s ease-in-out infinite;
 }
+
+.brutalist-grid-bg {
+  background-color: #f4f4f0;
+  background-image: radial-gradient(#d8d8d2 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}

@@ -1,15 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Gamepad2, LayoutDashboard, Target, Trophy, LogOut, GraduationCap, Shield, User } from "lucide-react";
+import { GraduationCap, ArrowRight, Shield, LogOut } from "lucide-react";
 import { useSession } from "@/components/AuthProvider";
 import { usePathname } from "next/navigation";
 
 export function MainNavbar() {
-  const pathname = usePathname();
   const { isAuthenticated, status, logout } = useSession();
   const isLoaded = status !== "loading";
+  const pathname = usePathname();
 
   if (pathname === "/") {
     return null;
@@ -18,36 +17,40 @@ export function MainNavbar() {
   return (
     <nav className="w-full bg-white/90 backdrop-blur-md border-b border-zinc-200 sticky top-0 z-50 shadow-sm transition-all duration-300">
       <div className="container mx-auto px-3 sm:px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group min-w-0">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 bg-primary text-white rounded-lg flex items-center justify-center group-hover:bg-primary/90 transition-all shadow-md shrink-0">
-            <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
+        <Link href="/" className="flex items-center space-x-3 group select-none">
+          <div className="w-10 h-10 bg-[#ef4444] text-white border-2 border-black rounded-lg flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)] group-hover:translate-x-[1px] group-hover:translate-y-[1px] group-hover:shadow-none transition-all shrink-0">
+            <GraduationCap className="w-6 h-6" />
           </div>
-          <div className="flex flex-col min-w-0">
-            <span className="text-xs sm:text-base font-extrabold text-zinc-900 leading-none tracking-tight truncate max-w-[140px] xs:max-w-[200px] sm:max-w-none">UTTAM</span>
-            <span className="text-[9px] sm:text-[10px] font-semibold text-primary mt-0.5 hidden xs:inline truncate">Somaiya EdTech Portal</span>
-          </div>
+          <span className="text-xl font-black uppercase tracking-wider text-black font-sans leading-none">
+            UTTAM
+          </span>
         </Link>
         
         {/* Navigation Links */}
-        <div className="flex items-center space-x-1.5 sm:space-x-4 shrink-0">
+        <div className="flex items-center space-x-3 shrink-0">
           {isLoaded && !isAuthenticated && (
             <Link href="/faculty/login">
-              <Button variant="ghost" size="sm" className="text-zinc-600 hover:text-primary font-medium text-xs px-2 sm:px-3">
-                Faculty Login
-              </Button>
+              <button
+                className="border-2 border-black bg-[#ef4444] text-white font-extrabold px-3 py-2 sm:px-4 sm:py-2 text-[10px] sm:text-xs uppercase tracking-wider shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center gap-2 cursor-pointer rounded-none"
+              >
+                <span>Faculty Login</span>
+                <span className="w-4 h-4 hidden sm:flex items-center justify-center border border-black bg-[#a81a1a] rounded-none">
+                  <ArrowRight className="w-2.5 h-2.5 text-white" />
+                </span>
+              </button>
             </Link>
           )}
           
           {isLoaded && isAuthenticated && (
             <>
               <Link href="/faculty/dashboard">
-                <Button variant="ghost" size="sm" className="text-zinc-700 hover:text-primary font-medium flex items-center space-x-1.5 text-xs px-2 sm:px-3">
+                <button className="border-2 border-black bg-[#ef4444] text-white font-extrabold px-3 py-2 text-[10px] sm:text-xs uppercase tracking-wider shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center gap-1.5 cursor-pointer rounded-none">
                   <Shield className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Faculty Dashboard</span><span className="xs:hidden">Dashboard</span>
-                </Button>
+                </button>
               </Link>
-              <Button onClick={() => logout()} variant="outline" size="sm" className="border-zinc-200 text-zinc-700 hover:text-primary hover:bg-zinc-50 flex items-center space-x-1.5 text-xs px-2 sm:px-3">
+              <button onClick={() => logout()} className="border-2 border-black bg-white text-black font-extrabold px-3 py-2 text-[10px] sm:text-xs uppercase tracking-wider shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center gap-1.5 cursor-pointer rounded-none">
                 <LogOut className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Sign Out</span>
-              </Button>
+              </button>
             </>
           )}
         </div>

@@ -5,8 +5,8 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { fetchGAS } from "@/lib/apiClient";
 import { Button } from "@/components/ui/button";
-import { 
-  ChevronDown, ArrowLeft, Search, Play, Headphones, BookOpen, 
+import {
+  ChevronDown, ArrowLeft, Search, Play, Headphones, BookOpen,
   FileText, Layers, Target, Brain, Image as ImageIcon, Gamepad2, SlidersHorizontal, Info
 } from "lucide-react";
 
@@ -96,12 +96,12 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
   const [data, setData] = useState<any>(dataSource || null);
   const [subjectName, setSubjectName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Filters state
   const [selectedModuleId, setSelectedModuleId] = useState("all");
   const [selectedDuration, setSelectedDuration] = useState("all"); // For videos/audio
   const [sortBy, setSortBy] = useState("default"); // 'default' | 'alphabetical'
-  
+
   // Collapsed sections tracking state (moduleId: boolean)
   const [collapsedModules, setCollapsedModules] = useState<Record<string, boolean>>({});
 
@@ -150,7 +150,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
       const parsed = JSON.parse(cleanUrl);
       if (Array.isArray(parsed)) return parsed;
       return [{ title: "Study Guide Notes", url: cleanUrl }];
-    } catch(e) {
+    } catch (e) {
       return [{ title: "Study Guide Notes", url: cleanUrl }];
     }
   };
@@ -187,7 +187,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
               moduleNo: mod.moduleNo,
               duration: sub.hours ? `${sub.hours} Hrs` : "Video",
               durationVal: sub.hours || 1,
-              link: `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}&subtopicId=${sub.id}&resourceType=video`
+              link: `/student/subjects/subject/videos/viewer?subjectId=${subjectId}&moduleId=${mod.id}&subtopicId=${sub.id}`
             });
           }
         });
@@ -206,7 +206,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
               moduleNo: mod.moduleNo,
               duration: "Audio Lesson",
               durationVal: 1,
-              link: `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}&subtopicId=${sub.id}&resourceType=audio`
+              link: `/student/subjects/subject/audio/viewer?subjectId=${subjectId}&moduleId=${mod.id}&subtopicId=${sub.id}`
             });
           }
         });
@@ -224,7 +224,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
               moduleTitle: mod.title,
               moduleNo: mod.moduleNo,
               duration: "Study Notes",
-              link: `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}&subtopicId=${sub.id}&resourceType=notes`
+              link: `/student/subjects/subject/notes/viewer?subjectId=${subjectId}&moduleId=${mod.id}&subtopicId=${sub.id}`
             });
           }
         });
@@ -242,7 +242,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
           moduleTitle: matchingMod ? matchingMod.title : "General Reference PDFs",
           moduleNo: matchingMod ? matchingMod.moduleNo : 99,
           duration: "PDF Manual",
-          link: `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${res.moduleId || modules[0]?.id || ""}&resourceType=pdf`
+          link: `/student/subjects/subject/pdfs/viewer?subjectId=${subjectId}&moduleId=${res.moduleId || "general"}&resourceId=${encodeURIComponent(res.id || res.link)}`
         });
       });
 
@@ -258,7 +258,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
               moduleTitle: mod.title,
               moduleNo: mod.moduleNo,
               duration: "Subtopic PDF",
-              link: `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}&subtopicId=${sub.id}&resourceType=reference`
+              link: `/student/subjects/subject/pdfs/viewer?subjectId=${subjectId}&moduleId=${mod.id}&subtopicId=${sub.id}`
             });
           }
         });
@@ -285,7 +285,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
           moduleTitle: matchingMod ? matchingMod.title : "Flashcards module",
           moduleNo: matchingMod ? matchingMod.moduleNo : 1,
           duration: `${deck.cards?.length || 0} Cards`,
-          link: `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${deck.moduleId}&subtopicId=${deck.subtopicId}&resourceType=flashcards`
+          link: `/student/subjects/subject/flashcards/viewer?subjectId=${subjectId}&moduleId=${deck.moduleId}&subtopicId=${deck.subtopicId}`
         });
       });
     } else if (resourceType === "quizzes") {
@@ -308,7 +308,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
           moduleTitle: matchingMod ? matchingMod.title : "Module Quiz",
           moduleNo: matchingMod ? matchingMod.moduleNo : 1,
           duration: `${quiz.questions?.length || 0} Qs`,
-          link: `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${quiz.moduleId}&subtopicId=${quiz.subtopicId}&resourceType=quiz`
+          link: `/student/subjects/subject/quizzes/viewer?subjectId=${subjectId}&moduleId=${quiz.moduleId}&subtopicId=${quiz.subtopicId}`
         });
       });
     } else if (resourceType === "mindmaps") {
@@ -325,7 +325,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
           moduleTitle: matchingMod ? matchingMod.title : "Mind Maps Group",
           moduleNo: matchingMod ? matchingMod.moduleNo : 1,
           duration: "Mind Map",
-          link: `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${map.moduleId}&subtopicId=${resolvedSub ? resolvedSub.subtopicId : ""}&resourceType=mindmap`
+          link: `/student/subjects/subject/mindmaps/viewer?subjectId=${subjectId}&moduleId=${map.moduleId}&subtopicId=${resolvedSub ? resolvedSub.subtopicId : ""}`
         });
       });
     } else if (resourceType === "infographics") {
@@ -342,7 +342,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
           moduleTitle: matchingMod ? matchingMod.title : "Infographic Group",
           moduleNo: matchingMod ? matchingMod.moduleNo : 1,
           duration: "Infographic",
-          link: `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${info.moduleId}&subtopicId=${resolvedSub ? resolvedSub.subtopicId : ""}&resourceType=infographic`
+          link: `/student/subjects/subject/infographics/viewer?subjectId=${subjectId}&moduleId=${info.moduleId}&subtopicId=${resolvedSub ? resolvedSub.subtopicId : ""}`
         });
       });
     } else if (resourceType === "simulations") {
@@ -358,7 +358,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
           moduleTitle: matchingMod ? matchingMod.title : "Simulation Group",
           moduleNo: matchingMod ? matchingMod.moduleNo : 1,
           duration: "Simulation",
-          link: `/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${sim.moduleId}&subtopicId=${sim.subtopicId || ""}&resourceType=simulation`
+          link: `/student/subjects/subject/simulations/viewer?subjectId=${subjectId}&moduleId=${sim.moduleId}&subtopicId=${sim.subtopicId || ""}`
         });
       });
     }
@@ -374,7 +374,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       items = items.filter(
-        (item) => 
+        (item) =>
           String(item.title).toLowerCase().includes(query) ||
           String(item.description).toLowerCase().includes(query) ||
           String(item.moduleTitle).toLowerCase().includes(query)
@@ -476,7 +476,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
       <div className="absolute top-0 left-0 right-0 h-1 bg-black" />
 
       <div className="container mx-auto px-4 mt-8 relative z-10 max-w-4xl space-y-8">
-        
+
         {/* Back navigation */}
         <div className="flex items-center justify-between">
           <Link href={`/student/subjects/subject?subjectId=${subjectId}`}>
@@ -507,7 +507,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
 
         {/* SEARCH & FILTERS BAR */}
         <section className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_rgba(0,0,0,1)] space-y-4">
-          
+
           {/* Search Box */}
           <div className="relative w-full">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -522,7 +522,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
 
           {/* Filters controls */}
           <div className="flex flex-wrap items-center gap-4 text-xs font-bold">
-            
+
             {/* Filter icon prefix */}
             <div className="flex items-center gap-1.5 text-zinc-700 font-extrabold uppercase shrink-0">
               <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -582,8 +582,8 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
           {groupedModules.map((group) => {
             const isCollapsed = !!collapsedModules[group.id];
             return (
-              <div 
-                key={group.id} 
+              <div
+                key={group.id}
                 className="border-4 border-black bg-white shadow-[6px_6px_0px_rgba(0,0,0,1)] rounded-none overflow-hidden transition-all duration-150"
               >
                 {/* Collapsible Header */}
@@ -612,8 +612,8 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
                 {!isCollapsed && (
                   <div className="divide-y-2 divide-zinc-200 bg-white">
                     {group.resources.map((item: any) => (
-                      <div 
-                        key={item.id} 
+                      <div
+                        key={item.id}
                         className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50 transition-colors group"
                       >
                         <div className="flex items-start gap-3.5 min-w-0 flex-1">
@@ -656,7 +656,7 @@ export default function ResourceLibrary({ resourceType, dataSource }: ResourceLi
             <div className="text-center py-12 border-4 border-dashed border-zinc-300 bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)]">
               <Info className="w-8 h-8 mx-auto text-zinc-400" />
               <p className="text-sm font-bold text-zinc-700 mt-2">No matching resource files found in this library.</p>
-              <button 
+              <button
                 onClick={() => {
                   setSearchQuery("");
                   setSelectedModuleId("all");
