@@ -129,6 +129,7 @@ export default function QuizzesViewerClientPage() {
           subjectId={subjectId} 
           moduleId={moduleId} 
           subtopicId={subtopicId} 
+          onBack={() => window.history.back()}
         />
       </div>
 

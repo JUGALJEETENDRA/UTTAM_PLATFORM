@@ -31,6 +31,7 @@ import { fetchGAS } from "@/lib/apiClient";
 import { redirect, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { UttamLoader } from "@/components/ui/UttamLoader";
+import { getEmbedUrl, getExternalEmbedUrl, getGoogleDriveFileId, isYouTubeUrl, getAudioDirectSources } from "@/lib/mediaHelpers";
 
 // Theme Configuration lookup table used by fallback default and custom layouts
 const THEME_MAP: Record<string, {
@@ -88,71 +89,7 @@ const DEFAULT_THEME = {
   pattern: ""
 };
 
-function getEmbedUrl(url: string | null | undefined): string | null {
-  if (!url) return null;
-  
-  if (url.includes("drive.google.com") || url.includes("docs.google.com")) {
-    const match = url.match(/(file|document|presentation|spreadsheets).*?\/d\/([^\/\?]+)/);
-    if (match && match[1] && match[2]) {
-      const type = match[1];
-      const id = match[2];
-      const domain = type === 'file' ? 'drive.google.com' : 'docs.google.com';
-      return `https://${domain}/${type}/d/${id}/preview`;
-    }
-    const folderMatch = url.match(/\/folders\/([^\/\?]+)/);
-    if (folderMatch && folderMatch[1]) {
-      return `https://drive.google.com/embeddedfolderview?id=${folderMatch[1]}#list`;
-    }
-    const idMatch = url.match(/id=([^&]+)/);
-    if (idMatch && idMatch[1]) {
-      return `https://drive.google.com/file/d/${idMatch[1]}/preview`;
-    }
-  }
-  
-  let embedUrl = url;
-  
-  if (url.includes("youtube.com/watch")) {
-    try {
-      const urlObj = new URL(url);
-      const videoId = urlObj.searchParams.get("v");
-      if (videoId) {
-        embedUrl = `https://www.youtube.com/embed/${videoId}`;
-      }
-    } catch (e) {
-      // ignore
-    }
-  } else if (url.includes("youtu.be/")) {
-    const parts = url.split("youtu.be/");
-    if (parts.length > 1) {
-      const videoId = parts[1].split(/[?#]/)[0];
-      if (videoId) {
-        embedUrl = `https://www.youtube.com/embed/${videoId}`;
-      }
-    }
-  } else if (url.includes("youtube.com/shorts/")) {
-    const parts = url.split("youtube.com/shorts/");
-    if (parts.length > 1) {
-      const videoId = parts[1].split(/[?#]/)[0];
-      if (videoId) {
-        embedUrl = `https://www.youtube.com/embed/${videoId}`;
-      }
-    }
-  }
-  
-  if (embedUrl.includes("youtube.com/embed/")) {
-    try {
-      const urlObj = new URL(embedUrl);
-      urlObj.searchParams.set("playsinline", "1");
-      urlObj.searchParams.set("rel", "0");
-      return urlObj.toString();
-    } catch (e) {
-      const separator = embedUrl.includes("?") ? "&" : "?";
-      return `${embedUrl}${separator}playsinline=1&rel=0`;
-    }
-  }
-  
-  return embedUrl;
-}
+
 
 function getParsedNotes(notesUrl: string | null | undefined) {
   if (!notesUrl) return [];
@@ -168,46 +105,7 @@ function getParsedNotes(notesUrl: string | null | undefined) {
   }
 }
 
-function getExternalEmbedUrl(url: string | null | undefined): string | null {
-  if (!url) return null;
-  
-  let cleanUrl = url.replace(/drive\.https:\/\//g, "https://");
-  if (cleanUrl.startsWith("drive.google.com") || cleanUrl.startsWith("docs.google.com")) {
-    cleanUrl = "https://" + cleanUrl;
-  }
-  
-  if (cleanUrl.includes("drive.google.com") || cleanUrl.includes("docs.google.com")) {
-    const match = cleanUrl.match(/(file|document|presentation|spreadsheets).*?\/d\/([^\/\?]+)/);
-    if (match && match[1] && match[2]) {
-      const type = match[1];
-      const id = match[2];
-      const domain = type === 'file' ? 'drive.google.com' : 'docs.google.com';
-      return `https://${domain}/${type}/d/${id}/preview`;
-    }
-    const folderMatch = cleanUrl.match(/\/folders\/([^\/\?]+)/);
-    if (folderMatch && folderMatch[1]) {
-      return `https://drive.google.com/embeddedfolderview?id=${folderMatch[1]}#list`;
-    }
-    const idMatch = cleanUrl.match(/id=([^&]+)/);
-    if (idMatch && idMatch[1]) {
-      return `https://drive.google.com/file/d/${idMatch[1]}/preview`;
-    }
-  }
-  return cleanUrl;
-}
 
-function getGoogleDriveFileId(url: string | null | undefined): string | null {
-  if (!url) return null;
-  if (url.includes("/file/d/")) {
-    const match = url.match(/\/file\/d\/([^\/\?]+)/);
-    if (match && match[1]) return match[1];
-  }
-  if (url.includes("id=")) {
-    const match = url.match(/id=([^&]+)/);
-    if (match && match[1]) return match[1];
-  }
-  return null;
-}
 
 const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
   if (!url || typeof url !== 'string') return null;
@@ -253,14 +151,6 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
 };
 
 const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
-  if (!url || typeof url !== 'string') return null;
-  const driveFileId = getGoogleDriveFileId(url);
-  const embedUrl = getExternalEmbedUrl(url);
-  
-  const googleDriveDirectUrl = driveFileId 
-    ? `https://docs.google.com/uc?export=download&id=${driveFileId}` 
-    : url;
-
   const [useDriveFallback, setUseDriveFallback] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -268,13 +158,59 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
+  const [playbackRate, setPlaybackRate] = useState(1);
+
+  const cleanUrl = url ? url.replace(/drive\.https:\/\//g, "https://").trim() : "";
 
   useEffect(() => {
     setIsPlaying(false);
     setCurrentTime(0);
     setDuration(0);
     setUseDriveFallback(false);
+    setPlaybackRate(1);
   }, [url]);
+
+  if (!cleanUrl) {
+    return (
+      <div className="w-full bg-[#FAF9F5] p-6 border-2 border-black flex flex-col items-center justify-center text-center gap-2">
+        <Headphones className="w-8 h-8 text-zinc-400" />
+        <p className="font-bold text-xs uppercase font-mono text-zinc-700">No Audio Track Available</p>
+        <p className="text-xs text-zinc-500">The audio file link is missing or empty.</p>
+      </div>
+    );
+  }
+
+  const driveFileId = getGoogleDriveFileId(cleanUrl);
+  const isYouTube = isYouTubeUrl(cleanUrl);
+
+  if (isYouTube) {
+    const ytEmbedUrl = getEmbedUrl(cleanUrl) || cleanUrl;
+    return (
+      <div className="w-full aspect-video max-h-[360px] bg-black border-2 border-black relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <iframe
+          src={ytEmbedUrl}
+          className="w-full h-full border-0 absolute inset-0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+          allowFullScreen
+          title={title || "YouTube Audio Lesson"}
+        />
+      </div>
+    );
+  }
+
+  if (driveFileId) {
+    const driveEmbedUrl = `https://drive.google.com/file/d/${driveFileId}/preview`;
+    return (
+      <div className="w-full h-[180px] bg-black border-2 border-black relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <iframe
+          src={driveEmbedUrl}
+          className="w-full h-full border-0 absolute inset-0"
+          allow="autoplay; fullscreen"
+          title={title || "Google Drive Audio Player"}
+        />
+      </div>
+    );
+  }
 
   const togglePlay = () => {
     if (!audioRef.current) return;
@@ -284,12 +220,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
     } else {
       audioRef.current.play()
         .then(() => setIsPlaying(true))
-        .catch(err => {
-          console.error("Play failed:", err);
-          if (driveFileId) {
-            setUseDriveFallback(true);
-          }
-        });
+        .catch(err => console.error("Play failed:", err));
     }
   };
 
@@ -329,6 +260,16 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
     }
   };
 
+  const handleSpeedChange = () => {
+    const rates = [1, 1.25, 1.5, 2];
+    const nextIdx = (rates.indexOf(playbackRate) + 1) % rates.length;
+    const nextRate = rates[nextIdx];
+    setPlaybackRate(nextRate);
+    if (audioRef.current) {
+      audioRef.current.playbackRate = nextRate;
+    }
+  };
+
   const formatTime = (time: number) => {
     if (isNaN(time) || !isFinite(time)) return "0:00";
     const mins = Math.floor(time / 60);
@@ -336,133 +277,114 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
-  const activeAudioSrc = googleDriveDirectUrl;
-
   return (
-    <div className="w-full">
-      {!useDriveFallback && activeAudioSrc ? (
-        <div className="w-full bg-[#FAF9F5] p-5 border-2 border-black flex flex-col gap-4">
-          <audio 
-            key={activeAudioSrc}
-            ref={audioRef}
-            src={activeAudioSrc}
-            onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={handleLoadedMetadata}
-            onEnded={() => setIsPlaying(false)}
-            preload="metadata"
-            className="hidden"
-            onError={() => {
-              if (driveFileId) setUseDriveFallback(true);
+    <div className="w-full bg-[#FAF9F5] p-5 border-2 border-black flex flex-col gap-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <audio 
+        key={cleanUrl}
+        ref={audioRef}
+        src={cleanUrl}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={() => setIsPlaying(false)}
+        preload="metadata"
+        className="hidden"
+      />
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-350 pb-3 gap-2">
+        <div className="flex items-center gap-2">
+          <Headphones className="w-5 h-5 text-zinc-950" />
+          <span className="font-bold text-xs uppercase tracking-tight text-black">{title || "Audio Lesson"}</span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 w-full flex-wrap sm:flex-nowrap">
+        <button
+          type="button"
+          onClick={togglePlay}
+          className="w-12 h-12 rounded-full bg-[#2dd4bf] hover:bg-[#2dd4bf]/90 border-2 border-black text-black flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:translate-x-0.5 active:shadow-none active:translate-y-1 active:translate-x-1 transition-all shrink-0 focus:outline-none"
+          title={isPlaying ? "Pause" : "Play"}
+        >
+          {isPlaying ? (
+            <Pause className="w-5 h-5 fill-black text-black" />
+          ) : (
+            <Play className="w-5 h-5 fill-black text-black translate-x-[1px]" />
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            if (audioRef.current) {
+              audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10);
+            }
+          }}
+          className="w-8 h-8 rounded-full bg-white border-2 border-black text-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:translate-x-0.5 active:shadow-none active:translate-y-1 active:translate-x-1 transition-all shrink-0 focus:outline-none"
+          title="Rewind 10s"
+        >
+          <RotateCcw className="w-4 h-4" />
+        </button>
+
+        <div className="flex-1 flex items-center gap-3 min-w-[200px]">
+          <span className="text-xs font-mono text-zinc-700 shrink-0 font-bold">
+            {formatTime(currentTime)}
+          </span>
+          
+          <input
+            type="range"
+            min="0"
+            max={duration || 100}
+            value={currentTime}
+            onChange={handleSeek}
+            className="flex-1 h-2.5 bg-zinc-200 border-2 border-black appearance-none cursor-pointer accent-black focus:outline-none"
+            style={{
+              background: `linear-gradient(to right, #000 0%, #000 ${
+                duration ? (currentTime / duration) * 100 : 0
+              }%, #e4e4e7 ${
+                duration ? (currentTime / duration) * 100 : 0
+              }%, #e4e4e7 100%)`
             }}
           />
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-350 pb-3 gap-2">
-            <div className="flex items-center gap-2">
-              <Headphones className="w-5 h-5 text-zinc-950" />
-              <span className="font-bold text-xs uppercase tracking-tight">{title || "Audio Lesson"}</span>
-            </div>
-            <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Audio Workspace</span>
-          </div>
-
-          <div className="flex items-center gap-4 w-full">
-            <button
-              type="button"
-              onClick={togglePlay}
-              className="w-12 h-12 rounded-full bg-[#2dd4bf] hover:bg-[#2dd4bf]/90 border-2 border-black text-black flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:translate-x-0.5 active:shadow-none active:translate-y-1 active:translate-x-1 transition-all shrink-0 focus:outline-none"
-            >
-              {isPlaying ? (
-                <Pause className="w-5 h-5 fill-black text-black" />
-              ) : (
-                <Play className="w-5 h-5 fill-black text-black translate-x-[1px]" />
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                if (audioRef.current) {
-                  audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10);
-                }
-              }}
-              className="w-8 h-8 rounded-full bg-white border-2 border-black text-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:translate-x-0.5 active:shadow-none active:translate-y-1 active:translate-x-1 transition-all shrink-0 focus:outline-none"
-              title="Rewind 10s"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
-
-            <div className="flex-1 flex items-center gap-3">
-              <span className="text-xs font-mono text-zinc-655 shrink-0">
-                {formatTime(currentTime)}
-              </span>
-              
-              <input
-                type="range"
-                min="0"
-                max={duration || 100}
-                value={currentTime}
-                onChange={handleSeek}
-                className="flex-1 h-2 bg-zinc-200 border border-black appearance-none cursor-pointer accent-black focus:outline-none"
-                style={{
-                  background: `linear-gradient(to right, #000 0%, #000 ${
-                    duration ? (currentTime / duration) * 100 : 0
-                  }%, #e4e4e7 ${
-                    duration ? (currentTime / duration) * 100 : 0
-                  }%, #e4e4e7 100%)`
-                }}
-              />
-
-              <span className="text-xs font-mono text-zinc-655 shrink-0">
-                {formatTime(duration)}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-end gap-2 text-zinc-655 text-xs pt-2">
-            <button
-              type="button"
-              onClick={toggleMute}
-              className="hover:text-black transition-colors focus:outline-none"
-            >
-              {isMuted ? <VolumeX className="w-4 h-4 text-red-500" /> : <Volume2 className="w-4 h-4" />}
-            </button>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.05"
-              value={isMuted ? 0 : volume}
-              onChange={handleVolumeChange}
-              className="w-24 h-1.5 bg-zinc-200 border border-black appearance-none cursor-pointer accent-black focus:outline-none"
-              style={{
-                background: `linear-gradient(to right, #000 0%, #000 ${
-                  (isMuted ? 0 : volume) * 100
-                }%, #e4e4e7 ${(isMuted ? 0 : volume) * 100}%, #e4e4e7 100%)`
-              }}
-            />
-          </div>
-
-          {driveFileId && (
-            <div className="flex justify-end pt-1">
-              <button
-                type="button"
-                onClick={() => setUseDriveFallback(true)}
-                className="text-[10px] text-zinc-500 hover:text-black underline font-bold uppercase font-mono"
-              >
-                Use Alternative Player
-              </button>
-            </div>
-          )}
+          <span className="text-xs font-mono text-zinc-700 shrink-0 font-bold">
+            {formatTime(duration)}
+          </span>
         </div>
-      ) : (
-        <div className="w-full h-[250px] bg-black border-2 border-black relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <iframe
-            src={embedUrl || url}
-            className="w-full h-full border-0 absolute inset-0"
-            allow="autoplay"
-            title={title || "Drive Audio Player"}
+
+        <button
+          type="button"
+          onClick={handleSpeedChange}
+          className="px-2 py-1 bg-white border-2 border-black text-[11px] font-mono font-bold text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-zinc-100 shrink-0"
+          title="Playback Speed"
+        >
+          {playbackRate}x
+        </button>
+      </div>
+
+      <div className="flex items-center justify-end gap-2 text-zinc-700 text-xs pt-1">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleMute}
+            className="hover:text-black transition-colors focus:outline-none"
+          >
+            {isMuted ? <VolumeX className="w-4 h-4 text-red-500" /> : <Volume2 className="w-4 h-4" />}
+          </button>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            value={isMuted ? 0 : volume}
+            onChange={handleVolumeChange}
+            className="w-20 sm:w-24 h-1.5 bg-zinc-200 border border-black appearance-none cursor-pointer accent-black focus:outline-none"
+            style={{
+              background: `linear-gradient(to right, #000 0%, #000 ${
+                (isMuted ? 0 : volume) * 100
+              }%, #e4e4e7 ${(isMuted ? 0 : volume) * 100}%, #e4e4e7 100%)`
+            }}
           />
         </div>
-      )}
+      </div>
     </div>
   );
 };

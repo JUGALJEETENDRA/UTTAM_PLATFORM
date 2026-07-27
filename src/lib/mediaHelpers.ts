@@ -105,14 +105,42 @@ export function getExternalEmbedUrl(url: string | null | undefined): string | nu
 }
 
 export function getGoogleDriveFileId(url: string | null | undefined): string | null {
-  if (!url) return null;
-  if (url.includes("/file/d/")) {
-    const match = url.match(/\/file\/d\/([^\/\?]+)/);
-    if (match && match[1]) return match[1];
+  if (!url || typeof url !== 'string') return null;
+  let cleanUrl = url.replace(/drive\.https:\/\//g, "https://");
+  if (cleanUrl.startsWith("drive.google.com") || cleanUrl.startsWith("docs.google.com")) {
+    cleanUrl = "https://" + cleanUrl;
   }
-  if (url.includes("id=")) {
-    const match = url.match(/id=([^&]+)/);
-    if (match && match[1]) return match[1];
-  }
+  const fileDMatch = cleanUrl.match(/\/file\/d\/([^\/\?#]+)/);
+  if (fileDMatch && fileDMatch[1]) return fileDMatch[1];
+
+  const dMatch = cleanUrl.match(/\/d\/([^\/\?#]+)/);
+  if (dMatch && dMatch[1]) return dMatch[1];
+
+  const idMatch = cleanUrl.match(/id=([^&]+)/);
+  if (idMatch && idMatch[1]) return idMatch[1];
+
   return null;
 }
+
+export function isYouTubeUrl(url: string | null | undefined): boolean {
+  if (!url || typeof url !== 'string') return false;
+  const lower = url.toLowerCase();
+  return lower.includes("youtube.com") || lower.includes("youtu.be");
+}
+
+export function getAudioDirectSources(url: string | null | undefined): string[] {
+  if (!url || typeof url !== 'string') return [];
+  const cleanUrl = url.replace(/drive\.https:\/\//g, "https://").trim();
+  const driveFileId = getGoogleDriveFileId(cleanUrl);
+  
+  if (driveFileId) {
+    return [
+      `https://lh3.googleusercontent.com/d/${driveFileId}`,
+      `https://docs.google.com/uc?export=open&id=${driveFileId}`,
+      `https://drive.google.com/uc?export=download&id=${driveFileId}`,
+      cleanUrl
+    ];
+  }
+  return [cleanUrl];
+}
+

@@ -14,8 +14,8 @@ export function ResourceLinkTracker({ children }: ResourceLinkTrackerProps) {
   // Progress tracking via local API is disabled since moving to Google Apps Script backend.
   // XP rewards have also been removed from the platform.
   return (
-    <div className="inline-block">
+    <>
       {children}
-    </div>
+    </>
   );
 }
