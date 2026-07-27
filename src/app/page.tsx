@@ -84,15 +84,15 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <button
-            onClick={() => router.push("/student/subjects")}
+          <Link
+            href="/student/subjects"
             className="inline-flex items-center border-2 border-black bg-[#dc2626] text-white font-black uppercase tracking-wider hover:bg-[#dc2626]/95 transition-all cursor-pointer shadow-[5px_5px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_rgba(0,0,0,1)] select-none rounded-none"
           >
             <span className="px-8 py-4 text-sm sm:text-base font-black">Start Learning</span>
             <span className="border-l-2 border-black p-4 bg-[#a81a1a] flex items-center justify-center">
               <ArrowRight className="w-5 h-5 text-white" />
             </span>
-          </button>
+          </Link>
         </div>
 
         {/* Hero Interactive Whiteboard (Right Column) */}
@@ -126,9 +126,9 @@ export default function LandingPage() {
               { title: "Audio Lectures", desc: "Listen and learn anytime, anywhere.", color: "bg-[#06b6d4]", icon: <Headphones className="w-9 h-9 text-black stroke-[2.5px]" /> },
               { title: "Resources", desc: "Helpful references and downloads in one place.", color: "bg-[#71717a]", icon: <Folder className="w-9 h-9 text-black stroke-[2.5px]" /> }
             ].map((feat, idx) => (
-              <div
+              <Link
                 key={idx}
-                onClick={() => router.push("/student/subjects")}
+                href="/student/subjects"
                 className={`${feat.color} border-2 border-black p-4 flex flex-col justify-center items-center text-center shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_rgba(0,0,0,1)] transition-all aspect-square w-full max-w-[220px] mx-auto group cursor-pointer rounded-none`}
               >
                 <div className="w-16 h-16 border-2 border-black bg-white flex items-center justify-center font-bold shadow-[2px_2px_0px_rgba(0,0,0,1)] shrink-0">
@@ -142,7 +142,7 @@ export default function LandingPage() {
                     {feat.desc}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
