@@ -123,15 +123,16 @@ export default function SimulationsPage() {
     show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 120, damping: 14 } }
   };
 
+  const getCleanPythonDetails = (title: string) => {
+    const cleanTitle = String(title || "").replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
+    const words = cleanTitle.split(" ");
+    const shortWords = words.slice(0, 2);
+    const shortTitle = shortWords.join(" ") + ".py";
+    const funcName = "study" + shortWords.map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
+    return { shortTitle, funcName };
+  };
+
   if (isPythonProgramming) {
-    const getCleanPythonDetails = (title: string) => {
-      const cleanTitle = String(title || "").replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
-      const words = cleanTitle.split(" ");
-      const shortWords = words.slice(0, 2);
-      const shortTitle = shortWords.join(" ") + ".py";
-      const funcName = "study" + shortWords.map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
-      return { shortTitle, funcName };
-    };
 
     return (
       <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden font-mono antialiased selection:bg-[#3776AB]/10 selection:text-[#3776AB] font-jetbrains">

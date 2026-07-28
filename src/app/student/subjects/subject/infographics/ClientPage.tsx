@@ -103,9 +103,10 @@ const DesignStudioCard = ({ children, className = "", style = {}, isPremium, lab
 };
 
 const sortInfographics = (items: Infographic[], modulesList: any[]) => {
+  const mods = Array.isArray(modulesList) ? modulesList : [];
   return [...items].sort((a, b) => {
-    const modA = modulesList.find(m => m.id === a.moduleId);
-    const modB = modulesList.find(m => m.id === b.moduleId);
+    const modA = mods.find(m => m.id === a.moduleId);
+    const modB = mods.find(m => m.id === b.moduleId);
     
     const modNumA = modA ? parseInt(modA.moduleNo) || 0 : 9999;
     const modNumB = modB ? parseInt(modB.moduleNo) || 0 : 9999;

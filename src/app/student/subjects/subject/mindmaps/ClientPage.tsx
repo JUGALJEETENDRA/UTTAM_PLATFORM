@@ -103,9 +103,10 @@ const DesignStudioCard = ({ children, className = "", style = {}, isPremium, lab
 };
 
 const sortMindMaps = (items: MindMap[], modulesList: any[]) => {
+  const mods = Array.isArray(modulesList) ? modulesList : [];
   return [...items].sort((a, b) => {
-    const modA = modulesList.find(m => m.id === a.moduleId);
-    const modB = modulesList.find(m => m.id === b.moduleId);
+    const modA = mods.find(m => m.id === a.moduleId);
+    const modB = mods.find(m => m.id === b.moduleId);
     
     const modNumA = modA ? parseInt(modA.moduleNo) || 0 : 9999;
     const modNumB = modB ? parseInt(modB.moduleNo) || 0 : 9999;
@@ -258,15 +259,16 @@ export default function StudentMindMapsList() {
     show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 120, damping: 14 } }
   };
 
+  const getCleanPythonDetails = (title: string) => {
+    const cleanTitle = String(title || "").replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
+    const words = cleanTitle.split(" ");
+    const shortWords = words.slice(0, 2);
+    const shortTitle = shortWords.join(" ") + ".py";
+    const funcName = "study" + shortWords.map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
+    return { shortTitle, funcName };
+  };
+
   if (isPythonProgramming) {
-    const getCleanPythonDetails = (title: string) => {
-      const cleanTitle = String(title || "").replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
-      const words = cleanTitle.split(" ");
-      const shortWords = words.slice(0, 2);
-      const shortTitle = shortWords.join(" ") + ".py";
-      const funcName = "study" + shortWords.map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
-      return { shortTitle, funcName };
-    };
 
     return (
       <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden font-mono antialiased selection:bg-[#3776AB]/10 selection:text-[#3776AB] font-jetbrains">
