@@ -357,13 +357,12 @@ export default function MindMapsClientPage() {
                     <img 
                       src={(() => {
                         let url = map.imageUrl || "";
-                        if (url.includes('drive.google.com')) {
-                          const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-                          if (match && match[1]) {
-                            // Use Google Drive thumbnail API to bypass virus scan redirect that breaks images
-                            return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800-h400`;
-                          }
-                        }
+                         if (url.includes('drive.google.com')) {
+                           const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                           if (match && match[1]) {
+                             return `https://lh3.googleusercontent.com/d/${match[1]}`;
+                           }
+                         }
                         return url.startsWith('/') || url.startsWith('http') ? url : `/${url}`;
                       })()}
                       alt={map.title} 

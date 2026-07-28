@@ -199,10 +199,14 @@ export default function MindMapViewerClientPage() {
                       <img
                         src={(() => {
                           if (driveId && !imageError) {
-                            // Try the download URL format which often bypasses the HTML warning for images
-                            return `https://drive.google.com/uc?export=download&id=${driveId}`;
+                            return `https://lh3.googleusercontent.com/d/${driveId}`;
                           }
-                          return url.startsWith('/') || url.startsWith('http') ? url : `/${url}`;
+                          const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+                          if (url.startsWith('http') || url.startsWith('data:')) {
+                            return url;
+                          }
+                          const cleanUrl = url.startsWith('/') ? url : `/${url}`;
+                          return `${basePath}${cleanUrl}`;
                         })()}
                         alt={mindMap.title}
                         className="max-w-none shadow-2xl rounded-sm object-contain"
