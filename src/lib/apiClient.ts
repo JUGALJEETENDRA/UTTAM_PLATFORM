@@ -39,9 +39,10 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
                    if (decrypted) return decrypted;
                 }
                 
-                const isDashboard = window.location.pathname.endsWith('/subject');
+                const isDashboard = window.location.pathname.endsWith('/subject') || window.location.pathname.endsWith('/subject/');
                 if (!isDashboard) {
-                  window.location.href = `/student/subjects/subject?subjectId=${subjectId}`;
+                  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+                  window.location.href = `${basePath}/student/subjects/subject?subjectId=${subjectId}`;
                   return Array.isArray(dataObj) ? [] : {};
                 }
              }
@@ -50,17 +51,17 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
         };
 
         if (action === 'getSubjects') return dataJson.getSubjects || [];
-        if (action === 'getStudentDashboard') return processEncrypted(dataJson.getStudentDashboard[payload.subjectId]) || null;
-        if (action === 'getModules') return processEncrypted(dataJson.getModules[payload.subjectId]) || [];
-        if (action === 'getModule') return processEncrypted(dataJson.getModule[payload.moduleId]) || null;
-        if (action === 'getQuizzes') return processEncrypted(dataJson.getQuizzes[payload.subjectId]) || [];
-        if (action === 'getQuiz') return processEncrypted(dataJson.getQuiz[payload.quizId]) || null;
-        if (action === 'getSimulations') return processEncrypted(dataJson.getSimulations[payload.subjectId]) || [];
-        if (action === 'getSimulation') return processEncrypted(dataJson.getSimulation[payload.simulationId]) || null;
-        if (action === 'getFlashcardDecks') return processEncrypted(dataJson.getFlashcardDecks[payload.subjectId]) || [];
-        if (action === 'getFlashcardDeck') return processEncrypted(dataJson.getFlashcardDeck[payload.deckId]) || null;
-        if (action === 'getMindMaps') return processEncrypted(dataJson.getMindMaps[payload.subjectId]) || [];
-        if (action === 'getInfographics') return processEncrypted(dataJson.getInfographics[payload.subjectId]) || [];
+        if (action === 'getStudentDashboard') return processEncrypted(dataJson.getStudentDashboard?.[payload.subjectId]) || null;
+        if (action === 'getModules') return processEncrypted(dataJson.getModules?.[payload.subjectId]) || [];
+        if (action === 'getModule') return processEncrypted(dataJson.getModule?.[payload.moduleId]) || null;
+        if (action === 'getQuizzes') return processEncrypted(dataJson.getQuizzes?.[payload.subjectId]) || [];
+        if (action === 'getQuiz') return processEncrypted(dataJson.getQuiz?.[payload.quizId]) || null;
+        if (action === 'getSimulations') return processEncrypted(dataJson.getSimulations?.[payload.subjectId]) || [];
+        if (action === 'getSimulation') return processEncrypted(dataJson.getSimulation?.[payload.simulationId]) || null;
+        if (action === 'getFlashcardDecks') return processEncrypted(dataJson.getFlashcardDecks?.[payload.subjectId]) || [];
+        if (action === 'getFlashcardDeck') return processEncrypted(dataJson.getFlashcardDeck?.[payload.deckId]) || null;
+        if (action === 'getMindMaps') return processEncrypted(dataJson.getMindMaps?.[payload.subjectId]) || [];
+        if (action === 'getInfographics') return processEncrypted(dataJson.getInfographics?.[payload.subjectId]) || [];
         
         // If not a read action or not handled, it will fall through to GAS (though likely fail if offline/static)
       } catch (err) {

@@ -125,9 +125,10 @@ const DesignStudioCard = ({ children, className = "", style = {}, isPremium, lab
 };
 
 const sortMindMaps = (items: MindMap[], modulesList: any[]) => {
+  const mods = Array.isArray(modulesList) ? modulesList : [];
   return [...items].sort((a, b) => {
-    const modA = modulesList.find(m => m.id === a.moduleId);
-    const modB = modulesList.find(m => m.id === b.moduleId);
+    const modA = mods.find(m => m.id === a.moduleId);
+    const modB = mods.find(m => m.id === b.moduleId);
     
     const modNumA = modA ? parseInt(modA.moduleNo) || 0 : 9999;
     const modNumB = modB ? parseInt(modB.moduleNo) || 0 : 9999;
@@ -144,7 +145,7 @@ const sortMindMaps = (items: MindMap[], modulesList: any[]) => {
       
       if (idx !== -1) {
         const sub = subtopics[idx];
-        const subNo = sub.subtopicNo || "";
+        const subNo = String(sub.subtopicNo !== undefined && sub.subtopicNo !== null ? sub.subtopicNo : "");
         const parts = subNo.split(".").map((p: string) => parseInt(p) || 0);
         return { isModule: item.title === mod.title, index: idx, parts };
       }
@@ -237,31 +238,13 @@ export default function StudentMindMapsList() {
   const isPremiumTheme = !isPythonProgramming;
 
   const renderMindMapPlaceholder = () => {
-    const primaryColorHex = isStartupEngineering ? "#2563EB" : "#7C3AED";
     return (
-      <svg className="w-full h-full text-slate-350 bg-slate-50 border-b border-slate-200" viewBox="0 0 200 120" fill="none" stroke="currentColor" strokeWidth="1">
-        <rect x="0" y="0" width="200" height="120" fill="#F8FAFC" />
-        <circle cx="100" cy="60" r="14" stroke={primaryColorHex} strokeWidth="1.5" fill={primaryColorHex} fillOpacity="0.05" />
-        <text x="88" y="63" fill={primaryColorHex} fontSize="8" fontWeight="bold" fontFamily="monospace">ROOT</text>
-
-        <path d="M 100 46 L 100 24 M 100 74 L 100 96 M 86 60 L 50 60 M 114 60 L 150 60" stroke="#94A3B8" strokeWidth="1.2" strokeDasharray="3 3" />
-
-        <circle cx="100" cy="20" r="8" stroke="#3B82F6" strokeWidth="1.2" fill="#3B82F6" fillOpacity="0.05" />
-        <circle cx="100" cy="100" r="8" stroke="#10B981" strokeWidth="1.2" fill="#10B981" fillOpacity="0.05" />
-        <circle cx="42" cy="60" r="8" stroke="#F59E0B" strokeWidth="1.2" fill="#F59E0B" fillOpacity="0.05" />
-        <circle cx="158" cy="60" r="8" stroke="#EC4899" strokeWidth="1.2" fill="#EC4899" fillOpacity="0.05" />
-
-        <text x="96" y="23" fill="#3B82F6" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M1</text>
-        <text x="96" y="103" fill="#10B981" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M2</text>
-        <text x="38" y="63" fill="#F59E0B" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M3</text>
-        <text x="154" y="63" fill="#EC4899" fontSize="6.5" fontWeight="bold" fontFamily="monospace">M4</text>
-
-        <path d="M 10 10 L 190 10 M 10 110 L 190 110" stroke="#E2E8F0" strokeWidth="0.5" />
-        <circle cx="10" cy="10" r="1.5" fill="#EF4444" opacity="0.4" />
-        <circle cx="190" cy="10" r="1.5" fill="#EF4444" opacity="0.4" />
-        <circle cx="10" cy="110" r="1.5" fill="#EF4444" opacity="0.4" />
-        <circle cx="190" cy="110" r="1.5" fill="#EF4444" opacity="0.4" />
-      </svg>
+      <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100/50 flex flex-col items-center justify-center gap-3 border-b border-slate-150">
+        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xs border ${isStartupEngineering ? 'bg-blue-50/80 text-blue-600 border-blue-100' : 'bg-violet-50/80 text-violet-600 border-violet-100'}`}>
+          <Brain className="h-6 w-6 stroke-[1.8]" />
+        </div>
+        <span className="text-[10px] font-medium tracking-wider text-slate-450 uppercase font-mono">Mind Map Node</span>
+      </div>
     );
   };
 
@@ -280,15 +263,16 @@ export default function StudentMindMapsList() {
     show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 120, damping: 14 } }
   };
 
+  const getCleanPythonDetails = (title: string) => {
+    const cleanTitle = String(title || "").replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
+    const words = cleanTitle.split(" ");
+    const shortWords = words.slice(0, 2);
+    const shortTitle = shortWords.join(" ") + ".py";
+    const funcName = "study" + shortWords.map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
+    return { shortTitle, funcName };
+  };
+
   if (isPythonProgramming) {
-    const getCleanPythonDetails = (title: string) => {
-      const cleanTitle = String(title || "").replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, " ");
-      const words = cleanTitle.split(" ");
-      const shortWords = words.slice(0, 2);
-      const shortTitle = shortWords.join(" ") + ".py";
-      const funcName = "study" + shortWords.map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("");
-      return { shortTitle, funcName };
-    };
 
     return (
       <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden font-mono antialiased selection:bg-[#3776AB]/10 selection:text-[#3776AB] font-jetbrains">
@@ -480,22 +464,32 @@ export default function StudentMindMapsList() {
                   }`}>
                   <div className="h-36 w-full bg-slate-50 border-b border-slate-200/80 overflow-hidden relative">
                     {map.imageUrl && !imageErrors[map.id] ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img 
-                        src={(() => {
-                          let url = map.imageUrl || "";
-                          if (url.includes('drive.google.com')) {
-                            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-                            if (match && match[1]) {
-                              return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800-h400`;
-                            }
+                      (() => {
+                        let url = map.imageUrl || "";
+                        if (url.includes('drive.google.com')) {
+                          const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                          if (match && match[1]) {
+                            return (
+                              <iframe 
+                                src={`https://drive.google.com/file/d/${match[1]}/preview`}
+                                className="w-full h-full border-0 pointer-events-none"
+                                scrolling="no"
+                              />
+                            );
                           }
-                          return url.startsWith('/') || url.startsWith('http') ? url : `/${url}`;
-                        })()} 
-                        alt={map.title} 
-                        className="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" 
-                        onError={() => setImageErrors(prev => ({ ...prev, [map.id]: true }))}
-                      />
+                        }
+                        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+                        const resolvedUrl = (url.startsWith('http') || url.startsWith('data:')) ? url : `${basePath}${url.startsWith('/') ? url : `/${url}`}`;
+                        return (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img 
+                            src={resolvedUrl} 
+                            alt={map.title} 
+                            className="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" 
+                            onError={() => setImageErrors(prev => ({ ...prev, [map.id]: true }))}
+                          />
+                        );
+                      })()
                     ) : (
                       isPremiumTheme ? renderMindMapPlaceholder() : (
                         <div className="w-full h-full flex flex-col items-center justify-center bg-purple-50">
@@ -543,7 +537,7 @@ export default function StudentMindMapsList() {
                           transition={{ type: "spring", stiffness: 350, damping: 22 }}
                           className="h-auto"
                         >
-                          <DesignStudioCard isPremium={true} label={`Map.Node ${map.id.slice(0, 5)}`} className="h-auto">
+<DesignStudioCard isPremium={true} label={`Map.Node ${(map.id || '').slice(0, 5)}`} className="h-auto">
                             {cardContent}
                           </DesignStudioCard>
                         </motion.div>
