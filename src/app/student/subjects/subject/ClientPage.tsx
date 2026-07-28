@@ -38,25 +38,25 @@ const THEME_MAP: Record<string, {
   iconColor: string;
 }> = {
   "ui programming": {
-    bg: "bg-slate-50 text-slate-800 font-sans",
+    bg: "bg-[#FAF9F5] text-black font-sans",
     cardBg: "bg-white",
-    borderClass: "border border-slate-200 rounded-xl",
-    shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-[#ef4444] hover:bg-[#dc2626] text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-555 hover:text-[#ef4444] font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
-    titleHover: "group-hover:text-[#ef4444]",
-    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
-    textMuted: "text-slate-500 font-medium font-sans",
-    badge: "font-sans text-[10px] font-semibold bg-red-50 text-[#ef4444] border border-red-200 px-2.5 py-1 rounded-lg",
+    borderClass: "border-2 border-black rounded-none",
+    shadowClass: "shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(239,68,68,1)] hover:-translate-y-0.5",
+    btnPrimary: "bg-[#EF4444] hover:bg-[#dc2626] text-white font-black uppercase text-[11px] tracking-wider px-3.5 py-1.5 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all cursor-pointer rounded-none",
+    btnGhost: "text-black hover:text-[#EF4444] font-bold text-xs bg-white hover:bg-slate-50 border-2 border-black rounded-none px-3 py-1.5 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[0.5px] hover:translate-y-[0.5px] transition-all inline-flex items-center",
+    titleHover: "group-hover:text-[#EF4444]",
+    textHeading: "text-slate-900 font-black uppercase tracking-tight font-sans",
+    textMuted: "text-zinc-655 font-bold",
+    badge: "font-mono text-[9px] font-black uppercase tracking-wider text-white bg-zinc-900 px-2 py-0.5 border border-black shadow-[1px_1px_0px_rgba(0,0,0,1)]",
     pattern: "",
-    iconColor: "text-[#ef4444]"
+    iconColor: "text-[#EF4444]"
   },
 
   "startup engineering": {
-    bg: "bg-slate-50 text-slate-800 font-sans",
+    bg: "bg-[#F8FAFC] text-slate-800 font-sans",
     cardBg: "bg-white",
     borderClass: "border border-slate-200 rounded-xl",
-    shadowClass: "shadow-sm transition-all duration-200",
+    shadowClass: "shadow-xs hover:shadow-md hover:-translate-y-0.5",
     btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
     btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
     titleHover: "group-hover:text-blue-600",
@@ -68,18 +68,33 @@ const THEME_MAP: Record<string, {
   },
 
   "python programming": {
-    bg: "bg-[#0C0A09]",
-    cardBg: "bg-[#1C1917]",
-    borderClass: "border-4 border-[#3776AB] rounded-none",
-    shadowClass: "shadow-[8px_8px_0px_0px_#FFD43B] hover:shadow-[0px_0px_0px_0px_#FFD43B] hover:translate-x-2 hover:translate-y-2",
-    btnPrimary: "bg-[#FFD43B] text-black hover:bg-[#FFD43B]/90 border-2 border-white rounded-none shadow-[4px_4px_0px_0px_#3776AB] active:shadow-none active:translate-x-1 active:translate-y-1",
-    btnGhost: "text-[#FFD43B] font-black hover:bg-[#FFD43B]/10 rounded-none",
-    titleHover: "group-hover:text-[#FFD43B]",
-    textHeading: "text-[#FFD43B] font-mono uppercase tracking-widest",
-    textMuted: "text-zinc-400 font-mono",
-    badge: "bg-[#3776AB] text-white border-2 border-[#FFD43B] rounded-none font-mono",
-    pattern: "python-matrix-terminal",
-    iconColor: "text-[#FFD43B]"
+    bg: "bg-[#F8FAFC] text-slate-750 font-mono font-jetbrains",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded",
+    shadowClass: "shadow-xs hover:shadow-sm hover:-translate-y-0.5",
+    btnPrimary: "bg-[#3776AB] hover:bg-[#2b5b84] text-white font-bold text-xs rounded shadow-xs py-2 px-4 transition-all font-mono",
+    btnGhost: "text-slate-655 hover:text-[#3776AB] font-mono text-xs hover:bg-slate-50 border border-slate-200 rounded px-3 py-1.5 transition-all bg-white shadow-sm inline-flex items-center",
+    titleHover: "group-hover:text-[#3776AB]",
+    textHeading: "text-slate-900 font-bold tracking-tight font-mono",
+    textMuted: "text-slate-500 font-mono",
+    badge: "bg-blue-50 text-[#3776AB] border border-blue-200 rounded font-mono",
+    pattern: "",
+    iconColor: "text-[#3776AB]"
+  },
+
+  "digital business": {
+    bg: "bg-[#F8FAFC] text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-xs hover:shadow-md hover:-translate-y-0.5",
+    btnPrimary: "bg-[#0F766E] hover:bg-[#0d635c] text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-555 hover:text-[#0F766E] font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-[#0F766E]",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-[#0F766E]/5 text-[#0F766E] border border-[#0F766E]/10 px-2.5 py-1 rounded-lg",
+    pattern: "strategy-board-dot",
+    iconColor: "text-[#0F766E]"
   }
 };
 
@@ -679,44 +694,74 @@ interface ResourceRowItemProps {
   countLabel: string;
   href?: string;
   onClick?: () => void;
+  themeKey?: string;
+  t?: any;
 }
 
-function ResourceRowItem({ icon: Icon, title, description, count, countLabel, href, onClick }: ResourceRowItemProps) {
+function ResourceRowItem({ icon: Icon, title, description, count, countLabel, href, onClick, themeKey, t }: ResourceRowItemProps) {
+  let iconWrapperClass = "";
+  if (themeKey === "ui programming") {
+    iconWrapperClass = "w-8 h-8 rounded-none bg-slate-50 border-2 border-black flex items-center justify-center text-[#ef4444] flex-shrink-0 group-hover:bg-[#ef4444] group-hover:text-white transition-colors";
+  } else if (themeKey === "python programming") {
+    iconWrapperClass = "w-8 h-8 rounded bg-slate-100 border border-slate-200 flex items-center justify-center text-[#3776AB] flex-shrink-0 group-hover:bg-[#3776AB] group-hover:text-white transition-colors";
+  } else if (themeKey === "digital business") {
+    iconWrapperClass = "w-8 h-8 rounded-lg bg-[#0F766E]/10 flex items-center justify-center text-[#0F766E] flex-shrink-0 group-hover:bg-[#0F766E] group-hover:text-white transition-colors";
+  } else {
+    // startup engineering or default
+    iconWrapperClass = "w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors";
+  }
+
+  const containerClass = themeKey === "ui programming"
+    ? "bg-white hover:bg-slate-50 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(239,68,68,1)] hover:-translate-y-0.5 transition-all duration-150 rounded-none group cursor-pointer"
+    : themeKey === "python programming"
+      ? "bg-white hover:bg-slate-50/50 border border-slate-200 shadow-xs hover:shadow-sm hover:-translate-y-0.5 transition-all duration-150 rounded group cursor-pointer"
+      : `bg-white hover:bg-slate-50/80 border border-slate-200 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 rounded-xl group cursor-pointer`;
+
   const content = (
-    <div className="flex items-center justify-between py-3.5 px-4 bg-white hover:bg-slate-50 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(239,68,68,1)] hover:-translate-y-0.5 transition-all duration-150 group cursor-pointer">
+    <div className={`flex items-center justify-between py-3.5 px-4 ${containerClass}`}>
       <div className="flex items-center gap-3 min-w-0 flex-1">
-        <div className="w-8 h-8 rounded-none bg-slate-50 border-2 border-black flex items-center justify-center text-[#ef4444] flex-shrink-0 group-hover:bg-[#ef4444] group-hover:text-white transition-colors">
+        <div className={iconWrapperClass}>
           <Icon className="w-4 h-4" />
         </div>
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-black font-extrabold uppercase text-xs tracking-wider truncate leading-tight">
+          <span className={`text-black font-extrabold uppercase text-xs tracking-wider truncate leading-tight transition-colors ${themeKey === 'python programming' ? 'font-mono' : ''} ${t?.titleHover || ''}`}>
             {title}
           </span>
-          <span className="text-[10px] text-zinc-655 font-bold truncate leading-relaxed">
+          <span className={`text-[10px] truncate leading-relaxed ${
+            themeKey === 'python programming' ? 'text-slate-500 font-mono' : 'text-zinc-655 font-bold'
+          }`}>
             {description}
           </span>
         </div>
       </div>
       <div className="flex items-center gap-2 flex-shrink-0 pl-2">
         {count !== undefined && (
-          <span className="text-[9px] font-mono font-bold uppercase bg-slate-100 border border-black px-1.5 py-0.5 text-zinc-700">
+          <span className={`text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 ${
+            themeKey === 'ui programming'
+              ? 'bg-slate-100 border border-black text-zinc-700'
+              : themeKey === 'python programming'
+                ? 'bg-slate-100 border border-slate-200 text-slate-650 rounded'
+                : 'bg-slate-100 text-slate-600 rounded-md'
+          }`}>
             {count} {countLabel}
           </span>
         )}
-        <ChevronRight className="w-4 h-4 text-black group-hover:translate-x-0.5 transition-transform" />
+        <ChevronRight className={`w-4 h-4 group-hover:translate-x-0.5 transition-transform ${
+          themeKey === 'python programming' ? 'text-[#3776AB]' : 'text-black'
+        }`} />
       </div>
     </div>
   );
 
   if (href) {
     return (
-      <Link href={href} className="block outline-none focus-visible:ring-2 focus-visible:ring-black">
+      <Link href={href} className="block outline-hidden focus-visible:ring-2 focus-visible:ring-black">
         {content}
       </Link>
     );
   }
   return (
-    <button onClick={onClick} className="w-full text-left outline-none focus-visible:ring-2 focus-visible:ring-black border-none bg-transparent p-0">
+    <button onClick={onClick} className="w-full text-left outline-hidden focus-visible:ring-2 focus-visible:ring-black border-none bg-transparent p-0">
       {content}
     </button>
   );
@@ -997,2259 +1042,525 @@ export default function StudentDashboard() {
   const isPythonProgramming = subjectId === 'id_hdzqxse2n' || subjectNameLower.includes("python");
   const isStartupEngineering = subjectNameLower.includes("startup") || subjectNameLower.includes("engineering");
 
-  const pythonModules = isPythonProgramming
-    ? ((modules && modules.length > 0) ? modules : PYTHON_FALLBACK_MODULES)
-    : [];  // ==========================================
-  // RENDER VARIANT C: UI PROGRAMMING REDESIGN (PREMIUM SaaS STYLE)
-  // ==========================================
-  if (isUiProgramming) {
-    const filteredModules = modules.filter((mod: any) => {
-      if (!searchQuery.trim()) return true;
-      const query = searchQuery.toLowerCase();
-      return (
-        String(mod.title || "").toLowerCase().includes(query) ||
-        String(mod.description || "").toLowerCase().includes(query) ||
-        (mod.subtopics || []).some((st: any) => String(st.title || "").toLowerCase().includes(query))
-      );
-    });
-
-    const notesCount = modules.length;
-    const mindmapsCount = mindmaps.length;
-    const infographicsCount = infographics.length;
-    const flashcardsCount = flashcardDecks.length;
-    const quizzesCount = quizzesWithAttempts.length;
-    const pdfCount = subjectResources.length;
-
-    // Count video subtopics
-    const videosCount = modules.reduce((acc: number, mod: any) => 
-      acc + (mod.subtopics || []).filter((st: any) => !!st.videoUrl || st.type === "videoUrl" || st.selectedResourceType === "videoUrl").length, 0
-    );
-
-    // Count audio subtopics
-    const audiosCount = modules.reduce((acc: number, mod: any) => 
-      acc + (mod.subtopics || []).filter((st: any) => !!st.audioUrl || st.type === "audioUrl" || st.selectedResourceType === "audioUrl").length, 0
-    );
-
-    const actualSimulationsCount = simulationsCount ?? 0;
-
-    return (
-      <div className="min-h-screen bg-[#FAF9F5] text-black pb-24 relative overflow-hidden font-sans antialiased selection:bg-indigo-600/10 selection:text-[#4f46e5]">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-black" />
-        <FloatingBackground />
-        
-        <div className="container mx-auto px-4 mt-8 relative z-10 max-w-6xl space-y-12">
-          
-          {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs text-zinc-655 font-bold" aria-label="Breadcrumb">
-            <Link href="/student/subjects" className="hover:text-[#4f46e5] hover:underline transition-all">
-              Subjects
-            </Link>
-            <span className="text-zinc-400">/</span>
-            <span className="text-black uppercase tracking-wider font-extrabold">{subject.name}</span>
-          </nav>
-
-          {/* 1. SUBJECT HEADER */}
-          <header className="relative bg-white rounded-none border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="space-y-4 flex-1 w-full">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#ef4444] font-black bg-red-50 px-2.5 py-1 border-2 border-black shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)]">
-                  Subject Workspace
-                </span>
-              </div>
-              <h1 className="text-3xl font-black uppercase text-slate-900 tracking-tight leading-none font-sans">
-                {subject.name}
-              </h1>
-              <p className="text-zinc-700 text-sm font-bold max-w-2xl leading-relaxed">
-                {subject.description || "Master the concepts of modern typography, layouts, user centered wireframes, interface hierarchies, and usability rules."}
-              </p>
-
-              {/* Statistics Panel */}
-              <div className="flex flex-wrap gap-4 pt-2">
-                <span className="text-[10px] font-mono font-extrabold uppercase bg-slate-100 text-zinc-800 border-2 border-black px-2.5 py-1">
-                  📚 {notesCount} Modules
-                </span>
-                <span className="text-[10px] font-mono font-extrabold uppercase bg-slate-100 text-zinc-800 border-2 border-black px-2.5 py-1">
-                  🎥 {videosCount} Videos
-                </span>
-                <span className="text-[10px] font-mono font-extrabold uppercase bg-slate-100 text-zinc-800 border-2 border-black px-2.5 py-1">
-                  🎮 {actualSimulationsCount} Simulations
-                </span>
-                <span className="text-[10px] font-mono font-extrabold uppercase bg-slate-100 text-zinc-800 border-2 border-black px-2.5 py-1">
-                  📄 {pdfCount} Resources
-                </span>
-              </div>
-
-              {/* Search Bar */}
-              <div className="relative max-w-md w-full pt-2">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                <input
-                  type="text"
-                  placeholder="Search modules or subtopics..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 text-xs text-black bg-[#FAF9F5] border-2 border-black rounded-none shadow-[2px_2px_0px_rgba(0,0,0,1)] outline-hidden focus:shadow-[4px_4px_0px_rgba(239,68,68,1)] focus:-translate-x-0.5 focus:-translate-y-0.5 transition-all font-bold"
-                />
-              </div>
-            </div>
-          </header>
-
-          {/* 2. MODULE LIBRARY */}
-          <section className="space-y-6">
-            <div className="border-b-4 border-black pb-3">
-              <h2 className="text-xl font-black uppercase tracking-tight text-black">
-                Module Library
-              </h2>
-              <p className="text-xs text-zinc-655 font-bold mt-1">
-                Explore the primary learning structure of this course
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredModules.map((mod: any, index: number) => {
-                const totalTopics = mod.subtopics?.length || 0;
-                return (
-                  <article 
-                    key={mod.id || index} 
-                    className="bg-[#FAF9F5] border-2 border-black p-4 md:p-5 shadow-[3px_3px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between group rounded-none"
-                  >
-                    <div className="space-y-3">
-                      {/* Top Header Row: Refined Badge + Hours & Topics */}
-                      <div className="flex items-center justify-between">
-                        <span className="text-[9px] font-mono font-black uppercase tracking-wider text-white bg-zinc-900 px-2 py-0.5 border border-black shadow-[1px_1px_0px_rgba(0,0,0,1)]">
-                          Module {mod.moduleNo < 10 ? `0${mod.moduleNo}` : mod.moduleNo}
-                        </span>
-                        <div className="flex items-center gap-3">
-                          <span className="text-[11px] font-mono font-bold text-zinc-600 flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5 text-zinc-400" /> {mod.hours || 4} Hrs
-                          </span>
-                          <span className="text-[11px] font-mono font-bold text-zinc-600 flex items-center gap-1">
-                            <BookOpen className="w-3.5 h-3.5 text-zinc-400" /> {totalTopics} Topics
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Module Title & Description */}
-                      <div className="space-y-1.5">
-                        <h3 className="text-base sm:text-lg font-black uppercase text-zinc-900 tracking-tight leading-snug group-hover:text-[#EF4444] transition-colors">
-                          {mod.title ? mod.title.replace(/^[●•]\s*/, "") : `Module ${mod.moduleNo}`}
-                        </h3>
-                        {mod.description && (
-                          <p className="text-xs text-zinc-600 font-medium leading-relaxed line-clamp-2">
-                            {mod.description}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Topics Included Preview */}
-                      {mod.subtopics && mod.subtopics.length > 0 && (
-                        <div className="pt-2.5 border-t border-zinc-300/70 space-y-1">
-                          <span className="text-[10px] font-mono uppercase tracking-wider font-extrabold text-zinc-500 block">
-                            Topics Included
-                          </span>
-                          <ul className="space-y-1">
-                            {mod.subtopics.slice(0, 3).map((sub: any, sIdx: number) => {
-                              const titleStr = sub.title ? sub.title.replace(/^[●•]\s*/, "") : sub.name || `Topic ${sIdx + 1}`;
-                              return (
-                                <li key={sIdx} className="text-xs text-zinc-800 font-semibold flex items-center gap-1.5 truncate">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#EF4444] shrink-0" />
-                                  <span className="truncate">{titleStr}</span>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Bottom CTA Row: Compact, inviting CTA positioned bottom-right */}
-                    <div className="pt-3.5 mt-3 border-t border-zinc-300/70 flex items-center justify-between">
-                      <span className="text-[11px] font-mono font-bold text-zinc-500 uppercase tracking-wider">
-                        Module {mod.moduleNo < 10 ? `0${mod.moduleNo}` : mod.moduleNo}
-                      </span>
-                      <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
-                        <button className="inline-flex items-center gap-1.5 bg-[#EF4444] hover:bg-[#dc2626] text-white font-black uppercase text-[11px] tracking-wider px-3.5 py-1.5 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all cursor-pointer rounded-none group/btn">
-                          <span>Open Module</span>
-                          <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-1" />
-                        </button>
-                      </Link>
-                    </div>
-                  </article>
-                );
-              })}
-              {filteredModules.length === 0 && (
-                <div className="col-span-1 md:col-span-2 text-center py-12 border-4 border-dashed border-zinc-300 bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                  <Info className="w-8 h-8 mx-auto text-zinc-400" />
-                  <p className="text-sm font-bold text-zinc-700 mt-2">No matching modules found in this subject.</p>
-                </div>
-              )}
-            </div>
-          </section>
-
-          {/* Secondary Resource Sections Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
-            
-            {/* 3. RESOURCES SECTION */}
-            <section className="space-y-4">
-              <div className="border-b-4 border-black pb-2">
-                <h2 className="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
-                  <FolderOpen className="w-4 h-4 text-[#ef4444]" />
-                  Resources
-                </h2>
-              </div>
-              <div className="space-y-3">
-                <ResourceRowItem 
-                  icon={BookOpen}
-                  title="Notes"
-                  description="Lecture notes & explanations"
-                  count={notesCount}
-                  countLabel="Modules"
-                  href={`/student/subjects/subject/notes?subjectId=${subjectId}`}
-                />
-                <ResourceRowItem 
-                  icon={Play}
-                  title="Videos"
-                  description="Recorded video walkthroughs"
-                  count={videosCount}
-                  countLabel="Videos"
-                  href={`/student/subjects/subject/videos?subjectId=${subjectId}`}
-                />
-                <ResourceRowItem 
-                  icon={FileText}
-                  title="PDF Resources"
-                  description="Reference manuals & slides"
-                  count={pdfCount}
-                  countLabel="Files"
-                  href={`/student/subjects/subject/pdfs?subjectId=${subjectId}`}
-                />
-                <ResourceRowItem 
-                  icon={Headphones}
-                  title="Audio Lessons"
-                  description="Audio explanations & lectures"
-                  count={audiosCount}
-                  countLabel="Audios"
-                  href={`/student/subjects/subject/audio?subjectId=${subjectId}`}
-                />
-              </div>
-            </section>
-
-            {/* 4. PRACTICE SECTION */}
-            <section className="space-y-4">
-              <div className="border-b-4 border-black pb-2">
-                <h2 className="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
-                  <Award className="w-4 h-4 text-[#ef4444]" />
-                  Practice
-                </h2>
-              </div>
-              <div className="space-y-3">
-                <ResourceRowItem 
-                  icon={Zap}
-                  title="Flashcards"
-                  description="Active recall flashcard decks"
-                  count={flashcardsCount}
-                  countLabel="Decks"
-                  href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}
-                />
-                <ResourceRowItem 
-                  icon={CheckCircle}
-                  title="Quizzes"
-                  description="Adaptive subject assessments"
-                  count={quizzesCount}
-                  countLabel="Quizzes"
-                  href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}
-                />
-                <ResourceRowItem 
-                  icon={Gamepad2}
-                  title="Simulations"
-                  description="Interactive sandbox exercises"
-                  count={actualSimulationsCount}
-                  countLabel="Sims"
-                  href={`/student/subjects/subject/simulations?subjectId=${subjectId}`}
-                />
-              </div>
-            </section>
-
-            {/* 5. VISUAL LEARNING SECTION */}
-            <section className="space-y-4">
-              <div className="border-b-4 border-black pb-2">
-                <h2 className="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-[#ef4444]" />
-                  Visual Learning
-                </h2>
-              </div>
-              <div className="space-y-3">
-                <ResourceRowItem 
-                  icon={Terminal}
-                  title="Mind Maps"
-                  description="Visual concept layout topologies"
-                  count={mindmapsCount}
-                  countLabel="Maps"
-                  href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}
-                />
-                <ResourceRowItem 
-                  icon={Presentation}
-                  title="Infographics"
-                  description="Design grids & visual guidelines"
-                  count={infographicsCount}
-                  countLabel="Graphics"
-                  href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}
-                />
-              </div>
-            </section>
-
-          </div>
-
-          {/* PDF Dialog Modal */}
-          {pdfModalOpen && (
-            <div 
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="pdf-modal-title"
-            >
-              <div className="bg-[#FAF9F5] border-4 border-black p-6 md:p-8 max-w-lg w-full shadow-[8px_8px_0px_rgba(0,0,0,1)] relative animate-in fade-in zoom-in-95 duration-150">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h2 id="pdf-modal-title" className="text-xl font-black uppercase tracking-tight text-black flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-[#4f46e5]" />
-                      PDF Resources
-                    </h2>
-                    <p className="text-zinc-650 text-xs font-bold mt-1">
-                      Select a textbook or reading manual to view in Google Drive
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setPdfModalOpen(false)}
-                    className="text-black hover:text-red-500 font-mono font-black text-sm border-2 border-black bg-white hover:bg-slate-50 px-2 py-0.5 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-black"
-                    aria-label="Close dialog"
-                  >
-                    ESC
-                  </button>
-                </div>
-
-                <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
-                  {subjectResources.map((resource: any, index: number) => (
-                    <a
-                      key={index}
-                      href={resource.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between p-3.5 bg-white hover:bg-indigo-50/50 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(79,70,229,1)] hover:-translate-y-0.5 transition-all duration-150 group outline-none focus-visible:ring-2 focus-visible:ring-black"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-7 h-7 bg-indigo-50 border border-black text-[#4f46e5] flex items-center justify-center flex-shrink-0 group-hover:bg-[#4f46e5] group-hover:text-white transition-colors">
-                          <FileText className="w-4 h-4" />
-                        </div>
-                        <span className="text-xs font-extrabold uppercase text-slate-800 tracking-wide truncate">
-                          {resource.title}
-                        </span>
-                      </div>
-                      <ExternalLink className="w-4 h-4 text-black flex-shrink-0" />
-                    </a>
-                  ))}
-                  {subjectResources.length === 0 && (
-                    <div className="text-center py-6 text-xs text-zinc-500 border-2 border-dashed border-zinc-300">
-                      No PDF resources uploaded yet.
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-6 flex justify-end">
-                  <button
-                    onClick={() => setPdfModalOpen(false)}
-                    className="px-4 py-2 bg-black hover:bg-zinc-900 text-white text-xs font-black uppercase border-2 border-black shadow-[2px_2px_0px_rgba(79,70,229,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-black"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-        </div>
-      </div>
-    );
-  }
-
-  // ==========================================
-  // RENDER VARIANT A: DIGITAL BUSINESS & TRANSFORMATION (PREMIUM LIGHT THEME)
-  // ==========================================
-  if (isDigitalBusiness) {
-    return (
-      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 pb-20 relative overflow-hidden font-sans antialiased selection:bg-[#3b82f6]/10 selection:text-[#3b82f6]">
-        {/* Strategy-board dot pattern grid overlay */}
-        <div className="absolute inset-0 pointer-events-none z-0" style={{
-          backgroundImage: `radial-gradient(#e2e8f0 1.2px, transparent 1.2px)`,
-          backgroundSize: "24px 24px"
-        }} />
-
-        <div className="container mx-auto px-4 mt-8 relative z-10">
-
-          {/* HEADER SECTION - CSS Stock Market Theme */}
-          <div className="relative overflow-hidden bg-white rounded-xl border border-slate-200 shadow-sm p-6 lg:p-8 flex flex-col md:flex-row justify-between items-center w-full mb-8">
-            {/* Left Side (Typography - High Z-Index) */}
-            <div className="z-10 relative max-w-2xl w-full">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-[10px] uppercase font-mono tracking-wider text-[#0F766E] font-bold bg-[#0F766E]/5 px-2 py-0.5 rounded border border-[#0F766E]/10">
-                  Workspace
-                </span>
-                <span className="text-[10px] font-mono text-slate-400">course.console</span>
-              </div>
-              <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 font-sans">
-                {subject.name}
-              </h1>
-              <p className="text-slate-500 text-xs font-sans mt-1.5">
-                Portal for Digital Business & Transformation course, modules, quizzes, and resources.
-              </p>
-            </div>
-
-            {/* Right Side (Status Badge - High Z-Index) */}
-            <div className="z-10 relative mt-4 md:mt-0 flex-shrink-0">
-              <div className="bg-white/90 backdrop-blur-xs px-3 py-1.5 border border-slate-200/80 flex items-center font-mono text-[10px] text-slate-655 rounded-md shadow-xs">
-                <span className="flex items-center gap-1.5 font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-[#0F766E]" />
-                  STATUS: ACTIVE
-                </span>
-              </div>
-            </div>
-
-            {/* Background Art (Stock Market Chart - Low Z-Index) */}
-            <div className="absolute right-0 top-0 bottom-0 w-1/2 z-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%)] pointer-events-none select-none">
-              {/* Element A: The Data Grid */}
-              <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:1rem_1rem] opacity-70" />
-
-              {/* Element C: CSS Candlesticks */}
-              {/* Candlestick 1 - Green */}
-              <div className="absolute bottom-[20%] left-[10%] flex flex-col items-center">
-                <div className="w-[1.5px] h-12 bg-emerald-500/40" />
-                <div className="absolute top-2 w-2.5 h-6 bg-emerald-500 rounded-[1.5px]" />
-              </div>
-
-              {/* Candlestick 2 - Green */}
-              <div className="absolute bottom-[35%] left-[25%] flex flex-col items-center">
-                <div className="w-[1.5px] h-16 bg-emerald-500/40" />
-                <div className="absolute top-3 w-2.5 h-8 bg-emerald-500 rounded-[1.5px]" />
-              </div>
-
-              {/* Candlestick 3 - Red */}
-              <div className="absolute bottom-[25%] left-[40%] flex flex-col items-center">
-                <div className="w-[1.5px] h-10 bg-rose-400/40" />
-                <div className="absolute top-2.5 w-2.5 h-5 bg-rose-400 rounded-[1.5px]" />
-              </div>
-
-              {/* Candlestick 4 - Green */}
-              <div className="absolute bottom-[50%] left-[55%] flex flex-col items-center">
-                <div className="w-[1.5px] h-18 bg-emerald-500/40" />
-                <div className="absolute top-4 w-2.5 h-9 bg-emerald-500 rounded-[1.5px]" />
-              </div>
-
-              {/* Candlestick 5 - Red */}
-              <div className="absolute bottom-[40%] left-[70%] flex flex-col items-center">
-                <div className="w-[1.5px] h-12 bg-rose-400/40" />
-                <div className="absolute top-3 w-2.5 h-5 bg-rose-400 rounded-[1.5px]" />
-              </div>
-
-              {/* Candlestick 6 - Green */}
-              <div className="absolute bottom-[65%] left-[85%] flex flex-col items-center">
-                <div className="w-[1.5px] h-20 bg-emerald-500/40" />
-                <div className="absolute top-4 w-2.5 h-11 bg-emerald-500 rounded-[1.5px]" />
-              </div>
-
-              {/* Element B: Upward trend line with shadow glow */}
-              <svg className="absolute inset-0 w-full h-full text-teal-500" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path
-                  d="M 0 85 L 20 65 L 35 72 L 55 45 L 70 52 L 90 25 L 100 15"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ filter: "drop-shadow(0px 3px 6px rgba(20, 184, 166, 0.4))" }}
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* BUSINESS TRANSFORMATION CASE STUDY SPOTLIGHT CARDS */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-            {CASE_STUDIES.map((study) => (
-              <div
-                key={study.id}
-                onClick={() => setSelectedCaseStudy(study)}
-                className={`bg-white border border-slate-200 p-5 rounded-lg relative shadow-sm transition-all duration-300 group cursor-pointer overflow-hidden flex flex-col justify-between min-h-[180px] hover:-translate-y-1 
-                  ${study.id === "netflix" ? "hover:border-rose-350 hover:bg-rose-50/20 hover:shadow-[0_8px_30px_rgba(244,63,94,0.06)]" : ""}
-                  ${study.id === "amazon" ? "hover:border-amber-350 hover:bg-amber-50/20 hover:shadow-[0_8px_30px_rgba(245,158,11,0.06)]" : ""}
-                  ${study.id === "uber" ? "hover:border-emerald-350 hover:bg-emerald-50/20 hover:shadow-[0_8px_30px_rgba(16,185,129,0.06)]" : ""}
-                  ${study.id === "adobe" ? "hover:border-indigo-350 hover:bg-indigo-50/20 hover:shadow-[0_8px_30px_rgba(99,102,241,0.06)]" : ""}
-                `}
-              >
-                {/* Watermark SVGs */}
-                {study.watermark === "streaming" && (
-                  <svg className={`absolute right-2 bottom-2 w-28 h-28 ${study.svgClass} pointer-events-none opacity-[0.08] group-hover:opacity-[0.26] group-hover:scale-105 transition-all duration-500`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                    <rect x="2" y="4" width="20" height="12" rx="1.5" />
-                    <path d="M6 20h12M12 16v4" />
-                    <path d="M9 7l6 3-6 3V7z" fill="currentColor" fillOpacity="0.1" />
-                  </svg>
-                )}
-                {study.watermark === "ecosystem" && (
-                  <svg className={`absolute right-2 bottom-2 w-28 h-28 ${study.svgClass} pointer-events-none opacity-[0.08] group-hover:opacity-[0.26] group-hover:scale-105 transition-all duration-500`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                    <circle cx="12" cy="12" r="4" strokeDasharray="2 2" />
-                    <circle cx="12" cy="12" r="8" />
-                    <path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
-                    <circle cx="12" cy="4" r="1.5" fill="currentColor" />
-                    <circle cx="12" cy="20" r="1.5" fill="currentColor" />
-                    <circle cx="4" cy="12" r="1.5" fill="currentColor" />
-                    <circle cx="20" cy="12" r="1.5" fill="currentColor" />
-                  </svg>
-                )}
-                {study.watermark === "mobility" && (
-                  <svg className={`absolute right-2 bottom-2 w-28 h-28 ${study.svgClass} pointer-events-none opacity-[0.08] group-hover:opacity-[0.26] group-hover:scale-105 transition-all duration-500`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                    <path d="M3 5h18M3 12h18M3 19h18" strokeDasharray="3 3" />
-                    <path d="M7 2v20M17 2v20" strokeDasharray="3 3" />
-                    <path d="M7 19h5a2 2 0 002-2v-5a2 2 0 012-2h5" stroke="currentColor" strokeWidth="1.5" />
-                    <circle cx="7" cy="19" r="2.5" fill="currentColor" fillOpacity="0.2" />
-                    <circle cx="21" cy="10" r="2.5" fill="currentColor" fillOpacity="0.2" />
-                  </svg>
-                )}
-                {study.watermark === "creative" && (
-                  <svg className={`absolute right-2 bottom-2 w-28 h-28 ${study.svgClass} pointer-events-none opacity-[0.08] group-hover:opacity-[0.26] group-hover:scale-105 transition-all duration-500`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                    <path d="M4 18c4-12 12-12 16 0" strokeWidth="1.5" />
-                    <circle cx="4" cy="18" r="2" fill="currentColor" />
-                    <circle cx="20" cy="18" r="2" fill="currentColor" />
-                    <circle cx="12" cy="9.5" r="2.5" fill="currentColor" />
-                    <path d="M12 9.5l-4-4M12 9.5l4-4" strokeDasharray="1 1" />
-                    <circle cx="8" cy="5.5" r="1" />
-                    <circle cx="16" cy="5.5" r="1" />
-                  </svg>
-                )}
-
-                <div className="relative z-10">
-                  <div className="flex justify-between items-start">
-                    <h3 className={`text-lg font-bold font-sans text-slate-900 tracking-tight transition-colors duration-300
-                      ${study.id === "netflix" ? "group-hover:text-rose-700" : ""}
-                      ${study.id === "amazon" ? "group-hover:text-amber-700" : ""}
-                      ${study.id === "uber" ? "group-hover:text-emerald-700" : ""}
-                      ${study.id === "adobe" ? "group-hover:text-indigo-700" : ""}
-                    `}>
-                      {study.company}
-                    </h3>
-                    <span className={`text-[9px] font-mono font-bold ${study.tagClass} border px-2 py-0.5 rounded uppercase tracking-wider`}>
-                      {study.tag}
-                    </span>
-                  </div>
-                  <p className="text-[12px] text-slate-500 font-sans mt-3 leading-relaxed">
-                    {study.summary}
-                  </p>
-                </div>
-
-                <div className="mt-6 pt-3 border-t border-slate-100 flex justify-between items-center relative z-10">
-                  <span className={`text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1 transition-colors
-                    ${study.id === "netflix" ? "text-rose-750 group-hover:text-rose-800" : ""}
-                    ${study.id === "amazon" ? "text-amber-750 group-hover:text-amber-800" : ""}
-                    ${study.id === "uber" ? "text-emerald-750 group-hover:text-emerald-800" : ""}
-                    ${study.id === "adobe" ? "text-indigo-750 group-hover:text-indigo-800" : ""}
-                  `}>
-                    View Insight
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-                  </span>
-                  <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest">case.spotlight</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* TWO COLUMN MATRIX CONTAINER */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            {/* LEFT & CENTER COLUMN ACTIONS */}
-            <div className="lg:col-span-2 space-y-6">
-
-              {/* MODULES AS WORKSTREAMS BRIEF */}
-              <div className="bg-white border border-slate-200 p-6 shadow-sm rounded-lg">
-                <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-150">
-                  <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 font-sans">Modules</h2>
-                  <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
-                    <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-650 hover:border-indigo-300/80 transition-colors cursor-pointer border border-slate-200 px-2.5 py-1 rounded bg-white shadow-xs view-all-btn inline-block">View All Modules →</span>
-                  </Link>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {modules.slice(0, 4).map((mod: any, index: number) => (
-                    <Link key={mod.id} href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
-                      <div className="bg-white border border-slate-200 p-5 rounded-lg hover:border-[#1E3A8A] hover:bg-slate-50/30 hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300 flex flex-col justify-between h-full group shadow-xs">
-                        <div>
-                          <div className="flex justify-between items-start mb-2">
-                            <span className="text-[9px] font-mono text-slate-400 font-bold uppercase tracking-wider">
-                              Module 0{index + 1}
-                            </span>
-                            <span className="text-[9px] font-mono text-teal-700 border border-teal-200/60 px-1.5 py-0.5 rounded bg-teal-500/10 font-semibold uppercase group-hover:bg-teal-650 group-hover:text-white group-hover:border-teal-650 transition-colors duration-300">
-                              Active
-                            </span>
-                          </div>
-                          <h3 className="text-[13.5px] font-bold font-sans text-slate-800 tracking-tight leading-snug group-hover:text-[#1E3A8A] transition-colors pr-2">
-                            {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
-                          </h3>
-                          <p className="text-[11px] text-slate-500 font-sans mt-2 line-clamp-3 leading-relaxed">
-                            {mod.description || "Analyze digital business transformation models, legacy IT architectures, and core strategic optimization parameters."}
-                          </p>
-                        </div>
-
-                        <div className="mt-5 pt-3.5 border-t border-slate-100 flex justify-end items-center font-mono text-[9.5px] text-slate-400">
-                          <span className="text-[#1E3A8A] font-semibold flex items-center gap-1 group-hover:text-indigo-750 transition-colors duration-300">
-                            {mod.subtopics?.length || 0} Units
-                            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* ASSESSMENT STRATEGIES (QUIZZES) */}
-              <div className="bg-white border border-slate-200 p-6 shadow-sm rounded-lg">
-                <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-150">
-                  <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2 font-sans">
-                    Quizzes
-                  </h2>
-                  <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
-                    <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-655 hover:border-indigo-300/80 transition-colors cursor-pointer border border-slate-200 px-2.5 py-1 rounded bg-white shadow-xs view-all-btn inline-block">View All Quizzes →</span>
-                  </Link>
-                </div>
-                <div className="space-y-3">
-                  {quizzesWithAttempts.slice(0, 6).map((quiz: any) => (
-                    <div key={quiz.id} className="bg-white border border-slate-200 p-4 flex justify-between items-center rounded-lg hover:border-[#1E3A8A] hover:bg-slate-50/30 hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300 shadow-xs group">
-                      <div>
-                        <div className="font-sans font-bold text-xs text-slate-800 tracking-tight group-hover:text-[#1E3A8A] transition-colors duration-300">{getQuizDisplayTitle(quiz, modules)}</div>
-                      </div>
-                      <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`}>
-                        <Button className="bg-gradient-to-r from-blue-700 via-indigo-700 to-indigo-800 hover:from-blue-800 hover:to-indigo-900 text-white font-mono rounded-md font-semibold tracking-wider uppercase px-4 text-[10px] h-8 border-none shadow-md group-hover:scale-105 transition-all duration-300 flex items-center gap-1">
-                          Start Quiz
-                        </Button>
-                      </Link>
-                    </div>
-                  ))}
-                  {quizzesWithAttempts.length === 0 && (
-                    <div className="p-4 border border-dashed border-slate-200 text-center text-slate-400 font-mono text-xs rounded-lg">NO ACTIVE QUIZZES FOUND</div>
-                  )}
-                </div>
-              </div>
-
-              {/* TWO COLUMN GRID FOR FLASHCARDS AND MINDMAPS */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white border border-slate-200 p-6 shadow-sm rounded-lg">
-                  <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-150">
-                    <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2 font-sans">
-                      <Zap className="w-3.5 h-3.5 text-amber-600" /> Flashcard Decks
-                    </h2>
-                    <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
-                      <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-650 hover:border-indigo-300/80 transition-colors cursor-pointer border border-slate-200 px-2.5 py-1 rounded bg-white shadow-xs view-all-btn inline-block">View All Decks →</span>
-                    </Link>
-                  </div>
-                  <div className="space-y-3">
-                    {flashcardDecks.slice(0, 3).map((deck: any) => (
-                      <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
-                        <div className="bg-white border border-slate-200 p-3 hover:border-[#1E3A8A] hover:bg-slate-50/30 hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300 flex justify-between items-center rounded-lg group shadow-xs">
-                          <span className="font-semibold text-xs text-slate-700 font-sans tracking-tight line-clamp-1 group-hover:text-[#1E3A8A] transition-colors duration-300">{getFlashcardDisplayTitle(deck, modules)}</span>
-                          <span className="text-slate-550 text-[9px] font-mono border border-slate-200 px-1.5 py-0.5 rounded bg-slate-50 font-bold whitespace-nowrap group-hover:bg-[#1E3A8A] group-hover:text-white group-hover:border-[#1E3A8A] transition-all duration-300">{deck.cards?.length || 0} CARDS</span>
-                        </div>
-                      </Link>
-                    ))}
-                    {flashcardDecks.length === 0 && (
-                      <div className="p-3 border border-dashed border-slate-200 text-center text-slate-400 font-mono text-[9.5px] rounded-lg">EMPTY REPOSITORY</div>
-                    )}
-                  </div>
-                </div>
-
-                {/* MIND MAPS ARCHITECTURE SECTION */}
-                <div className="bg-white border border-slate-200 p-6 shadow-sm rounded-lg">
-                  <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-150">
-                    <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2 font-sans">
-                      <Brain className="w-3.5 h-3.5 text-[#ef4444]" /> Mind Maps
-                    </h2>
-                    <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
-                      <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-650 hover:border-indigo-300/80 transition-colors cursor-pointer border border-slate-200 px-2.5 py-1 rounded bg-white shadow-xs view-all-btn inline-block">View All Mind Maps →</span>
-                    </Link>
-                  </div>
-                  <div className="space-y-3">
-                    {mindmaps.slice(0, 3).map((map: any) => (
-                      <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`}>
-                        <div className="bg-white border border-slate-200 p-3 hover:border-[#1E3A8A] hover:bg-slate-50/30 hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300 flex justify-between items-center font-mono text-xs rounded-lg group shadow-xs">
-                          <span className="font-semibold text-xs text-slate-700 tracking-tight line-clamp-1 group-hover:text-[#1E3A8A] transition-colors duration-300">{map.title}</span>
-                          <span className="text-slate-550 flex items-center gap-1 text-[9px] font-mono border border-slate-200 px-1.5 py-0.5 rounded bg-slate-50 font-bold group-hover:bg-[#1E3A8A] group-hover:text-white group-hover:border-[#1E3A8A] transition-all duration-300">
-                            PLOT <ExternalLink className="w-2.5 h-2.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-                          </span>
-                        </div>
-                      </Link>
-                    ))}
-                    {mindmaps.length === 0 && (
-                      <div className="p-3 border border-dashed border-slate-200 text-center text-slate-400 font-mono text-[9.5px] rounded-lg">NO MIND MAPS LOGGED</div>
-                    )}
-                  </div>
-                </div>
-
-                {/* INFOGRAPHICS ARCHITECTURE SECTION */}
-                <div className="bg-white border border-slate-200 p-6 shadow-sm rounded-lg">
-                  <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-150">
-                    <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2 font-sans">
-                      <Brain className="w-3.5 h-3.5 text-pink-600" /> Infographics
-                    </h2>
-                    <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
-                      <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-650 hover:border-indigo-300/80 transition-colors cursor-pointer border border-slate-200 px-2.5 py-1 rounded bg-white shadow-xs view-all-btn inline-block">View All Infographics →</span>
-                    </Link>
-                  </div>
-                  <div className="space-y-3">
-                    {infographics.slice(0, 3).map((info: any) => (
-                      <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`}>
-                        <div className="bg-white border border-slate-200 p-3 hover:border-[#1E3A8A] hover:bg-slate-50/30 hover:shadow-[0_8px_30px_rgba(30,58,138,0.06)] hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300 flex justify-between items-center font-mono text-xs rounded-lg group shadow-xs">
-                          <span className="font-semibold text-xs text-slate-700 tracking-tight line-clamp-1 group-hover:text-[#1E3A8A] transition-colors duration-300">{info.title}</span>
-                          <span className="text-slate-550 flex items-center gap-1 text-[9px] font-mono border border-slate-200 px-1.5 py-0.5 rounded bg-slate-50 font-bold group-hover:bg-[#1E3A8A] group-hover:text-white group-hover:border-[#1E3A8A] transition-all duration-300">
-                            VIEW <ExternalLink className="w-2.5 h-2.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-                          </span>
-                        </div>
-                      </Link>
-                    ))}
-                    {infographics.length === 0 && (
-                      <div className="p-3 border border-dashed border-slate-200 text-center text-slate-400 font-mono text-[9.5px] rounded-lg">NO INFOGRAPHICS LOGGED</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* SIDEBAR DASHBOARD SYSTEM ASSETS */}
-            <div className="space-y-6">
-
-              {/* REFERENCE DOSSIERS */}
-              <div className="bg-white border border-slate-200 p-5 rounded-lg shadow-sm">
-                <div className="pb-3 border-b border-slate-150 mb-4">
-                  <h3 className="text-xs font-bold uppercase tracking-wider flex items-center text-slate-900 font-sans">
-                    <FileText className="w-4 h-4 mr-2 text-[#1E3A8A]" /> Resources
-                  </h3>
-                </div>
-                <div className="space-y-3">
-                  {subjectResources.map((resource: any, idx: number) => (
-                    <div key={idx} className="bg-white border border-slate-200 p-2.5 rounded-lg hover:border-[#1E3A8A] transition-colors shadow-xs">
-                      <SubjectResourceCard title={resource.title} type={resource.type} link={resource.link} />
-                    </div>
-                  ))}
-                  {subjectResources.length === 0 && (
-                    <p className="text-[10px] font-mono text-slate-400 text-center py-2 border border-dashed border-slate-200 rounded-lg">NO DATA LOGGED.</p>
-                  )}
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        {/* CASE STUDY DETAIL MODAL */}
-        <AnimatePresence>
-          {selectedCaseStudy && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setSelectedCaseStudy(null)}
-                className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs"
-              />
-
-              {/* Modal Card */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                transition={{ duration: 0.2 }}
-                className="relative bg-white border border-slate-200 rounded-xl shadow-2xl max-w-lg w-full overflow-hidden z-10 flex flex-col pt-[4px]"
-              >
-                {/* Top Brand Gradient Line */}
-                <div className={`absolute top-0 left-0 right-0 h-[4px]
-                  ${selectedCaseStudy.id === "netflix" ? "bg-rose-600" : ""}
-                  ${selectedCaseStudy.id === "amazon" ? "bg-amber-500" : ""}
-                  ${selectedCaseStudy.id === "uber" ? "bg-emerald-500" : ""}
-                  ${selectedCaseStudy.id === "adobe" ? "bg-indigo-600" : ""}
-                `} />
-
-                {/* Header */}
-                <div className="p-6 border-b border-slate-105 flex justify-between items-start bg-slate-50/50">
-                  <div>
-                    <span className={`text-[9px] font-mono font-bold border px-2 py-0.5 rounded uppercase tracking-wider ${selectedCaseStudy.tagClass}`}>
-                      {selectedCaseStudy.tag}
-                    </span>
-                    <h2 className="text-2xl font-extrabold text-slate-900 font-sans mt-2 tracking-tight">
-                      {selectedCaseStudy.company}
-                    </h2>
-                    <p className="text-slate-500 text-xs font-sans mt-1">
-                      {selectedCaseStudy.summary}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setSelectedCaseStudy(null)}
-                    className="text-slate-400 hover:text-slate-700 transition-colors p-1.5 rounded-full hover:bg-slate-100 font-mono text-xs uppercase"
-                  >
-                    Close [×]
-                  </button>
-                </div>
-
-                {/* Body */}
-                <div className="p-6 space-y-5 flex-1 overflow-y-auto">
-                  <div>
-                    <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-1.5">Strategic Vector</h4>
-                    <p className="text-sm font-bold text-slate-800 font-sans leading-snug">
-                      {selectedCaseStudy.detailedBrief.headline}
-                    </p>
-                    <p className="text-xs text-slate-550 font-sans mt-2 leading-relaxed">
-                      {selectedCaseStudy.detailedBrief.strategicShift}
-                    </p>
-                  </div>
-
-                  <div>
-                    <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-2">Key Transformation Enablers</h4>
-                    <ul className="space-y-2.5">
-                      {selectedCaseStudy.detailedBrief.keyEnablers.map((enabler: string, index: number) => (
-                        <li key={index} className="text-xs text-slate-650 font-sans flex items-start gap-2.5 leading-relaxed">
-                          <span className={`text-[9.5px] font-mono font-bold px-1.5 py-0.5 rounded mt-0.5
-                            ${selectedCaseStudy.id === "netflix" ? "text-rose-700 bg-rose-50 border border-rose-100" : ""}
-                            ${selectedCaseStudy.id === "amazon" ? "text-amber-700 bg-amber-50 border border-amber-100" : ""}
-                            ${selectedCaseStudy.id === "uber" ? "text-emerald-700 bg-emerald-50 border border-emerald-100" : ""}
-                            ${selectedCaseStudy.id === "adobe" ? "text-indigo-750 bg-indigo-50 border border-indigo-100" : ""}
-                          `}>
-                            0{index + 1}
-                          </span>
-                          <span className="flex-1">{enabler}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className={`p-4 rounded-lg border transition-all duration-300
-                    ${selectedCaseStudy.id === "netflix" ? "bg-rose-500/5 border-rose-200/40 text-rose-950" : ""}
-                    ${selectedCaseStudy.id === "amazon" ? "bg-amber-500/5 border-amber-200/40 text-amber-950" : ""}
-                    ${selectedCaseStudy.id === "uber" ? "bg-emerald-500/5 border-emerald-200/40 text-emerald-950" : ""}
-                    ${selectedCaseStudy.id === "adobe" ? "bg-indigo-500/5 border-indigo-200/40 text-indigo-950" : ""}
-                  `}>
-                    <h4 className={`text-[10px] font-mono font-bold uppercase tracking-widest mb-1.5
-                      ${selectedCaseStudy.id === "netflix" ? "text-rose-800" : ""}
-                      ${selectedCaseStudy.id === "amazon" ? "text-amber-800" : ""}
-                      ${selectedCaseStudy.id === "uber" ? "text-emerald-800" : ""}
-                      ${selectedCaseStudy.id === "adobe" ? "text-indigo-850" : ""}
-                    `}>business outcome</h4>
-                    <p className="text-xs font-sans leading-relaxed">
-                      {selectedCaseStudy.detailedBrief.outcome}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Footer */}
-                <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                  <span>EXECUTIVE BRIEFING SERIES</span>
-                  <span>CONFIDENTIAL</span>
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
-      </div>
-    );
-  }
-  // RENDER VARIANT C: PYTHON DEVELOPMENT STUDIO (PREMIUM PROFESSIONAL IDE THEME)
-  // ==========================================
-  if (isPythonProgramming) {
-    // Helper to generate file icon
-    const getFileIcon = (fileName: string) => {
-      if (fileName.endsWith(".py")) {
-        return <FileCode className="w-4 h-4 text-[#3776AB] transition-transform duration-200 group-hover:scale-110" />;
-      } else if (fileName.endsWith(".json")) {
-        return <FileJson className="w-4 h-4 text-amber-600 transition-transform duration-200 group-hover:scale-110" />;
-      } else if (fileName.endsWith(".md")) {
-        return <FileText className="w-4 h-4 text-emerald-600 transition-transform duration-200 group-hover:scale-110" />;
-      }
-      return <Code className="w-4 h-4 text-slate-500 transition-transform duration-200 group-hover:scale-110" />;
-    };
-
-    // Helper to generate file structure from modules
-    const getModuleFiles = (mod: any) => {
-      const slug = mod.title.toLowerCase().replace(/[^a-z0-9]+/g, "_");
-      return [
-        { name: `${slug}.py`, code: getCodeSnippet(`${slug}.py`, mod?.title || "") },
-        { name: `test_${slug}.py`, code: getCodeSnippet(`test_${slug}.py`, mod?.title || "") },
-        { name: `README.md`, code: getCodeSnippet(`README.md`, mod?.title || "") }
-      ];
-    };
-
-    return (
-      <div className="min-h-screen bg-[#F8FAFC] text-slate-700 pb-20 relative overflow-hidden font-mono antialiased selection:bg-[#3776AB]/10 selection:text-[#3776AB] font-jetbrains">
-
-        {/* Floating particles in background */}
-        {particles.map((p) => (
-          <span
-            key={p.id}
-            className="particle"
-            style={{
-              left: p.left,
-              animationDelay: p.delay,
-              animationDuration: p.duration,
-              fontSize: p.fontSize,
-              opacity: 0.08
-            }}
-          >
-            {p.word}
-          </span>
-        ))}
-
-
-
-        {/* CSS font imports and custom utility styles */}
-        <style jsx global>{`
-          @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
-          
-          .font-jetbrains {
-            font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
-          }
-          .font-ibm {
-            font-family: 'IBM Plex Mono', monospace;
-          }
-          .font-inter {
-            font-family: 'Inter', sans-serif;
-          }
-          @keyframes float-up {
-            0% {
-              transform: translateY(100vh) rotate(0deg);
-              opacity: 0;
-            }
-            10% {
-              opacity: 0.08;
-            }
-            90% {
-              opacity: 0.08;
-            }
-            100% {
-              transform: translateY(-10vh) rotate(360deg);
-              opacity: 0;
-            }
-          }
-          .particle {
-            position: absolute;
-            animation: float-up 25s linear infinite;
-            color: #475569;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: bold;
-            pointer-events: none;
-            z-index: 0;
-          }
-          /* Custom scrollbar for file tree and terminals */
-          .custom-dev-scroll::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-          }
-          .custom-dev-scroll::-webkit-scrollbar-track {
-            background: #f1f5f9;
-          }
-          .custom-dev-scroll::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-          }
-          .custom-dev-scroll::-webkit-scrollbar-thumb:hover {
-            background: #3776AB;
-          }
-        `}</style>
-
-        <div className="container mx-auto px-4 mt-6 relative z-10 space-y-6">
-          {/* Top IDE Header / Status bar */}
-          <div className="bg-white border border-slate-200 rounded p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 font-mono text-xs text-slate-655 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="flex gap-1.5 flex-shrink-0">
-                <span className="w-3 h-3 rounded-full bg-[#ef4444]" />
-                <span className="w-3 h-3 rounded-full bg-[#eab308]" />
-                <span className="w-3 h-3 rounded-full bg-[#22c55e]" />
-              </div>
-              <span className="text-slate-300">|</span>
-              <span className="font-bold text-[#2b5b84]">PYTHON DEVELOPMENT STUDIO</span>
-              <span className="text-slate-300">/</span>
-              <span className="text-slate-600 font-bold uppercase tracking-wider truncate max-w-[200px] md:max-w-none">{subject.name}</span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-4 w-full md:w-auto font-ibm">
-              {/* Build Metrics */}
-              <div className="flex items-center gap-2 bg-blue-50/80 border border-blue-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default">
-                <span className="text-blue-600 font-semibold">Project Completion:</span>
-                <span className="text-[#3776AB] font-bold">88.4%</span>
-              </div>
-              <div className="flex items-center gap-2 bg-emerald-50/80 border border-emerald-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default">
-                <span className="text-emerald-600 font-semibold">Build:</span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
-                  <span className="text-emerald-800 font-bold uppercase">SUCCESSFUL</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-2 bg-red-50/80 border border-red-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default">
-                <span className="text-[#ef4444] font-semibold">Coverage:</span>
-                <span className="text-red-800 font-bold">92.4%</span>
-              </div>
-              <div className="flex items-center gap-2 bg-amber-50/80 border border-amber-200 px-3 py-1.5 rounded hover:scale-105 hover:shadow-sm transition-all duration-200 cursor-default font-mono">
-                <span className="text-amber-600 font-semibold">Quality:</span>
-                <span className="text-amber-800 font-bold px-1.5 py-0.5 bg-amber-100/50 border border-amber-200 rounded">A+</span>
-              </div>
-            </div>
-          </div>
-
-          {/* PYTHON LEARNING MODULES */}
-          <div className="bg-white border border-slate-200 rounded p-6 shadow-sm relative z-10">
-            <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-[#2b5b84] flex items-center gap-2">
-                <Layers className="w-4 h-4 text-[#2b5b84]" /> Python Learning Modules
-              </h3>
-              <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
-                <Button variant="ghost" className="text-slate-700 hover:text-[#3776AB] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
-                  <span>View All Modules</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
-                </Button>
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-              {pythonModules.map((mod: any, idx: number) => {
-                const subtopicsCount = mod.subtopics?.length || 0;
-                return (
-                  <Link key={mod.id} href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
-                    <div className="bg-slate-50 border border-slate-200 rounded p-4 hover:border-[#3776AB] hover:bg-white hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 group h-full flex flex-col justify-between cursor-pointer">
-                      <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <span className="text-[10px] text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded font-mono font-bold tracking-widest uppercase">
-                            MODULE 0{mod.moduleNo || (idx + 1)}
-                          </span>
-                        </div>
-                        <h4 className="font-mono text-xs font-bold text-slate-800 mb-2 line-clamp-2 group-hover:text-[#3776AB] transition-colors">
-                          {mod.title}
-                        </h4>
-                        <p className="text-[10px] text-slate-500 line-clamp-2 mb-4 font-sans leading-relaxed">
-                          {mod.co || "Master core concepts and build projects."}
-                        </p>
-                      </div>
-                      <div className="pt-2.5 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                        <span className="flex items-center gap-1">
-                          <Book className="w-3.5 h-3.5" /> {subtopicsCount} Subtopics
-                        </span>
-                        <span className="text-[#3776AB] font-bold group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
-                          Study <ArrowRight className="w-3 h-3" />
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* TWO COLUMN GRID FOR DEBUG QUIZ CHALLENGES AND PYTHON FLASHCARD DECKS */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
-
-            {/* DEBUG QUIZ CHALLENGES (QUIZZES) */}
-            <div className="lg:col-span-2 bg-white border border-slate-200 rounded p-6 shadow-sm">
-              <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-[#2b5b84] flex items-center gap-2">
-                  <Bug className="w-4 h-4 text-[#2b5b84]" /> Debug Quiz Challenges (Active Issues)
-                </h3>
-                <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
-                  <Button variant="ghost" className="text-slate-700 hover:text-[#3776AB] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
-                    <span>View All Quizzes</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </Button>
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {quizzesWithAttempts.slice(0, 6).map((quiz: any, idx: number) => {
-                  const difficulty = idx % 2 === 0 ? "Medium" : "Hard";
-                  const xp = quiz.totalMarks * 5 || 250;
-                  const isHard = difficulty === "Hard";
-
-                  // Color configurations based on difficulty
-                  const themeColor = isHard ? "text-rose-700 bg-rose-50 border-rose-200" : "text-amber-700 bg-amber-50 border-amber-200";
-                  const btnColorClass = isHard
-                    ? "bg-rose-600 hover:bg-rose-700 border-rose-700 shadow-rose-100"
-                    : "bg-amber-500 hover:bg-amber-600 border-amber-600 shadow-amber-100";
-
-                  return (
-                    <div key={quiz.id} className="bg-slate-50 border border-slate-200 rounded p-4 hover:border-blue-500 hover:bg-white hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 group">
-                      <div className="flex justify-start items-start mb-2">
-                        <span className={`text-[10px] ${themeColor} border px-2 py-0.5 rounded font-mono font-bold tracking-widest uppercase`}>🐞 BUG FIX</span>
-                      </div>
-                      <h4 className="font-mono text-xs font-bold text-slate-800 mb-3 line-clamp-1 group-hover:text-blue-650 transition-colors">{getQuizDisplayTitle(quiz, modules)}</h4>
-                      <div className="mt-4 flex justify-end">
-                        <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`}>
-                          <Button className={`${btnColorClass} text-white border rounded font-mono text-[10px] py-1.5 px-4 h-8 uppercase tracking-wider hover:scale-105 active:scale-95 hover:shadow-md transition-all duration-200`}>
-                            Debug Quiz Challenge →
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  );
-                })}
-                {quizzesWithAttempts.length === 0 && (
-                  <div className="col-span-2 p-6 border border-dashed border-slate-200 text-center text-slate-450 font-mono text-xs rounded">
-                    All unit tests passing. No bug reports active.
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* PYTHON FLASHCARD DECKS (FLASHCARDS) */}
-            <div className="bg-white border border-slate-200 rounded p-6 shadow-sm">
-              <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-[#2b5b84] flex items-center gap-2">
-                  <Code className="w-4 h-4 text-[#2b5b84]" /> Python Flashcard Decks
-                </h3>
-                <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
-                  <Button variant="ghost" className="text-slate-700 hover:text-[#3776AB] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
-                    <span>View All Decks</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </Button>
-                </Link>
-              </div>
-              <div className="space-y-3">
-                {flashcardDecks.slice(0, 4).map((deck: any, idx: number) => {
-                  const keywordsList = ["def", "class", "list comprehension", "lambda"];
-                  const kw = keywordsList[idx % keywordsList.length];
-
-                  const badgeColors = [
-                    "text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100",
-                    "text-purple-700 bg-purple-50 border-purple-200 hover:bg-purple-100",
-                    "text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100",
-                    "text-pink-700 bg-pink-50 border-pink-200 hover:bg-pink-100"
-                  ];
-                  const badgeClass = badgeColors[idx % badgeColors.length];
-
-                  return (
-                    <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
-                      <div className="bg-slate-50 border border-slate-200 p-3.5 rounded hover:border-amber-500 hover:bg-white hover:shadow-md hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 flex justify-between items-center cursor-pointer group">
-                        <div className="flex items-center gap-2 overflow-hidden">
-                          <span className={`font-mono text-[10px] font-bold px-2 py-0.5 border rounded flex-shrink-0 ${badgeClass} transition-colors`}>{kw}</span>
-                          <span className="font-mono text-xs text-slate-800 font-semibold group-hover:text-amber-700 transition-colors truncate">{getFlashcardDisplayTitle(deck, modules)}</span>
-                        </div>
-                        <span className="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 border border-blue-100 rounded font-mono font-bold whitespace-nowrap">{deck.cards?.length || 0} CARDS</span>
-                      </div>
-                    </Link>
-                  );
-                })}
-                {flashcardDecks.length === 0 && (
-                  <div className="p-4 border border-dashed border-slate-200 text-center text-slate-450 font-mono text-[10px] rounded">
-                    Library index is empty.
-                  </div>
-                )}
-              </div>
-            </div>
-
-          </div>
-
-          {/* CONNECTED ARCHITECTURE DIAGRAMS (MINDMAPS) */}
-          <div className="w-full relative z-10">
-
-            {/* ARCHITECTURE DIAGRAM (MINDMAPS) */}
-            <div className="bg-white border border-slate-200 rounded p-6 flex flex-col justify-between shadow-sm">
-              <div>
-                <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-[#2b5b84] flex items-center gap-2">
-                    <Brain className="w-4 h-4 text-[#2b5b84]" /> Python Mind Maps
-                  </h3>
-                  <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
-                    <Button variant="ghost" className="text-slate-700 hover:text-[#3776AB] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
-                      <span>View All Mind Maps</span>
-                      <ArrowRight className="w-4 h-4 ml-1.5" />
-                    </Button>
-                  </Link>
-                </div>
-
-                <div className="relative flex flex-col items-center justify-center py-6">
-                  {/* SVG Connector Lines */}
-                  <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-                    <svg className="w-full h-full stroke-slate-200 stroke-[2]" style={{ strokeDasharray: "4 4" }}>
-                      <line x1="15%" y1="50%" x2="38%" y2="50%" />
-                      <line x1="38%" y1="50%" x2="62%" y2="50%" />
-                      <line x1="62%" y1="50%" x2="85%" y2="50%" />
-                    </svg>
-                  </div>
-
-                  <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
-                    {mindmaps.slice(0, 4).map((map: any, idx: number) => {
-                      const nodeColors = [
-                        { bg: "bg-blue-50 text-blue-700 border-blue-200", hover: "group-hover:bg-blue-600 group-hover:border-blue-600" },
-                        { bg: "bg-emerald-50 text-emerald-700 border-emerald-200", hover: "group-hover:bg-emerald-600 group-hover:border-emerald-600" },
-                        { bg: "bg-purple-50 text-purple-700 border-purple-200", hover: "group-hover:bg-purple-600 group-hover:border-purple-600" },
-                        { bg: "bg-amber-50 text-amber-700 border-amber-200", hover: "group-hover:bg-amber-600 group-hover:border-amber-600" },
-                      ];
-                      const colors = nodeColors[idx % nodeColors.length];
-
-                      return (
-                        <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="w-full h-full flex">
-                          <div className="bg-slate-50 border border-slate-200 hover:border-blue-500 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm w-full h-full transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md flex flex-col justify-between items-center gap-2">
-                            <div className="w-full flex flex-col items-center">
-                              <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
-                                M0{idx + 1}
-                              </div>
-                              <h4 className="font-mono text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-2 group-hover:text-blue-650 transition-colors px-1 leading-normal">{map.title}</h4>
-                            </div>
-                            <p className="text-[9px] text-slate-400 font-mono mt-auto">Architecture Node</p>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* CONNECTED ARCHITECTURE DIAGRAMS (INFOGRAPHICS) */}
-          <div className="w-full relative z-10 mt-6">
-
-            {/* ARCHITECTURE DIAGRAM (INFOGRAPHICS) */}
-            <div className="bg-white border border-slate-200 rounded p-6 flex flex-col justify-between shadow-sm">
-              <div>
-                <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-[#842b6a] flex items-center gap-2">
-                    <Brain className="w-4 h-4 text-[#842b6a]" /> Infographics Topologies
-                  </h3>
-                  <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
-                    <Button variant="ghost" className="text-slate-700 hover:text-[#AB3788] font-bold text-xs uppercase hover:bg-slate-100 border border-slate-200/80 rounded px-4 py-2 transition-all inline-flex items-center bg-white shadow-sm flex items-center view-all-btn">
-                      <span>View All Infographics</span>
-                      <ArrowRight className="w-4 h-4 ml-1.5" />
-                    </Button>
-                  </Link>
-                </div>
-
-                <div className="relative flex flex-col items-center justify-center py-6">
-                  {/* SVG Connector Lines */}
-                  <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-                    <svg className="w-full h-full stroke-slate-200 stroke-[2]" style={{ strokeDasharray: "4 4" }}>
-                      <line x1="15%" y1="50%" x2="38%" y2="50%" />
-                      <line x1="38%" y1="50%" x2="62%" y2="50%" />
-                      <line x1="62%" y1="50%" x2="85%" y2="50%" />
-                    </svg>
-                  </div>
-
-                  <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
-                    {infographics.slice(0, 4).map((info: any, idx: number) => {
-                      const nodeColors = [
-                        { bg: "bg-pink-50 text-pink-700 border-pink-200", hover: "group-hover:bg-pink-600 group-hover:border-pink-600" },
-                        { bg: "bg-teal-50 text-teal-700 border-teal-200", hover: "group-hover:bg-teal-600 group-hover:border-teal-600" },
-                        { bg: "bg-orange-50 text-orange-700 border-orange-200", hover: "group-hover:bg-orange-600 group-hover:border-orange-600" },
-                        { bg: "bg-indigo-50 text-indigo-700 border-indigo-200", hover: "group-hover:bg-indigo-600 group-hover:border-indigo-600" },
-                      ];
-                      const colors = nodeColors[idx % nodeColors.length];
-
-                      return (
-                        <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="w-full h-full flex">
-                          <div className="bg-slate-50 border border-slate-200 hover:border-pink-500 rounded-lg p-4 text-center group cursor-pointer transition-all duration-300 relative shadow-sm w-full h-full transform hover:-translate-y-1.5 hover:scale-105 active:scale-[0.97] hover:bg-white hover:shadow-md flex flex-col justify-between items-center gap-2">
-                            <div className="w-full flex flex-col items-center">
-                              <div className={`w-7 h-7 rounded-full ${colors.bg} border flex items-center justify-center font-bold font-mono text-xs mx-auto mb-2 ${colors.hover} group-hover:text-white transition-all duration-300`}>
-                                I0{idx + 1}
-                              </div>
-                              <h4 className="font-mono text-[10px] font-bold text-slate-800 uppercase tracking-wider line-clamp-2 group-hover:text-pink-650 transition-colors px-1 leading-normal">{info.title}</h4>
-                            </div>
-                            <p className="text-[9px] text-slate-400 font-mono mt-auto">Infographic Node</p>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* REFERENCE MATERIALS (SIDEBAR RESOURCES) */}
-          <div className="bg-white border border-slate-200 rounded p-6 relative z-10 shadow-sm">
-            <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-[#2b5b84] flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#2b5b84]" /> Workspace Reference materials
-              </h3>
-              <span className="text-[10px] font-mono text-slate-400 uppercase">Reference Docs</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {subjectResources.map((resource: any, idx: number) => (
-                <div key={idx} className="bg-slate-50 border border-slate-200 p-3.5 rounded hover:scale-[1.03] active:scale-[0.98] hover:shadow-md transition-all duration-200">
-                  <SubjectResourceCard title={resource.title} type={resource.type} link={resource.link} />
-                </div>
-              ))}
-              {subjectResources.length === 0 && (
-                <p className="col-span-4 text-xs font-mono text-slate-500 text-center py-4 border border-dashed border-slate-200 rounded">
-                  No configuration manuals imported.
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* MAIN IDE WORKSPACE AREA (MOVED TO BOTTOM OF PAGE) */}
-          <div className="flex flex-col gap-6 mt-6 relative z-10">
-
-            {/* CODE EDITOR PANEL (FULL WIDTH AT TOP) */}
-            <div className="bg-white border border-slate-200 rounded flex flex-col h-[500px] overflow-hidden relative group/editor shadow-sm">
-              {/* Editor Tabs Header */}
-              <div className="bg-slate-100 border-b border-slate-200 flex justify-between items-center pr-4">
-                <div className="flex overflow-x-auto">
-                  {/* Active tab file */}
-                  <div className="bg-white border-r border-slate-200 border-t-2 border-t-[#3776AB] px-4 py-2.5 flex items-center gap-2 text-xs font-mono text-slate-800 font-bold select-none group">
-                    {getFileIcon(activeFile.name)}
-                    <span>{activeFile.name}</span>
-                  </div>
-                  {/* Fake extra tabs for realism */}
-                  <div className="px-4 py-2.5 flex items-center gap-2 text-xs font-mono text-slate-500 hover:text-slate-700 border-r border-slate-200 cursor-pointer select-none group hover:bg-slate-200/40 transition-colors">
-                    <FileJson className="w-3.5 h-3.5 text-amber-600 transition-transform duration-200 group-hover:scale-110" />
-                    <span>workspace_config.json</span>
-                  </div>
-                </div>
-
-                {/* Action buttons */}
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <button
-                    onClick={() => runCodeInTerminal(activeFile.name)}
-                    disabled={isTerminalRunning}
-                    className={`flex items-center gap-1.5 font-mono text-[10px] font-bold px-3.5 py-1.5 rounded uppercase tracking-widest transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-md ${isTerminalRunning
-                      ? "bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300"
-                      : "bg-emerald-600 text-white hover:bg-emerald-700 border border-emerald-700 shadow-sm"
-                      }`}
-                  >
-                    <Play className="w-3.5 h-3.5 fill-current" /> {isTerminalRunning ? "Running..." : "Run Code"}
-                  </button>
-                </div>
-              </div>
-
-              {/* Editor Code Area */}
-              <div className="flex-1 flex bg-white border-b border-slate-200 overflow-hidden font-jetbrains">
-                {/* Line Numbers */}
-                <div className="text-slate-400 select-none text-right pr-3 border-r border-slate-200 py-4 font-mono w-10 bg-slate-50/50">
-                  {Array.from({ length: Math.max(12, activeFile.code.split("\n").length) }).map((_, i) => (
-                    <div key={i} className="h-6 leading-6 text-xs">{i + 1}</div>
-                  ))}
-                </div>
-                {/* Editable Code Editor */}
-                <div className="flex-1 relative h-full">
-                  <div className="absolute right-4 top-2 text-[10px] text-slate-400 font-mono tracking-widest select-none uppercase z-10">
-                    // {activeFile.folder}
-                  </div>
-                  <textarea
-                    value={activeFile.code}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setActiveFile(prev => ({ ...prev, code: val }));
-                      setFileCodes(prev => ({ ...prev, [activeFile.name]: val }));
-                    }}
-                    spellCheck={false}
-                    className="w-full h-full p-4 font-mono text-sm leading-6 text-slate-800 bg-transparent border-none outline-none resize-none focus:ring-0 focus:border-none font-jetbrains select-text"
-                    style={{ lineHeight: "24px" }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* BOTTOM UTILITY DRAWERS: File Explorer & Terminal side-by-side */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-
-              {/* File Explorer (Bottom Left) */}
-              <div className="lg:col-span-1 bg-slate-50 border border-slate-200 rounded flex flex-col h-[320px] overflow-hidden shadow-sm">
-                {/* Sidebar Tabs */}
-                <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex justify-between items-center text-xs font-bold text-slate-655">
-                  <span className="tracking-widest uppercase">File Explorer</span>
-                  <Settings className="w-3.5 h-3.5 hover:text-[#3776AB] cursor-pointer hover:scale-110 active:scale-90 transition-all duration-200" />
-                </div>
-
-                {/* Project Title */}
-                <div className="px-4 py-2 text-[10px] uppercase font-bold text-slate-400 tracking-wider border-b border-slate-200 flex items-center justify-between">
-                  <span>📁 PROJECT: STUDENT_WORKSPACE</span>
-                  <span className="text-[#3776AB]">v3.9</span>
-                </div>
-
-                {/* Folders List */}
-                <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-dev-scroll">
-                  {PYTHON_WORKSPACE_TOPICS.map((topic) => {
-                    const isExpanded = expandedFolders[topic.id] || false;
-                    const topicFiles = topic.files;
-                    return (
-                      <div key={topic.id} className="space-y-1">
-                        {/* Folder Title Row */}
-                        <button
-                          onClick={() => setExpandedFolders(prev => ({ ...prev, [topic.id]: !isExpanded }))}
-                          className="w-full flex items-center gap-2 px-2 py-1.5 rounded hover:bg-slate-200/60 hover:translate-x-1 hover:shadow-sm text-left font-mono text-xs text-slate-800 transition-all duration-200 group active:scale-[0.98]"
-                        >
-                          {isExpanded ? (
-                            <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                          ) : (
-                            <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                          )}
-                          {isExpanded ? (
-                            <FolderOpen className="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform flex-shrink-0" />
-                          ) : (
-                            <Folder className="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform flex-shrink-0" />
-                          )}
-                          <span className="truncate font-semibold group-hover:text-[#3776AB] transition-colors">{topic.title}</span>
-                        </button>
-
-                        {/* Folder Files List */}
-                        {isExpanded && (
-                          <div className="pl-6 space-y-1 border-l border-slate-200 ml-4 my-1">
-                            {topicFiles.map((file) => {
-                              const isSelected = activeFile.name === file.name;
-                              return (
-                                <button
-                                  key={file.name}
-                                  onClick={() => {
-                                    const currentCode = fileCodes[file.name] ?? file.code;
-                                    setActiveFile({ name: file.name, folder: topic.title, code: currentCode });
-                                    setEditorActiveTab(file.name);
-                                  }}
-                                  className={`w-full flex items-center gap-2 px-2 py-1 rounded text-left font-mono text-xs transition-all duration-200 group active:scale-[0.97] ${isSelected
-                                    ? "bg-blue-50/80 text-blue-700 border-l-2 border-blue-600 pl-1.5 font-bold shadow-sm"
-                                    : "text-slate-655 hover:text-slate-900 hover:bg-slate-200/40 hover:translate-x-1 hover:shadow-xs"
-                                    }`}
-                                >
-                                  {getFileIcon(file.name)}
-                                  <span className="truncate">{file.name}</span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Terminal / Compiler Widget (Bottom Right) */}
-              <div className="lg:col-span-3 bg-slate-50 border border-slate-200 rounded overflow-hidden flex flex-col font-mono text-xs h-[320px] shadow-sm">
-                <div className="bg-slate-100 border-b border-slate-200 px-4 py-2 flex justify-between items-center select-none">
-                  <span className="text-slate-700 font-bold flex items-center gap-2">
-                    <Terminal className="w-3.5 h-3.5 text-[#3776AB]" /> bash (python-sim)
-                  </span>
-                  <span className="text-[10px] text-slate-400">UTF-8</span>
-                </div>
-                <div className="bg-white p-4 space-y-1.5 overflow-y-auto text-slate-800 font-ibm flex-1 custom-dev-scroll">
-                  <div className="text-slate-500 font-medium">$ python {activeFile.name}</div>
-                  {terminalLogs.map((log, idx) => {
-                    let logColor = "text-slate-600";
-                    if (log.includes("Successful") || log.includes("Passed") || log.includes("✓")) {
-                      logColor = "text-emerald-600 font-bold";
-                    } else if (log.includes("Error") || log.includes("Failed") || log.includes("✗")) {
-                      logColor = "text-rose-600 font-bold";
-                    } else if (log.startsWith("[")) {
-                      logColor = "text-blue-605 font-medium";
-                    }
-                    return (
-                      <div key={idx} className={logColor}>
-                        {log}
-                      </div>
-                    );
-                  })}
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <span className="text-[#3776AB] font-bold">$</span>
-                    <span className="w-1.5 h-3.5 bg-slate-400 animate-pulse" />
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-    );
-  }
-
-  // ==========================================
-  // RENDER VARIANT B: UI PROGRAMMING & DEFAULT FALLBACK LOOK (NEUBRUTALISM STYLE)
-  // ==========================================
-  const renderModulePreview = (moduleNo: number, title?: string) => {
-    const normalizedTitle = String(title || "").toLowerCase();
-
-    // Module 1: User Persona Card, User Journey, Profile Layout
-    if (normalizedTitle.includes("intro") || normalizedTitle.includes("thinking") || moduleNo === 1) {
-      return (
-        <svg className="w-full h-full text-[#7C3AED]" viewBox="0 0 200 80" fill="none" stroke="currentColor" strokeWidth="1.2">
-          {/* Wireframe box layout */}
-          <rect x="15" y="10" width="80" height="60" rx="6" fill="currentColor" fillOpacity="0.03" stroke="#7C3AED" />
-          {/* User Persona Avatar */}
-          <motion.g
-            variants={{
-              rest: { y: 0 },
-              hover: { y: -2, transition: { type: "spring", stiffness: 300, damping: 15 } }
-            }}
-          >
-            <circle cx="35" cy="30" r="12" stroke="#7C3AED" strokeWidth="1.5" />
-            <path d="M23,50 C23,43 28,42 35,42 C42,42 47,43 47,50" stroke="#7C3AED" strokeWidth="1.5" />
-          </motion.g>
-
-          {/* Info lines */}
-          <line x1="55" y1="24" x2="85" y2="24" stroke="#7C3AED" strokeWidth="2" />
-          <line x1="55" y1="32" x2="75" y2="32" stroke="#7C3AED" strokeWidth="1" />
-          <line x1="55" y1="40" x2="80" y2="40" stroke="#7C3AED" strokeWidth="1" />
-
-          {/* User Journey Graph line */}
-          <motion.path
-            d="M110,55 L125,35 L145,45 L165,15 L185,25"
-            stroke="#10B981"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            variants={{
-              rest: { pathLength: 1 },
-              hover: { pathLength: [0, 1], transition: { duration: 0.8, ease: "easeOut" } }
-            }}
-          />
-          {/* Graph Nodes */}
-          <circle cx="110" cy="55" r="3" fill="#10B981" />
-          <circle cx="125" cy="35" r="3" fill="#10B981" />
-          <circle cx="145" cy="45" r="3" fill="#10B981" />
-          <circle cx="165" cy="15" r="3" fill="#10B981" />
-          <circle cx="185" cy="25" r="3" fill="#10B981" />
-
-          {/* Guidelines */}
-          <line x1="105" y1="60" x2="190" y2="60" stroke="#E2E8F0" strokeWidth="1" />
-          <line x1="105" y1="10" x2="105" y2="60" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="2 2" />
-        </svg>
-      );
-    }
-
-    // Module 2: Layout Grids, Wireframes, Spacing Systems
-    if (normalizedTitle.includes("flex") || normalizedTitle.includes("layout") || moduleNo === 2) {
-      return (
-        <svg className="w-full h-full text-[#3B82F6]" viewBox="0 0 200 80" fill="none" stroke="currentColor" strokeWidth="1.2">
-          <rect x="15" y="10" width="170" height="60" rx="6" stroke="#E2E8F0" />
-          {/* Flex column grid layout */}
-          <rect x="25" y="18" width="40" height="44" rx="3" fill="currentColor" fillOpacity="0.04" stroke="#3B82F6" strokeWidth="1.2" />
-          <motion.rect
-            x="73" y="18" width="54" height="44" rx="3" fill="currentColor" fillOpacity="0.04" stroke="#3B82F6" strokeWidth="1.2"
-            variants={{
-              rest: { scale: 1, originX: "73px", originY: "18px" },
-              hover: { scale: 1.015, originX: "73px", originY: "18px", transition: { type: "spring", stiffness: 300, damping: 15 } }
-            }}
-          />
-          <rect x="135" y="18" width="40" height="44" rx="3" fill="currentColor" fillOpacity="0.04" stroke="#3B82F6" strokeWidth="1.2" />
-
-          {/* Spacing lines / dimension guides */}
-          <line x1="65" y1="18" x2="65" y2="62" stroke="#EF4444" strokeWidth="1" strokeDasharray="2 1" />
-          <line x1="127" y1="18" x2="127" y2="62" stroke="#EF4444" strokeWidth="1" strokeDasharray="2 1" />
-          <motion.line
-            x1="65" y1="40" x2="73" y2="40" stroke="#EF4444" strokeWidth="1"
-            variants={{
-              rest: { opacity: 0.8 },
-              hover: { opacity: [0.8, 1, 0.8], transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut" } }
-            }}
-          />
-          <motion.line
-            x1="127" y1="40" x2="135" y2="40" stroke="#EF4444" strokeWidth="1"
-            variants={{
-              rest: { opacity: 0.8 },
-              hover: { opacity: [0.8, 1, 0.8], transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut" } }
-            }}
-          />
-
-          {/* Dimension Text mockup */}
-          <text x="66" y="34" fill="#EF4444" fontSize="6" fontFamily="monospace" stroke="none" fontWeight="bold">8</text>
-
-          {/* Wireframe lines */}
-          <line x1="30" y1="28" x2="60" y2="28" stroke="#3B82F6" strokeWidth="1.5" />
-          <line x1="30" y1="36" x2="50" y2="36" stroke="#3B82F6" strokeWidth="1" />
-          <line x1="79" y1="28" x2="121" y2="28" stroke="#3B82F6" strokeWidth="1.5" />
-          <line x1="79" y1="36" x2="110" y2="36" stroke="#3B82F6" strokeWidth="1" />
-          <line x1="79" y1="44" x2="100" y2="44" stroke="#3B82F6" strokeWidth="1" />
-        </svg>
-      );
-    }
-
-    // Module 3: Browser Mockup, Navigation Systems, Responsive Layouts
-    if (normalizedTitle.includes("styling") || normalizedTitle.includes("tailwind") || normalizedTitle.includes("design system") || moduleNo === 3) {
-      return (
-        <svg className="w-full h-full text-[#10B981]" viewBox="0 0 200 80" fill="none" stroke="currentColor" strokeWidth="1.2">
-          {/* Responsive Browser Mockups */}
-          {/* Desktop Browser */}
-          <rect x="15" y="10" width="110" height="60" rx="6" fill="white" stroke="#E2E8F0" />
-          <motion.g
-            variants={{
-              rest: { x: 0 },
-              hover: { x: -3, transition: { type: "spring", stiffness: 200, damping: 15 } }
-            }}
-          >
-            <rect x="157" y="20" width="30" height="50" rx="4" fill="white" stroke="#E2E8F0" />
-            <rect x="162" y="28" width="20" height="4" rx="2" fill="#10B981" stroke="none" />
-            <circle cx="172" cy="42" r="6" fill="currentColor" fillOpacity="0.08" stroke="#10B981" strokeWidth="1" />
-            <rect x="162" y="54" width="20" height="2" rx="1" fill="#E2E8F0" stroke="none" />
-            <rect x="162" y="60" width="14" height="2" rx="1" fill="#E2E8F0" stroke="none" />
-          </motion.g>
-
-          {/* Desktop headers */}
-          <rect x="15.5" y="10.5" width="109" height="12" rx="5.5" fill="#F8FAFC" stroke="none" />
-          <circle cx="21" cy="16.5" r="2" fill="#EF4444" stroke="none" />
-          <circle cx="27" cy="16.5" r="2" fill="#F59E0B" stroke="none" />
-          <circle cx="33" cy="16.5" r="2" fill="#10B981" stroke="none" />
-
-          {/* Navigation link markers */}
-          <rect x="55" y="15" width="15" height="3" rx="1.5" fill="#10B981" stroke="none" />
-          <rect x="75" y="15" width="15" height="3" rx="1.5" fill="#E2E8F0" stroke="none" />
-          <rect x="95" y="15" width="15" height="3" rx="1.5" fill="#E2E8F0" stroke="none" />
-
-          {/* Desktop Body content */}
-          <circle cx="35" cy="40" r="10" fill="currentColor" fillOpacity="0.08" stroke="#10B981" strokeWidth="1.2" />
-          <rect x="52" y="34" width="45" height="5" rx="2.5" fill="#10B981" stroke="none" />
-          <rect x="52" y="44" width="30" height="3.5" rx="1.7" fill="#E2E8F0" stroke="none" />
-
-          {/* Responsive connector vector line */}
-          <motion.path
-            d="M130,40 L150,40"
-            stroke="#10B981"
-            strokeDasharray="3 3"
-            strokeWidth="1.5"
-            initial={{ strokeDashoffset: 0 }}
-            variants={{
-              rest: { strokeDashoffset: 0 },
-              hover: { strokeDashoffset: [0, -6], transition: { repeat: Infinity, ease: "linear", duration: 0.8 } }
-            }}
-          />
-          <polygon points="146,37 151,40 146,43" fill="#10B981" stroke="none" />
-        </svg>
-      );
-    }
-
-    // Module 4: Tables, Dashboards, Cards, Data Widgets
-    if (normalizedTitle.includes("data") || normalizedTitle.includes("handling") || moduleNo === 4) {
-      return (
-        <svg className="w-full h-full text-[#F59E0B]" viewBox="0 0 200 80" fill="none" stroke="currentColor" strokeWidth="1.2">
-          <rect x="15" y="10" width="170" height="60" rx="6" stroke="#E2E8F0" />
-
-          {/* Widget 1: Circular Chart */}
-          <rect x="25" y="18" width="40" height="44" rx="4" fill="currentColor" fillOpacity="0.03" stroke="#F59E0B" strokeWidth="1" />
-          <circle cx="45" cy="35" r="10" stroke="#E2E8F0" strokeWidth="2.5" />
-          <circle cx="45" cy="35" r="10" stroke="#F59E0B" strokeWidth="2.5" strokeDasharray="40 60" />
-          <text x="38" y="38" fill="#F59E0B" fontSize="7" fontWeight="bold" fontFamily="sans-serif" stroke="none">65%</text>
-
-          {/* Widget 2: Data Bars */}
-          <rect x="73" y="18" width="54" height="44" rx="4" fill="currentColor" fillOpacity="0.03" stroke="#F59E0B" strokeWidth="1" />
-          <motion.rect
-            x="81" y="42" width="6" height="12" rx="1" fill="#F59E0B" stroke="none"
-            variants={{
-              rest: { scaleY: 1, originY: "54px" },
-              hover: { scaleY: [1, 1.1, 1], originY: "54px", transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut", delay: 0.1 } }
-            }}
-          />
-          <motion.rect
-            x="91" y="32" width="6" height="22" rx="1" fill="#F59E0B" stroke="none"
-            variants={{
-              rest: { scaleY: 1, originY: "54px" },
-              hover: { scaleY: [1, 1.15, 1], originY: "54px", transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut" } }
-            }}
-          />
-          <motion.rect
-            x="101" y="26" width="6" height="28" rx="1" fill="#F59E0B" stroke="none"
-            variants={{
-              rest: { scaleY: 1, originY: "54px" },
-              hover: { scaleY: [1, 1.08, 1], originY: "54px", transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut", delay: 0.2 } }
-            }}
-          />
-          <rect x="111" y="36" width="6" height="18" rx="1" fill="#E2E8F0" stroke="none" />
-
-          {/* Widget 3: Card list grid */}
-          <rect x="135" y="18" width="40" height="44" rx="4" fill="currentColor" fillOpacity="0.03" stroke="#F59E0B" strokeWidth="1" />
-          <rect x="141" y="24" width="28" height="6" rx="3" fill="#F59E0B" stroke="none" />
-          <rect x="141" y="34" width="28" height="6" rx="3" fill="#E2E8F0" stroke="none" />
-          <rect x="141" y="44" width="28" height="6" rx="3" fill="#E2E8F0" stroke="none" />
-        </svg>
-      );
-    }
-
-    // Module 5: Mobile Interface Design (Phone shell & Lateral slide-out navigation)
-    if (normalizedTitle.includes("mobile") || normalizedTitle.includes("phone") || moduleNo === 5) {
-      return (
-        <svg className="w-full h-full text-[#EC4899]" viewBox="0 0 200 80" fill="none" stroke="currentColor" strokeWidth="1.2">
-          {/* Mobile phone chassis */}
-          <rect x="80" y="8" width="40" height="64" rx="6" stroke="#EC4899" strokeWidth="1.5" fill="white" />
-          {/* Notch / Speaker */}
-          <rect x="95" y="11" width="10" height="2" rx="1" fill="#EC4899" stroke="none" />
-          {/* Bottom Nav Bar */}
-          <rect x="80.75" y="60" width="38.5" height="11.25" fill="#FFF1F2" stroke="none" />
-          <line x1="80" y1="60" x2="120" y2="60" stroke="#EC4899" strokeWidth="0.8" />
-          <circle cx="89" cy="65" r="1.5" fill="#EC4899" />
-          <circle cx="100" cy="65" r="1.5" fill="#EC4899" />
-          <circle cx="111" cy="65" r="1.5" fill="#EC4899" />
-
-          {/* Main Content Area: Info Card */}
-          <rect x="85" y="18" width="30" height="16" rx="3" fill="#EC4899" fillOpacity="0.04" stroke="#EC4899" strokeWidth="0.8" />
-          <circle cx="92" cy="26" r="3.5" fill="#EC4899" fillOpacity="0.15" stroke="#EC4899" strokeWidth="0.6" />
-          <line x1="100" y1="23" x2="111" y2="23" stroke="#EC4899" strokeWidth="1.2" />
-          <line x1="100" y1="28" x2="108" y2="28" stroke="#EC4899" strokeWidth="0.8" strokeOpacity="0.6" />
-
-          {/* List Items */}
-          <rect x="85" y="38" width="30" height="6" rx="1.5" fill="#EC4899" fillOpacity="0.02" stroke="#EC4899" strokeWidth="0.6" />
-          <rect x="85" y="47" width="30" height="6" rx="1.5" fill="#EC4899" fillOpacity="0.02" stroke="#EC4899" strokeWidth="0.6" />
-          <line x1="89" y1="41" x2="111" y2="41" stroke="#EC4899" strokeWidth="0.6" strokeOpacity="0.8" />
-          <line x1="89" y1="50" x2="105" y2="50" stroke="#EC4899" strokeWidth="0.6" strokeOpacity="0.8" />
-
-          {/* Lateral overlay menu sliding in */}
-          <motion.g
-            variants={{
-              rest: { x: 0 },
-              hover: { x: -3, transition: { type: "spring", stiffness: 200, damping: 15 } }
-            }}
-          >
-            <path d="M128,12 L146,12 L146,58 L128,58 Z" stroke="#EC4899" strokeWidth="0.8" strokeDasharray="3 2" fill="white" />
-            <line x1="132" y1="18" x2="142" y2="18" stroke="#EC4899" strokeWidth="0.8" />
-            <line x1="132" y1="24" x2="139" y2="24" stroke="#EC4899" strokeWidth="0.8" />
-            <line x1="132" y1="30" x2="141" y2="30" stroke="#EC4899" strokeWidth="0.8" />
-          </motion.g>
-
-          {/* Connection Arrows */}
-          <path d="M122,35 L126,35" stroke="#EC4899" strokeWidth="1" strokeLinecap="round" />
-          <polygon points="125,33 128,35 125,37" fill="#EC4899" stroke="none" />
-        </svg>
-      );
-    }
-
-    // Default Fallback: Tables, Dashboards, Cards, Data Widgets
-    return (
-      <svg className="w-full h-full text-[#F59E0B]" viewBox="0 0 200 80" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <rect x="15" y="10" width="170" height="60" rx="6" stroke="#E2E8F0" />
-
-        {/* Widget 1: Circular Chart */}
-        <rect x="25" y="18" width="40" height="44" rx="4" fill="currentColor" fillOpacity="0.03" stroke="#F59E0B" strokeWidth="1" />
-        <circle cx="45" cy="35" r="10" stroke="#E2E8F0" strokeWidth="2.5" />
-        <circle cx="45" cy="35" r="10" stroke="#F59E0B" strokeWidth="2.5" strokeDasharray="40 60" />
-        <text x="38" y="38" fill="#F59E0B" fontSize="7" fontWeight="bold" fontFamily="sans-serif" stroke="none">65%</text>
-
-        {/* Widget 2: Data Bars */}
-        <rect x="73" y="18" width="54" height="44" rx="4" fill="currentColor" fillOpacity="0.03" stroke="#F59E0B" strokeWidth="1" />
-        <motion.rect
-          x="81" y="42" width="6" height="12" rx="1" fill="#F59E0B" stroke="none"
-          variants={{
-            rest: { scaleY: 1, originY: "54px" },
-            hover: { scaleY: [1, 1.1, 1], originY: "54px", transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut", delay: 0.1 } }
-          }}
-        />
-        <motion.rect
-          x="91" y="32" width="6" height="22" rx="1" fill="#F59E0B" stroke="none"
-          variants={{
-            rest: { scaleY: 1, originY: "54px" },
-            hover: { scaleY: [1, 1.15, 1], originY: "54px", transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut" } }
-          }}
-        />
-        <motion.rect
-          x="101" y="26" width="6" height="28" rx="1" fill="#F59E0B" stroke="none"
-          variants={{
-            rest: { scaleY: 1, originY: "54px" },
-            hover: { scaleY: [1, 1.08, 1], originY: "54px", transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut", delay: 0.2 } }
-          }}
-        />
-        <rect x="111" y="36" width="6" height="18" rx="1" fill="#E2E8F0" stroke="none" />
-
-        {/* Widget 3: Card list grid */}
-        <rect x="135" y="18" width="40" height="44" rx="4" fill="currentColor" fillOpacity="0.03" stroke="#F59E0B" strokeWidth="1" />
-        <rect x="141" y="24" width="28" height="6" rx="3" fill="#F59E0B" stroke="none" />
-        <rect x="141" y="34" width="28" height="6" rx="3" fill="#E2E8F0" stroke="none" />
-        <rect x="141" y="44" width="28" height="6" rx="3" fill="#E2E8F0" stroke="none" />
-      </svg>
-    );
-  };
-
-  const renderQuizPreview = (quizIndex: number, title?: string) => {
-    const normalizedTitle = String(title || "").toLowerCase();
-
-    if (normalizedTitle.includes("layout") || normalizedTitle.includes("concept") || quizIndex === 1) {
-      return (
-        <svg className="w-full h-full text-[#7C3AED]" viewBox="0 0 100 80" fill="none" stroke="currentColor" strokeWidth="1.2">
-          <circle cx="50" cy="40" r="28" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="2 2" />
-          <circle cx="50" cy="40" r="18" stroke="#7C3AED" strokeWidth="1.2" strokeOpacity="0.5" />
-          <circle cx="50" cy="40" r="8" stroke="#7C3AED" strokeWidth="1.5" fill="currentColor" fillOpacity="0.1" />
-          <circle cx="50" cy="40" r="3" fill="#7C3AED" />
-          <line x1="50" y1="6" x2="50" y2="74" stroke="#7C3AED" strokeWidth="0.8" strokeDasharray="3 3" strokeOpacity="0.4" />
-          <line x1="16" y1="40" x2="84" y2="40" stroke="#7C3AED" strokeWidth="0.8" strokeDasharray="3 3" strokeOpacity="0.4" />
-          <motion.path
-            d="M32,58 L46,44 M42,42 L47,41 L48,46"
-            stroke="#7C3AED"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            animate={{ x: [0, 2, 0], y: [0, -2, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </svg>
-      );
-    }
-
-    if (normalizedTitle.includes("component") || normalizedTitle.includes("design") || quizIndex === 2) {
-      return (
-        <svg className="w-full h-full text-[#7C3AED]" viewBox="0 0 100 80" fill="none" stroke="currentColor" strokeWidth="1.2">
-          <rect x="15" y="15" width="70" height="50" rx="4" stroke="#E2E8F0" fill="currentColor" fillOpacity="0.02" />
-          <rect x="25" y="24" width="22" height="10" rx="5" fill="#7C3AED" fillOpacity="0.1" stroke="#7C3AED" strokeWidth="1" />
-          <motion.circle
-            cx="40" cy="29" r="3"
-            fill="#7C3AED"
-            animate={{ cx: [30, 40, 30] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <rect x="25" y="42" width="22" height="10" rx="5" fill="#E2E8F0" stroke="#CBD5E1" strokeWidth="1" />
-          <circle cx="30" cy="47" r="3" fill="#94A3B8" />
-          <path d="M53,29 L68,29 M53,47 L68,47" stroke="#7C3AED" strokeWidth="0.8" strokeDasharray="2 2" strokeOpacity="0.6" />
-          <circle cx="70" cy="29" r="2" fill="#7C3AED" />
-          <circle cx="70" cy="47" r="2" fill="#CBD5E1" />
-        </svg>
-      );
-    }
-
-    return (
-      <svg className="w-full h-full text-[#7C3AED]" viewBox="0 0 100 80" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <circle cx="50" cy="44" r="22" stroke="#E2E8F0" strokeWidth="2.5" />
-        <circle cx="50" cy="44" r="22" stroke="#7C3AED" strokeWidth="2.5" strokeDasharray="30 110" />
-        <rect x="47" y="16" width="6" height="6" rx="1" fill="#7C3AED" />
-        <line x1="50" y1="44" x2="50" y2="30" stroke="#7C3AED" strokeWidth="1.5" strokeLinecap="round" />
-        <motion.line
-          x1="50" y1="44" x2="62" y2="44"
-          stroke="#7C3AED"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-          animate={{ rotate: 360 }}
-          style={{ originX: "50px", originY: "44px" }}
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        />
-        <circle cx="50" cy="44" r="2" fill="#7C3AED" />
-      </svg>
-    );
-  };
-
-  const renderFlashcardPreview = (moduleNo: number, title?: string) => {
-    return (
-      <svg className="w-full h-full text-[#7C3AED]" viewBox="0 0 150 80" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <motion.rect
-          x="35" y="25" width="80" height="42" rx="4"
-          fill="currentColor" fillOpacity="0.02"
-          stroke="#7C3AED" strokeOpacity="0.3"
-          variants={{
-            rest: { x: 0, y: 0, rotate: 0 },
-            hover: { x: 12, y: -8, rotate: 4 }
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        />
-        <motion.rect
-          x="35" y="22" width="80" height="42" rx="4"
-          fill="currentColor" fillOpacity="0.04"
-          stroke="#7C3AED" strokeOpacity="0.6"
-          variants={{
-            rest: { x: 0, y: 0, rotate: 0 },
-            hover: { x: 6, y: -4, rotate: -2 }
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        />
-        <rect x="35" y="18" width="80" height="42" rx="4" fill="white" stroke="#7C3AED" strokeWidth="1.5" />
-        <line x1="45" y1="28" x2="75" y2="28" stroke="#7C3AED" strokeWidth="2.5" />
-        <line x1="45" y1="36" x2="105" y2="36" stroke="#7C3AED" strokeWidth="1" strokeOpacity="0.5" />
-        <line x1="45" y1="44" x2="95" y2="44" stroke="#7C3AED" strokeWidth="1" strokeOpacity="0.5" />
-        <circle cx="103" cy="28" r="4" fill="#7C3AED" fillOpacity="0.1" stroke="#7C3AED" strokeWidth="0.8" />
-        <path d="M101.5,28 L102.5,29 L104.5,27" stroke="#7C3AED" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    );
-  };
-
-  const themeKey = isUiProgramming ? "ui programming" : (isStartupEngineering ? "startup engineering" : (subjectNameLower.includes("python") ? "python programming" : ""));
+  const themeKey = isUiProgramming 
+    ? "ui programming" 
+    : (isStartupEngineering 
+      ? "startup engineering" 
+      : (isDigitalBusiness 
+        ? "digital business" 
+        : (subjectNameLower.includes("python") ? "python programming" : "")));
   const t = THEME_MAP[themeKey] || getDynamicTheme(subject?.id || subjectId);
-  const isPremiumTheme = isUiProgramming || isStartupEngineering;
-  const isSaaS = !isPythonProgramming;
+
+  const targetModules = (isPythonProgramming && (!modules || modules.length === 0)) ? PYTHON_FALLBACK_MODULES : modules;
+
+  const filteredModules = targetModules.filter((mod: any) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      String(mod.title || "").toLowerCase().includes(query) ||
+      String(mod.description || "").toLowerCase().includes(query) ||
+      (mod.subtopics || []).some((st: any) => String(st.title || "").toLowerCase().includes(query))
+    );
+  });
+
+  const notesCount = targetModules.length;
+  const mindmapsCount = mindmaps.length;
+  const infographicsCount = infographics.length;
+  const flashcardsCount = flashcardDecks.length;
+  const quizzesCount = quizzesWithAttempts.length;
+  const pdfCount = subjectResources.length;
+
+  // Count video subtopics
+  const videosCount = targetModules.reduce((acc: number, mod: any) => 
+    acc + (mod.subtopics || []).filter((st: any) => !!st.videoUrl || st.type === "videoUrl" || st.selectedResourceType === "videoUrl").length, 0
+  );
+
+  // Count audio subtopics
+  const audiosCount = targetModules.reduce((acc: number, mod: any) => 
+    acc + (mod.subtopics || []).filter((st: any) => !!st.audioUrl || st.type === "audioUrl" || st.selectedResourceType === "audioUrl").length, 0
+  );
+
+  const actualSimulationsCount = simulationsCount ?? 0;
 
   return (
-    <div className={`min-h-screen relative ${t.bg} ${t.pattern} pb-16 pt-8 brutalist-transition transition-colors duration-300 overflow-hidden`}>
-      {/* Structural Embedded CSS Overrides */}
+    <div className={`min-h-screen ${t.bg} ${t.pattern} pb-24 relative overflow-hidden antialiased selection:bg-[#4f46e5]/10 selection:text-[#4f46e5]`}>
+      {/* Top thick accent bar */}
+      <div className={`absolute top-0 left-0 right-0 h-1 ${
+        isUiProgramming
+          ? 'bg-black'
+          : isPythonProgramming
+            ? 'bg-[#3776AB]'
+            : isDigitalBusiness
+              ? 'bg-[#0F766E]'
+              : 'bg-blue-600'
+      }`} />
+      
+      {/* Background decoration */}
+      {isUiProgramming && <FloatingBackground />}
+      
+      {/* Python Matrix/Terminal custom background particles */}
+      {isPythonProgramming && particles.map((p) => (
+        <span
+          key={p.id}
+          className="particle"
+          style={{
+            left: p.left,
+            animationDelay: p.delay,
+            animationDuration: p.duration,
+            fontSize: p.fontSize,
+            opacity: 0.08
+          }}
+        >
+          {p.word}
+        </span>
+      ))}
+
+      {/* Global CSS style definitions */}
       <style jsx global>{`
-        .brutalist-transition {
-          transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+        
+        .font-jetbrains {
+          font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
         }
-        .ui-blueprint-grid {
-          background-color: #F8F9FC;
-          position: relative;
+        .strategy-board-dot {
+          background-image: radial-gradient(#e2e8f0 1.2px, transparent 1.2px);
+          background-size: 24px 24px;
         }
-        .python-matrix-terminal {
-          background-size: 40px 40px;
-          background-image: linear-gradient(to bottom, rgba(55, 118, 171, 0.03) 50%, rgba(0, 0, 0, 0) 50%), 
-                            linear-gradient(to right, rgba(255, 212, 59, 0.02) 1px, transparent 1px);
+        @keyframes float-up {
+          0% {
+            transform: translateY(100vh) rotate(0deg);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.08;
+          }
+          90% {
+            opacity: 0.08;
+          }
+          100% {
+            transform: translateY(-10vh) rotate(360deg);
+            opacity: 0;
+          }
         }
-        /* Style fixes for the Python Dark Mode Variant */
-        .python-matrix-terminal .text-zinc-900,
-        .python-matrix-terminal .text-zinc-800,
-        .python-matrix-terminal h2,
-        .python-matrix-terminal h3 { color: #ffffff !important; }
-        .python-matrix-terminal .text-zinc-500,
-        .python-matrix-terminal p { color: #a1a1aa !important; }
-        .python-matrix-terminal span { color: #e4e4e7 !important; }
-
-        @keyframes float {
-          0% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-6px) rotate(0.5deg); }
-          100% { transform: translateY(0px) rotate(0deg); }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.04; }
-          50% { opacity: 0.08; }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 4s ease-in-out infinite;
-        }
-
-        /* Microinteractions: grows underline from left */
-        .design-studio-link {
-          position: relative;
-          color: #7C3AED;
-          font-weight: 600;
-        }
-        .design-studio-link::after {
-          content: '';
+        .particle {
           position: absolute;
-          width: 100%;
-          transform: scaleX(0);
-          height: 2px;
-          bottom: -2px;
-          left: 0;
-          background-color: #7C3AED;
-          transform-origin: bottom left;
-          transition: transform 0.25s ease-out;
-        }
-        .design-studio-link:hover::after {
-          transform: scaleX(1);
+          animation: float-up 25s linear infinite;
+          color: #475569;
+          font-family: 'JetBrains Mono', monospace;
+          font-weight: bold;
+          pointer-events: none;
+          z-index: 0;
         }
       `}</style>
 
-      <div className="container mx-auto px-4 mt-6 relative z-10 space-y-6">
+      <div className="container mx-auto px-4 mt-8 relative z-10 max-w-6xl space-y-12">
         
-        {/* Top IDE Header / Status bar styled as DESIGN STUDIO */}
-        {isSaaS ? (
-          <div className="bg-white border border-slate-200 rounded-xl shadow-xs p-4 flex items-center gap-3 relative z-10 font-sans text-xs text-slate-600 transition-all duration-300">
-            <Link href="/student/subjects" className="hover:text-blue-600 transition-colors flex items-center justify-center">
-              <Home className="w-4 h-4 text-blue-600" />
-            </Link>
-            <span className="text-slate-300">/</span>
-            <span className="text-slate-900 font-extrabold uppercase tracking-wide">{subject.name}</span>
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-2 text-xs font-bold" aria-label="Breadcrumb">
+          <Link href="/student/subjects" className={`hover:underline transition-all ${t.titleHover}`}>
+            Subjects
+          </Link>
+          <span className="text-zinc-400">/</span>
+          <span className={`uppercase tracking-wider font-extrabold ${isPythonProgramming ? 'text-[#3776AB]' : 'text-black'}`}>{subject.name}</span>
+        </nav>
+
+        {/* 1. SUBJECT HEADER */}
+        <header className={`relative ${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6`}>
+          <div className="space-y-4 flex-1 w-full">
+            <div className="flex items-center gap-2">
+              <span className={`text-[10px] uppercase font-mono tracking-widest font-black px-2.5 py-1 ${t.badge}`}>
+                Subject Workspace
+              </span>
+            </div>
+            <h1 className={`text-3xl font-black uppercase tracking-tight leading-none ${isPythonProgramming ? 'text-slate-900 font-jetbrains' : 'text-slate-900 font-sans'}`}>
+              {subject.name}
+            </h1>
+            <p className={`text-sm font-bold max-w-2xl leading-relaxed ${isPythonProgramming ? 'text-slate-600 font-mono' : 'text-zinc-700 font-sans'}`}>
+              {subject.description || "Explore and master the conceptual foundations, modules, quizzes, and simulation runtimes of this subject."}
+            </p>
+
+            {/* Statistics Panel */}
+            <div className="flex flex-wrap gap-4 pt-2">
+              <span className={`text-[10px] font-mono font-extrabold uppercase px-2.5 py-1 ${
+                isUiProgramming
+                  ? 'bg-slate-100 text-zinc-800 border-2 border-black'
+                  : isPythonProgramming
+                    ? 'bg-white text-slate-700 border border-slate-200 rounded'
+                    : 'bg-slate-100 text-zinc-800 border border-slate-200 rounded-md'
+              }`}>
+                📚 {notesCount} Modules
+              </span>
+              <span className={`text-[10px] font-mono font-extrabold uppercase px-2.5 py-1 ${
+                isUiProgramming
+                  ? 'bg-slate-100 text-zinc-800 border-2 border-black'
+                  : isPythonProgramming
+                    ? 'bg-white text-slate-700 border border-slate-200 rounded'
+                    : 'bg-slate-100 text-zinc-800 border border-slate-200 rounded-md'
+              }`}>
+                🎥 {videosCount} Videos
+              </span>
+              <span className={`text-[10px] font-mono font-extrabold uppercase px-2.5 py-1 ${
+                isUiProgramming
+                  ? 'bg-slate-100 text-zinc-800 border-2 border-black'
+                  : isPythonProgramming
+                    ? 'bg-white text-slate-700 border border-slate-200 rounded'
+                    : 'bg-slate-100 text-zinc-800 border border-slate-200 rounded-md'
+              }`}>
+                🎮 {actualSimulationsCount} Simulations
+              </span>
+              <span className={`text-[10px] font-mono font-extrabold uppercase px-2.5 py-1 ${
+                isUiProgramming
+                  ? 'bg-slate-100 text-zinc-800 border-2 border-black'
+                  : isPythonProgramming
+                    ? 'bg-white text-slate-700 border border-slate-200 rounded'
+                    : 'bg-slate-100 text-zinc-800 border border-slate-200 rounded-md'
+              }`}>
+                📄 {pdfCount} Resources
+              </span>
+            </div>
+
+            {/* Search Bar */}
+            <div className="relative max-w-md w-full pt-2">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-550" />
+              <input
+                type="text"
+                placeholder="Search modules or subtopics..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={`w-full pl-10 pr-4 py-2.5 text-xs text-black focus:outline-hidden transition-all font-bold ${
+                  isUiProgramming
+                    ? 'bg-[#FAF9F5] border-2 border-black rounded-none shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_rgba(239,68,68,1)] focus:-translate-x-0.5 focus:-translate-y-0.5'
+                    : isPythonProgramming
+                      ? 'bg-white border border-slate-200 rounded shadow-xs focus:border-[#3776AB] focus:ring-1 focus:ring-[#3776AB] font-mono'
+                      : 'bg-white border border-slate-200 rounded-xl shadow-xs focus:ring-2 focus:ring-[#0F766E] font-sans'
+                }`}
+              />
+            </div>
           </div>
-        ) : (
-          <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 font-mono text-xs text-slate-655 transition-all duration-300`}>
-            <div className="flex items-center gap-3">
-              <div className="flex gap-1.5 flex-shrink-0">
-                <span className="w-3 h-3 rounded-full bg-[#ef4444] border border-black" />
-                <span className="w-3 h-3 rounded-full bg-[#eab308] border border-black" />
-                <span className="w-3 h-3 rounded-full bg-[#22c55e] border border-black" />
+        </header>
+
+        {/* 2. MODULE LIBRARY */}
+        <section className="space-y-6">
+          <div className={`border-b-4 pb-3 ${isUiProgramming ? 'border-black' : isPythonProgramming ? 'border-[#3776AB]/30' : 'border-slate-200'}`}>
+            <h2 className={`text-xl font-black uppercase tracking-tight ${isPythonProgramming ? 'font-mono' : 'font-sans'}`}>
+              Module Library
+            </h2>
+            <p className={`text-xs font-bold mt-1 ${isPythonProgramming ? 'text-slate-500 font-mono' : 'text-zinc-655'}`}>
+              Explore the primary learning structure of this course
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredModules.map((mod: any, index: number) => {
+              const totalTopics = mod.subtopics?.length || 0;
+              return (
+                <article 
+                  key={mod.id || index} 
+                  className={`p-4 md:p-5 flex flex-col justify-between group transition-all duration-200 ${t.cardBg} ${t.borderClass} ${t.shadowClass}`}
+                >
+                  <div className="space-y-3">
+                    {/* Top Header Row: Badge + Hours & Topics */}
+                    <div className="flex items-center justify-between">
+                      <span className={`text-[9px] font-mono font-black uppercase tracking-wider px-2 py-0.5 ${
+                        isUiProgramming
+                          ? 'text-white bg-zinc-900 border border-black shadow-[1px_1px_0px_rgba(0,0,0,1)]'
+                          : isPythonProgramming
+                            ? 'text-white bg-[#3776AB] border border-[#3776AB] rounded'
+                            : 'text-slate-700 bg-slate-100 border border-slate-200 rounded-md'
+                      }`}>
+                        Module {mod.moduleNo < 10 ? `0${mod.moduleNo}` : mod.moduleNo}
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <span className={`text-[11px] font-mono font-bold flex items-center gap-1 ${isPythonProgramming ? 'text-slate-550' : 'text-zinc-600'}`}>
+                          <Clock className={`w-3.5 h-3.5 ${isPythonProgramming ? 'text-[#3776AB]' : 'text-zinc-450'}`} /> {mod.hours || 4} Hrs
+                        </span>
+                        <span className={`text-[11px] font-mono font-bold flex items-center gap-1 ${isPythonProgramming ? 'text-slate-555' : 'text-zinc-600'}`}>
+                          <BookOpen className={`w-3.5 h-3.5 ${isPythonProgramming ? 'text-[#3776AB]' : 'text-zinc-450'}`} /> {totalTopics} Topics
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Module Title & Description */}
+                    <div className="space-y-1.5">
+                      <h3 className={`text-base sm:text-lg font-black uppercase tracking-tight leading-snug transition-colors ${t.titleHover}`}>
+                        {mod.title ? mod.title.replace(/^[●•]\s*/, "") : `Module ${mod.moduleNo}`}
+                      </h3>
+                      {mod.description && (
+                        <p className={`text-xs font-medium leading-relaxed line-clamp-2 ${isPythonProgramming ? 'text-slate-500' : 'text-zinc-600'}`}>
+                          {mod.description}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Topics Included Preview */}
+                    {mod.subtopics && mod.subtopics.length > 0 && (
+                      <div className={`pt-2.5 border-t space-y-1 ${isPythonProgramming ? 'border-[#3776AB]/20' : 'border-zinc-300/70'}`}>
+                        <span className={`text-[10px] font-mono uppercase tracking-wider font-extrabold block ${isPythonProgramming ? 'text-[#3776AB]' : 'text-zinc-500'}`}>
+                          Topics Included
+                        </span>
+                        <ul className="space-y-1">
+                          {mod.subtopics.slice(0, 3).map((sub: any, sIdx: number) => {
+                            const titleStr = sub.title ? sub.title.replace(/^[●•]\s*/, "") : sub.name || `Topic ${sIdx + 1}`;
+                            return (
+                              <li key={sIdx} className={`text-xs font-semibold flex items-center gap-1.5 truncate ${isPythonProgramming ? 'text-slate-700' : 'text-zinc-800'}`}>
+                                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isUiProgramming ? 'bg-[#EF4444]' : isPythonProgramming ? 'bg-[#3776AB]' : isDigitalBusiness ? 'bg-[#0F766E]' : 'bg-blue-600'}`} />
+                                <span className="truncate">{titleStr}</span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Bottom CTA Row */}
+                  <div className={`pt-3.5 mt-3 border-t flex items-center justify-between ${isPythonProgramming ? 'border-[#3776AB]/20' : 'border-zinc-300/70'}`}>
+                    <span className="text-[11px] font-mono font-bold text-zinc-500 uppercase tracking-wider">
+                      Module {mod.moduleNo < 10 ? `0${mod.moduleNo}` : mod.moduleNo}
+                    </span>
+                    <Link href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
+                      <button className={t.btnPrimary + " inline-flex items-center gap-1.5 cursor-pointer group/btn"}>
+                        <span>Open Module</span>
+                        <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-1" />
+                      </button>
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
+            {filteredModules.length === 0 && (
+              <div className={`col-span-1 md:col-span-2 text-center py-12 border-4 border-dashed border-zinc-350 bg-white ${isUiProgramming ? 'shadow-[4px_4px_0px_rgba(0,0,0,1)]' : 'rounded-xl shadow-xs'}`}>
+                <Info className="w-8 h-8 mx-auto text-zinc-400" />
+                <p className="text-sm font-bold text-zinc-700 mt-2">No matching modules found in this subject.</p>
               </div>
-              <span className="text-slate-300">|</span>
-              <span className={`font-black ${t.iconColor}`}>DESIGN STUDIO</span>
-              <span className="text-slate-300">/</span>
-              <span className="text-black font-black uppercase tracking-wider truncate max-w-[200px] md:max-w-none">{subject.name}</span>
+            )}
+          </div>
+        </section>
+
+        {/* Secondary Resource Sections Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
+          
+          {/* 3. RESOURCES SECTION */}
+          <section className="space-y-4">
+            <div className={`border-b-4 pb-2 ${isUiProgramming ? 'border-black' : isPythonProgramming ? 'border-[#3776AB]/30' : 'border-slate-200'}`}>
+              <h2 className={`text-sm font-black uppercase tracking-wider flex items-center gap-2 ${isPythonProgramming ? 'text-[#3776AB]' : 'text-black'}`}>
+                <FolderOpen className="w-4 h-4" />
+                Resources
+              </h2>
+            </div>
+            <div className="space-y-3">
+              <ResourceRowItem 
+                icon={BookOpen}
+                title="Notes"
+                description="Lecture notes & explanations"
+                count={notesCount}
+                countLabel="Modules"
+                href={`/student/subjects/subject/notes?subjectId=${subjectId}`}
+                themeKey={themeKey}
+                t={t}
+              />
+              <ResourceRowItem 
+                icon={Play}
+                title="Videos"
+                description="Recorded video walkthroughs"
+                count={videosCount}
+                countLabel="Videos"
+                href={`/student/subjects/subject/videos?subjectId=${subjectId}`}
+                themeKey={themeKey}
+                t={t}
+              />
+              <ResourceRowItem 
+                icon={FileText}
+                title="PDF Resources"
+                description="Reference manuals & slides"
+                count={pdfCount}
+                countLabel="Files"
+                href={`/student/subjects/subject/pdfs?subjectId=${subjectId}`}
+                themeKey={themeKey}
+                t={t}
+              />
+              <ResourceRowItem 
+                icon={Headphones}
+                title="Audio Lessons"
+                description="Audio explanations & lectures"
+                count={audiosCount}
+                countLabel="Audios"
+                href={`/student/subjects/subject/audio?subjectId=${subjectId}`}
+                themeKey={themeKey}
+                t={t}
+              />
+            </div>
+          </section>
+
+          {/* 4. PRACTICE SECTION */}
+          <section className="space-y-4">
+            <div className={`border-b-4 pb-2 ${isUiProgramming ? 'border-black' : isPythonProgramming ? 'border-[#3776AB]/30' : 'border-slate-200'}`}>
+              <h2 className={`text-sm font-black uppercase tracking-wider flex items-center gap-2 ${isPythonProgramming ? 'text-[#3776AB]' : 'text-black'}`}>
+                <Award className="w-4 h-4" />
+                Practice
+              </h2>
+            </div>
+            <div className="space-y-3">
+              <ResourceRowItem 
+                icon={Zap}
+                title="Flashcards"
+                description="Active recall flashcard decks"
+                count={flashcardsCount}
+                countLabel="Decks"
+                href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}
+                themeKey={themeKey}
+                t={t}
+              />
+              <ResourceRowItem 
+                icon={CheckCircle}
+                title="Quizzes"
+                description="Adaptive subject assessments"
+                count={quizzesCount}
+                countLabel="Quizzes"
+                href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}
+                themeKey={themeKey}
+                t={t}
+              />
+              <ResourceRowItem 
+                icon={Gamepad2}
+                title="Simulations"
+                description="Interactive sandbox exercises"
+                count={actualSimulationsCount}
+                countLabel="Sims"
+                href={`/student/subjects/subject/simulations?subjectId=${subjectId}`}
+                themeKey={themeKey}
+                t={t}
+              />
+            </div>
+          </section>
+
+          {/* 5. VISUAL LEARNING SECTION */}
+          <section className="space-y-4">
+            <div className={`border-b-4 pb-2 ${isUiProgramming ? 'border-black' : isPythonProgramming ? 'border-[#3776AB]/30' : 'border-slate-200'}`}>
+              <h2 className={`text-sm font-black uppercase tracking-wider flex items-center gap-2 ${isPythonProgramming ? 'text-[#3776AB]' : 'text-black'}`}>
+                <Brain className="w-4 h-4" />
+                Visual Learning
+              </h2>
+            </div>
+            <div className="space-y-3">
+              <ResourceRowItem 
+                icon={Terminal}
+                title="Mind Maps"
+                description="Visual concept layout topologies"
+                count={mindmapsCount}
+                countLabel="Maps"
+                href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}
+                themeKey={themeKey}
+                t={t}
+              />
+              <ResourceRowItem 
+                icon={Presentation}
+                title="Infographics"
+                description="Design grids & visual guidelines"
+                count={infographicsCount}
+                countLabel="Graphics"
+                href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}
+                themeKey={themeKey}
+                t={t}
+              />
+            </div>
+          </section>
+
+        </div>
+
+        {/* PDF Dialog Modal */}
+        {pdfModalOpen && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="pdf-modal-title"
+          >
+            <div className={`p-6 md:p-8 max-w-lg w-full relative animate-in fade-in zoom-in-95 duration-150 ${
+              isUiProgramming
+                ? 'bg-[#FAF9F5] border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-none'
+                : isPythonProgramming
+                  ? 'bg-white border-2 border-slate-200 rounded shadow-lg'
+                  : 'bg-white border border-slate-200 rounded-xl shadow-xl'
+            }`}>
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h2 id="pdf-modal-title" className={`text-xl font-black uppercase tracking-tight flex items-center gap-2 ${
+                    isPythonProgramming ? 'font-mono text-[#3776AB]' : 'text-black'
+                  }`}>
+                    <FileText className="w-5 h-5" />
+                    PDF Resources
+                  </h2>
+                  <p className={`text-xs font-bold mt-1 ${isPythonProgramming ? 'text-slate-550 font-mono' : 'text-zinc-650'}`}>
+                    Select a textbook or reading manual to view in Google Drive
+                  </p>
+                </div>
+                <button
+                  onClick={() => setPdfModalOpen(false)}
+                  className={`cursor-pointer outline-hidden ${
+                    isUiProgramming
+                      ? 'text-black hover:text-red-500 font-mono font-black text-sm border-2 border-black bg-white hover:bg-slate-50 px-2 py-0.5 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)]'
+                      : isPythonProgramming
+                        ? 'text-slate-550 hover:text-slate-800 font-mono text-xs border border-slate-200 px-2 py-1 rounded bg-slate-50'
+                        : 'text-slate-400 hover:text-slate-655 hover:bg-slate-100 rounded-lg p-1.5'
+                  }`}
+                  aria-label="Close dialog"
+                >
+                  ESC
+                </button>
+              </div>
+
+              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                {subjectResources.map((resource: any, index: number) => (
+                  <a
+                    key={index}
+                    href={resource.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex items-center justify-between p-3.5 transition-all duration-150 group outline-hidden ${
+                      isUiProgramming
+                        ? 'bg-white hover:bg-indigo-50/50 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(79,70,229,1)] hover:-translate-y-0.5 text-slate-800'
+                        : isPythonProgramming
+                          ? 'bg-white hover:bg-slate-50/80 border border-slate-200 rounded shadow-xs text-slate-850 hover:border-[#3776AB]'
+                          : 'bg-white hover:bg-slate-50 border border-slate-200 rounded-xl shadow-xs text-slate-800 hover:border-[#0F766E]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={`w-7 h-7 flex items-center justify-center flex-shrink-0 transition-colors ${
+                        isUiProgramming
+                          ? 'bg-indigo-50 border border-black text-[#4f46e5] group-hover:bg-[#4f46e5] group-hover:text-white'
+                          : isPythonProgramming
+                            ? 'bg-blue-50 border border-slate-200 text-[#3776AB] rounded'
+                            : 'bg-emerald-50 text-[#0F766E] rounded-lg'
+                      }`}>
+                        <FileText className="w-4 h-4" />
+                      </div>
+                      <span className={`text-xs font-extrabold uppercase tracking-wide truncate ${isPythonProgramming ? 'font-mono' : ''}`}>
+                        {resource.title}
+                      </span>
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-black flex-shrink-0" />
+                  </a>
+                ))}
+                {subjectResources.length === 0 && (
+                  <div className="text-center py-6 text-xs text-zinc-550 border-2 border-dashed border-zinc-200">
+                    No PDF resources uploaded yet.
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setPdfModalOpen(false)}
+                  className={`cursor-pointer ${t.btnPrimary}`}
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         )}
 
-        {/* UI LEARNING MODULES */}
-        <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 relative z-10 transition-all duration-300`}>
-          <div className={`flex justify-between items-center mb-5 pb-3 ${isSaaS ? 'border-b border-slate-100' : 'border-b-2 border-black'}`}>
-            <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} flex items-center gap-2 ${isSaaS ? 'font-sans text-blue-600' : 'font-mono'}`}>
-              <Layers className={`w-4 h-4 ${t.iconColor}`} /> {subject.name} Modules
-            </h3>
-            <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
-              <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
-                <span>View All Modules</span>
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {modules.slice(0, 5).map((mod: any, idx: number) => {
-              const subtopicsCount = mod.subtopics?.length || 0;
-              return (
-                <Link key={mod.id} href={`/student/subjects/subject/modules/item?subjectId=${subjectId}&id=${mod.id}`}>
-                  <div className={`bg-white p-4 transition-all duration-200 group h-full flex flex-col justify-between cursor-pointer relative ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none'}`}>
-                    <div>
-                      <div className="flex justify-between items-start mb-2">
-                        <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-bold tracking-widest uppercase ${isSaaS ? 'font-sans' : 'font-mono'}`}>
-                          MODULE 0{mod.moduleNo || (idx + 1)}
-                        </span>
-                      </div>
-                      <h4 className={`text-xs font-bold text-black mb-2 line-clamp-2 ${t.titleHover} transition-colors ${isSaaS ? 'font-sans' : 'font-mono'}`}>
-                        {mod.title ? mod.title.replace(/^[●•]\s*/, "") : ""}
-                      </h4>
-                      <p className="text-[10px] text-zinc-700 line-clamp-2 mb-4 font-sans leading-relaxed">
-                        {mod.co || "Introduces core concepts and key terminology."}
-                      </p>
-                    </div>
-                    <div className={`pt-2.5 flex justify-between items-center text-[10px] text-slate-500 ${isSaaS ? 'border-t border-slate-100 font-sans' : 'border-t border-black font-mono'}`}>
-                      <span className="flex items-center gap-1">
-                        <Book className="w-3.5 h-3.5" /> {subtopicsCount} Subtopics
-                      </span>
-                      <span className={`font-bold group-hover:translate-x-1 transition-transform flex items-center gap-0.5 ${t.iconColor}`}>
-                        Study <ArrowRight className="w-3 h-3" />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-            {modules.length === 0 && (
-              <div className={`col-span-full py-8 text-center font-bold text-slate-450 rounded-none ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl' : 'border-2 border-dashed border-black'}`}>
-                No modules available yet.
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* TWO COLUMN GRID FOR QUIZZES AND FLASHCARDS (Like Python) */}
-        <div className={`grid grid-cols-1 ${isSaaS ? 'lg:grid-cols-2' : 'lg:grid-cols-3'} gap-6 relative z-10 w-full`}>
-
-          {/* 2. Quizzes & Assessments */}
-          <div className={`${isSaaS ? 'lg:col-span-1' : 'lg:col-span-2'} ${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 transition-all duration-300`}>
-            <div className={`flex justify-between items-center mb-5 pb-3 ${isSaaS ? 'border-b border-slate-100' : 'border-b-2 border-black'}`}>
-              <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} flex items-center gap-2 ${isSaaS ? 'font-sans text-blue-600' : 'font-mono'}`}>
-                <Component className={`w-4 h-4 ${t.iconColor}`} /> Assessments & Challenges
-              </h3>
-              <Link href={`/student/subjects/subject/quizzes?subjectId=${subjectId}`}>
-                <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
-                  <span>View All Quizzes</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {quizzesWithAttempts.slice(0, 6).map((quiz: any) => {
-                return (
-                  <div key={quiz.id} className={`bg-white p-4 transition-all duration-200 group ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none'}`}>
-                    <div className="flex justify-start items-start mb-2">
-                      <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-bold tracking-widest uppercase ${isSaaS ? 'font-sans' : 'font-mono'}`}>PRACTICE QUIZ</span>
-                    </div>
-                    <h4 className={`text-xs font-bold text-black mb-3 line-clamp-1 ${t.titleHover} transition-colors ${isSaaS ? 'font-sans' : 'font-mono'}`}>{getQuizDisplayTitle(quiz, modules)}</h4>
-                    <div className="mt-4 flex justify-end">
-                      <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`}>
-                        <Button className={`${t.btnPrimary} font-mono text-[10px] py-1.5 px-4 h-8 uppercase tracking-wider transition-all duration-150`}>
-                          Start Challenge →
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                );
-              })}
-              {quizzesWithAttempts.length === 0 && (
-                <div className={`col-span-2 p-6 text-center text-slate-450 text-xs ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl flex flex-col md:flex-row items-center justify-center gap-6' : 'border-2 border-dashed border-black rounded-none font-mono'}`}>
-                  {isSaaS && (
-                    <div className="w-16 h-16 shrink-0 text-blue-500 bg-blue-50 rounded-lg border border-blue-100 flex items-center justify-center">
-                      <FileText className="w-8 h-8" />
-                    </div>
-                  )}
-                  <div className={isSaaS ? 'text-left' : ''}>
-                    <p className="font-bold text-slate-800 text-sm">All design specs met. No active challenges.</p>
-                    <p className="text-[11px] text-slate-500 mt-1">New quizzes and challenges will appear here once they are published.</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* 3. Flashcard Decks */}
-          <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 transition-all duration-300`}>
-            <div className={`flex justify-between items-center mb-5 pb-3 ${isSaaS ? 'border-b border-slate-100' : 'border-b-2 border-black'}`}>
-              <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} flex items-center gap-2 ${isSaaS ? 'font-sans text-blue-600' : 'font-mono'}`}>
-                <Palette className={`w-4 h-4 ${t.iconColor}`} /> Flashcard Decks
-              </h3>
-              <Link href={`/student/subjects/subject/flashcards?subjectId=${subjectId}`}>
-                <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
-                  <span>View All Decks</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </div>
-            <div className="space-y-3">
-              {flashcardDecks.slice(0, 4).map((deck: any) => {
-                return (
-                  <Link key={deck.id} href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`}>
-                    <div className={`bg-white p-3.5 flex justify-between items-center cursor-pointer group transition-all duration-200 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-0 active:translate-y-0 active:shadow-none'}`}>
-                      <div className="flex items-center gap-2 overflow-hidden">
-                        <span className={`text-xs text-black font-bold ${t.titleHover} transition-colors truncate ${isSaaS ? 'font-sans' : 'font-mono'}`}>{getFlashcardDisplayTitle(deck, modules)}</span>
-                      </div>
-                      <span className={`text-[10px] ${t.badge} px-2 py-0.5 font-bold whitespace-nowrap ${isSaaS ? 'font-sans' : 'font-mono'}`}>{deck.cards?.length || 0} CARDS</span>
-                    </div>
-                  </Link>
-                );
-              })}
-              {flashcardDecks.length === 0 && (
-                <div className={`p-6 text-center text-slate-450 text-xs ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl flex flex-col md:flex-row items-center justify-center gap-6 font-sans' : 'border-2 border-dashed border-black rounded-none font-mono'}`}>
-                  {isSaaS && (
-                    <div className="w-16 h-16 shrink-0 text-indigo-500 bg-indigo-50 rounded-lg border border-indigo-100 flex items-center justify-center">
-                      <Layers className="w-8 h-8" />
-                    </div>
-                  )}
-                  <div className={isSaaS ? 'text-left' : ''}>
-                    <p className="font-bold text-slate-800 text-sm">Library index is empty.</p>
-                    <p className="text-[11px] text-slate-500 mt-1">Flashcards will appear here once faculty publishes new decks.</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* CONNECTED ARCHITECTURE DIAGRAMS (MINDMAPS) */}
-        <div className="w-full relative z-10 mt-6">
-          <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 flex flex-col justify-between transition-all duration-300`}>
-            <div>
-              <div className={`flex justify-between items-center mb-5 pb-3 ${isSaaS ? 'border-b border-slate-100' : 'border-b-2 border-black'}`}>
-                <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} flex items-center gap-2 ${isSaaS ? 'font-sans text-blue-600' : 'font-mono'}`}>
-                  <Grid className={`w-4 h-4 ${t.iconColor}`} /> Subject Mind Maps
-                </h3>
-                <Link href={`/student/subjects/subject/mindmaps?subjectId=${subjectId}`}>
-                  <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
-                    <span>View All Mind Maps</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="relative flex flex-col items-center justify-center py-6">
-                {/* SVG Connector Lines */}
-                <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-                  <svg className={`w-full h-full ${isSaaS ? 'stroke-slate-200' : 'stroke-black stroke-[2]'}`} style={{ strokeDasharray: "4 4" }}>
-                    <line x1="15%" y1="50%" x2="38%" y2="50%" />
-                    <line x1="38%" y1="50%" x2="62%" y2="50%" />
-                    <line x1="62%" y1="50%" x2="85%" y2="50%" />
-                  </svg>
-                </div>
-
-                <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
-                  {mindmaps.slice(0, 4).map((map: any, idx: number) => {
-                    const nodeColors = [
-                      { bg: "bg-red-50 text-red-700 border-red-200", hover: "group-hover:bg-red-600 group-hover:border-red-600" },
-                      { bg: "bg-red-50 text-red-700 border-red-200", hover: "group-hover:bg-red-600 group-hover:border-red-600" },
-                      { bg: "bg-red-50 text-red-700 border-red-200", hover: "group-hover:bg-red-600 group-hover:border-red-600" },
-                      { bg: "bg-red-50 text-red-700 border-red-200", hover: "group-hover:bg-red-600 group-hover:border-red-600" },
-                    ];
-                    return (
-                      <Link key={map.id} href={`/student/subjects/subject/mindmaps/item?subjectId=${subjectId}&id=${map.id}`} className="w-full h-full flex">
-                        <div className={`bg-white p-4 text-center group cursor-pointer transition-all duration-200 relative w-full h-full flex flex-col justify-between items-center gap-2 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'}`}>
-                          <div className="w-full flex flex-col items-center">
-                            <div className={`w-7 h-7 ${t.badge} flex items-center justify-center font-bold text-xs mx-auto mb-2 transition-all duration-300 ${isSaaS ? 'font-sans' : 'font-mono'}`}>
-                              M0{idx + 1}
-                            </div>
-                            <h4 className={`text-[10px] font-bold text-black uppercase tracking-wider line-clamp-2 ${t.titleHover} transition-colors px-1 leading-normal ${isSaaS ? 'font-sans' : 'font-mono'}`}>{map.title}</h4>
-                          </div>
-                          <p className={`text-[9px] text-slate-400 mt-auto ${isSaaS ? 'font-sans' : 'font-mono'}`}>Design Node</p>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                  {mindmaps.length === 0 && (
-                    <div className={`col-span-full py-6 text-center text-slate-450 text-xs ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl flex items-center justify-center gap-4' : 'border-2 border-dashed border-black rounded-none font-mono'}`}>
-                      {isSaaS && (
-                        <div className="w-10 h-10 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-[#ef4444]">
-                          <Grid className="w-5 h-5" />
-                        </div>
-                      )}
-                      <div className={isSaaS ? 'text-left' : ''}>
-                        <p className="font-bold text-slate-800 text-sm">No mind maps available yet.</p>
-                        <p className="text-[11px] text-slate-500 mt-1">Mind maps will be available here soon.</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* CONNECTED ARCHITECTURE DIAGRAMS (INFOGRAPHICS) */}
-        <div className="w-full relative z-10 mt-6">
-          <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 flex flex-col justify-between transition-all duration-300`}>
-            <div>
-              <div className={`flex justify-between items-center mb-5 pb-3 ${isSaaS ? 'border-b border-slate-100' : 'border-b-2 border-black'}`}>
-                <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} flex items-center gap-2 ${isSaaS ? 'font-sans text-blue-600' : 'font-mono'}`}>
-                  <Grid className={`w-4 h-4 ${t.iconColor}`} /> Infographics Topologies
-                </h3>
-                <Link href={`/student/subjects/subject/infographics?subjectId=${subjectId}`}>
-                  <Button className={`${t.btnGhost} view-all-btn flex items-center gap-1.5`}>
-                    <span>View All Infographics</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="relative flex flex-col items-center justify-center py-6">
-                {/* SVG Connector Lines */}
-                <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-                  <svg className={`w-full h-full ${isSaaS ? 'stroke-slate-200' : 'stroke-black stroke-[2]'}`} style={{ strokeDasharray: "4 4" }}>
-                    <line x1="15%" y1="50%" x2="38%" y2="50%" />
-                    <line x1="38%" y1="50%" x2="62%" y2="50%" />
-                    <line x1="62%" y1="50%" x2="85%" y2="50%" />
-                  </svg>
-                </div>
-
-                <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-4">
-                  {infographics.slice(0, 4).map((info: any, idx: number) => {
-                    return (
-                      <Link key={info.id} href={`/student/subjects/subject/infographics/item?subjectId=${subjectId}&id=${info.id}`} className="w-full h-full flex">
-                        <div className={`bg-white p-4 text-center group cursor-pointer transition-all duration-200 relative w-full h-full flex flex-col justify-between items-center gap-2 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'}`}>
-                          <div className="w-full flex flex-col items-center">
-                            <div className={`w-7 h-7 ${t.badge} flex items-center justify-center font-bold text-xs mx-auto mb-2 transition-all duration-300 ${isSaaS ? 'font-sans' : 'font-mono'}`}>
-                              I0{idx + 1}
-                            </div>
-                            <h4 className={`text-[10px] font-bold text-black uppercase tracking-wider line-clamp-2 ${t.titleHover} transition-colors px-1 leading-normal ${isSaaS ? 'font-sans' : 'font-mono'}`}>{info.title}</h4>
-                          </div>
-                          <p className={`text-[9px] text-slate-400 mt-auto ${isSaaS ? 'font-sans' : 'font-mono'}`}>Infographic Node</p>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                  {infographics.length === 0 && (
-                    <div className={`col-span-full py-6 text-center text-slate-450 text-xs ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl flex items-center justify-center gap-4' : 'border-2 border-dashed border-black rounded-none font-mono'}`}>
-                      {isSaaS && (
-                        <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
-                          <Activity className="w-5 h-5" />
-                        </div>
-                      )}
-                      <div className={isSaaS ? 'text-left' : ''}>
-                        <p className="font-bold text-slate-800 text-sm">No infographics available yet.</p>
-                        <p className="text-[11px] text-slate-500 mt-1">Infographics will be available here soon.</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Reference Materials (Bottom Column) */}
-        <div className="w-full relative z-10 mt-6 pb-20">
-          <div className={`${t.cardBg} ${t.borderClass} ${t.shadowClass} p-6 transition-all duration-300`}>
-            <div className="flex items-center gap-2 mb-4">
-              <FileText className={`w-4 h-4 ${t.iconColor}`} />
-              <h3 className={`text-sm font-bold uppercase tracking-wider ${t.iconColor} ${isSaaS ? 'font-sans' : 'font-mono'}`}>Design Resources & Documentation</h3>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {subjectResources.slice(0, 4).map((resource: any, index: number) => (
-                <a key={index} href={resource.link} target="_blank" rel="noopener noreferrer" className="block w-full">
-                  <div className={`bg-white p-4 flex flex-col justify-center items-center text-center gap-3 group aspect-square w-full transition-all duration-250 ${isSaaS ? 'border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5' : 'border-2 border-black rounded-none hover:bg-zinc-50 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]'}`}>
-                    <div className={`p-3 transition-colors ${isSaaS ? 'bg-blue-50 text-blue-600 rounded-xl' : 'bg-white border-2 border-black rounded-none group-hover:bg-zinc-100'}`}>
-                      <FileText className={`w-6 h-6 ${isSaaS ? 'text-blue-600' : 'text-slate-600 group-hover:text-black'}`} />
-                    </div>
-                    <div className="space-y-1">
-                      <p className={`text-xs font-bold text-black ${t.titleHover} transition-colors line-clamp-2 ${isSaaS ? 'font-sans' : ''}`}>{resource.title}</p>
-                      <p className={`text-[10px] ${t.textMuted} uppercase tracking-wider ${isSaaS ? 'font-sans' : 'font-mono'}`}>{resource.type}</p>
-                    </div>
-                  </div>
-                </a>
-              ))}
-              {subjectResources.length === 0 && (
-                <div className={`col-span-full py-4 text-center text-slate-450 text-xs rounded-none ${isSaaS ? 'border border-dashed border-[#E2E8F0] bg-slate-50/50 rounded-xl font-sans' : 'border-2 border-dashed border-black font-mono'}`}>
-                  No official design assets linked.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

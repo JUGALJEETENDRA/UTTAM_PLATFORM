@@ -24,45 +24,66 @@ const THEME_MAP: Record<string, {
   textMuted: string;
   badge: string;
   pattern: string;
+  iconColor: string;
 }> = {
   "ui programming": {
-    bg: "bg-slate-50 text-slate-800 font-sans",
+    bg: "bg-[#FAF9F5] text-black font-sans",
     cardBg: "bg-white",
-    borderClass: "border border-slate-200 rounded-lg",
-    shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-500 hover:text-indigo-655 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
-    titleHover: "group-hover:text-indigo-600",
-    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
-    textMuted: "text-slate-500 font-medium font-sans",
-    badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    borderClass: "border-2 border-black rounded-none",
+    shadowClass: "shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(239,68,68,1)] hover:-translate-y-0.5",
+    btnPrimary: "bg-[#EF4444] hover:bg-[#dc2626] text-white font-black uppercase text-[11px] tracking-wider px-3.5 py-1.5 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all cursor-pointer rounded-none",
+    btnGhost: "text-black hover:text-[#EF4444] font-bold text-xs bg-white hover:bg-slate-50 border-2 border-black rounded-none px-3 py-1.5 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[0.5px] hover:translate-y-[0.5px] transition-all inline-flex items-center",
+    titleHover: "group-hover:text-[#EF4444]",
+    textHeading: "text-slate-900 font-black uppercase tracking-tight font-sans",
+    textMuted: "text-zinc-655 font-bold",
+    badge: "font-mono text-[9px] font-black uppercase tracking-wider text-white bg-zinc-900 px-2 py-0.5 border border-black shadow-[1px_1px_0px_rgba(0,0,0,1)]",
+    pattern: "",
+    iconColor: "text-[#EF4444]"
   },
+
   "startup engineering": {
     bg: "bg-[#F8FAFC] text-slate-800 font-sans",
     cardBg: "bg-white",
     borderClass: "border border-slate-200 rounded-xl",
-    shadowClass: "shadow-xs transition-all duration-200",
+    shadowClass: "shadow-xs hover:shadow-md hover:-translate-y-0.5",
     btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-202 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
     titleHover: "group-hover:text-blue-600",
     textHeading: "text-slate-900 font-bold tracking-tight font-sans",
     textMuted: "text-slate-500 font-medium font-sans",
     badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    pattern: "",
+    iconColor: "text-blue-600"
   },
+
+  "python programming": {
+    bg: "bg-[#F8FAFC] text-slate-755 font-mono font-jetbrains",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded",
+    shadowClass: "shadow-xs hover:shadow-sm hover:-translate-y-0.5",
+    btnPrimary: "bg-[#3776AB] hover:bg-[#2b5b84] text-white font-bold text-xs rounded shadow-xs py-2 px-4 transition-all font-mono",
+    btnGhost: "text-slate-655 hover:text-[#3776AB] font-mono text-xs hover:bg-slate-50 border border-slate-200 rounded px-3 py-1.5 transition-all bg-white shadow-sm inline-flex items-center",
+    titleHover: "group-hover:text-[#3776AB]",
+    textHeading: "text-slate-900 font-bold tracking-tight font-mono",
+    textMuted: "text-slate-500 font-mono",
+    badge: "bg-blue-50 text-[#3776AB] border border-blue-200 rounded font-mono",
+    pattern: "",
+    iconColor: "text-[#3776AB]"
+  },
+
   "digital business": {
-    bg: "bg-slate-50 text-slate-800 font-sans",
+    bg: "bg-[#F8FAFC] text-slate-800 font-sans",
     cardBg: "bg-white",
     borderClass: "border border-slate-200 rounded-xl",
-    shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-gradient-to-r from-blue-700 via-indigo-700 to-indigo-800 hover:from-blue-800 hover:to-indigo-900 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-600 hover:text-slate-900 font-sans text-xs hover:bg-slate-100 border border-slate-200/85 rounded-xl px-4 py-2 transition-all inline-flex items-center bg-white shadow-xs",
-    titleHover: "group-hover:text-blue-700",
+    shadowClass: "shadow-xs hover:shadow-md hover:-translate-y-0.5",
+    btnPrimary: "bg-[#0F766E] hover:bg-[#0d635c] text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-555 hover:text-[#0F766E] font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-[#0F766E]",
     textHeading: "text-slate-900 font-bold tracking-tight font-sans",
     textMuted: "text-slate-500 font-medium font-sans",
-    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    badge: "font-sans text-[10px] font-semibold bg-[#0F766E]/5 text-[#0F766E] border border-[#0F766E]/10 px-2.5 py-1 rounded-lg",
+    pattern: "strategy-board-dot",
+    iconColor: "text-[#0F766E]"
   }
 };
 
@@ -77,7 +98,8 @@ const DEFAULT_THEME = {
   textHeading: "text-slate-900 font-bold tracking-tight font-sans",
   textMuted: "text-slate-500 font-medium font-sans",
   badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
-  pattern: ""
+  pattern: "",
+  iconColor: "text-blue-600"
 };
 
 // Premium Figma-style component bounding box selection frame (Overlays removed per request)
@@ -149,7 +171,7 @@ export default function QuizzesPage() {
   const isStartupEngineering = subjectId === 'id_1i2u3y4t5' || String(subjectName || "").toLowerCase().includes("startup");
   const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : isDigitalBusiness ? "digital business" : (isStartupEngineering ? "startup engineering" : "");
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
-  const isPremiumTheme = !isPythonProgramming && !isDigitalBusiness;
+  const isPremiumTheme = !isPythonProgramming;
 
   const renderQuizPreview = (quizIndex: number, title?: string) => {
     const normalizedTitle = String(title || "").toLowerCase();
@@ -298,7 +320,7 @@ export default function QuizzesPage() {
               const { shortTitle, funcName } = getCleanPythonDetails(quiz.title);
 
               return (
-                <motion.div key={quiz.id} variants={itemVariants}>
+                <motion.div key={quiz.id} variants={itemVariants} className="h-fit">
                   <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="block h-full">
                     <div className="bg-white border border-slate-200 p-4 rounded hover:border-[#3776AB] transition-all duration-300 flex flex-col justify-between h-full group cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(55,118,171,0.06)] hover:-translate-y-1">
                       <div>
@@ -376,10 +398,7 @@ export default function QuizzesPage() {
               whileHover={isPremiumTheme ? { x: -3 } : {}}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
-              <Button className={`font-black uppercase tracking-wider ${isPremiumTheme
-                ? "bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 hover:text-slate-900 shadow-xs rounded-lg px-4 py-2 text-xs font-mono font-bold uppercase transition-all duration-150"
-                : t.btnGhost
-                }`}>
+              <Button className={`${t.btnGhost} uppercase`}>
                 ← Back to Dashboard
               </Button>
             </motion.div>
@@ -387,7 +406,7 @@ export default function QuizzesPage() {
         </div>
 
         {/* Section Header Card */}
-        <div className="bg-white border border-slate-200 p-6 md:p-8 rounded-lg shadow-xs mb-8">
+        <div className={`bg-white ${t.borderClass} p-6 md:p-8 ${t.shadowClass} mb-8`}>
           <ResourceHeader 
             type="quizzes" 
             title="Interactive Quizzes" 
@@ -410,11 +429,11 @@ export default function QuizzesPage() {
             const quizStatus = isCompleted ? (hasPassed ? "passed" : "failed") : "pending";
 
             const quizCard = (
-              <Card className={`flex flex-col h-full transition-all duration-300 overflow-hidden ${isPremiumTheme
+              <Card className={`flex flex-col h-auto transition-all duration-300 overflow-hidden ${isPremiumTheme
                   ? `${t.cardBg} ${t.borderClass} ${t.shadowClass} ${quizStatus === 'passed' ? 'opacity-85' : ''}`
-                  : `flex flex-col h-full hover:shadow-lg transition-shadow border-zinc-200 ${quizStatus === 'passed' ? 'bg-zinc-50 opacity-80' : ''}`
+                  : `flex flex-col h-auto hover:shadow-lg transition-shadow border-zinc-200 ${quizStatus === 'passed' ? 'bg-zinc-50 opacity-80' : ''}`
                 }`}>
-                <CardHeader className={isPremiumTheme ? (isUiProgramming ? "p-4 pb-1 md:p-4 md:pb-1" : "p-5 md:p-6 pb-2") : ""}>
+                <CardHeader className={isPremiumTheme ? (isUiProgramming ? "p-4 pb-1 md:p-4 md:pb-1" : "p-4 md:p-5 pb-1.5") : ""}>
                   <div className="flex justify-between items-start mb-1.5">
                     <Badge variant="outline" className={isPremiumTheme ? "bg-slate-100 text-slate-700 border-slate-200 rounded font-mono text-[9px]" : "text-zinc-600 bg-white"}>
                       Module {quiz.module?.moduleNo || "?"}
@@ -428,7 +447,7 @@ export default function QuizzesPage() {
                   </CardTitle>
                 </CardHeader>
 
-                <CardContent className={`flex-grow ${isPremiumTheme ? (isUiProgramming ? "p-4 pt-1 pb-1 md:p-4 md:pt-1 md:pb-1" : "p-5 md:p-6 pt-0") : ""}`}>
+                <CardContent className={`${isPremiumTheme ? (isUiProgramming ? "p-4 pt-1 pb-1 md:p-4 md:pt-1 md:pb-1" : "p-4 md:p-5 pt-0 pb-3") : ""}`}>
                   <div className={`space-y-1.5 ${isPremiumTheme ? "text-xs font-mono text-slate-500" : "text-sm text-zinc-650"}`}>
                     {quizStatus === 'pending' ? (
                       <>
@@ -446,16 +465,16 @@ export default function QuizzesPage() {
                   </div>
                 </CardContent>
 
-                <CardFooter className={`pt-2 mt-auto ${isPremiumTheme ? (isUiProgramming ? "p-4 pt-2 md:p-4 md:pt-2 border-t border-slate-100" : "p-5 md:p-6 border-t border-slate-100") : "border-t border-zinc-100"}`}>
+                <CardFooter className={`pt-2 mt-auto ${isPremiumTheme ? (isUiProgramming ? "p-4 pt-2 md:p-4 md:pt-2 border-t border-black" : "p-4 md:p-5 border-t border-slate-100") : "border-t border-zinc-100"}`}>
                   {quizStatus === 'pending' && (
                     <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="w-full">
-                      <Button className={`w-full ${isUiProgramming ? "h-8 py-1 text-xs rounded-lg bg-[#4f46e5] hover:bg-[#4338ca] text-white font-semibold shadow-xs font-sans transition-all" : (isPremiumTheme ? t.btnPrimary : "bg-primary hover:bg-primary/90 text-white")}`}>Start Quiz</Button>
+                      <Button className={`w-full ${isPremiumTheme ? t.btnPrimary : "bg-primary hover:bg-primary/90 text-white"}`}>Start Quiz</Button>
                     </Link>
                   )}
                   {quizStatus === 'failed' && (
                     <div className="w-full flex flex-col space-y-2">
                       <Link href={`/student/subjects/subject/quizzes/item?subjectId=${subjectId}&id=${quiz.id}`} className="w-full">
-                        <Button variant="outline" className={`w-full font-semibold ${isPremiumTheme ? (isUiProgramming ? "h-8 py-1 text-xs rounded-lg border-slate-350 text-slate-700 hover:bg-slate-50 shadow-xs font-sans" : "border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg shadow-xs font-mono text-xs uppercase") : "border-zinc-300 text-zinc-700 hover:bg-zinc-100"}`}>Retry Quiz</Button>
+                        <Button variant="outline" className={`w-full font-semibold ${isPremiumTheme ? t.btnGhost : "border border-zinc-300 text-zinc-700 hover:bg-zinc-100 rounded-lg"}`}>Retry Quiz</Button>
                       </Link>
                     </div>
                   )}

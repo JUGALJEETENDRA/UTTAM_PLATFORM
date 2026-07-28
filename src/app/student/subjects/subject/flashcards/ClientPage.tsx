@@ -24,45 +24,66 @@ const THEME_MAP: Record<string, {
   textMuted: string;
   badge: string;
   pattern: string;
+  iconColor: string;
 }> = {
   "ui programming": {
-    bg: "bg-slate-50 text-slate-800 font-sans",
+    bg: "bg-[#FAF9F5] text-black font-sans",
     cardBg: "bg-white",
-    borderClass: "border border-slate-200 rounded-lg",
-    shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-500 hover:text-indigo-655 font-sans text-xs hover:bg-slate-55 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
-    titleHover: "group-hover:text-indigo-600",
-    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
-    textMuted: "text-slate-500 font-medium font-sans",
-    badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    borderClass: "border-2 border-black rounded-none",
+    shadowClass: "shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(239,68,68,1)] hover:-translate-y-0.5",
+    btnPrimary: "bg-[#EF4444] hover:bg-[#dc2626] text-white font-black uppercase text-[11px] tracking-wider px-3.5 py-1.5 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all cursor-pointer rounded-none",
+    btnGhost: "text-black hover:text-[#EF4444] font-bold text-xs bg-white hover:bg-slate-50 border-2 border-black rounded-none px-3 py-1.5 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[0.5px] hover:translate-y-[0.5px] transition-all inline-flex items-center",
+    titleHover: "group-hover:text-[#EF4444]",
+    textHeading: "text-slate-900 font-black uppercase tracking-tight font-sans",
+    textMuted: "text-zinc-655 font-bold",
+    badge: "font-mono text-[9px] font-black uppercase tracking-wider text-white bg-zinc-900 px-2 py-0.5 border border-black shadow-[1px_1px_0px_rgba(0,0,0,1)]",
+    pattern: "",
+    iconColor: "text-[#EF4444]"
   },
+
   "startup engineering": {
     bg: "bg-[#F8FAFC] text-slate-800 font-sans",
     cardBg: "bg-white",
     borderClass: "border border-slate-200 rounded-xl",
-    shadowClass: "shadow-xs transition-all duration-200",
+    shadowClass: "shadow-xs hover:shadow-md hover:-translate-y-0.5",
     btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-202 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
     titleHover: "group-hover:text-blue-600",
     textHeading: "text-slate-900 font-bold tracking-tight font-sans",
     textMuted: "text-slate-500 font-medium font-sans",
     badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    pattern: "",
+    iconColor: "text-blue-600"
   },
+
+  "python programming": {
+    bg: "bg-[#F8FAFC] text-slate-755 font-mono font-jetbrains",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded",
+    shadowClass: "shadow-xs hover:shadow-sm hover:-translate-y-0.5",
+    btnPrimary: "bg-[#3776AB] hover:bg-[#2b5b84] text-white font-bold text-xs rounded shadow-xs py-2 px-4 transition-all font-mono",
+    btnGhost: "text-slate-655 hover:text-[#3776AB] font-mono text-xs hover:bg-slate-50 border border-slate-200 rounded px-3 py-1.5 transition-all bg-white shadow-sm inline-flex items-center",
+    titleHover: "group-hover:text-[#3776AB]",
+    textHeading: "text-slate-900 font-bold tracking-tight font-mono",
+    textMuted: "text-slate-500 font-mono",
+    badge: "bg-blue-50 text-[#3776AB] border border-blue-200 rounded font-mono",
+    pattern: "",
+    iconColor: "text-[#3776AB]"
+  },
+
   "digital business": {
-    bg: "bg-slate-50 text-slate-800 font-sans",
+    bg: "bg-[#F8FAFC] text-slate-800 font-sans",
     cardBg: "bg-white",
     borderClass: "border border-slate-200 rounded-xl",
-    shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-gradient-to-r from-blue-700 via-indigo-700 to-indigo-800 hover:from-blue-800 hover:to-indigo-900 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-600 hover:text-slate-900 font-sans text-xs hover:bg-slate-100 border border-slate-200/85 rounded-xl px-4 py-2 transition-all inline-flex items-center bg-white shadow-xs",
-    titleHover: "group-hover:text-blue-700",
+    shadowClass: "shadow-xs hover:shadow-md hover:-translate-y-0.5",
+    btnPrimary: "bg-[#0F766E] hover:bg-[#0d635c] text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-555 hover:text-[#0F766E] font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-[#0F766E]",
     textHeading: "text-slate-900 font-bold tracking-tight font-sans",
     textMuted: "text-slate-500 font-medium font-sans",
-    badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    badge: "font-sans text-[10px] font-semibold bg-[#0F766E]/5 text-[#0F766E] border border-[#0F766E]/10 px-2.5 py-1 rounded-lg",
+    pattern: "strategy-board-dot",
+    iconColor: "text-[#0F766E]"
   }
 };
 
@@ -77,7 +98,8 @@ const DEFAULT_THEME = {
   textHeading: "text-slate-900 font-bold tracking-tight font-sans",
   textMuted: "text-slate-500 font-medium font-sans",
   badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
-  pattern: ""
+  pattern: "",
+  iconColor: "text-blue-600"
 };
 
 // Premium Figma-style component bounding box selection frame (Overlays removed per request)
@@ -151,7 +173,7 @@ export default function FlashcardsListPage() {
   const isStartupEngineering = subjectId === 'id_1i2u3y4t5' || String(subjectName || "").toLowerCase().includes("startup");
   const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : isDigitalBusiness ? "digital business" : (isStartupEngineering ? "startup engineering" : "");
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
-  const isPremiumTheme = !isPythonProgramming && !isDigitalBusiness;
+  const isPremiumTheme = !isPythonProgramming;
 
   const renderFlashcardPreview = (moduleNo: number, title: string) => {
     return (
@@ -290,7 +312,7 @@ export default function FlashcardsListPage() {
               const { shortTitle, funcName } = getCleanPythonDetails(getFlashcardDisplayTitle(deck, modules));
 
               return (
-                <motion.div key={deck.id} variants={itemVariants}>
+                <motion.div key={deck.id} variants={itemVariants} className="h-fit">
                   <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`} className="block h-full">
                     <div className="bg-white border border-slate-200 p-4 rounded hover:border-[#3776AB] transition-all duration-300 flex flex-col justify-between h-full group cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(55,118,171,0.06)] hover:-translate-y-1">
                       <div>
@@ -367,10 +389,7 @@ export default function FlashcardsListPage() {
               whileHover={isPremiumTheme ? { x: -3 } : {}}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
-              <Button className={`font-black uppercase tracking-wider ${isPremiumTheme
-                ? "bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 hover:text-slate-900 shadow-xs rounded-lg px-4 py-2 text-xs font-mono font-bold uppercase transition-all duration-150"
-                : t.btnGhost
-                }`}>
+              <Button className={`${t.btnGhost} uppercase`}>
                 ← Back to Dashboard
               </Button>
             </motion.div>
@@ -378,7 +397,7 @@ export default function FlashcardsListPage() {
         </div>
 
         {/* Section Header Card */}
-        <div className="bg-white border border-slate-200 p-6 md:p-8 rounded-lg shadow-xs mb-8">
+        <div className={`bg-white ${t.borderClass} p-6 md:p-8 ${t.shadowClass} mb-8`}>
           <ResourceHeader 
             type="flashcards" 
             title="Revision Flashcards" 
@@ -395,11 +414,11 @@ export default function FlashcardsListPage() {
         >
           {flashcardDecks.map((deck) => {
             const cardContent = (
-              <Card className={`flex flex-col h-full transition-all duration-300 overflow-hidden ${isPremiumTheme
-                  ? "bg-white border border-slate-200 rounded-lg shadow-sm"
+              <Card className={`flex flex-col h-auto transition-all duration-300 overflow-hidden ${isPremiumTheme
+                  ? `${t.cardBg} ${t.borderClass} ${t.shadowClass}`
                   : "hover:border-primary/40 hover:shadow-lg bg-white"
                 }`}>
-                <CardHeader className={`${isPremiumTheme ? "p-5 md:p-6 pb-2 border-b border-slate-100" : "pb-3 border-b border-zinc-50"}`}>
+                <CardHeader className={`${isPremiumTheme ? "p-4 md:p-5 pb-2 border-b border-slate-100" : "pb-3 border-b border-zinc-50"}`}>
                   <div className="flex justify-between items-start mb-2">
                     <Badge variant="outline" className={isPremiumTheme ? "bg-slate-100 text-slate-750 border-slate-200 rounded font-mono text-[9px]" : "text-[10px] px-2 py-0.5 border-zinc-200 bg-zinc-50 text-zinc-650 font-bold"}>
                       Module {deck.module?.moduleNo || "?"}
@@ -423,17 +442,14 @@ export default function FlashcardsListPage() {
                     {getFlashcardDisplayTitle(deck, modules)}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className={`flex-grow flex flex-col justify-between ${isPremiumTheme ? "p-5 md:p-6" : "pt-4"}`}>
-                  <div className={`flex items-center space-x-2 font-medium mb-6 ${isPremiumTheme ? "text-xs font-mono text-slate-500" : "text-sm text-zinc-555"}`}>
+                <CardContent className={`${isPremiumTheme ? "p-4 md:p-5 pt-2.5" : "pt-4"}`}>
+                  <div className={`flex items-center space-x-2 font-medium mb-3.5 ${isPremiumTheme ? "text-xs font-mono text-slate-500" : "text-sm text-zinc-555"}`}>
                     <Layers className={`w-4 h-4 ${isPremiumTheme ? "text-slate-400" : "text-primary/70"}`} />
                     <span>{deck.cards?.length || 0} Terms & Concepts</span>
                   </div>
 
                   <Link href={`/student/subjects/subject/flashcards/item?subjectId=${subjectId}&id=${deck.id}`} className="w-full mt-auto">
-                    <Button className={`w-full ${isPremiumTheme
-                        ? "bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-sm font-sans text-xs font-semibold transition-all duration-150"
-                        : "bg-primary hover:bg-primary/95 text-white shadow-sm font-bold h-10 transition-transform active:scale-[0.98]"
-                      }`}>
+                    <Button className={`w-full ${isPremiumTheme ? t.btnPrimary : "bg-primary hover:bg-primary/95 text-white shadow-sm font-bold h-10 transition-transform active:scale-[0.98]"}`}>
                       Study Deck
                     </Button>
                   </Link>
@@ -447,7 +463,7 @@ export default function FlashcardsListPage() {
                   <motion.div
                     whileHover="hover"
                     animate="rest"
-                    className="h-full"
+                    className="h-auto"
                   >
                     <motion.div
                       variants={{
@@ -455,16 +471,16 @@ export default function FlashcardsListPage() {
                         hover: { y: -8, scale: 1.012 }
                       }}
                       transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                      className="h-full relative group"
+                      className="h-auto relative group"
                     >
                       {/* Stack offset backgrounds — frozen, no hover changes */}
                       <div
-                        className="absolute inset-0 bg-slate-100 rounded-lg border border-slate-200 translate-y-1 translate-x-1 pointer-events-none transition-opacity duration-200 group-hover:opacity-0"
+                        className={`absolute inset-0 bg-slate-100 translate-y-1 translate-x-1 pointer-events-none transition-opacity duration-200 group-hover:opacity-0 ${t.borderClass}`}
                       />
                       <div
-                        className="absolute inset-0 bg-slate-50 rounded-lg border border-slate-200/60 translate-y-2 translate-x-2 pointer-events-none transition-opacity duration-200 opacity-60 group-hover:opacity-0"
+                        className={`absolute inset-0 bg-slate-50 translate-y-2 translate-x-2 pointer-events-none transition-opacity duration-200 opacity-60 group-hover:opacity-0 ${t.borderClass}`}
                       />
-                      <DesignStudioCard isPremium={true} label={`Deck.Topology M0${deck.module?.moduleNo || 1}`} className="h-full relative z-10">
+                      <DesignStudioCard isPremium={true} label={`Deck.Topology M0${deck.module?.moduleNo || 1}`} className="h-auto relative z-10">
                         {cardContent}
                       </DesignStudioCard>
                     </motion.div>

@@ -25,32 +25,66 @@ const THEME_MAP: Record<string, {
   textMuted: string;
   badge: string;
   pattern: string;
+  iconColor: string;
 }> = {
   "ui programming": {
-    bg: "bg-slate-50 text-slate-800 font-sans",
+    bg: "bg-[#FAF9F5] text-black font-sans",
     cardBg: "bg-white",
-    borderClass: "border border-slate-200 rounded-lg",
-    shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-500 hover:text-indigo-655 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
-    titleHover: "group-hover:text-indigo-600",
-    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
-    textMuted: "text-slate-500 font-medium font-sans",
-    badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    borderClass: "border-2 border-black rounded-none",
+    shadowClass: "shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(239,68,68,1)] hover:-translate-y-0.5",
+    btnPrimary: "bg-[#EF4444] hover:bg-[#dc2626] text-white font-black uppercase text-[11px] tracking-wider px-3.5 py-1.5 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all cursor-pointer rounded-none",
+    btnGhost: "text-black hover:text-[#EF4444] font-bold text-xs bg-white hover:bg-slate-50 border-2 border-black rounded-none px-3 py-1.5 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[0.5px] hover:translate-y-[0.5px] transition-all inline-flex items-center",
+    titleHover: "group-hover:text-[#EF4444]",
+    textHeading: "text-slate-900 font-black uppercase tracking-tight font-sans",
+    textMuted: "text-zinc-655 font-bold",
+    badge: "font-mono text-[9px] font-black uppercase tracking-wider text-white bg-zinc-900 px-2 py-0.5 border border-black shadow-[1px_1px_0px_rgba(0,0,0,1)]",
+    pattern: "",
+    iconColor: "text-[#EF4444]"
   },
+
   "startup engineering": {
     bg: "bg-[#F8FAFC] text-slate-800 font-sans",
     cardBg: "bg-white",
     borderClass: "border border-slate-200 rounded-xl",
-    shadowClass: "shadow-xs transition-all duration-200",
+    shadowClass: "shadow-xs hover:shadow-md hover:-translate-y-0.5",
     btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-202 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
     titleHover: "group-hover:text-blue-600",
     textHeading: "text-slate-900 font-bold tracking-tight font-sans",
     textMuted: "text-slate-500 font-medium font-sans",
     badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    pattern: "",
+    iconColor: "text-blue-600"
+  },
+
+  "python programming": {
+    bg: "bg-[#F8FAFC] text-slate-755 font-mono font-jetbrains",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded",
+    shadowClass: "shadow-xs hover:shadow-sm hover:-translate-y-0.5",
+    btnPrimary: "bg-[#3776AB] hover:bg-[#2b5b84] text-white font-bold text-xs rounded shadow-xs py-2 px-4 transition-all font-mono",
+    btnGhost: "text-slate-655 hover:text-[#3776AB] font-mono text-xs hover:bg-slate-50 border border-slate-200 rounded px-3 py-1.5 transition-all bg-white shadow-sm inline-flex items-center",
+    titleHover: "group-hover:text-[#3776AB]",
+    textHeading: "text-slate-900 font-bold tracking-tight font-mono",
+    textMuted: "text-slate-500 font-mono",
+    badge: "bg-blue-50 text-[#3776AB] border border-blue-200 rounded font-mono",
+    pattern: "",
+    iconColor: "text-[#3776AB]"
+  },
+
+  "digital business": {
+    bg: "bg-[#F8FAFC] text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-xs hover:shadow-md hover:-translate-y-0.5",
+    btnPrimary: "bg-[#0F766E] hover:bg-[#0d635c] text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-555 hover:text-[#0F766E] font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-[#0F766E]",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-[#0F766E]/5 text-[#0F766E] border border-[#0F766E]/10 px-2.5 py-1 rounded-lg",
+    pattern: "strategy-board-dot",
+    iconColor: "text-[#0F766E]"
   }
 };
 
@@ -65,7 +99,8 @@ const DEFAULT_THEME = {
   textHeading: "text-slate-900 font-bold tracking-tight font-sans",
   textMuted: "text-slate-500 font-medium font-sans",
   badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
-  pattern: ""
+  pattern: "",
+  iconColor: "text-blue-600"
 };
 
 export default function SimulationsPage() {
@@ -97,10 +132,11 @@ export default function SimulationsPage() {
     };
     loadSimulations();
   }, [subjectId]);
+  const isDigitalBusiness = subjectId === 'id_pryay1ykw' || subjectName.toLowerCase().includes("digital business");
   const isUiProgramming = subjectId === 'id_mn573l5e5' || subjectName.toLowerCase().includes("ui programming");
   const isPythonProgramming = subjectId === 'id_hdzqxse2n' || subjectName.toLowerCase().includes("python");
   const isStartupEngineering = subjectId === 'id_1i2u3y4t5' || subjectName.toLowerCase().includes("startup");
-  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : (isStartupEngineering ? "startup engineering" : "");
+  const themeKey = isUiProgramming ? "ui programming" : isPythonProgramming ? "python programming" : isDigitalBusiness ? "digital business" : (isStartupEngineering ? "startup engineering" : "");
   const t = THEME_MAP[themeKey] || DEFAULT_THEME;
   const isPremiumTheme = !isPythonProgramming;
 
@@ -209,7 +245,7 @@ export default function SimulationsPage() {
               const { shortTitle, funcName } = getCleanPythonDetails(sim.title);
 
               return (
-                <motion.div key={sim.id} variants={itemVariants}>
+                <motion.div key={sim.id} variants={itemVariants} className="h-fit">
                   <Link href={`/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${sim.id}`} className="block h-full">
                     <div className="bg-white border border-slate-200 p-4 rounded hover:border-[#3776AB] transition-all duration-300 flex flex-col justify-between h-full group cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(55,118,171,0.06)] hover:-translate-y-1">
                       <div>
@@ -279,10 +315,7 @@ export default function SimulationsPage() {
               whileHover={isPremiumTheme ? { x: -3 } : {}}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
-              <Button className={`font-black uppercase tracking-wider ${isPremiumTheme
-                ? "bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 hover:text-slate-900 shadow-xs rounded-lg px-4 py-2 text-xs font-mono font-bold uppercase transition-all duration-150"
-                : t.btnGhost
-                }`}>
+              <Button className={`${t.btnGhost} uppercase`}>
                 ← Back to Dashboard
               </Button>
             </motion.div>
@@ -290,7 +323,7 @@ export default function SimulationsPage() {
         </div>
 
         {/* Section Header Card */}
-        <div className="bg-white border border-slate-200 p-6 md:p-8 rounded-lg shadow-xs mb-8">
+        <div className={`bg-white ${t.borderClass} p-6 md:p-8 ${t.shadowClass} mb-8`}>
           <ResourceHeader 
             type="labs" 
             title="Virtual Lab Simulations" 
@@ -311,6 +344,8 @@ export default function SimulationsPage() {
                 simulation={sim}
                 href={`/student/subjects/subject/simulations/item?subjectId=${subjectId}&id=${sim.id}`}
                 isUiProgramming={isPremiumTheme}
+                themeKey={themeKey}
+                t={t}
               />
             </motion.div>
           ))}

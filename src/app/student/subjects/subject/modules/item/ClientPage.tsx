@@ -46,50 +46,82 @@ const THEME_MAP: Record<string, {
   textMuted: string;
   badge: string;
   pattern: string;
+  iconColor: string;
 }> = {
   "ui programming": {
-    bg: "bg-slate-50 text-slate-800 font-sans",
+    bg: "bg-[#FAF9F5] text-black font-sans",
     cardBg: "bg-white",
-    borderClass: "border border-slate-200 rounded-lg",
-    shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-550 hover:text-indigo-650 font-sans text-xs hover:bg-slate-55 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
-    titleHover: "group-hover:text-indigo-600",
-    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
-    textMuted: "text-slate-500 font-medium font-sans",
-    badge: "font-sans text-[10px] font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    borderClass: "border-2 border-black rounded-none",
+    shadowClass: "shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(239,68,68,1)] hover:-translate-y-0.5",
+    btnPrimary: "bg-[#EF4444] hover:bg-[#dc2626] text-white font-black uppercase text-[11px] tracking-wider px-3.5 py-1.5 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all cursor-pointer rounded-none",
+    btnGhost: "text-black hover:text-[#EF4444] font-bold text-xs bg-white hover:bg-slate-50 border-2 border-black rounded-none px-3 py-1.5 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[0.5px] hover:translate-y-[0.5px] transition-all inline-flex items-center",
+    titleHover: "group-hover:text-[#EF4444]",
+    textHeading: "text-slate-900 font-black uppercase tracking-tight font-sans",
+    textMuted: "text-zinc-655 font-bold",
+    badge: "font-mono text-[9px] font-black uppercase tracking-wider text-white bg-zinc-900 px-2 py-0.5 border border-black shadow-[1px_1px_0px_rgba(0,0,0,1)]",
+    pattern: "",
+    iconColor: "text-[#EF4444]"
   },
+
   "startup engineering": {
-    bg: "bg-slate-50 text-slate-800 font-sans",
+    bg: "bg-[#F8FAFC] text-slate-800 font-sans",
     cardBg: "bg-white",
-    borderClass: "border border-slate-200 rounded-lg",
-    shadowClass: "shadow-sm transition-all duration-200",
-    btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-lg shadow-xs py-2.5 px-4 transition-all font-sans",
-    btnGhost: "text-slate-550 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-xs hover:shadow-md hover:-translate-y-0.5",
+    btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
     titleHover: "group-hover:text-blue-600",
     textHeading: "text-slate-900 font-bold tracking-tight font-sans",
     textMuted: "text-slate-500 font-medium font-sans",
     badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
-    pattern: ""
+    pattern: "",
+    iconColor: "text-blue-600"
   },
-};
 
+  "python programming": {
+    bg: "bg-[#F8FAFC] text-slate-755 font-mono font-jetbrains",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded",
+    shadowClass: "shadow-xs hover:shadow-sm hover:-translate-y-0.5",
+    btnPrimary: "bg-[#3776AB] hover:bg-[#2b5b84] text-white font-bold text-xs rounded shadow-xs py-2 px-4 transition-all font-mono",
+    btnGhost: "text-slate-655 hover:text-[#3776AB] font-mono text-xs hover:bg-slate-50 border border-slate-200 rounded px-3 py-1.5 transition-all bg-white shadow-sm inline-flex items-center",
+    titleHover: "group-hover:text-[#3776AB]",
+    textHeading: "text-slate-900 font-bold tracking-tight font-mono",
+    textMuted: "text-slate-500 font-mono",
+    badge: "bg-blue-50 text-[#3776AB] border border-blue-200 rounded font-mono",
+    pattern: "",
+    iconColor: "text-[#3776AB]"
+  },
+
+  "digital business": {
+    bg: "bg-[#F8FAFC] text-slate-800 font-sans",
+    cardBg: "bg-white",
+    borderClass: "border border-slate-200 rounded-xl",
+    shadowClass: "shadow-xs hover:shadow-md hover:-translate-y-0.5",
+    btnPrimary: "bg-[#0F766E] hover:bg-[#0d635c] text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+    btnGhost: "text-slate-555 hover:text-[#0F766E] font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+    titleHover: "group-hover:text-[#0F766E]",
+    textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+    textMuted: "text-slate-500 font-medium font-sans",
+    badge: "font-sans text-[10px] font-semibold bg-[#0F766E]/5 text-[#0F766E] border border-[#0F766E]/10 px-2.5 py-1 rounded-lg",
+    pattern: "strategy-board-dot",
+    iconColor: "text-[#0F766E]"
+  }
+};
 const DEFAULT_THEME = {
-  bg: "bg-[#f4f4f0]",
+  bg: "bg-[#F8FAFC] text-slate-800 font-sans",
   cardBg: "bg-white",
-  borderClass: "border-4 border-black rounded-none",
-  shadowClass: "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1.5 hover:translate-y-1.5",
-  btnPrimary: "bg-[#2dd4bf] text-black hover:bg-[#2dd4bf]/90 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
-  btnGhost: "text-black font-black hover:bg-zinc-200 rounded-none",
-  titleHover: "group-hover:text-primary",
-  textHeading: "text-black font-black uppercase",
-  textMuted: "text-zinc-700 font-medium",
-  badge: "bg-zinc-200 text-black border-2 border-black rounded-none",
-  pattern: ""
+  borderClass: "border border-slate-200 rounded-xl",
+  shadowClass: "shadow-xs transition-all duration-200",
+  btnPrimary: "bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs py-2.5 px-4 transition-all font-sans",
+  btnGhost: "text-slate-555 hover:text-blue-650 font-sans text-xs hover:bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 transition-all inline-flex items-center bg-white shadow-sm",
+  titleHover: "group-hover:text-blue-600",
+  textHeading: "text-slate-900 font-bold tracking-tight font-sans",
+  textMuted: "text-slate-500 font-medium font-sans",
+  badge: "font-sans text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg",
+  pattern: "",
+  iconColor: "text-blue-600"
 };
-
-
 
 function getParsedNotes(notesUrl: string | null | undefined) {
   if (!notesUrl) return [];
@@ -150,7 +182,7 @@ const InlineVideoPlayer = ({ url, title }: { url: string; title: string }) => {
   );
 };
 
-const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
+const InlineAudioPlayer = ({ url, title, themeKey, t }: { url: string; title: string; themeKey: string; t: any }) => {
   const [useDriveFallback, setUseDriveFallback] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -172,7 +204,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
 
   if (!cleanUrl) {
     return (
-      <div className="w-full bg-[#FAF9F5] p-6 border-2 border-black flex flex-col items-center justify-center text-center gap-2">
+      <div className={`w-full bg-[#FAF9F5] p-6 ${t.borderClass} flex flex-col items-center justify-center text-center gap-2`}>
         <Headphones className="w-8 h-8 text-zinc-400" />
         <p className="font-bold text-xs uppercase font-mono text-zinc-700">No Audio Track Available</p>
         <p className="text-xs text-zinc-500">The audio file link is missing or empty.</p>
@@ -186,7 +218,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   if (isYouTube) {
     const ytEmbedUrl = getEmbedUrl(cleanUrl) || cleanUrl;
     return (
-      <div className="w-full aspect-video max-h-[360px] bg-black border-2 border-black relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <div className={`w-full aspect-video max-h-[360px] bg-black relative overflow-hidden ${t.borderClass} ${t.shadowClass}`}>
         <iframe
           src={ytEmbedUrl}
           className="w-full h-full border-0 absolute inset-0"
@@ -201,7 +233,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   if (driveFileId) {
     const driveEmbedUrl = `https://drive.google.com/file/d/${driveFileId}/preview`;
     return (
-      <div className="w-full h-[180px] bg-black border-2 border-black relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <div className={`w-full h-[180px] bg-black relative overflow-hidden ${t.borderClass} ${t.shadowClass}`}>
         <iframe
           src={driveEmbedUrl}
           className="w-full h-full border-0 absolute inset-0"
@@ -277,8 +309,28 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
+  const playBtnClass = themeKey === "ui programming"
+    ? "w-12 h-12 rounded-none bg-[#EF4444] hover:bg-[#dc2626] border-2 border-black text-white flex items-center justify-center shadow-[3px_3px_0px_rgba(0,0,0,1)] hover:translate-x-[0.5px] hover:translate-y-[0.5px] hover:shadow-none transition-all cursor-pointer focus:outline-none"
+    : themeKey === "python programming"
+      ? "w-12 h-12 rounded-full bg-[#3776AB] hover:bg-[#2b5b84] text-white flex items-center justify-center transition-all focus:outline-none cursor-pointer"
+      : themeKey === "digital business"
+        ? "w-12 h-12 rounded-full bg-[#0F766E] hover:bg-[#0d635c] text-white flex items-center justify-center transition-all focus:outline-none cursor-pointer"
+        : "w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition-all focus:outline-none cursor-pointer";
+
+  const rewindBtnClass = themeKey === "ui programming"
+    ? "w-8 h-8 rounded-none bg-white border-2 border-black text-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:translate-y-[0.5px] hover:translate-x-[0.5px] active:shadow-none active:translate-y-1 active:translate-x-1 transition-all cursor-pointer focus:outline-none"
+    : "w-8 h-8 rounded-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 flex items-center justify-center cursor-pointer transition-all focus:outline-none";
+
+  const trackColor = themeKey === "ui programming"
+    ? "#000"
+    : themeKey === "python programming"
+      ? "#3776AB"
+      : themeKey === "digital business"
+        ? "#0F766E"
+        : "#2563eb";
+
   return (
-    <div className="w-full bg-[#FAF9F5] p-5 border-2 border-black flex flex-col gap-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <div className={`w-full bg-white p-5 flex flex-col gap-4 ${t.borderClass} ${t.shadowClass}`}>
       <audio 
         key={cleanUrl}
         ref={audioRef}
@@ -290,9 +342,9 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
         className="hidden"
       />
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-350 pb-3 gap-2">
+      <div className={`flex flex-col sm:flex-row sm:items-center justify-between border-b pb-3 gap-2 ${themeKey === 'ui programming' ? 'border-black' : 'border-zinc-200'}`}>
         <div className="flex items-center gap-2">
-          <Headphones className="w-5 h-5 text-zinc-950" />
+          <Headphones className={`w-5 h-5 ${t.iconColor}`} />
           <span className="font-bold text-xs uppercase tracking-tight text-black">{title || "Audio Lesson"}</span>
         </div>
       </div>
@@ -301,13 +353,13 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
         <button
           type="button"
           onClick={togglePlay}
-          className="w-12 h-12 rounded-full bg-[#2dd4bf] hover:bg-[#2dd4bf]/90 border-2 border-black text-black flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:translate-x-0.5 active:shadow-none active:translate-y-1 active:translate-x-1 transition-all shrink-0 focus:outline-none"
+          className={playBtnClass}
           title={isPlaying ? "Pause" : "Play"}
         >
           {isPlaying ? (
-            <Pause className="w-5 h-5 fill-black text-black" />
+            <Pause className="w-5 h-5 fill-current text-current" />
           ) : (
-            <Play className="w-5 h-5 fill-black text-black translate-x-[1px]" />
+            <Play className="w-5 h-5 fill-current text-current translate-x-[1px]" />
           )}
         </button>
 
@@ -318,14 +370,14 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
               audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10);
             }
           }}
-          className="w-8 h-8 rounded-full bg-white border-2 border-black text-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:translate-x-0.5 active:shadow-none active:translate-y-1 active:translate-x-1 transition-all shrink-0 focus:outline-none"
+          className={rewindBtnClass}
           title="Rewind 10s"
         >
           <RotateCcw className="w-4 h-4" />
         </button>
 
         <div className="flex-1 flex items-center gap-3 min-w-[200px]">
-          <span className="text-xs font-mono text-zinc-700 shrink-0 font-bold">
+          <span className={`text-xs font-mono text-zinc-700 shrink-0 font-bold ${themeKey === 'python programming' ? 'font-mono' : ''}`}>
             {formatTime(currentTime)}
           </span>
           
@@ -335,9 +387,11 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
             max={duration || 100}
             value={currentTime}
             onChange={handleSeek}
-            className="flex-1 h-2.5 bg-zinc-200 border-2 border-black appearance-none cursor-pointer accent-black focus:outline-none"
+            className={`flex-1 h-2 bg-zinc-200 border appearance-none cursor-pointer focus:outline-none ${
+              themeKey === 'ui programming' ? 'border-2 border-black rounded-none' : 'border-slate-200 rounded'
+            }`}
             style={{
-              background: `linear-gradient(to right, #000 0%, #000 ${
+              background: `linear-gradient(to right, ${trackColor} 0%, ${trackColor} ${
                 duration ? (currentTime / duration) * 100 : 0
               }%, #e4e4e7 ${
                 duration ? (currentTime / duration) * 100 : 0
@@ -345,7 +399,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
             }}
           />
 
-          <span className="text-xs font-mono text-zinc-700 shrink-0 font-bold">
+          <span className={`text-xs font-mono text-zinc-700 shrink-0 font-bold ${themeKey === 'python programming' ? 'font-mono' : ''}`}>
             {formatTime(duration)}
           </span>
         </div>
@@ -353,7 +407,9 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
         <button
           type="button"
           onClick={handleSpeedChange}
-          className="px-2 py-1 bg-white border-2 border-black text-[11px] font-mono font-bold text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-zinc-100 shrink-0"
+          className={`px-2 py-1 bg-white text-[11px] font-mono font-bold text-black hover:bg-zinc-50 shrink-0 cursor-pointer ${
+            themeKey === 'ui programming' ? 'border-2 border-black shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] rounded-none' : 'border border-slate-200 rounded shadow-xs'
+          }`}
           title="Playback Speed"
         >
           {playbackRate}x
@@ -365,7 +421,7 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
           <button
             type="button"
             onClick={toggleMute}
-            className="hover:text-black transition-colors focus:outline-none"
+            className="hover:text-black transition-colors focus:outline-none cursor-pointer"
           >
             {isMuted ? <VolumeX className="w-4 h-4 text-red-500" /> : <Volume2 className="w-4 h-4" />}
           </button>
@@ -376,7 +432,9 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
             step="0.05"
             value={isMuted ? 0 : volume}
             onChange={handleVolumeChange}
-            className="w-20 sm:w-24 h-1.5 bg-zinc-200 border border-black appearance-none cursor-pointer accent-black focus:outline-none"
+            className={`w-20 sm:w-24 h-1.5 bg-zinc-200 border appearance-none cursor-pointer focus:outline-none ${
+              themeKey === 'ui programming' ? 'border border-black' : 'border border-slate-200 rounded'
+            }`}
             style={{
               background: `linear-gradient(to right, #000 0%, #000 ${
                 (isMuted ? 0 : volume) * 100
@@ -389,13 +447,15 @@ const InlineAudioPlayer = ({ url, title }: { url: string; title: string }) => {
   );
 };
 
-const BrandedViewerWrap = ({ title, children, subtitle, actions }: { title: string; children: React.ReactNode; subtitle?: string; actions?: React.ReactNode }) => {
+const BrandedViewerWrap = ({ title, children, subtitle, actions, themeKey, t }: { title: string; children: React.ReactNode; subtitle?: string; actions?: React.ReactNode; themeKey: string; t: any }) => {
   return (
-    <div className="border-2 border-black bg-white p-4 md:p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b border-zinc-200 gap-2">
+    <div className={`bg-white p-4 md:p-6 transition-all duration-200 ${t.borderClass} ${t.shadowClass}`}>
+      <div className={`flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b gap-2 ${
+        themeKey === 'ui programming' ? 'border-black' : 'border-zinc-200'
+      }`}>
         <div>
-          <h3 className="font-black text-sm uppercase tracking-tight text-black">{title}</h3>
-          {subtitle && <p className="text-xs text-zinc-500 font-medium font-sans mt-0.5">{subtitle}</p>}
+          <h3 className={`font-black text-sm uppercase tracking-tight text-black ${themeKey === 'python programming' ? 'font-mono' : ''}`}>{title}</h3>
+          {subtitle && <p className={`text-xs text-zinc-500 font-medium mt-0.5 ${themeKey === 'python programming' ? 'font-mono' : 'font-sans'}`}>{subtitle}</p>}
         </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
@@ -703,7 +763,22 @@ export default function ModuleDetailPage() {
   if (hasPdf) availableTabs.push('reference');
 
   // Sidebar navigation and pagination helpers
-  const prevSubtopic = activeSubtopicIndex > 0 ? subtopics[activeSubtopicIndex - 1] : null;
+    const subjectNameLower = String(subjectName || "").toLowerCase();
+  const isDigitalBusiness = subjectId === 'id_pryay1ykw' || subjectNameLower.includes("digital business");
+  const isUiProgramming = subjectId === 'id_mn573l5e5' || subjectNameLower.includes("ui programming");
+  const isPythonProgramming = subjectId === 'id_hdzqxse2n' || subjectNameLower.includes("python");
+  const isStartupEngineering = subjectNameLower.includes("startup") || subjectNameLower.includes("engineering");
+
+  const themeKey = isUiProgramming 
+    ? "ui programming" 
+    : (isStartupEngineering 
+      ? "startup engineering" 
+      : (isDigitalBusiness 
+        ? "digital business" 
+        : (subjectNameLower.includes("python") ? "python programming" : "")));
+  const t = THEME_MAP[themeKey] || DEFAULT_THEME;
+
+const prevSubtopic = activeSubtopicIndex > 0 ? subtopics[activeSubtopicIndex - 1] : null;
   const nextSubtopic = activeSubtopicIndex < subtopics.length - 1 ? subtopics[activeSubtopicIndex + 1] : null;
 
   // Learning Toolkit Navigation configuration
@@ -748,21 +823,50 @@ export default function ModuleDetailPage() {
   ] : [];
 
   return (
-    <div className="min-h-screen bg-[#FAF9F5] text-zinc-905 font-sans pb-16 selection:bg-[#2dd4bf]/20 selection:text-black">
+    <div className={`min-h-screen ${t.bg} ${t.pattern} pb-16`}>
       
+      {/* Global CSS style definitions */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+        
+        .font-jetbrains {
+          font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+        }
+        .strategy-board-dot {
+          background-image: radial-gradient(#e2e8f0 1.2px, transparent 1.2px);
+          background-size: 24px 24px;
+        }
+      `}</style>
+
       {/* Clean Educational Header */}
-      <header className="border-b-2 border-black bg-white py-4 px-6 mb-8 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <header className={`border-b-2 bg-white py-4 px-6 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+        isUiProgramming
+          ? 'border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-none'
+          : 'border-slate-200 shadow-sm rounded-none'
+      }`}>
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-50 border border-black rounded shrink-0">
-            <BookOpen className="w-5 h-5 text-emerald-600" />
+          <div className={`p-2 shrink-0 ${
+            themeKey === 'ui programming'
+              ? 'bg-red-50 border border-black text-[#EF4444] rounded-none'
+              : themeKey === 'python programming'
+                ? 'bg-blue-55/10 border border-slate-200 text-[#3776AB] rounded'
+                : themeKey === 'digital business'
+                  ? 'bg-[#0F766E]/10 text-[#0F766E] rounded-lg'
+                  : 'bg-blue-50 text-blue-600 rounded-lg'
+          }`}>
+            <BookOpen className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{subjectName || "Subject Workspace"}</span>
-            <h1 className="font-black text-lg uppercase tracking-tight text-black mt-0.5">{moduleData.title || "Module Details"}</h1>
+            <span className={`text-[10px] font-bold uppercase tracking-widest text-zinc-500 ${isPythonProgramming ? 'font-mono' : ''}`}>
+              {subjectName || "Subject Workspace"}
+            </span>
+            <h1 className={`font-black text-lg uppercase tracking-tight text-black mt-0.5 ${isPythonProgramming ? 'font-mono' : ''}`}>
+              {moduleData.title || "Module Details"}
+            </h1>
           </div>
         </div>
         <Link href={`/student/subjects/subject/modules?subjectId=${subjectId}`}>
-          <button className="bg-white border-2 border-black hover:bg-zinc-50 text-black font-bold text-xs py-2 px-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:translate-x-0.5 active:shadow-none active:translate-y-1 active:translate-x-1 transition-all flex items-center gap-2 uppercase font-mono">
+          <button className={`${t.btnGhost} flex items-center gap-2 uppercase`}>
             <ChevronLeft className="w-4 h-4" /> All Modules
           </button>
         </Link>
@@ -775,12 +879,12 @@ export default function ModuleDetailPage() {
           <aside className="w-full lg:w-80 lg:shrink-0 lg:sticky lg:top-6 flex flex-col gap-6">
             
             {/* Parent Module Badge Header */}
-            <div className="border-2 border-black bg-[#FAF9F5] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <div className={`p-4 bg-white ${t.borderClass} ${t.shadowClass}`}>
               <div className="flex items-center gap-2 mb-2">
-                <Layers className="w-4 h-4 text-emerald-600" />
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Module Navigation</span>
+                <Layers className={`w-4 h-4 ${t.iconColor}`} />
+                <span className={`text-[10px] font-bold text-zinc-500 uppercase tracking-wider ${isPythonProgramming ? 'font-mono' : ''}`}>Module Navigation</span>
               </div>
-              <h2 className="font-black text-sm uppercase tracking-tight text-black line-clamp-2">
+              <h2 className={`font-black text-sm uppercase tracking-tight text-black line-clamp-2 ${isPythonProgramming ? 'font-mono' : ''}`}>
                 {moduleData.title}
               </h2>
             </div>
@@ -789,21 +893,40 @@ export default function ModuleDetailPage() {
             <div className="flex flex-col gap-3">
               {subtopics.map((st: any, idx: number) => {
                 const isActive = idx === activeSubtopicIndex;
+                let btnClass = "";
+                if (isActive) {
+                  if (themeKey === "ui programming") {
+                    btnClass = "border-black bg-[#fbbf24] text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] font-bold rounded-none";
+                  } else if (themeKey === "python programming") {
+                    btnClass = "border-[#3776AB] bg-[#3776AB]/10 text-[#3776AB] font-bold rounded font-mono";
+                  } else if (themeKey === "digital business") {
+                    btnClass = "border-[#0F766E] bg-[#0F766E]/10 text-[#0F766E] font-bold rounded-xl";
+                  } else {
+                    btnClass = "border-blue-500 bg-blue-50 text-blue-600 font-bold rounded-xl";
+                  }
+                } else {
+                  if (themeKey === "ui programming") {
+                    btnClass = "border-zinc-350 hover:border-black bg-white text-zinc-700 hover:text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded-none";
+                  } else if (themeKey === "python programming") {
+                    btnClass = "border-slate-200 hover:border-[#3776AB] bg-white text-slate-650 hover:text-[#3776AB] rounded font-mono";
+                  } else if (themeKey === "digital business") {
+                    btnClass = "border-slate-200 hover:border-[#0F766E] bg-white text-slate-650 hover:text-[#0F766E] rounded-xl";
+                  } else {
+                    btnClass = "border-slate-200 hover:border-blue-600 bg-white text-slate-655 hover:text-blue-600 rounded-xl";
+                  }
+                }
+                
                 return (
                   <button
                     key={st.id}
                     onClick={() => setActiveSubtopicIndex(idx)}
-                    className={`w-full text-left p-3.5 border-2 transition-all flex items-center justify-between gap-3 ${
-                      isActive 
-                        ? 'border-black bg-[#fbbf24] text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] font-bold' 
-                        : 'border-zinc-300 hover:border-black bg-white text-zinc-700 hover:text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
-                    }`}
+                    className={`w-full text-left p-3.5 border-2 transition-all flex items-center justify-between gap-3 ${btnClass}`}
                   >
                     <div className="flex items-start gap-2.5 min-w-0">
                       <span className="font-mono text-xs font-black shrink-0">{String(idx + 1).padStart(2, '0')}</span>
                       <span className="text-xs font-bold truncate">{st.title}</span>
                     </div>
-                    {isActive && <ChevronRight className="w-4 h-4 shrink-0 text-black" />}
+                    {isActive && <ChevronRight className="w-4 h-4 shrink-0" />}
                   </button>
                 );
               })}
@@ -815,7 +938,7 @@ export default function ModuleDetailPage() {
             <main className="flex-1 w-full space-y-6">
               
               {/* Breadcrumbs */}
-              <nav className="text-[10px] font-bold uppercase tracking-widest text-zinc-505 flex items-center flex-wrap gap-2">
+              <nav className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 flex items-center flex-wrap gap-2">
                 <span>Subjects</span>
                 <ChevronRight className="w-3 h-3 text-zinc-400" />
                 <span className="truncate max-w-[150px]">{subjectName}</span>
@@ -826,16 +949,22 @@ export default function ModuleDetailPage() {
               </nav>
 
               {/* Subtopic Header Info */}
-              <div className="border-b-2 border-black pb-4">
-                <h2 className="text-3xl font-black uppercase tracking-tight text-black leading-tight">
+              <div className={`border-b-2 pb-4 ${isUiProgramming ? 'border-black' : 'border-slate-200'}`}>
+                <h2 className={`text-3xl font-black uppercase tracking-tight text-black leading-tight ${isPythonProgramming ? 'font-mono' : ''}`}>
                   {activeSubtopic.title}
                 </h2>
-                <p className="text-sm text-zinc-650 font-medium font-sans mt-2 max-w-3xl leading-relaxed">
+                <p className={`text-sm text-zinc-650 font-medium mt-2 max-w-3xl leading-relaxed ${isPythonProgramming ? 'font-mono text-slate-500' : 'font-sans'}`}>
                   {activeSubtopic.description}
                 </p>
                 {activeSubtopic.co && (
                   <div className="mt-3 flex items-center gap-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider bg-zinc-200 border border-zinc-400 text-zinc-700 px-2 py-0.5">
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 ${
+                      isUiProgramming 
+                        ? 'bg-zinc-200 border border-zinc-400 text-zinc-700' 
+                        : isPythonProgramming
+                          ? 'bg-slate-105 border border-slate-200 text-slate-500 rounded font-mono'
+                          : 'bg-slate-100 text-slate-600 rounded border border-slate-200'
+                    }`}>
                       {activeSubtopic.co}
                     </span>
                   </div>
@@ -847,7 +976,7 @@ export default function ModuleDetailPage() {
                 <div className="space-y-4">
                   
                   {/* Tabs header row */}
-                  <div className="flex flex-wrap gap-2 border-b border-zinc-205 pb-2">
+                  <div className="flex flex-wrap gap-2 border-b border-zinc-200 pb-2">
                     {availableTabs.map((tab) => {
                       const tabLabels = {
                         lecture: "Lecture",
@@ -856,15 +985,34 @@ export default function ModuleDetailPage() {
                         reference: "Reference"
                       };
                       const isActive = activeTab === tab;
+                      let tabClass = "";
+                      if (isActive) {
+                        if (themeKey === "ui programming") {
+                          tabClass = "bg-black text-[#FAF9F5] border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)] rounded-none";
+                        } else if (themeKey === "python programming") {
+                          tabClass = "bg-[#3776AB] text-white border border-[#3776AB] rounded font-mono font-bold";
+                        } else if (themeKey === "digital business") {
+                          tabClass = "bg-[#0F766E] text-white border border-[#0F766E] rounded-xl font-bold";
+                        } else {
+                          tabClass = "bg-blue-600 text-white border border-blue-600 rounded-xl font-bold";
+                        }
+                      } else {
+                        if (themeKey === "ui programming") {
+                          tabClass = "bg-white text-zinc-700 hover:bg-zinc-50 border-2 border-black rounded-none";
+                        } else if (themeKey === "python programming") {
+                          tabClass = "bg-white text-slate-600 hover:text-[#3776AB] border border-slate-200 rounded font-mono hover:border-[#3776AB]";
+                        } else if (themeKey === "digital business") {
+                          tabClass = "bg-white text-slate-655 hover:text-[#0F766E] border border-slate-200 rounded-xl hover:border-[#0F766E]";
+                        } else {
+                          tabClass = "bg-white text-slate-655 hover:text-blue-600 border border-slate-200 rounded-xl hover:border-blue-600";
+                        }
+                      }
+                      
                       return (
                         <button
                           key={tab}
                           onClick={() => setActiveTab(tab)}
-                          className={`text-xs font-black uppercase tracking-wider px-4 py-2 border-2 border-black transition-all ${
-                            isActive 
-                              ? 'bg-black text-[#FAF9F5] shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]' 
-                              : 'bg-white text-zinc-700 hover:bg-zinc-50'
-                          }`}
+                          className={`text-xs font-black uppercase tracking-wider px-4 py-2 border-2 transition-all cursor-pointer ${tabClass}`}
                         >
                           {tabLabels[tab]}
                         </button>
@@ -878,12 +1026,14 @@ export default function ModuleDetailPage() {
                       <BrandedViewerWrap 
                         title="Lecture Video" 
                         subtitle="Watch the video explanation to master key concepts."
+                        themeKey={themeKey}
+                        t={t}
                       >
                         <div className="w-full flex flex-col gap-3">
                           {activeSubtopic.videoLanguages && activeSubtopic.videoLanguages.length > 0 && (
                             <div className="flex justify-end mb-1">
                               <select 
-                                className="bg-white border-2 border-black text-xs font-bold px-2 py-1 focus:outline-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-mono uppercase"
+                                className={`bg-white border-2 border-black text-xs font-bold px-2 py-1 focus:outline-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase ${isPythonProgramming ? 'font-mono' : ''}`}
                                 value={selectedLanguages[activeSubtopic.id]?.video || defaultVideoUrl}
                                 onChange={(e) => handleLanguageChange(activeSubtopic.id, 'video', e.target.value)}
                               >
@@ -904,58 +1054,75 @@ export default function ModuleDetailPage() {
 
                     {activeTab === 'notes' && (
                       <BrandedViewerWrap 
-                        title="Study Notes & Lessons" 
-                        subtitle="Read through compiled lessons and documentation."
-                        actions={
-                          notesList.length > 1 ? (
-                            <div className="flex flex-wrap gap-1.5">
-                              {notesList.map((n: any, idx: number) => (
-                                <button
-                                  key={idx}
-                                  onClick={() => setSelectedNoteUrl(n.url)}
-                                  className={`text-[10px] font-bold px-2 py-1 border border-black transition-all ${
-                                    selectedNoteUrl === n.url 
-                                      ? 'bg-[#fbbf24] text-black font-extrabold shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' 
-                                      : 'bg-white hover:bg-zinc-50'
-                                  }`}
-                                >
-                                  {n.title || `Doc ${idx + 1}`}
-                                </button>
-                              ))}
-                            </div>
-                          ) : null
-                        }
+                        title="Lecture Notes" 
+                        subtitle="Read through conceptual summaries and study notes."
+                        themeKey={themeKey}
+                        t={t}
+                        actions={notesList.length > 1 ? (
+                          <select 
+                            className={`bg-white border-2 border-black text-xs font-bold px-2 py-1 focus:outline-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase ${isPythonProgramming ? 'font-mono' : ''}`}
+                            value={selectedNoteUrl}
+                            onChange={(e) => setSelectedNoteUrl(e.target.value)}
+                          >
+                            {notesList.map((note: any, idx: number) => (
+                              <option key={idx} value={note.url}>{note.title}</option>
+                            ))}
+                          </select>
+                        ) : undefined}
                       >
-                        {activeSubtopic.lessonContent ? (
-                          <div className="prose max-w-none prose-slate p-4 sm:p-6 bg-white overflow-auto max-h-[600px] border border-zinc-200">
-                            <div dangerouslySetInnerHTML={{ __html: marked.parse(activeSubtopic.lessonContent || '') as string }} />
-                          </div>
-                        ) : selectedNoteUrl ? (
-                          <div className="w-full aspect-video min-h-[500px] bg-black overflow-hidden relative border border-zinc-300">
-                            <iframe
-                              src={getExternalEmbedUrl(selectedNoteUrl) || selectedNoteUrl}
-                              className="w-full h-full border-0 bg-black absolute inset-0"
-                              allow="autoplay; fullscreen"
+                        <div className="space-y-4">
+                          {selectedNoteUrl && (
+                            <div className="flex justify-end">
+                              <a 
+                                href={selectedNoteUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className={`text-xs flex items-center gap-1 hover:underline ${t.iconColor}`}
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" /> Open in Google Drive
+                              </a>
+                            </div>
+                          )}
+                          {activeSubtopic.lessonContent ? (
+                            <div 
+                              className={`prose max-w-none text-xs leading-relaxed text-slate-805 ${isPythonProgramming ? 'font-mono' : ''}`}
+                              dangerouslySetInnerHTML={{ __html: marked.parse(activeSubtopic.lessonContent) }}
                             />
-                          </div>
-                        ) : (
-                          <div className="p-8 text-center text-zinc-550 font-sans border border-dashed border-zinc-350">
-                            No notes content available.
-                          </div>
-                        )}
+                          ) : selectedNoteUrl ? (
+                            <div className={`w-full aspect-[4/3] max-h-[500px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] overflow-hidden relative bg-[#FAF9F5] flex flex-col justify-center items-center text-center p-6 gap-3`}>
+                              <div className={`p-3 ${t.badge} bg-white rounded-none border border-black shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] text-[#4f46e5]`}>
+                                <FileText className="w-8 h-8" />
+                              </div>
+                              <p className={`font-bold text-xs uppercase text-zinc-900 ${isPythonProgramming ? 'font-mono' : ''}`}>PDF / Word Document linked</p>
+                              <p className={`text-xs text-zinc-655 max-w-md ${isPythonProgramming ? 'font-mono' : ''}`}>Please click the link above or below to read the comprehensive lesson resources directly in Google Drive.</p>
+                              <a 
+                                href={selectedNoteUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className={`${t.btnPrimary} font-bold text-xs py-2 px-5 inline-flex items-center gap-1.5 uppercase tracking-wide mt-2`}
+                              >
+                                View Document <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                            </div>
+                          ) : (
+                            <div className="text-center py-12 text-zinc-400 text-xs font-bold uppercase">No note attachments present.</div>
+                          )}
+                        </div>
                       </BrandedViewerWrap>
                     )}
 
                     {activeTab === 'audio' && (
                       <BrandedViewerWrap 
                         title="Audio Lesson" 
-                        subtitle="Listen to audio explanations and discussions."
+                        subtitle="Listen to conceptual descriptions and lectures."
+                        themeKey={themeKey}
+                        t={t}
                       >
-                        <div className="w-full">
+                        <div className="w-full flex flex-col gap-3">
                           {activeSubtopic.audioLanguages && activeSubtopic.audioLanguages.length > 0 && (
-                            <div className="flex justify-end mb-2">
+                            <div className="flex justify-end mb-1">
                               <select 
-                                className="bg-white border-2 border-black text-xs font-bold px-2 py-1 focus:outline-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-mono uppercase"
+                                className={`bg-white border-2 border-black text-xs font-bold px-2 py-1 focus:outline-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase ${isPythonProgramming ? 'font-mono' : ''}`}
                                 value={selectedLanguages[activeSubtopic.id]?.audio || defaultAudioUrl}
                                 onChange={(e) => handleLanguageChange(activeSubtopic.id, 'audio', e.target.value)}
                               >
@@ -966,61 +1133,60 @@ export default function ModuleDetailPage() {
                               </select>
                             </div>
                           )}
-                          <ResourceLinkTracker subtopicId={activeSubtopic.id} moduleId={id} resourceType="audio">
-                            <InlineAudioPlayer 
-                              url={selectedLanguages[activeSubtopic.id]?.audio || defaultAudioUrl} 
-                              title={activeSubtopic.title} 
-                            />
-                          </ResourceLinkTracker>
+                          
+                          <InlineAudioPlayer 
+                            url={selectedLanguages[activeSubtopic.id]?.audio || defaultAudioUrl} 
+                            title={activeSubtopic.title}
+                            themeKey={themeKey}
+                            t={t}
+                          />
                         </div>
                       </BrandedViewerWrap>
                     )}
 
                     {activeTab === 'reference' && (
                       <BrandedViewerWrap 
-                        title="Reference Material" 
-                        subtitle="Access reference sheets, books, and external documents."
-                        actions={
-                          activeSubtopic.referenceUrl ? (
-                            <a 
-                              href={activeSubtopic.referenceUrl} 
-                              target="_blank" 
-                              rel="noopener noreferrer" 
-                              className="bg-white border border-black hover:bg-zinc-50 text-black font-bold text-[10px] py-1 px-2.5 shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] flex items-center gap-1 uppercase font-mono"
-                            >
-                              <ExternalLink className="w-3 h-3" /> External Link
-                            </a>
-                          ) : null
-                        }
+                        title="Reading PDF Resource" 
+                        subtitle="Detailed textbook chapters and reading PDFs."
+                        themeKey={themeKey}
+                        t={t}
                       >
-                        {activeSubtopic.referenceUrl ? (
-                          <div className="w-full aspect-video min-h-[500px] bg-black overflow-hidden relative border border-zinc-300">
-                            <iframe
-                              src={getExternalEmbedUrl(activeSubtopic.referenceUrl) || activeSubtopic.referenceUrl}
-                              className="w-full h-full border-0 bg-black absolute inset-0"
-                              allow="autoplay; fullscreen"
-                            />
+                        <div className="w-full aspect-video max-h-[500px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] overflow-hidden relative bg-[#FAF9F5] flex flex-col justify-center items-center text-center p-6 gap-3">
+                          <div className={`p-3 ${t.badge} bg-white rounded-none border border-black shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] text-[#4f46e5]`}>
+                            <FileText className="w-8 h-8" />
                           </div>
-                        ) : (
-                          <div className="p-8 text-center text-zinc-550 font-sans border border-dashed border-zinc-350">
-                            No reference material available.
-                          </div>
-                        )}
+                          <p className="font-bold text-xs uppercase text-zinc-900">Reference Manual Available</p>
+                          <p className="text-xs text-zinc-655 max-w-md">Please click below to read the reference readings or download slides in Google Drive.</p>
+                          <a 
+                            href={activeSubtopic.referenceUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className={`${t.btnPrimary} font-bold text-xs py-2 px-5 inline-flex items-center gap-1.5 uppercase tracking-wide mt-2`}
+                          >
+                            Read Online <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+                        </div>
                       </BrandedViewerWrap>
                     )}
                   </div>
                 </div>
               ) : (
-                <div className="border-2 border-dashed border-black bg-white p-12 text-center text-zinc-550 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase tracking-wider">
+                <div className={`border-2 border-dashed bg-white p-12 text-center text-zinc-550 font-bold uppercase tracking-wider ${
+                  isUiProgramming ? 'border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none' : 'border-slate-350 rounded-xl shadow-xs'
+                }`}>
                   No learning resources registered for this topic yet.
                 </div>
               )}
 
               {/* Topic Summary / Takeaways Section */}
               {activeSubtopic.didYouKnowUrl && (
-                <div className="border-2 border-black bg-[#FEF3C7] text-amber-950 p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className={`${t.borderClass} ${
+                  themeKey === 'ui programming' 
+                    ? 'bg-[#FEF3C7] text-amber-950 shadow-[4px_4px_0px_rgba(0,0,0,1)]' 
+                    : 'bg-amber-50 text-amber-900 border-amber-250 shadow-xs'
+                } p-5 mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4`}>
                   <div className="flex items-start gap-3">
-                    <div className="p-2 bg-amber-100 border border-amber-300 rounded shrink-0">
+                    <div className={`p-2 bg-amber-100 border border-amber-300 rounded shrink-0 ${isUiProgramming ? 'rounded-none border-black' : ''}`}>
                       <Lightbulb className="w-5 h-5 text-amber-700" />
                     </div>
                     <div>
@@ -1032,7 +1198,7 @@ export default function ModuleDetailPage() {
                     href={activeSubtopic.didYouKnowUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white border-2 border-black hover:bg-zinc-50 text-black font-bold text-xs py-1.5 px-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:translate-x-0.5 active:shadow-none active:translate-y-1 active:translate-x-1 transition-all shrink-0 uppercase font-mono"
+                    className={`${t.btnGhost} shrink-0`}
                   >
                     Read Case Study
                   </a>
@@ -1041,17 +1207,17 @@ export default function ModuleDetailPage() {
 
               {/* Learning Toolkit Section (List Style) */}
               {toolkitItems.length > 0 && (
-                <div className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mt-8">
-                  <div className="flex items-center gap-2 border-b border-black pb-2 mb-3">
+                <div className={`bg-white p-4 ${t.borderClass} ${t.shadowClass} mt-8`}>
+                  <div className={`flex items-center gap-2 border-b ${isUiProgramming ? 'border-black' : 'border-slate-200'} pb-2 mb-3`}>
                     <Brain className="w-4 h-4 text-[#fbbf24] fill-black stroke-black" />
                     <h3 className="font-black text-sm uppercase tracking-tight text-black">Learning Toolkit</h3>
                   </div>
                   <div className="flex flex-col divide-y divide-zinc-200">
                     {toolkitItems.map((item, idx) => {
                       const content = (
-                        <div className={`flex items-center justify-between py-2.5 transition-colors ${item.available ? 'hover:bg-zinc-50 px-2' : 'opacity-50 px-2 cursor-not-allowed'}`}>
+                        <div className={`flex items-center justify-between py-2.5 transition-colors ${item.available ? 'hover:bg-zinc-50 px-2' : 'opacity-55 px-2 cursor-not-allowed'}`}>
                           <div className="flex items-center gap-3">
-                            <div className="p-1.5 bg-[#FAF9F5] border border-black rounded shrink-0">
+                            <div className={`p-1.5 shrink-0 ${isUiProgramming ? 'bg-[#FAF9F5] border border-black rounded-none' : 'bg-slate-50 border border-slate-250 rounded-lg'}`}>
                               {item.icon}
                             </div>
                             <span className="font-bold text-xs text-zinc-900">{item.name}</span>
@@ -1060,7 +1226,7 @@ export default function ModuleDetailPage() {
                             <span className={`text-[10px] font-bold px-2 py-0.5 border ${
                               item.available 
                                 ? 'bg-emerald-50 text-emerald-700 border-emerald-300' 
-                                : 'bg-zinc-100 text-zinc-500 border-zinc-300'
+                                : 'bg-zinc-100 text-zinc-505 border-zinc-300'
                             }`}>
                               {item.available ? "Available" : "Not Assigned"}
                             </span>
@@ -1090,11 +1256,11 @@ export default function ModuleDetailPage() {
               )}
 
               {/* Navigation Controls with Specific Topic Names */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-12 pt-6 border-t border-zinc-300">
+              <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 mt-12 pt-6 border-t ${isUiProgramming ? 'border-black' : 'border-slate-200'}`}>
                 {prevSubtopic ? (
                   <button
                     onClick={() => setActiveSubtopicIndex(activeSubtopicIndex - 1)}
-                    className="w-full sm:w-auto bg-white border-2 border-black hover:bg-zinc-50 text-black font-bold text-xs py-3 px-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:translate-x-0.5 active:shadow-none active:translate-y-1 active:translate-x-1 transition-all flex items-center justify-center gap-2 uppercase font-mono"
+                    className={`w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer ${t.btnGhost}`}
                   >
                     <ChevronLeft className="w-4 h-4" />
                     <span className="truncate max-w-[200px] sm:max-w-xs">Previous: {prevSubtopic.title}</span>
@@ -1106,7 +1272,7 @@ export default function ModuleDetailPage() {
                 {nextSubtopic ? (
                   <button
                     onClick={() => setActiveSubtopicIndex(activeSubtopicIndex + 1)}
-                    className="w-full sm:w-auto bg-[#2dd4bf] border-2 border-black hover:bg-[#2dd4bf]/90 text-black font-bold text-xs py-3 px-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:translate-x-0.5 active:shadow-none active:translate-y-1 active:translate-x-1 transition-all flex items-center justify-center gap-2 uppercase font-mono ml-auto"
+                    className={`w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer ml-auto ${t.btnPrimary}`}
                   >
                     <span className="truncate max-w-[200px] sm:max-w-xs">Next: {nextSubtopic.title}</span>
                     <ChevronRight className="w-4 h-4" />
@@ -1118,7 +1284,9 @@ export default function ModuleDetailPage() {
 
             </main>
           ) : (
-            <div className="flex-1 p-12 text-center text-zinc-505 font-bold border-2 border-dashed border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <div className={`flex-1 p-12 text-center text-zinc-500 font-bold border-2 border-dashed bg-white ${
+              isUiProgramming ? 'border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' : 'border-slate-350 rounded-xl'
+            }`}>
               NO ACTIVE SUBTOPIC SELECTION
             </div>
           )}

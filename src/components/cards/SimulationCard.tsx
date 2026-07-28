@@ -19,6 +19,8 @@ export interface SimulationCardProps {
   };
   href: string;
   isUiProgramming?: boolean;
+  themeKey?: string;
+  t?: any;
 }
 
 // Figma-style component bounding box Selection Frame (Overlays removed per request)
@@ -34,7 +36,7 @@ const DesignStudioCard = ({ children, className = "", style = {}, isPremium, lab
   );
 };
 
-export function SimulationCard({ simulation, href, isUiProgramming = false }: SimulationCardProps) {
+export function SimulationCard({ simulation, href, isUiProgramming = false, themeKey, t }: SimulationCardProps) {
   const getDifficultyColor = (diff: string) => {
     if (isUiProgramming) {
       switch (diff) {
@@ -56,12 +58,12 @@ export function SimulationCard({ simulation, href, isUiProgramming = false }: Si
     (simulation.module ? `Module ${simulation.module.moduleNo}: ${simulation.module.title}` : "");
 
   const cardContent = (
-    <Card className={`flex flex-col h-full transition-all duration-300 overflow-hidden ${
-      isUiProgramming 
-        ? "bg-white border border-slate-200 rounded-xl shadow-sm"
-        : "hover:shadow-lg hover:border-primary/50 group"
+    <Card className={`flex flex-col h-auto transition-all duration-300 overflow-hidden ${
+      t 
+        ? `${t.cardBg} ${t.borderClass} ${t.shadowClass}`
+        : "hover:shadow-lg hover:border-primary/50 group bg-white"
     }`}>
-      <CardHeader className={isUiProgramming ? "p-5 md:p-6 pb-2" : ""}>
+      <CardHeader className={t ? "p-4 md:p-5 pb-1.5" : ""}>
         <div className="flex justify-between items-center mb-2">
           <Badge className={getDifficultyColor(simulation.difficulty)} variant={isUiProgramming ? "outline" : "secondary"}>
             {simulation.difficulty}
@@ -82,18 +84,18 @@ export function SimulationCard({ simulation, href, isUiProgramming = false }: Si
         }`}>{simulation.title}</CardTitle>
         <CardDescription className={`line-clamp-2 ${isUiProgramming ? "text-slate-500 font-medium text-xs font-sans mt-1.5" : ""}`}>{simulation.description}</CardDescription>
       </CardHeader>
-      <CardContent className={`flex-grow ${isUiProgramming ? "p-5 md:p-6 pt-0" : ""}`}>
+      <CardContent className={`flex-grow ${t ? "p-4 md:p-5 pt-0 pb-3" : ""}`}>
         {categoryLabel && (
           <div className={`font-medium ${isUiProgramming ? "text-[10px] font-sans text-slate-400" : "text-sm text-zinc-500"}`}>
             {isUiProgramming ? "Context: " : "Related to: "}{categoryLabel}
           </div>
         )}
       </CardContent>
-      <CardFooter className={`pt-4 mt-auto ${isUiProgramming ? "p-5 md:p-6 border-t border-slate-100" : "border-t border-zinc-105"}`}>
+      <CardFooter className={`pt-3 mt-auto border-t ${t ? (themeKey === "ui programming" ? "p-4 md:p-5 border-black" : "p-4 md:p-5 border-slate-100") : "border-zinc-105"}`}>
         <Link href={href} className="w-full">
           <div className={`w-full flex items-center justify-center space-x-2 py-2 px-4 rounded-md font-medium transition-all duration-150 ${
-            isUiProgramming 
-              ? "bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm font-sans text-xs font-semibold" 
+            t 
+              ? t.btnPrimary 
               : "bg-primary text-white hover:bg-primary/90"
           }`}>
             <Play className="w-4 h-4 fill-current" />
