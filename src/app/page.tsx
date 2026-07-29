@@ -28,6 +28,21 @@ import DotField from "@/components/DotField";
 export default function LandingPage() {
   const router = useRouter();
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  const [timestamp, setTimestamp] = React.useState("");
+
+  React.useEffect(() => {
+    const buildTimeStr = process.env.NEXT_PUBLIC_BUILD_TIME;
+    const date = buildTimeStr ? new Date(Number(buildTimeStr)) : new Date();
+    setTimestamp(date.toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+      timeZoneName: "short"
+    }).replace(",", ""));
+  }, []);
 
   return (
     <div className="bg-[#f4f4f0] min-h-screen text-black flex flex-col font-sans relative antialiased px-4 sm:px-6 md:px-8 selection:bg-red-500 selection:text-white overflow-hidden">
@@ -48,7 +63,7 @@ export default function LandingPage() {
       </div>
 
       {/* 1. Header Navigation Bar */}
-      <header className="container mx-auto max-w-6xl py-5 flex items-center justify-between z-50 relative">
+      <header className="container mx-auto max-w-[1440px] w-full py-4 flex items-center justify-between z-50 relative">
         <Link href="/" className="flex items-center space-x-3 group select-none">
           <div className="w-10 h-10 bg-[#ef4444] text-white border-2 border-black rounded-lg flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)] group-hover:translate-x-[1px] group-hover:translate-y-[1px] group-hover:shadow-none transition-all">
             <GraduationCap className="w-6 h-6" />
@@ -57,7 +72,7 @@ export default function LandingPage() {
             UTTAM
           </span>
         </Link>
-        
+
         <Link href="/faculty/login">
           <button
             className="border-2 border-black bg-[#ef4444] text-white font-extrabold px-4 py-2 text-xs uppercase tracking-wider shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center gap-2 cursor-pointer rounded-none"
@@ -71,7 +86,7 @@ export default function LandingPage() {
       </header>
 
       {/* 2. Hero Section */}
-      <main className="container mx-auto max-w-6xl py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center flex-1 relative z-10">
+      <main className="container mx-auto max-w-[1440px] w-full py-8 md:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center flex-1 relative z-10">
 
         {/* Hero Copy (Left Column) */}
         <div className="lg:col-span-6 flex flex-col items-start space-y-8 text-left">
@@ -151,11 +166,11 @@ export default function LandingPage() {
 
 
       {/* 6. Custom Neubrutalist Footer */}
-      <footer className="border-t-4 border-black bg-[#f4f4f0] py-10 mt-auto select-none relative z-10">
-        <div className="container mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-8">
+      <footer className="border-t-4 border-black bg-[#f4f4f0] py-5 mt-auto select-none relative z-10 -mx-4 sm:-mx-6 md:-mx-8 px-4 sm:px-6 md:px-8">
+        <div className="container mx-auto max-w-[1440px] w-full grid grid-cols-1 md:grid-cols-3 gap-4">
 
           {/* Logo & Intro Column */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-[#ef4444] text-white border-2 border-black rounded flex items-center justify-center shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)]">
                 <GraduationCap className="w-5 h-5" />
@@ -163,17 +178,17 @@ export default function LandingPage() {
               <span className="text-lg font-black text-black tracking-wider uppercase font-sans">UTTAM</span>
             </div>
             <p className="text-zinc-700 text-[11px] font-bold leading-relaxed font-sans max-w-xs">
-              An interactive EdTech platform that brings together simulations, quizzes, flashcards, mind maps, and infographics helping students learn through interactive and visual content.
+              A next-generation educational platform that empowers faculty to create, manage, and publish interactive learning experiences while providing students with an engaging, organized, and responsive digital classroom.
             </p>
           </div>
           {/* Team Column */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <h4 className="text-xs font-black uppercase text-black font-sans flex items-center">
               <span className="w-2.5 h-2.5 bg-[#ef4444] border border-black rounded-full mr-2"></span>
               Our Team
             </h4>
             <p className="text-zinc-700 text-[11px] font-bold leading-relaxed font-sans max-w-xs">
-              Discover the engineering roles, layout frameworks, and collaborative contributions behind this project.
+              UTTAM follows a lightweight static-content architecture powered by Google Apps Script, Google Sheets, and GitHub Pages for fast, secure, and responsive learning.
             </p>
             <button
               onClick={() => router.push("/team")}
@@ -186,7 +201,7 @@ export default function LandingPage() {
 
           {/* Build Details Column */}
           <div className="flex flex-col justify-end items-start md:items-end text-zinc-500 font-mono text-[9px] font-bold">
-            <p>Last updated: 26 Jul 2026, 03:54 pm IST</p>
+            <p>Last updated: {timestamp || "Loading..."}</p>
           </div>
 
         </div>

@@ -1071,38 +1071,20 @@ const prevSubtopic = activeSubtopicIndex > 0 ? subtopics[activeSubtopicIndex - 1
                         ) : undefined}
                       >
                         <div className="space-y-4">
-                          {selectedNoteUrl && (
-                            <div className="flex justify-end">
-                              <a 
-                                href={selectedNoteUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className={`text-xs flex items-center gap-1 hover:underline ${t.iconColor}`}
-                              >
-                                <ExternalLink className="w-3.5 h-3.5" /> Open in Google Drive
-                              </a>
-                            </div>
-                          )}
+
                           {activeSubtopic.lessonContent ? (
                             <div 
                               className={`prose max-w-none text-xs leading-relaxed text-slate-805 ${isPythonProgramming ? 'font-mono' : ''}`}
                               dangerouslySetInnerHTML={{ __html: marked.parse(activeSubtopic.lessonContent) }}
                             />
                           ) : selectedNoteUrl ? (
-                            <div className={`w-full aspect-[4/3] max-h-[500px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] overflow-hidden relative bg-[#FAF9F5] flex flex-col justify-center items-center text-center p-6 gap-3`}>
-                              <div className={`p-3 ${t.badge} bg-white rounded-none border border-black shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] text-[#4f46e5]`}>
-                                <FileText className="w-8 h-8" />
-                              </div>
-                              <p className={`font-bold text-xs uppercase text-zinc-900 ${isPythonProgramming ? 'font-mono' : ''}`}>PDF / Word Document linked</p>
-                              <p className={`text-xs text-zinc-655 max-w-md ${isPythonProgramming ? 'font-mono' : ''}`}>Please click the link above or below to read the comprehensive lesson resources directly in Google Drive.</p>
-                              <a 
-                                href={selectedNoteUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className={`${t.btnPrimary} font-bold text-xs py-2 px-5 inline-flex items-center gap-1.5 uppercase tracking-wide mt-2`}
-                              >
-                                View Document <ExternalLink className="w-3.5 h-3.5" />
-                              </a>
+                            <div className={`w-full aspect-[4/3] h-[75vh] min-h-[500px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] overflow-hidden relative bg-[#FAF9F5]`}>
+                              <iframe
+                                src={getExternalEmbedUrl(selectedNoteUrl) || selectedNoteUrl}
+                                className="w-full h-full border-0"
+                                title="Document Viewer"
+                                allow="autoplay; fullscreen"
+                              />
                             </div>
                           ) : (
                             <div className="text-center py-12 text-zinc-400 text-xs font-bold uppercase">No note attachments present.</div>
@@ -1151,20 +1133,13 @@ const prevSubtopic = activeSubtopicIndex > 0 ? subtopics[activeSubtopicIndex - 1
                         themeKey={themeKey}
                         t={t}
                       >
-                        <div className="w-full aspect-video max-h-[500px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] overflow-hidden relative bg-[#FAF9F5] flex flex-col justify-center items-center text-center p-6 gap-3">
-                          <div className={`p-3 ${t.badge} bg-white rounded-none border border-black shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] text-[#4f46e5]`}>
-                            <FileText className="w-8 h-8" />
-                          </div>
-                          <p className="font-bold text-xs uppercase text-zinc-900">Reference Manual Available</p>
-                          <p className="text-xs text-zinc-655 max-w-md">Please click below to read the reference readings or download slides in Google Drive.</p>
-                          <a 
-                            href={activeSubtopic.referenceUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className={`${t.btnPrimary} font-bold text-xs py-2 px-5 inline-flex items-center gap-1.5 uppercase tracking-wide mt-2`}
-                          >
-                            Read Online <ExternalLink className="w-3.5 h-3.5" />
-                          </a>
+                        <div className="w-full aspect-video h-[75vh] min-h-[500px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] overflow-hidden relative bg-[#FAF9F5]">
+                          <iframe
+                            src={getExternalEmbedUrl(activeSubtopic.referenceUrl) || activeSubtopic.referenceUrl}
+                            className="w-full h-full border-0"
+                            title="Reference Manual"
+                            allow="autoplay; fullscreen"
+                          />
                         </div>
                       </BrandedViewerWrap>
                     )}
