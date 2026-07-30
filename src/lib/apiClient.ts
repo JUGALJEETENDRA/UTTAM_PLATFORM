@@ -13,6 +13,31 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
   const isDeployed = process.env.NEXT_PUBLIC_IS_DEPLOYED === 'true';
   const isFaculty = typeof window !== 'undefined' && window.location.pathname.includes('/faculty');
   
+  // Helper to decrypt data centrally
+  const processEncrypted = (dataObj: any) => {
+    if (dataObj && dataObj.encrypted && typeof window !== 'undefined') {
+       const params = new URLSearchParams(window.location.search);
+       const subjectId = params.get('subjectId') || payload.subjectId;
+       if (subjectId) {
+          const key = localStorage.getItem(`subject_key_${subjectId}`);
+          const expirationStr = localStorage.getItem(`subject_unlocked_expiry_${subjectId}`);
+          
+          if (key && expirationStr && Date.now() < parseInt(expirationStr, 10)) {
+             const decrypted = decryptObject(dataObj, key);
+             if (decrypted) return decrypted;
+          }
+          
+          const isDashboard = window.location.pathname.endsWith('/subject') || window.location.pathname.endsWith('/subject/');
+          if (!isDashboard) {
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            window.location.href = `${basePath}/student/subjects/subject?subjectId=${subjectId}`;
+            return Array.isArray(dataObj) ? [] : {};
+          }
+       }
+    }
+    return dataObj;
+  };
+
   if (isDeployed && !isFaculty) {
     if (typeof window !== 'undefined') {
       if (!window._dataJsonPromise) {
@@ -24,31 +49,6 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
       
       try {
         const dataJson = await window._dataJsonPromise;
-        
-        // Helper to decrypt data centrally
-        const processEncrypted = (dataObj: any) => {
-          if (dataObj && dataObj.encrypted && typeof window !== 'undefined') {
-             const params = new URLSearchParams(window.location.search);
-             const subjectId = params.get('subjectId') || payload.subjectId;
-             if (subjectId) {
-                const key = localStorage.getItem(`subject_key_${subjectId}`);
-                const expirationStr = localStorage.getItem(`subject_unlocked_expiry_${subjectId}`);
-                
-                if (key && expirationStr && Date.now() < parseInt(expirationStr, 10)) {
-                   const decrypted = decryptObject(dataObj, key);
-                   if (decrypted) return decrypted;
-                }
-                
-                const isDashboard = window.location.pathname.endsWith('/subject') || window.location.pathname.endsWith('/subject/');
-                if (!isDashboard) {
-                  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-                  window.location.href = `${basePath}/student/subjects/subject?subjectId=${subjectId}`;
-                  return Array.isArray(dataObj) ? [] : {};
-                }
-             }
-          }
-          return dataObj;
-        };
 
         if (action === 'getSubjects') return dataJson.getSubjects || [];
         if (action === 'getStudentDashboard') return processEncrypted(dataJson.getStudentDashboard?.[payload.subjectId]) || null;
@@ -102,7 +102,7 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
     }
 
     console.log('GAS RESPONSE for', action, data ? (data.subtopics ? data.subtopics.map((s: any) => ({id: s.id, otherUrl: s.otherUrl})) : 'no subtopics') : 'no data');
-    return data;
+    return processEncrypted(data);
   } catch (error) {
     console.error(`Error fetching GAS for action ${action}:`, error);
     throw error;
