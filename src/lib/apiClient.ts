@@ -9,6 +9,21 @@ declare global {
   }
 }
 
+const STATIC_ACTIONS = new Set([
+  'getSubjects',
+  'getStudentDashboard',
+  'getModules',
+  'getModule',
+  'getQuizzes',
+  'getQuiz',
+  'getSimulations',
+  'getSimulation',
+  'getFlashcardDecks',
+  'getFlashcardDeck',
+  'getMindMaps',
+  'getInfographics'
+]);
+
 export async function fetchGAS(action: string, payload: Record<string, any> = {}) {
   // If deployed and not on a faculty page, intercept READ requests and use local data.json
   const isDeployed = process.env.NEXT_PUBLIC_IS_DEPLOYED === 'true';
@@ -39,7 +54,7 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
     return dataObj;
   };
 
-  if (isDeployed && !isFaculty) {
+  if (isDeployed && !isFaculty && STATIC_ACTIONS.has(action)) {
     if (typeof window !== 'undefined') {
       const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
       const buildTime = process.env.NEXT_PUBLIC_BUILD_TIME || '0';
@@ -86,6 +101,10 @@ export async function fetchGAS(action: string, payload: Record<string, any> = {}
         }
       }
     }
+  }
+
+  if (!GAS_WEB_APP_URL) {
+    throw new Error("NEXT_PUBLIC_GAS_URL is not configured in the environment. Cannot fetch from backend.");
   }
 
   try {

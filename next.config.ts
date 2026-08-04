@@ -31,6 +31,8 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_IS_DEPLOYED: isGithubActions ? 'true' : 'false',
     NEXT_PUBLIC_BASE_PATH: basePath,
     NEXT_PUBLIC_BUILD_TIME: Date.now().toString(),
+    NEXT_PUBLIC_GAS_URL: process.env.NEXT_PUBLIC_GAS_URL,
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
   },
   images: {
     unoptimized: true,

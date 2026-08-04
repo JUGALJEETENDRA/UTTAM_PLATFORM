@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchGAS } from "@/lib/apiClient";
+import { decryptObject } from "@/lib/crypto";
 import { Button } from "@/components/ui/button";
 import { GoogleLogin } from "@react-oauth/google";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -867,7 +868,21 @@ export default function StudentDashboard() {
       const cachedSimsCount = localStorage.getItem(`cached_sims_count_${subjectId}`);
       if (cachedDashboard) {
         try {
-          setData(JSON.parse(cachedDashboard));
+          let parsed = JSON.parse(cachedDashboard);
+          // If the cached dashboard is encrypted (e.g. cached before authorization),
+          // decrypt it in-memory using the newly-acquired decryption keys.
+          if (parsed && parsed.encrypted) {
+            const key = localStorage.getItem(`subject_key_${subjectId}`);
+            const expirationStr = localStorage.getItem(`subject_unlocked_expiry_${subjectId}`);
+            if (key && expirationStr && Date.now() < parseInt(expirationStr, 10)) {
+              const decrypted = decryptObject(parsed, key);
+              if (decrypted) {
+                parsed = decrypted;
+              }
+            }
+          }
+          
+          setData(parsed);
           if (cachedSimsCount !== null) {
             setSimulationsCount(parseInt(cachedSimsCount, 10));
           }

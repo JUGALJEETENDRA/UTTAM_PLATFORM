@@ -200,8 +200,13 @@ export default function LandingPage() {
           </div>
 
           {/* Build Details Column */}
-          <div className="flex flex-col justify-end items-start md:items-end text-zinc-500 font-mono text-[9px] font-bold">
+          <div className="flex flex-col justify-end items-start md:items-end text-zinc-500 font-mono text-[9px] font-bold space-y-1.5">
             <p>Last updated: {timestamp || "Loading..."}</p>
+            <div className="flex items-center gap-3">
+              <Link href="/sitemap" className="underline hover:text-black transition-colors uppercase">Sitemap</Link>
+              <span className="text-zinc-400">|</span>
+              <a href={`${basePath}/sitemap.xml`} target="_blank" rel="noopener noreferrer" className="underline hover:text-black transition-colors uppercase">XML Sitemap</a>
+            </div>
           </div>
 
         </div>
