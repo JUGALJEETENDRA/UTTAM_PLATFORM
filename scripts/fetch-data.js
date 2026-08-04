@@ -29,20 +29,26 @@ function encryptObject(obj, keyHex) {
   }
 }
 
-async function fetchGAS(action, payload = {}, retries = 3) {
+async function fetchGAS(action, payload = {}, retries = 5) {
   const url = new URL(GAS_WEB_APP_URL);
   url.searchParams.append('action', action);
   
   for (let attempt = 1; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15-second timeout
+
     try {
       const response = await fetch(url.toString(), {
         method: 'POST',
         headers: {
           'Content-Type': 'text/plain;charset=utf-8', 
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: controller.signal
       });
       
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -60,20 +66,15 @@ async function fetchGAS(action, payload = {}, retries = 3) {
       }
       return data;
     } catch (error) {
+      clearTimeout(timeoutId);
       if (attempt === retries) {
         throw error;
       }
-      console.warn(`    Retry ${attempt}/${retries} for action ${action} after error: ${error.message}`);
-      await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
+      const isTimeout = error.name === 'AbortError';
+      const errMsg = isTimeout ? 'Request timed out (15s)' : error.message;
+      console.warn(`    Retry ${attempt}/${retries} for action ${action} after error: ${errMsg}`);
+      await new Promise(resolve => setTimeout(resolve, 3000 * attempt)); // Increased backoff to 3s, 6s, 9s, 12s, 15s
     }
-  }
-}
-
-async function executeInChunks(tasks, chunkSize = 5) {
-  for (let i = 0; i < tasks.length; i += chunkSize) {
-    const chunk = tasks.slice(i, i + chunkSize);
-    await Promise.all(chunk.map(task => task()));
-    await new Promise(resolve => setTimeout(resolve, 500)); // Delay between chunks
   }
 }
 
