@@ -18,10 +18,27 @@ export default function StudentSubjectsListPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Stale-While-Revalidate: Load from local cache immediately if available
+    const cached = localStorage.getItem("cached_subjects");
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setSubjects(parsed);
+          setLoading(false);
+        }
+      } catch (e) {
+        console.error("Failed to parse cached subjects:", e);
+      }
+    }
+
     const loadSubjects = async () => {
       try {
         const data = await fetchGAS("getSubjects");
-        setSubjects(data || []);
+        if (data) {
+          setSubjects(data || []);
+          localStorage.setItem("cached_subjects", JSON.stringify(data));
+        }
       } catch (error) {
         console.error("Failed to fetch subjects:", error);
       } finally {

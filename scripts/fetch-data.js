@@ -193,6 +193,13 @@ async function main() {
     fs.writeFileSync(path.join(publicDir, 'data.json'), JSON.stringify(db));
     console.log('Successfully wrote public/data.json');
 
+    // Write a lightweight subjects.json containing only getSubjects data
+    const subjectsDb = {
+      getSubjects: db.getSubjects
+    };
+    fs.writeFileSync(path.join(publicDir, 'subjects.json'), JSON.stringify(subjectsDb));
+    console.log('Successfully wrote public/subjects.json');
+
   } catch (error) {
     console.error('Failed to fetch data:', error);
     process.exit(1);

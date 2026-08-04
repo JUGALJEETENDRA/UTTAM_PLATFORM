@@ -862,6 +862,21 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     if (subjectId) {
+      // Stale-While-Revalidate: Load from local cache immediately if available
+      const cachedDashboard = localStorage.getItem(`cached_dashboard_${subjectId}`);
+      const cachedSimsCount = localStorage.getItem(`cached_sims_count_${subjectId}`);
+      if (cachedDashboard) {
+        try {
+          setData(JSON.parse(cachedDashboard));
+          if (cachedSimsCount !== null) {
+            setSimulationsCount(parseInt(cachedSimsCount, 10));
+          }
+          setLoading(false);
+        } catch (e) {
+          console.error("Failed to parse cached dashboard data:", e);
+        }
+      }
+
       const loadDashboardData = async () => {
         try {
           const [result, sims] = await Promise.all([
@@ -875,10 +890,13 @@ export default function StudentDashboard() {
             })
           ]);
           setData(result);
+          localStorage.setItem(`cached_dashboard_${subjectId}`, JSON.stringify(result));
           if (Array.isArray(sims)) {
             setSimulationsCount(sims.length);
+            localStorage.setItem(`cached_sims_count_${subjectId}`, sims.length.toString());
           } else {
             setSimulationsCount(0);
+            localStorage.setItem(`cached_sims_count_${subjectId}`, "0");
           }
         } catch (err) {
           console.error("Failed to load dashboard data", err);
