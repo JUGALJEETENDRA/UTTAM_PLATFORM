@@ -108,25 +108,15 @@ async function main() {
       
       const topLevelTasks = [
         fetchGAS('getStudentDashboard', { subjectId: subject.id }),
-        fetchGAS('getModules', { subjectId: subject.id }),
-        fetchGAS('getQuizzes', { subjectId: subject.id }),
-        fetchGAS('getSimulations', { subjectId: subject.id }),
-        fetchGAS('getMindMaps', { subjectId: subject.id }),
-        fetchGAS('getInfographics', { subjectId: subject.id }),
-        fetchGAS('getFlashcardDecks', { subjectId: subject.id }).catch(e => {
-          console.warn(`  Warning: getFlashcardDecks failed for subject ${subject.id}: ${e.message}`);
+        fetchGAS('getSimulations', { subjectId: subject.id }).catch(e => {
+          console.warn(`  Warning: getSimulations failed for subject ${subject.id}: ${e.message}`);
           return [];
         })
       ];
 
       const [
         dashboard,
-        modules,
-        quizzes,
-        simulations,
-        mindmaps,
-        infographics,
-        decks
+        simulations
       ] = await Promise.all(topLevelTasks);
       
       const isPublic = subject.isPublic === "true" || subject.isPublic === true;
@@ -137,52 +127,59 @@ async function main() {
         return encryptObject(data, dataKey);
       };
 
+      const dashboardModules = dashboard.modules || [];
+      const dashboardQuizzes = dashboard.quizzesWithAttempts || [];
+      const dashboardDecks = dashboard.flashcardDecks || [];
+      const sims = simulations || [];
+
+      // 1. Populate top level subject arrays
       db.getStudentDashboard[subject.id] = processData(dashboard);
-      db.getModules[subject.id] = processData(modules);
-      db.getQuizzes[subject.id] = processData(quizzes);
-      db.getSimulations[subject.id] = processData(simulations);
-      db.getMindMaps[subject.id] = processData(mindmaps);
-      db.getInfographics[subject.id] = processData(infographics);
-      db.getFlashcardDecks[subject.id] = processData(decks || []);
+      db.getModules[subject.id] = processData(dashboardModules);
+      db.getQuizzes[subject.id] = processData(dashboardQuizzes);
+      db.getSimulations[subject.id] = processData(sims);
+      db.getMindMaps[subject.id] = processData(dashboard.mindmaps || []);
+      db.getInfographics[subject.id] = processData(dashboard.infographics || []);
+      db.getFlashcardDecks[subject.id] = processData(dashboardDecks);
 
-      const childTasks = [];
-      
-      (modules || []).forEach(mod => {
-        childTasks.push(async () => {
-          const modData = await fetchGAS('getModule', { moduleId: mod.id });
-          db.getModule[mod.id] = processData(modData);
-        });
+      // 2. Reconstruct individual modules in-memory (including nested child lookups)
+      dashboardModules.forEach(mod => {
+        const modData = {
+          ...mod,
+          quizzes: dashboardQuizzes.filter(q => q.moduleId === mod.id),
+          flashcardDecks: dashboardDecks.filter(f => f.moduleId === mod.id),
+          simulations: sims.filter(s => s.moduleId === mod.id),
+          mindmaps: (dashboard.mindmaps || []).filter(m => m.moduleId === mod.id),
+          infographics: (dashboard.infographics || []).filter(i => i.moduleId === mod.id)
+        };
+        db.getModule[mod.id] = processData(modData);
       });
 
-      (quizzes || []).forEach(quiz => {
-        childTasks.push(async () => {
-          const quizData = await fetchGAS('getQuiz', { quizId: quiz.id });
-          db.getQuiz[quiz.id] = processData(quizData);
-        });
+      // 3. Reconstruct individual quizzes in-memory
+      dashboardQuizzes.forEach(quiz => {
+        const quizData = {
+          ...quiz,
+          module: dashboardModules.find(m => m.id === quiz.moduleId)
+        };
+        db.getQuiz[quiz.id] = processData(quizData);
       });
 
-      (simulations || []).forEach(sim => {
-        childTasks.push(async () => {
-          const simData = await fetchGAS('getSimulation', { simulationId: sim.id });
-          db.getSimulation[sim.id] = processData(simData);
-        });
+      // 4. Reconstruct individual simulations in-memory
+      sims.forEach(sim => {
+        const simData = {
+          ...sim,
+          module: dashboardModules.find(m => m.id === sim.moduleId)
+        };
+        db.getSimulation[sim.id] = processData(simData);
       });
 
-      (decks || []).forEach(deck => {
-        childTasks.push(async () => {
-          try {
-            const deckData = await fetchGAS('getFlashcardDeck', { deckId: deck.id });
-            db.getFlashcardDeck[deck.id] = processData(deckData);
-          } catch (e) {
-            console.warn(`  Warning: getFlashcardDeck failed for deck ${deck.id}: ${e.message}`);
-          }
-        });
+      // 5. Reconstruct individual flashcard decks in-memory
+      dashboardDecks.forEach(deck => {
+        const deckData = {
+          ...deck,
+          module: dashboardModules.find(m => m.id === deck.moduleId)
+        };
+        db.getFlashcardDeck[deck.id] = processData(deckData);
       });
-
-      if (childTasks.length > 0) {
-        console.log(`  - Fetching ${childTasks.length} child items in parallel chunks...`);
-        await executeInChunks(childTasks, 15);
-      }
     }
 
     const publicDir = path.join(__dirname, '..', 'public');
